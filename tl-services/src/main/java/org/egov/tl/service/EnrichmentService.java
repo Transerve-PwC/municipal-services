@@ -382,6 +382,8 @@ public class EnrichmentService {
                 nameOfBusinessService=businessService_TL;
                 tradeLicense.setBusinessService(nameOfBusinessService);
             }
+            setCTLLicenseValidity(tradeLicense);
+			enrichCTLTradeUnits(tradeLicense);
             if ((nameOfBusinessService.equals(businessService_BPA) && (tradeLicense.getStatus().equalsIgnoreCase(STATUS_INITIATED))) || workflowService.isStateUpdatable(tradeLicense.getStatus(), businessService)) {
                 tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
                 if (!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getAccessories())) {
@@ -518,21 +520,21 @@ public class EnrichmentService {
 		}
     }
     
-    private String getLicensePeriod(long dob){
+    private int getAgeForLicensePeriod(long dob){
     	SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
-		String licensePeriod=null;
+		int licensePeriod=0;
     	try {   		
 			Date birthDate = new Date(dob);
 			String birthday = df2.format(birthDate);
 		    LocalDate birthDateLocal = LocalDate.parse(birthday);
 		    LocalDate today = LocalDate.now();
 			int age = Period.between(birthDateLocal, today).getYears();
-			if(age <=50)
-			 licensePeriod = "15";			 
+			/*if(age <=50)
+			 licensePeriod = 15;			 
 			else
-			 licensePeriod = "5";
+			 licensePeriod = 5;*/
 			
-			return licensePeriod;
+			return age;
 			
     	}catch (Exception e1) {
 			throw new CustomException("DOB ERROR", "Could not read dob as a valid date");
@@ -632,32 +634,44 @@ public class EnrichmentService {
     private void enrichCTLTradeUnits(TradeLicense license) {
     	TradeLicenseDetail licenseDetail = license.getTradeLicenseDetail();
     	String businessService = license.getBusinessService();
+    	JsonNode addtionalDetails = licenseDetail.getAdditionalDetail();
+    	Long dob = licenseDetail.getOwners().get(0).getDob();
     	TradeUnit e = null;
-    	String licensePeriod =null;
-    	switch(businessService) {
+    	int licensePeriod =0;
+    	int age=0;
+    	switch(businessService) {    		
     		case businessService_REHRI_DL:    
-    				Long dob = licenseDetail.getOwners().get(0).getDob();
     				//Getting license period using DOB.
-    				 licensePeriod = getLicensePeriod(dob);
+    				age = getAgeForLicensePeriod(dob);
+    				if(age <=50)
+    					 licensePeriod = 15;			 
+    					else
+    					 licensePeriod = 5;
     				//Updating licensePeriod in additional details.
-    				JsonNode addtionalDetails = licenseDetail.getAdditionalDetail();
-    				((ObjectNode)addtionalDetails).put("licensePeriod", licensePeriod+" years");
+    				
+    				((ObjectNode)addtionalDetails).put("licensePeriod", licensePeriod);
         			e = TradeUnit.builder()
 		    				.tradeType(businessService)
 		    				.uom("year")
-		    				.uomValue(licensePeriod)
+		    				.uomValue(String.valueOf(licensePeriod))
 		    				.build();    			
         			break;
     		case businessService_REHRI_RC:
-    			 licensePeriod = licenseDetail.getAdditionalDetail().get("licensePeriod").asText().split("years")[0];
+    			 int lPeriod = licenseDetail.getAdditionalDetail().get("licensePeriod").asInt();
+    			 age = getAgeForLicensePeriod(dob);
+    			 if(age <=50)
+					 licensePeriod = lPeriod;			 
+					else
+					 licensePeriod = 5;
     			 e = TradeUnit.builder()
 						.tradeType(businessService)
 						.uom("year")
-						.uomValue(licensePeriod)
+						.uomValue(String.valueOf(licensePeriod))
 						.build();
     			break;    			
     		case businessService_DHOBI_GHAT:
     			String tradeUnitType = license.getApplicationType() == ApplicationTypeEnum.RENEW ? businessService+"_RENEW" : businessService;
+    			((ObjectNode)addtionalDetails).put("licensePeriod",1);
     			e = TradeUnit.builder()
         				.tradeType(tradeUnitType)
         				.uom("year")
@@ -665,6 +679,7 @@ public class EnrichmentService {
         				.build();
         		break;
     		case businessService_BOOK_SHOP:
+    			((ObjectNode)addtionalDetails).put("licensePeriod",5);
     			e = TradeUnit.builder()
 				.tradeType(businessService)
 				.uom("year")
@@ -673,7 +688,16 @@ public class EnrichmentService {
     			break;
     	}
     	if (e != null) {
-    		license.getTradeLicenseDetail().getTradeUnits().add(e);	
+    		List<TradeUnit> tradeUnitsList =license.getTradeLicenseDetail().getTradeUnits();
+    		if(!tradeUnitsList.isEmpty()){
+    			for(int i=0;i<tradeUnitsList.size();i++){
+    				if(e.getTradeType().equals(tradeUnitsList.get(i).getTradeType())){
+    					license.getTradeLicenseDetail().getTradeUnits().get(i).setUomValue(e.getUomValue());
+    				}
+    			}
+    		}
+    		else
+    		license.getTradeLicenseDetail().getTradeUnits().add(e);
     	}
     	
     }
