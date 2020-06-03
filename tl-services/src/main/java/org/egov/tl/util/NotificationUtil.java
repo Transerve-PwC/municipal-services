@@ -40,6 +40,8 @@ public class NotificationUtil {
 	final String receiptNumberKey = "receiptNumber";
 
 	final String amountPaidKey = "amountPaid";
+	
+	final String consumerCodeKey = "consumerCodeKey";
 
 	/**
 	 * Creates customized message based on tradelicense
@@ -385,6 +387,22 @@ public class NotificationUtil {
 		messageTemplate = messageTemplate.replace("<4>", valMap.get(receiptNumberKey));
 		return messageTemplate;
 	}
+	
+	/**
+	 * Creates message for completed payment for owners
+	 * 
+	 * @param valMap
+	 *            The map containing required values from receipt
+	 * @param localizationMessages
+	 *            Message from localization
+	 * @return message for completed payment for owners
+	 */
+	public String getCTLOwnerPaymentMsg(TradeLicense license, Map<String, String> valMap, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_OWNER, localizationMessages);
+		messageTemplate = messageTemplate.replace("<2>", valMap.get(receiptNumberKey));
+		messageTemplate = messageTemplate.replace("<3>", license.getLicenseNumber());
+		return messageTemplate;
+	}
 
 	/**
 	 * Creates message for completed payment for payer
@@ -402,6 +420,25 @@ public class NotificationUtil {
 		messageTemplate = messageTemplate.replace("<4>", valMap.get(receiptNumberKey));
 		return messageTemplate;
 	}
+	
+	
+	/**
+	 * Creates message for completed payment for payer
+	 * 
+	 * @param valMap
+	 *            The map containing required values from receipt
+	 * @param localizationMessages
+	 *            Message from localization
+	 * @return message for completed payment for payer
+	 */
+	public String getCTLPayerPaymentMsg(TradeLicense license, Map<String, String> valMap, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_PAYER, localizationMessages);
+		messageTemplate = messageTemplate.replace("<2>", valMap.get(amountPaidKey));
+		messageTemplate = messageTemplate.replace("<3>", getMessageTemplate(license.getBusinessService(), localizationMessages));
+		messageTemplate = messageTemplate.replace("<4>", valMap.get(receiptNumberKey));
+		return messageTemplate;
+	}
+	
 
 	/**
 	 * Send the SMSRequest on the SMSNotification kafka topic
