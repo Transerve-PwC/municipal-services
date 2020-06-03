@@ -106,7 +106,6 @@ public class PaymentNotificationService {
             Map<String, Object> info = documentContext.read("$.RequestInfo");
             RequestInfo requestInfo = mapper.convertValue(info, RequestInfo.class);
 
-//            if(valMap.get(businessServiceKey).equalsIgnoreCase(config.getBusinessServiceTL())||valMap.get(businessServiceKey).equalsIgnoreCase(config.getBusinessServiceBPA())){
                 TradeLicense license = getTradeLicenseFromConsumerCode(valMap.get(tenantIdKey),valMap.get(consumerCodeKey),
                         requestInfo,valMap.get(businessServiceKey));
                 switch(valMap.get(businessServiceKey))
@@ -150,7 +149,6 @@ public class PaymentNotificationService {
                         }
                         break;
                 }
-//            }
         }
         catch (Exception e){
             e.printStackTrace();
