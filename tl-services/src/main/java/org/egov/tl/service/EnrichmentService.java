@@ -529,10 +529,6 @@ public class EnrichmentService {
 		    LocalDate birthDateLocal = LocalDate.parse(birthday);
 		    LocalDate today = LocalDate.now();
 			int age = Period.between(birthDateLocal, today).getYears();
-			/*if(age <=50)
-			 licensePeriod = 15;			 
-			else
-			 licensePeriod = 5;*/
 			
 			return age;
 			
