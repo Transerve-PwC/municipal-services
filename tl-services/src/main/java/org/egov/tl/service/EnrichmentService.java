@@ -659,6 +659,8 @@ public class EnrichmentService {
 					 licensePeriod = lPeriod;			 
 					else
 					 licensePeriod = 5;
+    			 
+    			 ((ObjectNode)addtionalDetails).put("licensePeriod", licensePeriod);
     			 e = TradeUnit.builder()
 						.tradeType(businessService)
 						.uom("year")
