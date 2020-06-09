@@ -329,11 +329,6 @@ public class TradeLicenseService {
         enrichmentService.postStatusEnrichment(tradeLicenseRequest,endStates);
         userService.createUser(tradeLicenseRequest, false);
         calculationService.addCalculation(tradeLicenseRequest);
-        switch (businessServicefromPath) {
-            case businessService_TL:
-                editNotificationService.sendEditNotification(tradeLicenseRequest, diffMap);
-                break;
-        }
         repository.update(tradeLicenseRequest, idToIsStateUpdatableMap);
         return tradeLicenseRequest.getLicenses();
     }
