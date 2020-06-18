@@ -30,6 +30,7 @@ import org.egov.tlcalculator.web.models.FeeAndBillingSlabIds;
 import org.egov.tlcalculator.web.models.demand.Category;
 import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
+import org.egov.tracer.model.CustomException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -189,6 +190,20 @@ public class CTLCalculationServiceTest {
 		assertEquals(calculationList.get(0).getTaxHeadEstimates().get(0).getEstimateAmount().doubleValue(), 200.00,0);
 		assertEquals(calculationList.get(0).getTaxHeadEstimates().get(1).getEstimateAmount().doubleValue(), 150.00,0);
 	}
+	
+	
+	/**
+	 * Test for Bad Request
+	 * Invalid UOM value
+	 * @throws Exception
+	 */
+	
+	@Test(expected= CustomException.class) 
+	public void testBadRequestCalculation() throws Exception {
+		CalculationReq calculationReq = this.objectMapper.readValue(getFileContents("badRequest.json"), CalculationReq.class);
+		List<Calculation> calculationList = ctlCalculationService.calculate(calculationReq);
+	}
+	
 
 	
 	private String getFileContents(String fileName) {

@@ -8,10 +8,10 @@
         "key": "",
         "msgId": "20170310130900|en_IN",
         "authToken": null,
-        "correlationId": "494d2d3a-8e3c-4e48-ac17-5df1af4e8168",
+        "correlationId": "4dca1f6c-72e9-4fcb-a46c-aa43039daefc",
         "userInfo": {
             "id": 42,
-            "userName": "9900289033",
+            "userName": "9999999999",
             "name": "Sunitha",
             "type": "CITIZEN",
             "mobileNumber": null,
@@ -32,9 +32,9 @@
         {
             "tradelicense": {
                 "comment": null,
-                "id": "2ad6264e-e08b-48ee-a432-729576525ef2",
+                "id": "1bf076fe-0481-4c6e-91bd-81dbf5f0fc66",
                 "tenantId": "ch.chandigarh",
-                "businessService": "CTL.DHOBI_GHAT",
+                "businessService": "CTL.REHRI_DRIVING_LICENSE",
                 "licenseType": "PERMANENT",
                 "applicationType": "New",
                 "licenseNumber": null,
@@ -44,18 +44,18 @@
                 "oldPropertyId": null,
                 "accountId": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
                 "tradeName": null,
-                "applicationDate": 1591966334705,
+                "applicationDate": 1592285910595,
                 "commencementDate": null,
                 "issuedDate": null,
                 "financialYear": "2020-21",
-                "validFrom": 1591966334707,
-                "validTo": 1623415934000,
+                "validFrom": 1592285910606,
+                "validTo": 2065498710000,
                 "action": "INITIATE",
                 "assignee": null,
                 "wfDocuments": null,
                 "status": "INITIATED",
                 "tradeLicenseDetail": {
-                    "id": "08cc5c60-f5a2-47fa-9416-d0a4d9991a17",
+                    "id": "03e5d802-d186-4f59-a87e-eda2fefba8ca",
                     "surveyNo": null,
                     "subOwnerShipCategory": "INDIVIDUAL.SINGLEOWNER",
                     "structureType": "IMMOVABLE.PUCCA",
@@ -67,9 +67,9 @@
                     "adhocPenaltyReason": null,
                     "owners": [
                         {
-                            "id": 56,
-                            "uuid": "cff7abeb-2b43-4fb2-869c-0b2257ad15e8",
-                            "userName": "facc7d14-fde4-42c3-9215-d1a6dc59b8bf",
+                            "id": 60,
+                            "uuid": "abca1250-974e-468d-bfd1-0b8d4de7392d",
+                            "userName": "7140efbd-990c-46c4-8461-f5620757931c",
                             "password": null,
                             "salutation": null,
                             "name": "name",
@@ -105,9 +105,9 @@
                             "identificationMark": null,
                             "photo": null,
                             "createdBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
-                            "createdDate": 1591966335047,
+                            "createdDate": 1592285910749,
                             "lastModifiedBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
-                            "lastModifiedDate": 1591966335047,
+                            "lastModifiedDate": 1592285910749,
                             "otpReference": null,
                             "tenantId": "ch",
                             "isPrimaryOwner": null,
@@ -121,7 +121,7 @@
                     ],
                     "channel": null,
                     "address": {
-                        "id": "e3bbd2c7-c580-4178-b748-4fb7b21a12f2",
+                        "id": "3e6149ce-f3dc-4485-b372-c522a0161b5c",
                         "tenantId": "ch.chandigarh",
                         "doorNo": null,
                         "latitude": null,
@@ -141,12 +141,12 @@
                     },
                     "tradeUnits": [
                         {
-                            "id": "b6f93903-2cc7-4f4a-96fb-9c85f3e6aae4",
+                            "id": "1f9f907e-cb3c-4292-b252-fa8ecd1f618c",
                             "tenantId": "ch.chandigarh",
                             "active": true,
-                            "tradeType": "CTL.DHOBI_GHAT",
+                            "tradeType": "CTL.REHRI_DRIVING_LICENSE",
                             "uom": "year",
-                            "uomValue": "1",
+                            "uomValue": "30",
                             "auditDetails": null
                         }
                     ],
@@ -154,27 +154,26 @@
                     "applicationDocuments": null,
                     "verificationDocuments": null,
                     "additionalDetail": {
-                        "tradeValue": "trade",
-                        "particularsOfArea": "particular",
-                        "licensePeriod": 1
+                        "licensePeriod": 15,
+                        "occupation": "occupation"
                     },
                     "institution": null,
                     "auditDetails": {
                         "createdBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
                         "lastModifiedBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
-                        "createdTime": 1591966334705,
-                        "lastModifiedTime": 1591966334705
+                        "createdTime": 1592285910595,
+                        "lastModifiedTime": 1592285910595
                     }
                 },
                 "calculation": null,
                 "auditDetails": {
                     "createdBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
                     "lastModifiedBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
-                    "createdTime": 1591966334705,
-                    "lastModifiedTime": 1591966334705
+                    "createdTime": 1592285910595,
+                    "lastModifiedTime": 1592285910595
                 }
             },
-            "applicationNumber": "CH-TL-2020-06-12-000015",
+            "applicationNumber": "CH-TL-2020-06-16-000019",
             "tenantId": "ch.chandigarh"
         }
     ]
