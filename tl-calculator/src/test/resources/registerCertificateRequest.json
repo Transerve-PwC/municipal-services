@@ -1,0 +1,180 @@
+{
+    "RequestInfo": {
+        "apiId": "Rainmaker",
+        "ver": ".01",
+        "ts": null,
+        "action": "",
+        "did": "1",
+        "key": "",
+        "msgId": "20170310130900|en_IN",
+        "authToken": null,
+        "correlationId": "e83e660f-e522-44f2-9f00-60d7c527a38b",
+        "userInfo": {
+            "id": 42,
+            "userName": "9900289033",
+            "name": "Sunitha",
+            "type": "CITIZEN",
+            "mobileNumber": null,
+            "emailId": "",
+            "roles": [
+                {
+                    "id": null,
+                    "name": "Citizen",
+                    "code": "CITIZEN",
+                    "tenantId": "ch"
+                }
+            ],
+            "tenantId": "ch",
+            "uuid": "b41b0bcc-8037-4bed-b76f-517116a29c7f"
+        }
+    },
+    "CalulationCriteria": [
+        {
+            "tradelicense": {
+                "comment": null,
+                "id": "141c3a0e-f806-41bc-8b7f-1aa5081bbe1e",
+                "tenantId": "ch.chandigarh",
+                "businessService": "CTL.REHRI_REGISTRATION",
+                "licenseType": "PERMANENT",
+                "applicationType": "New",
+                "licenseNumber": null,
+                "applicationNumber": "CH-TL-2020-06-16-000018",
+                "oldLicenseNumber": null,
+                "propertyId": null,
+                "oldPropertyId": null,
+                "accountId": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                "tradeName": null,
+                "applicationDate": 1592285580251,
+                "commencementDate": null,
+                "issuedDate": null,
+                "financialYear": "2020-21",
+                "validFrom": 1592285580255,
+                "validTo": 1749965580000,
+                "action": "INITIATE",
+                "assignee": null,
+                "wfDocuments": null,
+                "status": "INITIATED",
+                "tradeLicenseDetail": {
+                    "id": "5232e3c6-47f0-4fb6-93e9-0a8739aad361",
+                    "surveyNo": null,
+                    "subOwnerShipCategory": "INDIVIDUAL.SINGLEOWNER",
+                    "structureType": "IMMOVABLE.PUCCA",
+                    "operationalArea": null,
+                    "noOfEmployees": null,
+                    "adhocExemption": null,
+                    "adhocPenalty": null,
+                    "adhocExemptionReason": null,
+                    "adhocPenaltyReason": null,
+                    "owners": [
+                        {
+                            "id": 59,
+                            "uuid": "eac47dff-37da-4fbd-9283-ddd5e557ecfd",
+                            "userName": "3975a780-7300-4bc7-befb-07861f2bfbbf",
+                            "password": null,
+                            "salutation": null,
+                            "name": "name",
+                            "gender": null,
+                            "mobileNumber": "9999999999",
+                            "emailId": null,
+                            "altContactNumber": null,
+                            "pan": null,
+                            "aadhaarNumber": null,
+                            "permanentAddress": "address",
+                            "permanentCity": null,
+                            "permanentPinCode": null,
+                            "correspondenceCity": null,
+                            "correspondencePinCode": null,
+                            "correspondenceAddress": null,
+                            "active": true,
+                            "dob": 652904999000,
+                            "pwdExpiryDate": null,
+                            "locale": null,
+                            "type": "CITIZEN",
+                            "signature": null,
+                            "accountLocked": null,
+                            "roles": [
+                                {
+                                    "id": null,
+                                    "name": "Citizen",
+                                    "code": "CITIZEN",
+                                    "tenantId": "ch"
+                                }
+                            ],
+                            "fatherOrHusbandName": "Father",
+                            "bloodGroup": null,
+                            "identificationMark": null,
+                            "photo": null,
+                            "createdBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                            "createdDate": 1592285582090,
+                            "lastModifiedBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                            "lastModifiedDate": 1592285582090,
+                            "otpReference": null,
+                            "tenantId": "ch",
+                            "isPrimaryOwner": null,
+                            "ownerShipPercentage": null,
+                            "ownerType": null,
+                            "institutionId": null,
+                            "documents": null,
+                            "userActive": true,
+                            "relationship": "FATHER"
+                        }
+                    ],
+                    "channel": null,
+                    "address": {
+                        "id": "3a395f9c-2aa8-42aa-867b-3aa72e6785ab",
+                        "tenantId": "ch.chandigarh",
+                        "doorNo": null,
+                        "latitude": null,
+                        "longitude": null,
+                        "addressId": null,
+                        "addressNumber": null,
+                        "type": null,
+                        "addressLine1": null,
+                        "addressLine2": null,
+                        "landmark": null,
+                        "city": "ch.chandigarh",
+                        "pincode": null,
+                        "detail": null,
+                        "buildingName": null,
+                        "street": null,
+                        "locality": null
+                    },
+                    "tradeUnits": [
+                        {
+                            "id": "8b6108a9-bb5a-4f8c-a01b-1e1f7c6b7fbf",
+                            "tenantId": "ch.chandigarh",
+                            "active": true,
+                            "tradeType": "CTL.REHRI_REGISTRATION",
+                            "uom": "year",
+                            "uomValue": "5",
+                            "auditDetails": null
+                        }
+                    ],
+                    "accessories": null,
+                    "applicationDocuments": null,
+                    "verificationDocuments": null,
+                    "additionalDetail": {
+                        "licensePeriod": 5,
+                        "occupation": "occoupation"
+                    },
+                    "institution": null,
+                    "auditDetails": {
+                        "createdBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                        "lastModifiedBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                        "createdTime": 1592285580251,
+                        "lastModifiedTime": 1592285580251
+                    }
+                },
+                "calculation": null,
+                "auditDetails": {
+                    "createdBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                    "lastModifiedBy": "b41b0bcc-8037-4bed-b76f-517116a29c7f",
+                    "createdTime": 1592285580251,
+                    "lastModifiedTime": 1592285580251
+                }
+            },
+            "applicationNumber": "CH-TL-2020-06-16-000018",
+            "tenantId": "ch.chandigarh"
+        }
+    ]
+}
