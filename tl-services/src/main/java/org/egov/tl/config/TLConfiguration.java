@@ -260,6 +260,9 @@ public class TLConfiguration {
 
 	@Value("${egov.usr.events.pay.triggers}")
 	private String payTriggers;
+	
+	@Value("${egov.usr.events.ctl.pay.link}")
+	private String ctlPayLink;
 
 
 }

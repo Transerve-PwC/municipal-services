@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.egov.tl.util.TLConstants.*;
@@ -76,7 +77,7 @@ public class NotificationUtil {
 		case ACTION_STATUS_APPROVED:
 			BigDecimal amountToBePaid = getAmountToBePaid(requestInfo, license);
 			messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_APPROVED, localizationMessage);
-			message = getApprovedMsg(license, amountToBePaid, messageTemplate);
+			message = getApprovedMsg(license,localizationMessage, messageTemplate);
 			break;
 
 		case ACTION_STATUS_REJECTED:
@@ -141,6 +142,12 @@ public class NotificationUtil {
 				BigDecimal amountToBePaid = getAmountToBePaid(requestInfo, license);
 				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_APRROVED_AND_PAYMENT_PENDING, localizationMessage);
 				message = getApprovedAndPaymentPendingMsg(license,messageTemplate, localizationMessage, amountToBePaid);
+				break;
+				
+			case ACTION_STATUS_PAY:
+				BigDecimal amountToBePaid1 = getAmountToBePaid(requestInfo, license);
+				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_APPROVED, localizationMessage);
+				message = getApprovedMsg(license, localizationMessage, messageTemplate);
 				break;
 		}
 		return message;
@@ -275,10 +282,14 @@ public class NotificationUtil {
 	 *            Message from localization for approved
 	 * @return customized message for approved
 	 */
-	private String getApprovedMsg(TradeLicense license, BigDecimal amountToBePaid, String message) {
-		//message = message.replace("<2>", license.getTradeName());
-		message = message.replace("<2>", license.getBusinessService());
-		message = message.replace("<3>", amountToBePaid.toString());
+	private String getApprovedMsg(TradeLicense license, String localizationMessage, String message) {
+//		message = message.replace("<2>", license.getTradeName());
+		Date date=new Date(license.getValidTo());
+        SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+        String validTODate = df2.format(date);
+		message = message.replace("<2>", getMessageTemplate(license.getBusinessService(), localizationMessage));
+		message = message.replace("<3>", license.getLicenseNumber());
+		message = message.replace("<4>", validTODate);
 		return message;
 	}
 	

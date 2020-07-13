@@ -175,6 +175,8 @@ public class TLConstants {
     public static final String ACTION_SENDBACKTOCITIZEN_CLERK  = "SENDBACK_INITIATED";
     
     public static final String ACTION_STATUS_PAID  = "PAID";
+    
+    public static final String ACTION_STATUS_PAY  = "PAY_APPROVED";
 
 
     public static final String VARIABLE_ACTION = "action";

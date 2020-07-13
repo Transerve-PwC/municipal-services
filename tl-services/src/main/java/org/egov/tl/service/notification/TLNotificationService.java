@@ -194,7 +194,7 @@ public class TLNotificationService {
 			}
             if(message==null) continue;
 
-			message = message.replace("\\n","");
+//			message = message.replace("\\n","");
             emailRequests.addAll(util.createEMAILRequest(message,emailIdToOwner));
         }
     }
@@ -207,14 +207,15 @@ public class TLNotificationService {
      * @param request
      * @return
      */
-    private EventRequest getEventsForTL(TradeLicenseRequest request) {
+    public EventRequest getEventsForTL(TradeLicenseRequest request) {
     	List<Event> events = new ArrayList<>();
         String tenantId = request.getLicenses().get(0).getTenantId();
         String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
         for(TradeLicense license : request.getLicenses()){
 
-            String message = util.getCustomizedMsg(request.getRequestInfo(), license, localizationMessages);
+            String message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages);
             if(message == null) continue;
+            message = message.replace("\\n"," ");
             Map<String,String > mobileNumberToOwner = new HashMap<>();
             license.getTradeLicenseDetail().getOwners().forEach(owner -> {
                 if(owner.getMobileNumber()!=null)
@@ -240,7 +241,7 @@ public class TLNotificationService {
     			Action action = null;
     			if(payTriggerList.contains(license.getStatus())) {
                     List<ActionItem> items = new ArrayList<>();
-        			String actionLink = config.getPayLink().replace("$mobile", mobile)
+        			String actionLink = config.getCtlPayLink().replace("$mobile", mobile)
         						.replace("$applicationNo", license.getApplicationNumber())
         						.replace("$tenantId", license.getTenantId());
         			actionLink = config.getUiAppHost() + actionLink;
