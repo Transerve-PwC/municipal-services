@@ -135,6 +135,19 @@ public class CTLCalculationService {
 
       estimates.addAll(estimatesAndSlabs.getEstimates());
       
+      try {
+		  CTLBillingSlab billingSlab = this.getBillingSlabForCategory(tradeLicense, Category.CHARGES.toString(), null, null);
+		  TaxHeadEstimate estimate = new TaxHeadEstimate();
+  	      estimate.setEstimateAmount(billingSlab.getRate());
+  	      estimate.setCategory(Category.PENALTY);
+  	      estimate.setTaxHeadCode(getTaxHeadCode(tradeLicense.getBusinessService(), Category.CHARGES));
+  	      if (estimate.getEstimateAmount().compareTo(new BigDecimal(0)) > 0) {
+  	    	  estimates.add(estimate);	    	  
+  	      }
+	  } catch (CustomException customBillingSlabException) {
+		  log.error("Ignoring the error", customBillingSlabException);
+	  }
+      
 	  if(tradeLicense.getApplicationType() == TradeLicense.ApplicationTypeEnum.RENEW) {
 		  Long now = System.currentTimeMillis();
 		  JsonNode oldLicenseValidTo = tradeLicense.getTradeLicenseDetail().getAdditionalDetail().get("oldLicenseValidTo");
@@ -273,7 +286,7 @@ private EstimatesAndSlabs getBaseFee(CalulationCriteria calulationCriteria, Requ
     		  CTLBillingSlab billingSlab = this.getBillingSlabForCategory(license, Category.FEE.toString(), tradeUnit.getUom(), tradeUnit.getUomValue());
     		  billingSlabIds.add(billingSlab.getId()+"|"+i+"|"+tradeUnit.getId());
 			  tradeUnitFees.add(billingSlab.getRate());
-			  tradeUnitTotalFee = tradeUnitTotalFee.add(billingSlab.getRate()); 		      		  
+			  tradeUnitTotalFee = tradeUnitTotalFee.add(billingSlab.getRate());
     		  i++;
     	  }
       }
