@@ -716,6 +716,14 @@ public class EnrichmentService {
             	case businessService_REHRI_DL:
             	case businessService_DHOBI_GHAT:
             	case businessService_BOOK_SHOP:
+            		if(license.getApplicationType() != null && license.getApplicationType()==ApplicationTypeEnum.NEW){
+            			JsonNode oldLicenseValidTo = license.getTradeLicenseDetail().getAdditionalDetail().get("oldLicenseValidTo");
+            			if(oldLicenseValidTo!=null)
+            				((ObjectNode)license.getTradeLicenseDetail().getAdditionalDetail()).remove("oldLicenseValidTo");
+            			if(license.getOldLicenseNumber()!=null)
+            				license.setOldLicenseNumber(null);
+            		}
+            		
             		if(license.getApplicationType() != null && license.getApplicationType() == ApplicationTypeEnum.RENEW){
             			JsonNode oldLicenseValidTo = license.getTradeLicenseDetail().getAdditionalDetail().get("oldLicenseValidTo");
         	        	if((oldLicenseValidTo != null) && (oldLicenseValidTo.asLong() > now)){
