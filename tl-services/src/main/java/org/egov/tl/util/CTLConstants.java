@@ -22,4 +22,6 @@ public class CTLConstants {
 	 public static final String CTL_RECEIPT_PARAM_TENANT_KEY = "$tenantId";
 	 public static final String CTL_RECEIPT_GENERATED_BY_VALUE = "System";
 	 public static final String CTL_RECEIPT_GENERATED_BY_KEY = "generateBy";
+	 
+	 public static final String ACTION_SENDFORCLARIFICATION_CLERK  = "SENDBACK_PENDINGCLARIFICATION";
 }

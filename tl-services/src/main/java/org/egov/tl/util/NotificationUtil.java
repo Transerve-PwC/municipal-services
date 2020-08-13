@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.egov.tl.util.TLConstants.*;
+import static org.egov.tl.util.CTLConstants.*;
 
 @Component
 @Slf4j
@@ -129,7 +130,7 @@ public class NotificationUtil {
 				message = getSubittedMsg(license, messageTemplate, localizationMessage);
 				break;
 				
-			case ACTION_SENDBACKTOCITIZEN_CLERK:
+			case ACTION_SENDFORCLARIFICATION_CLERK:
 				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_SENDBACK_CITIZEN, localizationMessage);
 				message = getSendBackToCitizen(license, messageTemplate, localizationMessage);
 				break;
