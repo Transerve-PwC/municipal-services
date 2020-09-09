@@ -10,6 +10,7 @@ import org.egov.cpt.models.AccountStatementCriteria;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.RequestInfoWrapper;
+import org.egov.cpt.service.AccountStatementExcelGenerationService;
 import org.egov.cpt.service.PropertyService;
 import org.egov.cpt.util.ResponseInfoFactory;
 import org.egov.cpt.web.contracts.AccountStatementRequest;
@@ -36,6 +37,9 @@ public class PropertyController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+
+	@Autowired
+	private AccountStatementExcelGenerationService accountStatementExcelGeneration;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -112,4 +116,14 @@ public class PropertyController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@PostMapping("/_accountstatementxlsx")
+	public ResponseEntity<String> generateAccountStatementExcel(
+			@Valid @RequestBody AccountStatementRequest request) {
+		/* Set current date in a toDate if it is null */
+		request.getCriteria().setToDate(
+				request.getCriteria().getToDate() == null ? new Date().getTime() : request.getCriteria().getToDate());
+		AccountStatementCriteria accountStatementCriteria = request.getCriteria();
+		String response = accountStatementExcelGeneration.generageAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }
