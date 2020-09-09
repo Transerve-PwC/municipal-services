@@ -1,6 +1,7 @@
 package org.egov.cpt.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,10 +10,16 @@ import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
+import org.egov.cpt.models.PropertyCriteria;
+import org.egov.cpt.models.RentAccount;
+import org.egov.cpt.models.RentDemand;
+import org.egov.cpt.models.RentPayment;
+import org.egov.cpt.models.RentSummary;
 import org.egov.cpt.models.calculation.BusinessService;
 import org.egov.cpt.models.calculation.State;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.OwnershipTransferRepository;
+import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.calculation.DemandService;
 import org.egov.cpt.service.notification.PropertyNotificationService;
 import org.egov.cpt.util.PTConstants;
@@ -47,6 +54,9 @@ public class OwnershipTransferService {
 
 	@Autowired
 	private OwnershipTransferRepository repository;
+	
+	@Autowired
+	private PropertyRepository propertyRepository;
 
 	@Autowired
 	private DemandService demandService;
@@ -56,6 +66,9 @@ public class OwnershipTransferService {
 
 	@Autowired
 	PropertyNotificationService notificationService;
+	
+	@Autowired
+	private IRentCollectionService rentCollectionService;
 
 	public List<Owner> createOwnershipTransfer(OwnershipTransferRequest request) {
 		// TODO add validations as per requirement
@@ -93,7 +106,25 @@ public class OwnershipTransferService {
 
 		if (CollectionUtils.isEmpty(owners))
 			return Collections.emptyList();
+		
+		
+		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
+			
+			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
+					.propertyId(owner.getProperty().getId()).build();
 
+			List<Property> propertiesFromDB = propertyRepository.getProperties(propertyCriteria);
+			List<RentDemand> demands = propertyRepository
+					.getPropertyRentDemandDetails(propertyCriteria);
+			
+			RentAccount rentAccount = propertyRepository
+					.getPropertyRentAccountDetails(propertyCriteria);
+			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
+			}
+		});
+		
 		return owners;
 	}
 

@@ -53,6 +53,12 @@ public class Mortgage {
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 	
+	@JsonProperty("allotmentStartDate")
+	private String allotmentStartDate;
+	
+	@JsonProperty("allotmentEndDate")
+	private String allotmentEndDate;
+	
 	@JsonProperty("allotmentNumber")
 	private String allotmentNumber;
 

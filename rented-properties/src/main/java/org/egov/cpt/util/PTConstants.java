@@ -64,6 +64,10 @@ public class PTConstants {
 
 	public static final String BILLING_BUSINESS_SERVICE_DC = "RentedProperties.DuplicateAllotmentLetter";
 
+	public static final String TAX_HEAD_CODE_APPLICATION_CHARGE = "APPLICATION";
+
+	public static final String TAX_HEAD_CODE_PUBLICATION_CHARGE = "PUBLICATION";
+
 	public static final String BILLING_BUSINESS_SERVICE_RENT = "RentedProperties.Rent";
 
 	public static final String BUSINESS_SERVICE_DC = "DuplicateCopyOfAllotmentLetterRP";
@@ -199,6 +203,7 @@ public class PTConstants {
 	public static final String OT_ACTION_STATUS_PAYMENT = "SENDFORPAYMENT_OT_PENDINGPAYMENT";
 	public static final String OT_ACTION_STATUS_PAYMENT_SUCCESS = "PAY_OT_APPROVED";
 	public static final String OT_ACTION_STATUS_APPROVED = "APPROVE_OT_APPROVED";
+	public static final String OT_ACTION_STATUS_REJECTED_AFTER_PAYMENT = "REJECT_OT_REJECTEDPAID";
 
 	// Duplicate Copy ACTION_STATUS combinations for notification
 
@@ -209,6 +214,7 @@ public class PTConstants {
 	public static final String DC_ACTION_STATUS_PAYMENT = "SENDFORPAYMENT_DC_PENDINGPAYMENT";
 	public static final String DC_ACTION_STATUS_PAYMENT_SUCCESS = "PAY_DC_APPROVED";
 	public static final String DC_ACTION_STATUS_APPROVED = "APPROVE_DC_APPROVED";
+	public static final String DC_ACTION_STATUS_REJECTED_AFTER_PAYMENT = "REJECT_DC_REJECTEDPAID";
 
 	// Mortgage ACTION_STATUS combinations for notification
 

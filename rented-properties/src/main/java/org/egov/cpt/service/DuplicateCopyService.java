@@ -1,6 +1,7 @@
 package org.egov.cpt.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,6 +9,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.DuplicateCopy;
 import org.egov.cpt.models.DuplicateCopySearchCriteria;
+import org.egov.cpt.models.Property;
+import org.egov.cpt.models.PropertyCriteria;
+import org.egov.cpt.models.RentAccount;
+import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.calculation.BusinessService;
 import org.egov.cpt.models.calculation.State;
 import org.egov.cpt.producer.Producer;
@@ -54,6 +59,9 @@ public class DuplicateCopyService {
 
 	@Autowired
 	private WorkflowService workflowService;
+	
+	@Autowired
+	private IRentCollectionService rentCollectionService;
 
 	public List<DuplicateCopy> createApplication(DuplicateCopyRequest duplicateCopyRequest) {
 		propertyValidator.isPropertyExist(duplicateCopyRequest);
@@ -93,10 +101,29 @@ public class DuplicateCopyService {
 	}
 
 	private List<DuplicateCopy> getApplication(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
-		List<DuplicateCopy> application = repository.getDuplicateCopyProperties(criteria);
-		if (application.isEmpty())
+		List<DuplicateCopy> applications = repository.getDuplicateCopyProperties(criteria);
+		if (applications.isEmpty())
 			return Collections.emptyList();
-		return application;
+		
+		
+		applications.stream().filter(application -> application.getProperty().getId() != null).forEach(application -> {
+			
+			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
+					.propertyId(application.getProperty().getId()).build();
+
+			List<Property> propertiesFromDB = repository.getProperties(propertyCriteria);
+			List<RentDemand> demands = repository
+					.getPropertyRentDemandDetails(propertyCriteria);
+			
+			RentAccount rentAccount = repository
+					.getPropertyRentAccountDetails(propertyCriteria);
+			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				application.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
+			}
+		});
+		
+		return applications;
 	}
 
 	public List<DuplicateCopy> updateApplication(DuplicateCopyRequest duplicateCopyRequest) {

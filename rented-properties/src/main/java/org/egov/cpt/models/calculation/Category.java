@@ -5,27 +5,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Category {
 
-	TAX("TAX"),
-
 	FEE("FEE"),
 
-	REBATE("REBATE"),
+	TAX("TAX"),
 
-	EXEMPTION("EXEMPTION"),
+	PRINCIPAL("PRINCIPAL"),
 
 	ADVANCE_COLLECTION("ADVANCE_COLLECTION"),
 
-	PENALTY("PENALTY"),
-
-	FINES("FINES"),
-
-	DUE("DUE"),
-
-	CHARGES("CHARGES"),
-	
-	INTEREST("INTEREST"),
-	
-	PRINCIPAL("PRINCIPAL");
+	INTEREST("INTEREST");
 
 	private String value;
 

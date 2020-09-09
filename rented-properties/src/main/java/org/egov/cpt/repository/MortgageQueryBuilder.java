@@ -22,13 +22,15 @@ public class MortgageQueryBuilder {
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY mgModifiedTime desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
-	private static final String MORTGAGE_SEARCH_QUERY = SELECT + "mg.*,ap.*,doc.*,pt.*,address.*,ownership.*,gd.*,"
+	private static final String MORTGAGE_SEARCH_QUERY = SELECT + "mg.*,ap.*,doc.*,pt.*,address.*,ownership.*,od.*,gd.*,"
 			+ " mg.id as mgid, mg.propertyid, mg.tenantid as mgtenantid, mg.state, mg.action,mg.application_number as app_number,"
 			+ "mg.modified_time as mgModifiedTime,"
 
 			+ " pt.id as pid, pt.transit_number, pt.colony,"
 
 			+ " ownership.allotmen_number as owner_allot_number,"
+			
+			+ " od.allotment_startdate as allot_start_date, od.allotment_enddate as allot_end_date,"
 
 			+ " address.pincode, address.area,"
 
@@ -47,6 +49,7 @@ public class MortgageQueryBuilder {
 			+ INNER_JOIN + " cs_pt_mortgage_applicant ap ON mg.id =ap.mortgage_id " + LEFT_JOIN
 			+ " cs_pt_address_v1 address ON pt.id=address.property_id " + LEFT_JOIN
 			+ " cs_pt_ownership_v1 ownership ON mg.propertyid = ownership.property_id " + LEFT_JOIN
+			+ " cs_pt_ownershipdetails_v1 od ON ownership.id = od.owner_id "+LEFT_JOIN
 			+ " cs_pt_mortgage_approved_grantdetails gd ON pt.id=gd.property_id " + LEFT_JOIN
 			+ " cs_pt_documents_v1 doc ON doc.reference_id =  mg.id";
 

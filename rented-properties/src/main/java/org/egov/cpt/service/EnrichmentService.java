@@ -299,14 +299,14 @@ public class EnrichmentService {
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 		estimateDue.setEstimateAmount(new BigDecimal(0.0));
-		estimateDue.setCategory(Category.DUE);
-		estimateDue.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_OT, Category.DUE));
+		estimateDue.setCategory(Category.FEE);
+		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateDue);
 
 		TaxHeadEstimate estimateCharges = new TaxHeadEstimate();
 		estimateCharges.setEstimateAmount(new BigDecimal(0.0));
-		estimateCharges.setCategory(Category.CHARGES);
-		estimateCharges.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_OT, Category.CHARGES));
+		estimateCharges.setCategory(Category.FEE);
+		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateCharges);
 
 		Calculation calculation = Calculation.builder()
@@ -330,14 +330,14 @@ public class EnrichmentService {
 		if (owner.getApplicationState().equalsIgnoreCase(PTConstants.OT_STATE_PENDING_APRO)) {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(owner.getOwnerDetails().getDueAmount());
-			estimate1.setCategory(Category.DUE);
-			estimate1.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_OT, Category.DUE));
+			estimate1.setCategory(Category.FEE);
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
 
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(owner.getOwnerDetails().getAproCharge());
-			estimate2.setCategory(Category.CHARGES);
-			estimate2.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_OT, Category.CHARGES));
+			estimate2.setCategory(Category.FEE);
+			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate2);
 		}
 		// estimates.add(estimate);
@@ -349,6 +349,10 @@ public class EnrichmentService {
 
 	private String getTaxHeadCode(String billingBusService, Category category) {
 		return String.format("%s_%s", billingBusService, category.toString());
+	}
+	
+	private String getTaxHeadCodeWithCharge(String billingBusService, String chargeFor, Category category) {
+		return String.format("%s_%s_%s", billingBusService, chargeFor, category.toString());
 	}
 
 	private void updateOwnershipTransferDocs(Owner owner, RequestInfo requestInfo) {
@@ -471,13 +475,13 @@ public class EnrichmentService {
 		TaxHeadEstimate estimateFee = new TaxHeadEstimate();
 		estimateFee.setEstimateAmount(new BigDecimal(0.0));
 		estimateFee.setCategory(Category.FEE);
-		estimateFee.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_DC, Category.FEE));
+		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateFee);
 
 		TaxHeadEstimate estimateCharges = new TaxHeadEstimate();
 		estimateCharges.setEstimateAmount(new BigDecimal(0.0));
-		estimateCharges.setCategory(Category.CHARGES);
-		estimateCharges.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_DC, Category.CHARGES));
+		estimateCharges.setCategory(Category.FEE);
+		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateCharges);
 
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
@@ -501,13 +505,13 @@ public class EnrichmentService {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(application.getApplicant().get(0).getFeeAmount());
 			estimate1.setCategory(Category.FEE);
-			estimate1.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_DC, Category.FEE));
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
 
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(application.getApplicant().get(0).getAproCharge());
-			estimate2.setCategory(Category.CHARGES);
-			estimate2.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_DC, Category.CHARGES));
+			estimate2.setCategory(Category.FEE);
+			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate2);
 		}
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())

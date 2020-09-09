@@ -93,6 +93,10 @@ public class NotificationUtil {
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_PAYMENT, localizationMessage);
 				message = getInitiatedOtMsg(owner, messageTemplate);
 				break;
+			case PTConstants.OT_ACTION_STATUS_REJECTED_AFTER_PAYMENT:
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_REJECTED, localizationMessage);
+				message = getInitiatedOtMsg(owner, messageTemplate);
+				break;
 		}
 		return message;
 	}
@@ -232,6 +236,10 @@ public class NotificationUtil {
 
 			case PTConstants.DC_ACTION_STATUS_PAYMENT:
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_PAYMENT, localizationMessage);
+				message = getInitiatedDcMsg(copy, messageTemplate);
+				break;
+			case PTConstants.DC_ACTION_STATUS_REJECTED_AFTER_PAYMENT:
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_REJECTED, localizationMessage);
 				message = getInitiatedDcMsg(copy, messageTemplate);
 				break;
 		}

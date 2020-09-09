@@ -204,7 +204,7 @@ public class PaymentNotificationService {
 	private EmailRequest getDCOwnerEmailRequest(DuplicateCopy copy, Map<String, String> valMap2,
 			String localizationMessages) {
 		String message = util.getDCOwnerPaymentMsg(copy, localizationMessages);
-
+		message = message.replace("\\n", "<br/>");
 		EmailRequest emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
 				.email(copy.getApplicant().get(0).getEmail()).body(message).build();
 
@@ -223,7 +223,7 @@ public class PaymentNotificationService {
 
 	private EmailRequest getOTOwnerEmailRequest(Owner owner, Map<String, String> valMap2, String localizationMessages) {
 		String message = util.getOTOwnerPaymentMsg(owner, localizationMessages);
-
+		message = message.replace("\\n", "<br/>");
 		EmailRequest emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
 				.email(owner.getOwnerDetails().getEmail()).body(message).build();
 
