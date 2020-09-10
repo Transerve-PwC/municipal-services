@@ -55,7 +55,7 @@ public class AccountStatementExcelGenerationService {
 		this.fileStoreUtils = fileStoreUtils;
 	}
 
-	public List<HashMap<String, String>> generageAccountStatementExcel(
+	public List<HashMap<String, String>> generateAccountStatementExcel(
 			AccountStatementCriteria accountStatementCriteria, RequestInfo requestInfo) {
 
 		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,

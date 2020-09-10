@@ -125,7 +125,7 @@ public class PropertyController {
 				request.getCriteria().getToDate() == null ? new Date().getTime() : request.getCriteria().getToDate());
 		AccountStatementCriteria accountStatementCriteria = request.getCriteria();
 		List<HashMap<String, String>> response = accountStatementExcelGeneration
-				.generageAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
+				.generateAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
