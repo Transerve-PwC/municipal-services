@@ -2,7 +2,6 @@ package org.egov.cpt.util;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,7 @@ public class FileStoreUtils {
 
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, String>> fetchFileStoreId(File file, Property property) {
-		StringBuilder uri = new StringBuilder("http://localhost:8060//filestore/v1/files");
+		StringBuilder uri = new StringBuilder(fileStoreUrl.substring(0, fileStoreUrl.length()-4));
 
 		FileSystemResource fileSystemResource = new FileSystemResource(file);
 

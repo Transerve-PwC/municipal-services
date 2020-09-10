@@ -26,6 +26,7 @@ import org.egov.cpt.models.RentAccountStatement;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.util.FileStoreUtils;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +55,8 @@ public class AccountStatementExcelGenerationService {
 		this.fileStoreUtils = fileStoreUtils;
 	}
 
-	public List<HashMap<String, String>> generageAccountStatementExcel(AccountStatementCriteria accountStatementCriteria,
-			RequestInfo requestInfo) {
+	public List<HashMap<String, String>> generageAccountStatementExcel(
+			AccountStatementCriteria accountStatementCriteria, RequestInfo requestInfo) {
 
 		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
 				requestInfo);
@@ -160,6 +161,6 @@ public class AccountStatementExcelGenerationService {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
-		return null;
+		throw new CustomException("XLS_NOT_GENERATED", "Could not generate account statement");
 	}
 }
