@@ -52,7 +52,7 @@ public class FileStoreUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String fetchFileStoreId(File file, Property property) {
+	public List<HashMap<String, String>> fetchFileStoreId(File file, Property property) {
 		StringBuilder uri = new StringBuilder("http://localhost:8060//filestore/v1/files");
 
 		FileSystemResource fileSystemResource = new FileSystemResource(file);
@@ -61,18 +61,14 @@ public class FileStoreUtils {
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		body.add("file", fileSystemResource);
-		// body.add("tenantId", property.getTenantId());
-		// body.add("module", "RentedProperties");
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 		uri.append("?tenantId=" + property.getTenantId() + "&module=" + "RentedProperties");
 		try {
 			Map<String, Map<String, String>> response = (Map<String, Map<String, String>>) restTemplate
 					.postForObject(uri.toString(), requestEntity, HashMap.class);
-			System.out.println(response);
 
-			List<LinkedHashMap<String, String>> result = (List<LinkedHashMap<String, String>>) response.get("files");
-			System.out.println(result);
-			return result.get(0).get("fileStoreId");
+			List<HashMap<String, String>> result = (List<HashMap<String, String>>) response.get("files");
+			return result;
 		} catch (Exception e) {
 			log.error("Exception while fetching file store id: ", e);
 		}

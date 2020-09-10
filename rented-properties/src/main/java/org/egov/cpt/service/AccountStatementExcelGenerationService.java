@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -53,7 +54,7 @@ public class AccountStatementExcelGenerationService {
 		this.fileStoreUtils = fileStoreUtils;
 	}
 
-	public String generageAccountStatementExcel(AccountStatementCriteria accountStatementCriteria,
+	public List<HashMap<String, String>> generageAccountStatementExcel(AccountStatementCriteria accountStatementCriteria,
 			RequestInfo requestInfo) {
 
 		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
@@ -144,13 +145,11 @@ public class AccountStatementExcelGenerationService {
 				row.createCell(6).setCellValue(rentAccountStmt.getRemainingBalance());
 			}
 
-			System.out.println(sheet);
-			System.out.println(headerRow);
 			// Write the output to a file
 			File file = new File("poi-generated-file.xlsx");
 			FileOutputStream fileOut = new FileOutputStream(file);
 
-			String response = fileStoreUtils.fetchFileStoreId(file, properties.get(0));
+			List<HashMap<String, String>> response = fileStoreUtils.fetchFileStoreId(file, properties.get(0));
 
 			workbook.write(fileOut);
 			fileOut.close();

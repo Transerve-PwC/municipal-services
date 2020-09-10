@@ -1,6 +1,7 @@
 package org.egov.cpt.web.controllers;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -117,13 +118,13 @@ public class PropertyController {
 	}
 
 	@PostMapping("/_accountstatementxlsx")
-	public ResponseEntity<String> generateAccountStatementExcel(
+	public ResponseEntity<List<HashMap<String, String>>> generateAccountStatementExcel(
 			@Valid @RequestBody AccountStatementRequest request) {
 		/* Set current date in a toDate if it is null */
 		request.getCriteria().setToDate(
 				request.getCriteria().getToDate() == null ? new Date().getTime() : request.getCriteria().getToDate());
 		AccountStatementCriteria accountStatementCriteria = request.getCriteria();
-		String response = accountStatementExcelGeneration.generageAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
+		List<HashMap<String, String>> response = accountStatementExcelGeneration.generageAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
