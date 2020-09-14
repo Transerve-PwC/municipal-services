@@ -1,5 +1,8 @@
 package org.egov.cpt.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -8,14 +11,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 @EqualsAndHashCode
 public class RentDemand implements Comparable<RentDemand> {
 
@@ -95,4 +96,13 @@ public class RentDemand implements Comparable<RentDemand> {
       this.status = PaymentStatusEnum.UNPAID;
     }
   }
+
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
+
+  public String toString() {
+    return String.format("Collection: %.2f, remaining: %.2f, remainingSince: %s, generatedOn: %s",
+        this.collectionPrincipal, this.remainingPrincipal, DATE_FORMAT.format(this.interestSince),
+        DATE_FORMAT.format(this.generationDate));
+  }
+
 }

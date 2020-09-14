@@ -1,5 +1,8 @@
 package org.egov.cpt.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -62,5 +65,12 @@ public class RentPayment implements Comparable<RentPayment> {
 	@Override
 	public int compareTo(RentPayment other) {
 		return this.getDateOfPayment().compareTo(other.getDateOfPayment());
+	}
+
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
+
+	public String toString() {
+		return String.format("Amount: %.2f, paidOn: %s", this.amountPaid, DATE_FORMAT.format(this.dateOfPayment));
+
 	}
 }

@@ -30,6 +30,7 @@ public class RentAccountStatement {
     private double amount;
 
     private Type type;
+
     private double remainingPrincipal;
 
     private double remainingInterest;
@@ -42,7 +43,7 @@ public class RentAccountStatement {
     private double remainingBalance;
 
     public double getRemainingBalance() {
-        return Math.max(0, this.remainingBalance - this.remainingPrincipal - this.remainingInterest);
+        return Math.max(0, this.remainingBalance - this.remainingInterest);
     }
 
     public double getDueAmount() {
@@ -74,7 +75,7 @@ public class RentAccountStatement {
     }
 
     @JsonIgnore
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yy");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yy");
 
     @Override
     public String toString() {

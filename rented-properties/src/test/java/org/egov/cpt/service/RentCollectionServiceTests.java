@@ -28,6 +28,7 @@ import org.junit.runners.JUnit4;
 public class RentCollectionServiceTests {
     private static final String JAN_1_2000 = "01 01 2000";
     private static final String MAY_1_2000 = "01 05 2000";
+    private static final String JUN_1_2000 = "01 06 2000";
     private static final String JAN_1_2020 = "01 01 2020";
     private static final String JAN_15_2020 = "15 01 2020";
     private static final String FEB_1_2020 = "01 02 2020";
@@ -296,7 +297,7 @@ public class RentCollectionServiceTests {
         List<RentAccountStatement> accountStatementItems = this.rentCollectionService.getAccountStatement(demands,
                 payments, DEFAULT_INTEREST_RATE, null, null);
         utils.printStatement(accountStatementItems);
-        // TODO: Pooja to verify
+        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
     }
 
     @Test
@@ -307,7 +308,38 @@ public class RentCollectionServiceTests {
         List<RentAccountStatement> accountStatementItems = this.rentCollectionService.getAccountStatement(demands,
                 payments, DEFAULT_INTEREST_RATE, null, getEpochFromDateString(APR_1_2020));
         utils.printStatement(accountStatementItems);
-        // TODO: Pooja to verify
+        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
+    }
+
+    @Test
+    public void testAdditionalBalanceUseCase1() throws ParseException {
+        List<RentDemand> demands = Arrays.asList(getDemand(600, DEC_1_1999), getDemand(1000, DEC_1_1999),
+                getDemand(1000, JUN_1_2000));
+        List<RentPayment> payments = Arrays.asList(getPayment(100, MAY_1_2000));
+        List<RentAccountStatement> accountStatementItems = this.rentCollectionService.getAccountStatement(demands,
+                payments, RentCollectionServiceTests.DEFAULT_INTEREST_RATE, null, getEpochFromDateString(JUN_1_2000));
+        utils.printStatement(accountStatementItems);
+        utils.reconcileStatement(accountStatementItems, RentCollectionServiceTests.DEFAULT_INTEREST_RATE);
+    }
+
+    @Test
+    public void testAdditionalBalanceUseCase2() throws ParseException {
+        List<RentDemand> demands = Arrays.asList(getDemand(1000, DEC_1_1999));
+        List<RentPayment> payments = Arrays.asList(getPayment(50, MAY_1_2000));
+        List<RentAccountStatement> accountStatementItems = this.rentCollectionService.getAccountStatement(demands,
+                payments, RentCollectionServiceTests.DEFAULT_INTEREST_RATE, null, getEpochFromDateString(JUN_1_2000));
+        utils.printStatement(accountStatementItems);
+        utils.reconcileStatement(accountStatementItems, RentCollectionServiceTests.DEFAULT_INTEREST_RATE);
+    }
+
+    @Test
+    public void testAdditionalBalanceUsecase1Summary() throws ParseException {
+        List<RentDemand> demands = Arrays.asList(getDemand(600, DEC_1_1999), getDemand(1000, DEC_1_1999));
+        demands.get(0).setInterestSince(getEpochFromDateString(MAY_1_2000));
+        RentAccount rentAccount = getAccount(40.03);
+        RentSummary rentSummary = this.rentCollectionService.calculateRentSummaryAt(demands, rentAccount,
+                RentCollectionServiceTests.DEFAULT_INTEREST_RATE, getEpochFromDateString(JUN_1_2000));
+        assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
     }
 
     private long getEpochFromDateString(String date) throws ParseException {

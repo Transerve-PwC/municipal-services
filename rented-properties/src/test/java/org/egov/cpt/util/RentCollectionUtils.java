@@ -52,10 +52,10 @@ public class RentCollectionUtils {
 			 * If account has balance, it should mean principal, interest and due amounts
 			 * should be zero.
 			 */
-			if (currentItem.getRemainingBalance() > 0) {
-				assertEquals(currentItem.getRemainingPrincipal(), 0D, 0.0);
-				assertEquals(currentItem.getRemainingInterest(), 0D, 0.0);
-				assertEquals(currentItem.getDueAmount(), 0D, 0.0);
+			if (!this.diffInRange(currentItem.getRemainingBalance(), 0, 0.0000001)) {
+				assertEquals(dateFormat.format(currentItem.getDate()), currentItem.getRemainingPrincipal(), 0D, 0.0);
+				assertEquals(dateFormat.format(currentItem.getDate()), currentItem.getRemainingInterest(), 0D, 0.0);
+				assertEquals(dateFormat.format(currentItem.getDate()), currentItem.getDueAmount(), 0D, 0.0);
 			}
 			boolean isPayment = currentItem.getType() == RentAccountStatement.Type.C;
 
@@ -109,13 +109,22 @@ public class RentCollectionUtils {
 		}
 	}
 
-	private static final double ERROR_RANGE = 20.0D;
+	private static final double ERROR_RANGE = 6.0D;
 
 	private void assertInRange(String message, Double expected, Double actual) {
-		if (expected - actual >= 0.000001) {
+		if (!diffInRange(expected, actual, 0.000001)) {
 			System.out.println(String.format("%s, error range %.10f", message, expected - actual));
 		}
 		assertEquals(message, expected, actual, ERROR_RANGE);
+	}
+
+	private boolean diffInRange(double expected, double actual, double range) {
+		try {
+			assertEquals(expected, actual, range);
+			return true;
+		} catch (AssertionError err) {
+			return false;
+		}
 	}
 
 	private long getDaysBetween(long startTimestamp, long endTimestamp) {

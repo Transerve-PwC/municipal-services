@@ -43,7 +43,8 @@ public class RentCollectionService implements IRentCollectionService {
 			return settlePayment(demandsToBeSettled, payment, account, interestRate);
 		}).flatMap(Collection::stream).collect(Collectors.toList());
 
-		if (account.getRemainingAmount() == 0) {
+		if (account.getRemainingAmount() == 0
+				|| !this.didExtractAllDemandsInterest(demandsToBeSettled, account.getRemainingSince())) {
 			return collections;
 		}
 
@@ -70,7 +71,8 @@ public class RentCollectionService implements IRentCollectionService {
 		for (RentDemand demand : newerDemands) {
 			RentPayment payment = RentPayment.builder().amountPaid(0D).dateOfPayment(demand.getGenerationDate())
 					.build();
-			List<RentCollection> settledCollections = settlePayment(demandsToBeSettled, payment, account, 0);
+			List<RentCollection> settledCollections = settlePayment(Collections.singletonList(demand), payment, account,
+					0);
 			if (settledCollections.size() == 0) {
 				continue;
 			}
@@ -247,7 +249,7 @@ public class RentCollectionService implements IRentCollectionService {
 					return RentSummary.builder()
 							.balancePrincipal(summary.getBalancePrincipal() + demand.getRemainingPrincipal())
 							.balanceInterest(summary.getBalanceInterest() + calculatedInterest)
-							.balanceAmount(rentAccount.getRemainingAmount()).build();
+							.balanceAmount(summary.getBalanceAmount()).build();
 				}, (summary, demand) -> summary);
 	}
 
@@ -268,6 +270,8 @@ public class RentCollectionService implements IRentCollectionService {
 	public List<RentAccountStatement> getAccountStatement(List<RentDemand> demands, List<RentPayment> payments,
 			double interestRate, Long fromDateTimestamp, Long toDateTimestamp) {
 		long endTimestamp = toDateTimestamp == null ? System.currentTimeMillis() : toDateTimestamp.longValue();
+		demands = demands.stream().filter(demand -> demand.getGenerationDate() <= endTimestamp)
+				.collect(Collectors.toList());
 		payments = payments.stream().filter(payment -> payment.getAmountPaid() > 0)
 				.filter(p -> p.getDateOfPayment() <= endTimestamp).collect(Collectors.toList());
 		Collections.sort(demands);
@@ -321,7 +325,7 @@ public class RentCollectionService implements IRentCollectionService {
 		return RentDemand.builder().collectionPrincipal(rentDemand.getCollectionPrincipal())
 				.status(PaymentStatusEnum.UNPAID).generationDate(rentDemand.getGenerationDate())
 				.interestSince(rentDemand.getGenerationDate()).initialGracePeriod(rentDemand.getInitialGracePeriod())
-				.remainingPrincipal(rentDemand.getCollectionPrincipal()).build();
+				.remainingPrincipal(rentDemand.getRemainingPrincipal()).build();
 	}
 
 	private RentPayment clonePayment(RentPayment rentPayment) {

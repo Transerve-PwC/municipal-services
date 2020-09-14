@@ -13,8 +13,6 @@ import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.RentAccount;
 import org.egov.cpt.models.RentDemand;
-import org.egov.cpt.models.RentPayment;
-import org.egov.cpt.models.RentSummary;
 import org.egov.cpt.models.calculation.BusinessService;
 import org.egov.cpt.models.calculation.State;
 import org.egov.cpt.producer.Producer;
@@ -54,7 +52,7 @@ public class OwnershipTransferService {
 
 	@Autowired
 	private OwnershipTransferRepository repository;
-	
+
 	@Autowired
 	private PropertyRepository propertyRepository;
 
@@ -66,7 +64,7 @@ public class OwnershipTransferService {
 
 	@Autowired
 	PropertyNotificationService notificationService;
-	
+
 	@Autowired
 	private IRentCollectionService rentCollectionService;
 
@@ -106,25 +104,22 @@ public class OwnershipTransferService {
 
 		if (CollectionUtils.isEmpty(owners))
 			return Collections.emptyList();
-		
-		
+
 		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
-			
+
 			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
 					.propertyId(owner.getProperty().getId()).build();
 
 			List<Property> propertiesFromDB = propertyRepository.getProperties(propertyCriteria);
-			List<RentDemand> demands = propertyRepository
-					.getPropertyRentDemandDetails(propertyCriteria);
-			
-			RentAccount rentAccount = propertyRepository
-					.getPropertyRentAccountDetails(propertyCriteria);
+			List<RentDemand> demands = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
+
+			RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
 			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
 				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
 			}
 		});
-		
+
 		return owners;
 	}
 
