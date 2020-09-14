@@ -3,7 +3,6 @@ package org.egov.cpt.repository;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,8 +23,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
-
-	private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 	@Override
 	public List<Property> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -176,7 +173,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.relationship(rs.getString("ng_relationship")).violations(rs.getString("ng_violations"))
 						.description(rs.getString("ng_description")).demandNoticeFrom(rs.getLong("ng_demandNoticeFrom"))
 						.demandNoticeTo(rs.getLong("ng_demandNoticeTo")).recoveryType(rs.getString("ng_recoveryType"))
-						.amount(Double.valueOf(decimalFormat.format(rs.getDouble("ng_amount")))).propertyImageId(rs.getString("ng_p_image_id"))
+						.amount(rs.getDouble("ng_amount")).propertyImageId(rs.getString("ng_p_image_id"))
 						.allotmentNumber(rs.getString("oallotmen_number")).auditDetails(ngAuditDetails).build();
 
 				property.addNoticeItem(noticeGeneration);
