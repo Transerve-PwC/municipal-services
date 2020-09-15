@@ -1,6 +1,8 @@
 package org.egov.cpt.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class FileStoreUtils {
 
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, String>> fetchFileStoreId(File file, Property property) {
-		StringBuilder uri = new StringBuilder(fileStoreUrl.substring(0, fileStoreUrl.length()-4));
+		StringBuilder uri = new StringBuilder(fileStoreUrl.substring(0, fileStoreUrl.length() - 4));
 
 		FileSystemResource fileSystemResource = new FileSystemResource(file);
 
@@ -73,4 +75,31 @@ public class FileStoreUtils {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, String>> uploadStreamToFileStore(ByteArrayOutputStream outputStream, String tenantId,
+			String fileName, String contentType) throws UnsupportedEncodingException {
+		StringBuilder uri = new StringBuilder(fileStoreUrl.substring(0, fileStoreUrl.length() - 4));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+		body.add("file", new String(outputStream.toByteArray(), "UTF-8"));
+		body.add("filename", fileName);
+		body.add("contentType", contentType);
+
+		uri.append("?tenantId=" + tenantId + "&module=" + "RentedProperties");
+		try {
+			Map<String, Map<String, String>> response = (Map<String, Map<String, String>>) restTemplate
+					.postForObject(uri.toString(), requestEntity, HashMap.class);
+
+			List<HashMap<String, String>> result = (List<HashMap<String, String>>) response.get("files");
+			return result;
+		} catch (Exception e) {
+			log.error("Exception while fetching file store id: ", e);
+		}
+		return null;
+	}
+
 }

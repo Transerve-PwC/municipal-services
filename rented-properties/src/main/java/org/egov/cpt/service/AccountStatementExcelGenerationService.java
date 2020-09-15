@@ -1,7 +1,6 @@
 package org.egov.cpt.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -41,6 +40,7 @@ public class AccountStatementExcelGenerationService {
 	private FileStoreUtils fileStoreUtils;
 
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	private static String[] columns = { "Date", "Amount", "Type", "Interest Due", "Principal Due", "Total Due",
 			"Account Balance" };
 	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Plot No.", "Area",
@@ -65,19 +65,19 @@ public class AccountStatementExcelGenerationService {
 				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
 						.relations(Collections.singletonList("owner")).build());
 
+		Property property = properties.get(0);
 		List<String> propertyList = new ArrayList<>();
-		propertyList.add(properties.get(0).getOwners().get(0).getOwnerDetails().getName());
-		propertyList.add(
-				Instant.ofEpochMilli(properties.get(0).getOwners().get(0).getOwnerDetails().getAllotmentStartdate())
-						.atZone(ZoneId.systemDefault()).toLocalDate().format(FORMATTER).toString());
-		propertyList.add(properties.get(0).getTransitNumber());
-		propertyList.add(properties.get(0).getPropertyDetails().getArea());
-		propertyList.add(properties.get(0).getPropertyDetails().getRentPerSqyd());
+		propertyList.add(property.getOwners().get(0).getOwnerDetails().getName());
+		propertyList.add(Instant.ofEpochMilli(property.getOwners().get(0).getOwnerDetails().getAllotmentStartdate())
+				.atZone(ZoneId.systemDefault()).toLocalDate().format(FORMATTER).toString());
+		propertyList.add(property.getTransitNumber());
+		propertyList.add(property.getPropertyDetails().getArea());
+		propertyList.add(property.getPropertyDetails().getRentPerSqyd());
 		propertyList.add("");
-		propertyList.add(properties.get(0).getPropertyDetails().getRentIncrementPercentage().toString());
-		propertyList.add(properties.get(0).getOwners().get(0).getOwnerDetails().getMonthlyRent());
-		propertyList.add(properties.get(0).getPropertyDetails().getInterestRate().toString()
-				+ "% P.A as per clause 15 of Lease Deed");
+		propertyList.add(property.getPropertyDetails().getRentIncrementPercentage().toString());
+		propertyList.add(property.getOwners().get(0).getOwnerDetails().getMonthlyRent());
+		propertyList.add(
+				property.getPropertyDetails().getInterestRate().toString() + "% P.A as per clause 15 of Lease Deed");
 		try {
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("AccountStatement");
@@ -147,13 +147,15 @@ public class AccountStatementExcelGenerationService {
 			}
 
 			// Write the output to a file
-			File file = new File("poi-generated-file.xlsx");
-			FileOutputStream fileOut = new FileOutputStream(file);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			List<HashMap<String, String>> response = fileStoreUtils.fetchFileStoreId(file, properties.get(0));
+			workbook.write(baos);
+			String fileName = String.format("AccountStatement-%s-%d.xlsx", property.getTransitNumber(),
+					System.currentTimeMillis());
+			List<HashMap<String, String>> response = fileStoreUtils.uploadStreamToFileStore(baos,
+					property.getTenantId(), fileName, XLSX_CONTENT_TYPE);
 
-			workbook.write(fileOut);
-			fileOut.close();
+			baos.close();
 
 			// Closing the workbook
 			workbook.close();

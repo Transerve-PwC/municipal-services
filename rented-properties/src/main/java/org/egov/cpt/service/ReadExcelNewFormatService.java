@@ -38,27 +38,24 @@ public class ReadExcelNewFormatService {
 		List<RentDemand> demands = new ArrayList<>();
 		List<RentPayment> payments = new ArrayList<>();
 		List<String> rentDurations = new ArrayList<>();
-		try {			
+		try {
 			Workbook workbook = WorkbookFactory.create(inputStream);
 			Sheet sheet = workbook.getSheetAt(sheetIndex);
 			/* Prepare list of RentDemands */
 			getRentYearDeatils(sheet).forEach((key, value) -> {
 				List<String> rentDuration = getAllSequenceOfYears(key);
 				rentDurations.addAll(rentDuration);
-				rentDuration.forEach(rent->{
-					demands.add(RentDemand.builder()
-							   .generationDate(convertStrDatetoLong(rent))
-							   .interestSince(convertStrDatetoLong(rent))
-							   .collectionPrincipal(value)
-							   .remainingPrincipal(value)
-							   .build());							  
+				rentDuration.forEach(rent -> {
+					demands.add(RentDemand.builder().generationDate(convertStrDatetoLong(rent))
+							.interestSince(convertStrDatetoLong(rent)).collectionPrincipal(value)
+							.remainingPrincipal(value).build());
 				});
 			});
 			Iterator<Row> rowIterator = sheet.iterator();
 			boolean shouldParseRows = false;
 			while (rowIterator.hasNext()) {
 				Row currentRow = rowIterator.next();
-				
+
 				/**
 				 * Fetching Data will Start after this header row. This will also skip
 				 * intermediate header rows.
@@ -72,21 +69,21 @@ public class ReadExcelNewFormatService {
 				if (FOOTER_CELL.equalsIgnoreCase(String.valueOf(currentRow.getCell(0)))) {
 					break;
 				}
-				
-				if(shouldParseRows) {
-					Integer currentRowYear =  ((Double) getValueFromCell(currentRow.getCell(0))).intValue();
-					for (int i = 1; i < currentRow.getLastCellNum()-1; i++) {
-						if(rentDurations.contains(1+"-"+MONTHS[i-1]+"-"+currentRowYear)) {
+
+				if (shouldParseRows) {
+					Integer currentRowYear = ((Double) getValueFromCell(currentRow.getCell(0))).intValue();
+					for (int i = 1; i < currentRow.getLastCellNum() - 1; i++) {
+						if (rentDurations.contains(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear)) {
 							payments.add(RentPayment.builder()
-									   .amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
-									   .dateOfPayment(convertStrDatetoLong(1+"-"+MONTHS[i-1]+"-"+currentRowYear))
-									   .build());
+									.amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
+									.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))
+									.build());
 						}
-						
+
 					}
 				}
 			}
-			System.out.println(demands.size()+"<:temp:>"+payments.size());
+			System.out.println(demands.size() + "<:temp:>" + payments.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("File reading operation fails due to :" + e.getMessage());
@@ -106,7 +103,7 @@ public class ReadExcelNewFormatService {
 	}
 
 	private Map<String, Double> getRentYearDeatils(Sheet sheet) {
-		Map<String, Double> rentYearDetails = new HashMap();
+		Map<String, Double> rentYearDetails = new HashMap<String, Double>();
 		int rowRentCell = 0;
 		int columnRentCell = 0;
 		Iterator<Row> rowIterator = sheet.iterator();
@@ -143,7 +140,7 @@ public class ReadExcelNewFormatService {
 					startMaking = true;
 				}
 				if (startMaking) {
-					rentDuration.add(1+"-"+month + "-" + yearCounter);
+					rentDuration.add(1 + "-" + month + "-" + yearCounter);
 				}
 				if ((MONTHS[endMonthnumber] + "-" + yearCounter).equalsIgnoreCase(month + "-" + endYear)) {
 					break;
@@ -157,25 +154,25 @@ public class ReadExcelNewFormatService {
 	private Object getValueFromCell(Cell cell1) {
 		Object objValue = "";
 		switch (cell1.getCellType()) {
-		case BLANK:
-			objValue = "";
-			break;
-		case STRING:
-			objValue = cell1.getRichStringCellValue().getString();
-			break;
-		case NUMERIC:
-			if (DateUtil.isCellDateFormatted(cell1)) {
-				objValue = cell1.getDateCellValue().getTime();
-			} else {
+			case BLANK:
+				objValue = "";
+				break;
+			case STRING:
+				objValue = cell1.getRichStringCellValue().getString();
+				break;
+			case NUMERIC:
+				if (DateUtil.isCellDateFormatted(cell1)) {
+					objValue = cell1.getDateCellValue().getTime();
+				} else {
+					objValue = cell1.getNumericCellValue();
+				}
+				break;
+			case FORMULA:
 				objValue = cell1.getNumericCellValue();
-			}
-			break;
-		case FORMULA:
-			objValue = cell1.getNumericCellValue();
-			break;
+				break;
 
-		default:
-			objValue = "";
+			default:
+				objValue = "";
 		}
 		return objValue;
 	}

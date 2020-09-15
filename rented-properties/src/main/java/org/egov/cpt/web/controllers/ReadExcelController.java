@@ -1,11 +1,8 @@
 package org.egov.cpt.web.controllers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.cpt.models.ExcelSearchCriteria;
 import org.egov.cpt.models.RentDemandResponse;
 import org.egov.cpt.models.RequestInfoWrapper;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.apache.commons.lang.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,9 +29,10 @@ public class ReadExcelController {
 	private ReadExcelService readExcelService;
 	private FileStoreUtils fileStoreUtils;
 	private ReadExcelNewFormatService readExcelNewFormatService;
-	
+
 	@Autowired
-	public ReadExcelController(ReadExcelService readExcelService, FileStoreUtils fileStoreUtils,ReadExcelNewFormatService readExcelNewFormatService) {
+	public ReadExcelController(ReadExcelService readExcelService, FileStoreUtils fileStoreUtils,
+			ReadExcelNewFormatService readExcelNewFormatService) {
 		this.readExcelService = readExcelService;
 		this.fileStoreUtils = fileStoreUtils;
 		this.readExcelNewFormatService = readExcelNewFormatService;
@@ -49,9 +46,9 @@ public class ReadExcelController {
 		try {
 			String filePath = fileStoreUtils.fetchFileStoreUrl(searchCriteria);
 			if (StringUtils.isNotBlank(filePath)) {
-				if("0".equalsIgnoreCase(searchCriteria.getFileFormat())) {
+				if ("0".equalsIgnoreCase(searchCriteria.getFileFormat())) {
 					data = readExcelService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
-				}else if("1".equalsIgnoreCase(searchCriteria.getFileFormat())) {
+				} else if ("1".equalsIgnoreCase(searchCriteria.getFileFormat())) {
 					data = readExcelNewFormatService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
 				}
 			}
