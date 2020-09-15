@@ -54,7 +54,7 @@ public class FileStoreUtils {
 	public List<HashMap<String, String>> fetchFileStoreId(File file, Property property) {
 		StringBuilder uri = new StringBuilder(fileStoreUrl.substring(0, fileStoreUrl.length()-4));
 
-		FileSystemResource fileSystemResource = new FileSystemResource(file);
+		FileSystemResource fileSystemResource = new FileSystemResource(file.getPath());
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);

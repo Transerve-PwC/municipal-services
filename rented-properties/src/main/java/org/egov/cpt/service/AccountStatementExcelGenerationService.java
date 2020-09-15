@@ -149,10 +149,9 @@ public class AccountStatementExcelGenerationService {
 			// Write the output to a file
 			File file = new File("poi-generated-file.xlsx");
 			FileOutputStream fileOut = new FileOutputStream(file);
-
+			workbook.write(fileOut);
 			List<HashMap<String, String>> response = fileStoreUtils.fetchFileStoreId(file, properties.get(0));
 
-			workbook.write(fileOut);
 			fileOut.close();
 
 			// Closing the workbook
