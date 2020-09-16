@@ -86,7 +86,6 @@ public class ReadExcelNewFormatService {
 					}
 				}
 			}
-			System.out.println(demands.size()+"<:temp:>"+payments.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("File reading operation fails due to :" + e.getMessage());
@@ -120,7 +119,7 @@ public class ReadExcelNewFormatService {
 				}
 			}
 		}
-		for (int i = rowRentCell + 1; i < rowRentCell + 5; i++) {
+		for (int i = rowRentCell + 1; i < rowRentCell + 6; i++) {
 			Row row = sheet.getRow(i);
 			rentYearDetails.put(String.valueOf(row.getCell(columnRentCell)),
 					Double.valueOf(String.valueOf(row.getCell(columnRentCell + 2))));
