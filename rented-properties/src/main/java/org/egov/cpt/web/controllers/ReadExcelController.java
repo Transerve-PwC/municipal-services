@@ -45,11 +45,12 @@ public class ReadExcelController {
 		try {
 			String filePath = fileStoreUtils.fetchFileStoreUrl(searchCriteria);
 			if (StringUtils.isNotBlank(filePath)) {
-				if("0".equalsIgnoreCase(searchCriteria.getFileFormat())) {
-					data = readExcelService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
-				}else if("1".equalsIgnoreCase(searchCriteria.getFileFormat())) {
-					data = readExcelNewFormatService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
-				}
+				data = readExcelService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
+//				if("0".equalsIgnoreCase(searchCriteria.getFileFormat())) {
+//					data = readExcelService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
+//				}else if("1".equalsIgnoreCase(searchCriteria.getFileFormat())) {
+//					data = readExcelNewFormatService.getDatafromExcel(new UrlResource(filePath).getInputStream(), 0);
+//				}
 			}
 			log.info("End controller method readExcel Demand data:"+data.getDemand().size()
 					+" & Payment data:"+data.getPayment().size());
