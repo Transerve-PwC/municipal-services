@@ -81,20 +81,9 @@ public class OwnershipTransferService {
 		/**
 		 * calling rent Summary
 		 */
-		request.getOwners().stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
-
-			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
-					.propertyId(owner.getProperty().getId()).build();
-
-			List<Property> propertiesFromDB = propertyRepository.getProperties(propertyCriteria);
-			List<RentDemand> demands = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
-
-			RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
-			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
-				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
-						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
-			}
-		});
+		
+		addRentSummary(request.getOwners());
+		
 		return request.getOwners();
 	}
 
@@ -126,20 +115,7 @@ public class OwnershipTransferService {
 		/**
 		 * calling rent Summary
 		 */
-		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
-
-			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
-					.propertyId(owner.getProperty().getId()).build();
-
-			List<Property> propertiesFromDB = propertyRepository.getProperties(propertyCriteria);
-			List<RentDemand> demands = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
-
-			RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
-			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
-				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
-						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
-			}
-		});
+		addRentSummary(owners);
 
 		return owners;
 	}
@@ -170,7 +146,13 @@ public class OwnershipTransferService {
 		/**
 		 * calling rent Summary
 		 */
-		request.getOwners().stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
+		addRentSummary(request.getOwners());
+		
+		return request.getOwners();
+	}
+	
+	private void addRentSummary(List<Owner> owners) {
+		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
 
 			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
 					.propertyId(owner.getProperty().getId()).build();
@@ -184,7 +166,7 @@ public class OwnershipTransferService {
 						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
 			}
 		});
-		return request.getOwners();
+		
 	}
 
 }
