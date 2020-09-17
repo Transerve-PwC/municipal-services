@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AuditDetails;
 import org.egov.cpt.models.Property;
@@ -23,6 +24,7 @@ import org.egov.cpt.models.RentDemandCriteria;
 import org.egov.cpt.models.RentPayment;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.PropertyRepository;
+import org.egov.cpt.service.notification.DemandNotificationService;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,21 +44,24 @@ public class RentDemandGenerationService {
 
 	private RentCollectionService rentCollectionService;
 
+	private DemandNotificationService demandNotificationService;
+
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
 	@Autowired
 	public RentDemandGenerationService(PropertyRepository propertyRepository, Producer producer,
-			PropertyConfiguration config, RentCollectionService rentCollectionService) {
+			PropertyConfiguration config, RentCollectionService rentCollectionService, DemandNotificationService demandNotificationService) {
 		this.propertyRepository = propertyRepository;
 		this.producer = producer;
 		this.config = config;
 		this.rentCollectionService = rentCollectionService;
+		this.demandNotificationService = demandNotificationService;
 	}
 
-	public void createDemand(RentDemandCriteria demandCriteria) {
+	public void createDemand(RentDemandCriteria demandCriteria, RequestInfo requestInfo) {
 
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
-		propertyCriteria.setRelations(new ArrayList<>());
+		propertyCriteria.setRelations(Collections.singletonList("owner"));
 		List<Property> propertyList = propertyRepository.getProperties(propertyCriteria);
 
 		propertyList.forEach(property -> {
@@ -80,14 +85,14 @@ public class RentDemandGenerationService {
 						if (!dateList.contains(currentDate.toString())) {
 							// generate demand
 							generateRentDemand(property, collectionDemand.get(), currentDate, rentDemandList,
-									rentPaymentList, rentAccount);
+									rentPaymentList, rentAccount, requestInfo);
 						}
 					} else {
 						LocalDate date = LocalDate.parse(demandCriteria.getDate(), FORMATTER);
 						if (!dateList.contains(date.toString())) {
 							// generate demand
 							generateRentDemand(property, collectionDemand.get(), date, rentDemandList, rentPaymentList,
-									rentAccount);
+									rentAccount, requestInfo);
 						}
 					}
 				} else {
@@ -102,7 +107,7 @@ public class RentDemandGenerationService {
 	}
 
 	private void generateRentDemand(Property property, RentDemand collectionDemand, LocalDate date,
-			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount) {
+			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount, RequestInfo requestInfo) {
 
 		int oldYear = new Date(collectionDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDate().getYear();
@@ -169,6 +174,7 @@ public class RentDemandGenerationService {
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+		demandNotificationService.process(rentDemand, property, requestInfo);
 	}
 
 }
