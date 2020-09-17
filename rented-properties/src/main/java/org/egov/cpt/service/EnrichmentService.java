@@ -454,25 +454,16 @@ public class EnrichmentService {
 
 		if (!CollectionUtils.isEmpty(propertyImagesRequest.getPropertyImagesApplications())) {
 			propertyImagesRequest.getPropertyImagesApplications().forEach(application -> {
-				if (!CollectionUtils.isEmpty(application.getApplicationDocuments())) {
-					if (application.getApplicationDocuments().size() <= 6) {
-						String gen_application_id = UUID.randomUUID().toString();
-						application.setId(gen_application_id);
-						application.getProperty().setId(
-								propertyImagesRequest.getPropertyImagesApplications().get(0).getProperty().getId());
-						application.setAuditDetails(propertyAuditDetails);
+				String gen_application_id = UUID.randomUUID().toString();
+				application.setId(gen_application_id);
+				application.getProperty()
+						.setId(propertyImagesRequest.getPropertyImagesApplications().get(0).getProperty().getId());
+				application.setAuditDetails(propertyAuditDetails);
 
 						application.setCapturedBy(requestInfo.getUserInfo().getName());
 
-						enrichDocuments(application.getApplicationDocuments(), requestInfo,
-								application.getProperty().getId(), application.getId(), application.getTenantId());
-					} else {
-						throw new CustomException("PROPERTY_IMAGES_LIMIT_EXCEEDS",
-								"property images upload limit exceeds");
-					}
-				} else {
-					throw new CustomException("PROPERTY_IMAGES_NOT_FOUND", "no property images found");
-				}
+				enrichDocuments(application.getApplicationDocuments(), requestInfo, application.getProperty().getId(),
+						application.getId(), application.getTenantId());
 			});
 		}
 		setPIIdgenIds(propertyImagesRequest);
