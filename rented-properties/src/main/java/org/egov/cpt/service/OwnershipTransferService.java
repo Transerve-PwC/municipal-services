@@ -77,6 +77,24 @@ public class OwnershipTransferService {
 			wfIntegrator.callOwnershipTransferWorkFlow(request);
 		}
 		producer.push(config.getOwnershipTransferSaveTopic(), request);
+		
+		/**
+		 * calling rent Summary
+		 */
+		request.getOwners().stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
+
+			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
+					.propertyId(owner.getProperty().getId()).build();
+
+			List<Property> propertiesFromDB = propertyRepository.getProperties(propertyCriteria);
+			List<RentDemand> demands = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
+
+			RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
+			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
+			}
+		});
 		return request.getOwners();
 	}
 
@@ -104,7 +122,10 @@ public class OwnershipTransferService {
 
 		if (CollectionUtils.isEmpty(owners))
 			return Collections.emptyList();
-
+		
+		/**
+		 * calling rent Summary
+		 */
 		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
 
 			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
@@ -145,6 +166,24 @@ public class OwnershipTransferService {
 		}
 
 		notificationService.process(request);
+		
+		/**
+		 * calling rent Summary
+		 */
+		request.getOwners().stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
+
+			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
+					.propertyId(owner.getProperty().getId()).build();
+
+			List<Property> propertiesFromDB = propertyRepository.getProperties(propertyCriteria);
+			List<RentDemand> demands = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
+
+			RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
+			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
+			}
+		});
 		return request.getOwners();
 	}
 
