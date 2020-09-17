@@ -374,8 +374,8 @@ public class NotificationUtil {
 		messageTemplate = messageTemplate.replace("<3>", property.getTransitNumber());
 		LocalDate localDate = new Date(rentDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDate();
-		messageTemplate = messageTemplate.replace("<4>", localDate.getMonth().toString());
-		messageTemplate = messageTemplate.replace("<5>", String.valueOf(localDate.getYear()));
+		messageTemplate = messageTemplate.replace("<4>", localDate.getMonth().toString().substring(0,3));
+		messageTemplate = messageTemplate.replace("<5>", String.valueOf(localDate.getYear()).substring(2, 4));
 		return messageTemplate;
 	}
 }

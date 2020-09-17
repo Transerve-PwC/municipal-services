@@ -45,7 +45,7 @@ public class DemandNotificationService {
 		}
 		if (null != config.getIsEMAILNotificationEnabled()) {
 			if (config.getIsEMAILNotificationEnabled()) {
-				//enrichEMAILRequest(rentDemand, emailRequest);
+				enrichEMAILRequest(rentDemand, property, emailRequest, requestInfo);
 				if (!CollectionUtils.isEmpty(emailRequest))
 					util.sendEMAIL(emailRequest, true);
 			}
@@ -74,5 +74,29 @@ public class DemandNotificationService {
 		}
 
 	}
-	 
+
+	private void enrichEMAILRequest(RentDemand rentDemand, Property property, List<EmailRequest> emailRequest, RequestInfo requestInfo) {
+		String tenantId = property.getOwners().get(0).getTenantId();
+		for (Owner owner : property.getOwners()) {
+			Map<String, String> emailIdToApplicant = new HashMap<>();
+
+			if (owner.getOwnerDetails().getEmail() != null && owner.getActiveState())
+				emailIdToApplicant.put(owner.getOwnerDetails().getEmail(), owner.getOwnerDetails().getName());
+
+			if (emailIdToApplicant.isEmpty()) {
+				continue;
+			}
+			String message = null;
+			String localizationMessages;
+			localizationMessages = util.getLocalizationMessages(tenantId, requestInfo);
+			message = util.getDemandGenerationMsg(rentDemand, property, localizationMessages);
+			if (message == null)
+				continue;
+
+			message = message.replace("\\n", "\n");
+			emailRequest.addAll(util.createEMAILRequest(message, emailIdToApplicant));
+		}
+
+	}
+
 }
