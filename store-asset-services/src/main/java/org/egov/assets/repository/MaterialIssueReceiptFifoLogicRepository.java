@@ -33,7 +33,7 @@ public class MaterialIssueReceiptFifoLogicRepository {
 			+ " materialreceiptdetailaddnlinfo  addinfo on rctdtl.id= addinfo.receiptdetailid"
 			+ " where  (isscrapitem IS NULL or isscrapitem=false) and (rctdtl.deleted=false or"
 			+ " rctdtl.deleted is null ) and receivingstore= :store  and materialreceipt.tenantid= :tenantId"
-			+ " and  material= :material and mrnstatus in ('APPROVED') and receiptdate <= :date";
+			+ " and  material= :material and mrnstatus in ('Approved') and receiptdate <= :date";
 
 	public List<FifoEntity> implementFifoLogic(Store store, Material material, Long issueDate, String tenantId) {
 		Map<String, Object> paramValues = new HashMap<>();

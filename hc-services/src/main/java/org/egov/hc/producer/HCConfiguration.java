@@ -185,6 +185,11 @@ public class HCConfiguration {
 
 		@Value("${egov.user.search.endpoint}")
 		private String egovUserSearchEndpoint;
+		
+	// SLA days configration
+		
+		@Value("${egov.hc.sla.daysconfig}")
+		private int slaDays;
 
 
 }

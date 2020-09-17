@@ -21,23 +21,25 @@
   ],
   "services": [
     {
-      "serviceType":"PRUNING OF TREES GIRTH GREATER THAN 90 CMS",  
-      "ownerName":"dhanaji",  
-      "treeCount":"8",
-      "description": "Testing of Complaint", 
-      "addressDetail": {
-        "latitude": "30.743085",
-        "longitude": "76.786507",
-        "city": "ch.chandigarh",
-        "mohalla": "AMBEDKAR_AWAS_YOJNA",
-        "houseNoAndStreetName": "Test House no-34",
-        "landmark": "TEst landmark"
-      },
-      "address": "SCO 1-2-3, opp. Hotel Taj, 17A, Sector 17, Chandigarh, 160017, India",
-      "tenantId": "ch.chandigarh",   
-      "source": "mobileapp/web",
-      "contactNumber": "9811165595",
-      "email":"abcd@gmail.com"
+      "serviceType": "Removal of Dead/Dangerous/Dry Trees",
+            "subType": "DEAD",
+            "treeCount": "12",
+            "description": "dsdsd",
+            "latitude": 30.7333,
+            "longitude": 76.7794,
+            "address": "Himalaya Marg, 22B, Sector 21, Chandigarh, 160022, india",
+            "mohalla": "sector-2",
+            "housenoandstreetname": "2vvbdf",
+            "landmark": "dfdsfds",
+            "ownername": "dsd",
+            "contactnumber": "9405680399",
+            "email": "nikunjmishra8170@gmail.com",
+            "city": "ch.chandigarh",
+            "tenantid": "ch.chandigarh",
+            "media": [
+                "2089dedf-c1d8-4e3c-89e7-ff1665afc3be"
+            ],
+            "isEditState": 0
     }
   ],
  "idRequests":[{

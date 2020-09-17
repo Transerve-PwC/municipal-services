@@ -35,6 +35,8 @@ public class MaterialBalanceRateEntity {
 
 	private BigDecimal unitRate;
 
+	private String receiptDate;
+
 	public MaterialBalanceRate toDomain() {
 		MaterialBalanceRate materialBalanceRate = new MaterialBalanceRate();
 		materialBalanceRate.setTenantId(tenantId);
@@ -46,6 +48,7 @@ public class MaterialBalanceRateEntity {
 		materialBalanceRate.setUomCode(uomCode);
 		materialBalanceRate.setBalance(balance);
 		materialBalanceRate.setUnitRate(unitRate);
+		materialBalanceRate.setReceiptDate(receiptDate);
 		return materialBalanceRate;
 	}
 
@@ -59,6 +62,7 @@ public class MaterialBalanceRateEntity {
 		this.uomCode = materialBalanceRate.getUomCode();
 		this.balance = materialBalanceRate.getBalance();
 		this.unitRate = materialBalanceRate.getUnitRate();
+		this.receiptDate=materialBalanceRate.getReceiptDate();
 		return this;
 	}
 

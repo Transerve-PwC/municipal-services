@@ -62,4 +62,15 @@ public class BillingSlab {
 	private String calculationAttribute = null;
 	private double minimumCharge;
 	private List<Slab> slabs = new ArrayList<>();
+	private List<Charges> charges ;
+
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
+	
 }

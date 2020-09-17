@@ -226,6 +226,18 @@ public class SWCalculationConstant {
 	public static final String SC_FEESLAB_MASTER = "FeeSlab";
 
 	public static final String SC_ROADTYPE_MASTER = "RoadType";
+	
+	public static final String SW_REGULAR_CHARGES_MASTER = "SWAppCharges";
+	
+	public static final String SW_ROAD_CUT_TAX_CHARGES = "RoadCutTaxSlab";
+	
+	public static final String SW_DOMESTIC = "DOMESTIC";
+	
+	public static final String TAX_GST = "GST";
+
+	public static final String TAX_SUPERVISION = "SUPERVISION";
+	
+	public static final String TAX_PERCENTAGE = "taxPercentage";
 
 	/**
 	 * Fee Estimation Configuration

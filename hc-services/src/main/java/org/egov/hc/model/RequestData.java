@@ -82,6 +82,10 @@ public class RequestData {
 	@JsonProperty("actions")
 	private String actions;
 	
+	@Size(max=128)
+	@JsonProperty("serviceRequestSubtype")
+	private String serviceRequestSubtype;
+	
 	@Size(max=255)
 	@JsonProperty("email")
 	private String email = null;
@@ -101,14 +105,5 @@ public class RequestData {
 
 	    @JsonProperty("limit")
 	    private Integer limit;
-	    
-	    
-	    
-//	    public boolean isEmpty() {
-//	        return (this.tenantId == null && this.serviceRequestStatus == null && this.dataPayload == null && this.serviceType == null
-//	                && this.service_request_id == null && this.actions == null && this.ownerContactNumber == null &&
-//	                this.fromDate == null && this.toDate == null && this.auditDetails == null
-//	        );
-	  //  }
 
 }

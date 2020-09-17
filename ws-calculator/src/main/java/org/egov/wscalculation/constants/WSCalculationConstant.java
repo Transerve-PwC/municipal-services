@@ -286,7 +286,33 @@ public class WSCalculationConstant {
 	public static final String WS_TIME_ADHOC_PENALTY = "WS_TIME_ADHOC_PENALTY";
 	
 	public static final String WS_TIME_ADHOC_REBATE = "WS_TIME_ADHOC_REBATE";
+	
+	public static final String WS_TEMP_APP_CHARGES = "WSTempConAppCharges";
+	
+	public static final String WS_TEMP_BILLING_CHARGES = "WSTempConBillingSlab";
+	
+	public static final String WS_REGULAR_CHARGES = "PipeSize";
+	
+	public static final String WS_ROAD_CUT_TAX_CHARGES = "RoadCutTaxSlab";
 
+	public static final String TAX_GST = "GST";
+	
+	public static final String TAX_SUPERVISION = "SUPERVISION";
+	
+	public static final String TAX_PERCENTAGE = "taxPercentage";
+	
+	public static final String WS_METER_TESTING_CHARGE = "WS_METER_TESTING_CHARGE";
 
+	public static final String WS_METER_FITTING_CHARGE = "WS_METER_FITTING_CHARGE";
+
+	public static final String WS_FERRULE_CHARGE = "WS_FERRULE_CHARGE";
+	
+	public static final String WS_TEMP_CONNECTION_TYPE = "TEMPORARY";
+
+	public static final String WS_REGULAR_CONNECTION_TYPE = "REGULAR";
+
+	public static final String WS_COMMERCIAL = "COMMERCIAL";
+
+	public static final String	WS_SECURITY_CHARGE_STATUS = "PENDING_FOR_SECURITY_DEPOSIT";
 	
 }

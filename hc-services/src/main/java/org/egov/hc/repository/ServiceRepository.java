@@ -125,7 +125,6 @@ public class ServiceRepository {
  	        List<ServiceRequestData> serviceRequestList =  jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
  	        return serviceRequestList;
 	         
-
 	}
      
      

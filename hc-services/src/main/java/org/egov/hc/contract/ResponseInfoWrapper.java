@@ -17,6 +17,8 @@ import lombok.Setter;
 @Builder
 public class ResponseInfoWrapper {
 
+	public static final String HttpStatus = null;
+
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 

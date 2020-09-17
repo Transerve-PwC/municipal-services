@@ -325,7 +325,7 @@ public class RentCollectionService implements IRentCollectionService {
 		return RentDemand.builder().collectionPrincipal(rentDemand.getCollectionPrincipal())
 				.status(PaymentStatusEnum.UNPAID).generationDate(rentDemand.getGenerationDate())
 				.interestSince(rentDemand.getGenerationDate()).initialGracePeriod(rentDemand.getInitialGracePeriod())
-				.remainingPrincipal(rentDemand.getRemainingPrincipal()).build();
+				.remainingPrincipal(rentDemand.getCollectionPrincipal()).build();
 	}
 
 	private RentPayment clonePayment(RentPayment rentPayment) {

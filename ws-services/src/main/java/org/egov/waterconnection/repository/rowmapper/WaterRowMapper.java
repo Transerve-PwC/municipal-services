@@ -44,10 +44,12 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 				currentWaterConnection.setStatus(StatusEnum.fromValue(rs.getString("status")));
 				currentWaterConnection.setConnectionNo(rs.getString("connectionNo"));
 				currentWaterConnection.setOldConnectionNo(rs.getString("oldConnectionNo"));
-				currentWaterConnection.setPipeSize(rs.getDouble("pipeSize"));
+				currentWaterConnection.setPipeSize(rs.getString("pipeSize"));
 				currentWaterConnection.setNoOfTaps(rs.getInt("noOfTaps"));
-				currentWaterConnection.setProposedPipeSize(rs.getDouble("proposedPipeSize"));
+				currentWaterConnection.setProposedPipeSize(rs.getString("proposedPipeSize"));
 				currentWaterConnection.setProposedTaps(rs.getInt("proposedTaps"));
+				currentWaterConnection.setWaterApplicationType(rs.getString("waterApplicationType"));
+				currentWaterConnection.setSecurityCharge(rs.getDouble("securityCharge"));
 				currentWaterConnection.setRoadCuttingArea(rs.getFloat("roadcuttingarea"));
 				currentWaterConnection.setRoadType(rs.getString("roadtype"));
 				HashMap<String, Object> additionalDetails = new HashMap<>();

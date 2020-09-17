@@ -52,7 +52,7 @@ return (ServiceRequest) super.clone();
   private List<ActionInfo> actionInfo = new LinkedList<ActionInfo>();
   
   @JsonProperty("RequestBody")
-  @Valid
+  //@Valid
   private Object requestBody;
   
   @JsonProperty("auditDetails")
@@ -71,5 +71,7 @@ return (ServiceRequest) super.clone();
 
 	@JsonProperty("isEditState")
 	private int isEditState;
+	
+
 }
 
