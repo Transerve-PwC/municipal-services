@@ -1,6 +1,5 @@
 package org.egov.cpt.service.notification;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.egov.cpt.models.Property;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.util.NotificationUtil;
-import org.egov.cpt.web.contracts.OwnershipTransferRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -32,11 +30,6 @@ public class DemandNotificationService {
 		this.util = util;
 	}
 
-	/**
-	 * Creates and send the sms based on the OwnershipTransferRequest
-	 * 
-	 * @param request The OwnershipTransferRequest listenend on the kafka topic
-	 */
 	public void process(RentDemand rentDemand, Property property, RequestInfo requestInfo) {
 
 		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
@@ -60,13 +53,6 @@ public class DemandNotificationService {
 
 	}
 
-	/**
-	 * Enriches the smsRequest with the customized messages
-	 * 
-	 * @param request     The OwnershipTransferRequest from kafka topic
-	 * @param smsRequests List of SMSRequets
-	 */
-	
 	private void enrichSMSRequest(RentDemand rentDemand, Property property, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
 		String tenantId = property.getOwners().get(0).getTenantId();
 		for (Owner owner : property.getOwners()) {
