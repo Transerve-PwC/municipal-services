@@ -11,6 +11,7 @@ import org.egov.cpt.models.ExcelSearchCriteria;
 import org.egov.cpt.models.Property;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -85,9 +86,17 @@ public class FileStoreUtils {
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-		body.add("file", new String(outputStream.toByteArray(), "UTF-8"));
+
 		body.add("filename", fileName);
 		body.add("contentType", contentType);
+
+		ByteArrayResource contentsAsResource = new ByteArrayResource(outputStream.toByteArray()) {
+			@Override
+			public String getFilename() {
+				return fileName; // Filename has to be returned in order to be able to post.
+			}
+		};
+		body.add("file", contentsAsResource);
 
 		uri.append("?tenantId=" + tenantId + "&module=" + "RentedProperties");
 		try {

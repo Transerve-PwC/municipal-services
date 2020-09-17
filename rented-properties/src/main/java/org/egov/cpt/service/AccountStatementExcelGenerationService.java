@@ -99,7 +99,7 @@ public class AccountStatementExcelGenerationService {
 			cell.setCellStyle(headerCellStyle);
 
 			cell = headerRow.createCell(1);
-			cell.setCellValue("Provisional Statement of Plot No. ,");
+			cell.setCellValue(String.format("Provisional Statement of Plot No. %s,", property.getTransitNumber()));
 			cell.setCellStyle(headerCellStyle);
 
 			Row headerRow2 = sheet.createRow(1);
@@ -146,12 +146,10 @@ public class AccountStatementExcelGenerationService {
 				row.createCell(6).setCellValue(rentAccountStmt.getRemainingBalance());
 			}
 
-			// Write the output to a file
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 			workbook.write(baos);
-			String fileName = String.format("AccountStatement-%s-%d.xlsx", property.getTransitNumber(),
-					System.currentTimeMillis());
+			String fileName = String.format("AccountStatement-%s.xlsx", property.getTransitNumber());
 			List<HashMap<String, String>> response = fileStoreUtils.uploadStreamToFileStore(baos,
 					property.getTenantId(), fileName, XLSX_CONTENT_TYPE);
 
