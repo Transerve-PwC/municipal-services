@@ -81,6 +81,7 @@ public class HCConstants {
 	// Massage
 	
 	public static final String SUCCESS = "success";
+	public static final String FAIL = "fail";
 	public static final String MEDIA = "media";
 
 	
@@ -219,5 +220,27 @@ public class HCConstants {
 	public static final String ROLE_NAME_DGRO = "Department Grievance Routing Officer";
 	public static final String ROLE_NAME_CSR = "Customer Support Representative";
 	public static final String SUBJECT = "SERVICE REQUEST FORM";
+	
+	public static final String GET_REQUEST_EXCEPTION_CODE = "GET_REQUEST_EXCEPTION_CODE";
+	public static final String CREATE_REQUEST_EXCEPTION_CODE = "CREATE_REQUEST_EXCEPTION_CODE";
+	public static final String UPDATE_REQUEST_EXCEPTION_CODE = "UPDATE_REQUEST_EXCEPTION_CODE";
+	public static final String GETDETAIL_REQUEST_EXCEPTION_CODE = "GETDETAIL_REQUEST_EXCEPTION_CODE";
+	
+	
+	public static final String SERVICEREQUESTCREATE = "SERVICEREQUESTCREATE";
+	public static final String SERVICEREQUESTUPDATE = "SERVICEREQUESTUPDATE";
+	public static final String SERVICEREQUESTGET = "SERVICEREQUESTGET";
+	public static final String SERVICEREQUESTGETDETAIL = "SERVICEREQUESTGETDETAIL";
+	
+	
+	
+	public static final String SCRIPTTAGXSS = "(.*?)<(\\s*?)script(\\s*?)(.*?)>(.*?)<(\\s*?)/(\\s*?)script(\\s*?)>(.*?)";
+	public static final String SRC1TAGXSS = "(.*?)src[\\r\\n]*=[\\r\\n]*\\\'(.*?)\\\'(.*?)";
+	public static final String SRC2TAGXSS = "(.*?)src[\\r\\n]*=[\\r\\n]*\\\"(.*?)\\\"(.*?)";
+	public static final String SCRIPTENDTAGXSS = "(.*?)</script(\\s*?)>(.*?)";
+	public static final String SCRIPTSTARTTAGXSS = "(.*?)<(\\s*?)script(\\s*?)>(.*?)";
+	public static final String JSTAGXSS = "(.*?)javascript:(.*?)";
+	public static final String VBTAGXSS = "(.*?)vbscript:(.*?)";
+	public static final String ONLOADTAGXSS = "(.*?)onload(.*?)=(.*?)";
 		
 }

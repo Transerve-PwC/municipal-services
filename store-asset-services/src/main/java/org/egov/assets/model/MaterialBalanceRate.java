@@ -59,6 +59,9 @@ public class MaterialBalanceRate {
 	@JsonProperty("unitRate")
 	private BigDecimal unitRate;
 
+	@JsonProperty("receiptDate")
+	private String receiptDate;
+
 	@Override
 	public String toString() {
 		return "MaterialBalanceRate [tenantId=" + tenantId + ", receiptId=" + receiptId + ", receiptDetailId="

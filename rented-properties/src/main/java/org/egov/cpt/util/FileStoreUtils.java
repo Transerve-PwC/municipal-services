@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class FileStoreUtils {
 
-	@Value("${egov.filestore-service-host}${egov.file.url.path}")
+	@Value("${egov.filestore.host}${egov.file.url.path}")
 	private String fileStoreUrl;
 
 	private RestTemplate restTemplate;

@@ -106,6 +106,9 @@ public class WCConstants {
 	
 	public static final String ACTIVATE_CONNECTION_CONST = "ACTIVATE_CONNECTION";
 	
+	public static final String APPLY_SECURITY_DEPOSIT = "METER_INSTALLED";
+	
+	
 	
 	public static final List<String> NOTIFICATION_ENABLE_FOR_STATUS = Collections
 			.unmodifiableList(Arrays.asList(INITIATE_INITIATED, REJECT_REJECTED,

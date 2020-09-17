@@ -259,7 +259,7 @@ public class ReceiptNoteService extends DomainService {
 							"purchaseorderdetail", hashMap, null);
 
 					receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(),
-							"status = (case when status = 'RECEIPTED' then 'APPROVED' ELSE status end)"
+							"status = (case when status = 'RECEIPTED' then 'Approved' ELSE status end)"
 									+ " where purchaseordernumber = (select purchaseorder from purchaseorderdetail where id = '"
 									+ materialReceiptDetail.getPurchaseOrderDetail().getId() + "') and tenantid = '"
 									+ tenantId + "'");
@@ -298,7 +298,7 @@ public class ReceiptNoteService extends DomainService {
 				purchaseOrderSearch.setTenantId(tenantId);
 				if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
 					receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(),
-							"status = (case when status = 'RECEIPTED' then 'APPROVED' ELSE status end)"
+							"status = (case when status = 'RECEIPTED' then 'Approved' ELSE status end)"
 									+ " where purchaseordernumber = ('" + purchaseOrderSearch.getPurchaseOrderNumber()
 									+ "') and tenantid = '" + tenantId + "'");
 			}

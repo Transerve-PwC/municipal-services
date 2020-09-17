@@ -11,11 +11,13 @@ import javax.validation.constraints.Size;
 import org.egov.hc.contract.AuditDetails;
 import org.egov.hc.model.user.Citizen;
 import org.egov.hc.workflow.Document;
+import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -139,8 +141,15 @@ public class ServiceRequestData {
 	@Size(max = 64)
 	@JsonProperty("lastModifiedBy")
 	private String lastModifiedBy;
-
-
+	
+	
+	@JsonProperty("serviceRequestSubtype")
+	private String serviceRequestSubtype;
+	
+	@Size(max = 64)
+	@JsonProperty("subType")
+	private String subType;
+	
 	@JsonProperty("lastModifiedTime")
 	private Long lastModifiedTime;
 	

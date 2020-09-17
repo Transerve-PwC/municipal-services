@@ -1,88 +1,25 @@
-
 {
-  "RequestInfo": {
-    "apiId": "Rainmaker",
-    "ver": ".01",
-    "ts": 0,
-    "action": "",
-    "did": "1",
-    "key": "",
-    "msgId": "20170310130900|en_IN",
-    "authToken": "30d97835-cc1d-4a83-b23c-9d656a5dc285",
-    "correlationId": "",
-    "userInfo": {
-      "id": 112,
-      "userName": "mrunmay",
-      "salutation": null,
-      "name": "mrunmay",
-      "gender": "MALE",
-      "mobileNumber": "9665711947",
-      "emailId": null,
-      "altContactNumber": null,
-      "pan": null,
-      "aadhaarNumber": "215329445185",
-      "permanentAddress": "string",
-      "permanentCity": "ch.chandigarh",
-      "permanentPinCode": null,
-      "correspondenceAddress": "string",
-      "correspondenceCity": "ch.chandigarh",
-      "correspondencePinCode": null,
-      "active": true,
-      "locale": "string",
-      "type": "EMPLOYEE",
-      "accountLocked": false,
-      "accountLockedDate": 0,
-      "fatherOrHusbandName": "string",
-      "signature": "string",
-      "bloodGroup": null,
-      "photo": null,
-      "identificationMark": "string",
-      "createdBy": 93,
-      "lastModifiedBy": 93,
-      "tenantId": "ch.chandigarh",
-      "roles": [
-        {
-          "code": "JE",
-          "name": "JE",
-          "tenantId": "ch.chandigarh"
-        }
-      ],
-      "uuid": "f33c0392-575e-41f9-9670-f2ed97c2a9ff",
-      "createdDate": "21-05-2020 14:47:40",
-      "lastModifiedDate": "21-05-2020 14:47:40",
-      "dob": "17/1/2020",
-      "pwdExpiryDate": "19-08-2020 14:47:40"
+    "RequestInfo": {
+        "apiId": "Mihy",
+        "ver": ".01",
+        "action": "",
+        "did": "1",
+        "key": "",
+        "msgId": "20170310130900|en_IN",
+        "requesterId": "",
+        "authToken": "589c49df-6f3f-40c5-ba5a-792934b4d417"
     },
-  
-  "tenantId": "ch.chandigarh",
-  "auditDetails": {
-    "createdBy": 112,
-    "lastModifiedBy": 112,
-    "createdTime": 1590428785988,
-    "lastModifiedTime": 159042878598
-  }
-  },
-  
     "services": [
         {
-        "serviceType": "PRUNING OF TREES GIRTH GREATER THAN 90 CMS",
-          
-        "isRoleSpecific": 1,
-        "tenantId": "ch",
-        "comment": "ewewew",
-        "assignees": [],
-        "roleList": [],
-        
-        
-        "service_request_id": "CH-HC-2020-06-14-001432_1",
-        "action": "COMPLETE",
-            "wfDocuments": [
-                {
-                    "fileName": "TRD Service Request.jpg",
-                    "fileStoreId": "72a6f4ed-e3f0-4b9e-bccd-2e474713d19c",
-                    "documentType": "Document - 1"
-                }
-        ]
+            "comment": "bb",
+            "assignee": [],
+            "roleList": [],
+            "isRoleSpecific": true,
+            "serviceType": "REMOVAL OF DEAD/DANGEROUS/DRY TREES",
+            "service_request_id": "CH-HC-2020-09-09-003216",
+            "wfDocuments": [],
+            "locality": "ch",
+            "action": "VERIFY AND FORWARD TO SDO"
+        }
+    ]
 }
-    ]}
-

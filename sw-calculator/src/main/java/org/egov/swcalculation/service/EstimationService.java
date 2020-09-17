@@ -317,82 +317,61 @@ public class EstimationService {
 	 */
 	private List<TaxHeadEstimate> getTaxHeadForFeeEstimation(CalculationCriteria criteria,
 			Map<String, Object> masterData, RequestInfo requestInfo) {
-		JSONArray feeSlab = (JSONArray) masterData.getOrDefault(SWCalculationConstant.SC_FEESLAB_MASTER, null);
-		if (feeSlab == null)
-			throw new CustomException("FEE_SLAB_NOT_FOUND", "fee slab master data not found!!");
 		
+		Map<String, JSONArray> billingSlabMaster = new HashMap<>();
+
+		billingSlabMaster.put(SWCalculationConstant.SW_REGULAR_CHARGES_MASTER,
+				(JSONArray) masterData.get(SWCalculationConstant.SW_REGULAR_CHARGES_MASTER));
 		Property property = sWCalculationUtil.getProperty(SewerageConnectionRequest.builder()
 				.sewerageConnection(criteria.getSewerageConnection()).requestInfo(requestInfo).build());
+		List<TaxHeadEstimate> estimates = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		List<BillingSlab> mappingBillingSlab;
+		try {
+			mappingBillingSlab = mapper.readValue(
+					billingSlabMaster.get(SWCalculationConstant.SW_REGULAR_CHARGES_MASTER).toJSONString(),
+					mapper.getTypeFactory().constructCollectionType(List.class, BillingSlab.class));
+		} catch (IOException e) {
+			throw new CustomException("Parsing Exception", " Billing Slab can not be parsed!");
+		}
+
+		List<BillingSlab> billingSlabs = null;
+
+		billingSlabs = mappingBillingSlab.stream().filter(slab -> {
+			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(property.getUsageCategory());// property.usagecategory
+
+			return isBuildingTypeMatching;
+		}).collect(Collectors.toList());
 		
-		JSONObject feeObj = mapper.convertValue(feeSlab.get(0), JSONObject.class);
-		BigDecimal formFee = BigDecimal.ZERO;
-		if (feeObj.get(SWCalculationConstant.FORM_FEE_CONST) != null) {
-			formFee = new BigDecimal(feeObj.getAsNumber(SWCalculationConstant.FORM_FEE_CONST).toString());
+		Double charge = 0.0;
+
+		for (Slab slabs : billingSlabs.get(0).getSlabs()) {
+
+			if (property.getUsageCategory().equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC) && slabs.getCode().equalsIgnoreCase("FLATS")
+					&& property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo()) {
+				charge = slabs.getCharge();
+			} else if (property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo() && (!property.getUsageCategory().equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC))) {
+				charge = slabs.getCharge();
+			}
+			
 		}
-		BigDecimal scrutinyFee = BigDecimal.ZERO;
-		if (feeObj.get(SWCalculationConstant.SCRUTINY_FEE_CONST) != null) {
-			scrutinyFee = new BigDecimal(feeObj.getAsNumber(SWCalculationConstant.SCRUTINY_FEE_CONST).toString());
-		}
-		BigDecimal otherCharges = BigDecimal.ZERO;
-		if (feeObj.get(SWCalculationConstant.OTHER_CHARGE_CONST) != null) {
-			otherCharges = new BigDecimal(feeObj.getAsNumber(SWCalculationConstant.OTHER_CHARGE_CONST).toString());
-		}
-		BigDecimal taxAndCessPercentage = BigDecimal.ZERO;
-		if (feeObj.get(SWCalculationConstant.TAX_PERCENTAGE_CONST) != null) {
-			taxAndCessPercentage = new BigDecimal(
-					feeObj.getAsNumber(SWCalculationConstant.TAX_PERCENTAGE_CONST).toString());
-		}
-		BigDecimal meterCost = BigDecimal.ZERO;
-		if (feeObj.get(SWCalculationConstant.METER_COST_CONST) != null
-				&& criteria.getSewerageConnection().getConnectionType() != null && criteria.getSewerageConnection()
-						.getConnectionType().equalsIgnoreCase(SWCalculationConstant.meteredConnectionType)) {
-			meterCost = new BigDecimal(feeObj.getAsNumber(SWCalculationConstant.METER_COST_CONST).toString());
-		}
+		
 		BigDecimal roadCuttingCharge = BigDecimal.ZERO;
-		if (criteria.getSewerageConnection().getRoadType() != null) {
+		BigDecimal finalCharge = new BigDecimal(charge);
+
+		if (criteria.getSewerageConnection().getRoadType() != null)
 			roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getSewerageConnection().getRoadType(),
 					criteria.getSewerageConnection().getRoadCuttingArea());
-		}
-		BigDecimal roadPlotCharge = BigDecimal.ZERO;
-		if (property.getLandArea() != null) {
-			roadPlotCharge = getPlotSizeFee(masterData, property.getLandArea());
-		}
-		BigDecimal usageTypeCharge = BigDecimal.ZERO;
-		if (criteria.getSewerageConnection().getRoadCuttingArea() != null) {
-			usageTypeCharge = getUsageTypeFee(masterData,
-					property.getUsageCategory(),
-					criteria.getSewerageConnection().getRoadCuttingArea());
-		}
-		
-		BigDecimal tax = BigDecimal.ZERO;
-		BigDecimal totalCharge = BigDecimal.ZERO;
-		totalCharge = formFee.add(scrutinyFee).add(otherCharges).add(meterCost).add(roadCuttingCharge)
-				.add(roadPlotCharge).add(usageTypeCharge);
-		tax = totalCharge.multiply(taxAndCessPercentage.divide(SWCalculationConstant.HUNDRED));
-		//
-		List<TaxHeadEstimate> estimates = new ArrayList<>();
-		if (!(formFee.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_FORM_FEE)
-					.estimateAmount(formFee.setScale(2, 2)).build());
-		if (!(scrutinyFee.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_SCRUTINY_FEE)
-					.estimateAmount(scrutinyFee.setScale(2, 2)).build());
-		if (!(otherCharges.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
-					.estimateAmount(otherCharges.setScale(2, 2)).build());
+		if (!(finalCharge.compareTo(BigDecimal.ZERO) == 0))
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ONE_TIME_FEE)
+					.estimateAmount(finalCharge.setScale(2, 2)).build());
+
 		if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ROAD_CUTTING_CHARGE)
 					.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
-		if (!(usageTypeCharge.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ONE_TIME_FEE)
-					.estimateAmount(usageTypeCharge.setScale(2, 2)).build());
-		if (!(roadPlotCharge.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_SECURITY_CHARGE)
-					.estimateAmount(roadPlotCharge.setScale(2, 2)).build());
-		if (!(tax.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_TAX_AND_CESS)
-					.estimateAmount(tax.setScale(2, 2)).build());
-		addAdhocPenalityAndRebate(estimates, criteria.getSewerageConnection());
+		
+		
+		
 		return estimates;
 	}
 
@@ -434,18 +413,41 @@ public class EstimationService {
 	 */
 	private BigDecimal getChargeForRoadCutting(Map<String, Object> masterData, String roadType, Float roadCuttingArea) {
 		JSONArray roadSlab = (JSONArray) masterData.getOrDefault(SWCalculationConstant.SC_ROADTYPE_MASTER, null);
+		JSONArray roadCutTax = (JSONArray) masterData.getOrDefault(SWCalculationConstant.SW_ROAD_CUT_TAX_CHARGES, null);
+		JSONObject roadcutSlab = new JSONObject();
+		BigDecimal gst_tax = BigDecimal.ZERO;
+		BigDecimal supervision_tax = BigDecimal.ZERO;
+
+		if (roadCutTax != null) {
+			roadcutSlab.put("RoadCutTaxSlab", roadCutTax);
+			JSONArray GST = JsonPath.read(roadcutSlab,
+					"$.RoadCutTaxSlab[?(@.code=='" + SWCalculationConstant.TAX_GST + "')]");
+			if (CollectionUtils.isEmpty(GST))
+				return BigDecimal.ZERO;
+			JSONArray supervision = JsonPath.read(roadcutSlab,
+					"$.RoadCutTaxSlab[?(@.code=='" + SWCalculationConstant.TAX_SUPERVISION + "')]");
+
+			JSONObject gstTax = mapper.convertValue(GST.get(0), JSONObject.class);
+			JSONObject supervisionTax = mapper.convertValue(supervision.get(0), JSONObject.class);
+
+			gst_tax = new BigDecimal(gstTax.getAsNumber(SWCalculationConstant.TAX_PERCENTAGE).toString());
+			supervision_tax = new BigDecimal(
+					supervisionTax.getAsNumber(SWCalculationConstant.TAX_PERCENTAGE).toString());
+
+		}
 		BigDecimal charge = BigDecimal.ZERO;
-		BigDecimal cuttingArea = new BigDecimal(
-				roadCuttingArea == null ? BigDecimal.ZERO.toString() : roadCuttingArea.toString());
 		JSONObject masterSlab = new JSONObject();
 		if (roadSlab != null) {
 			masterSlab.put("RoadType", roadSlab);
 			JSONArray filteredMasters = JsonPath.read(masterSlab, "$.RoadType[?(@.code=='" + roadType + "')]");
 			if (CollectionUtils.isEmpty(filteredMasters))
-				return charge;
+				return BigDecimal.ZERO;
 			JSONObject master = mapper.convertValue(filteredMasters.get(0), JSONObject.class);
 			charge = new BigDecimal(master.getAsNumber(SWCalculationConstant.UNIT_COST_CONST).toString());
-			charge = charge.multiply(cuttingArea);
+			charge = charge.multiply(new BigDecimal (roadCuttingArea));
+			charge = charge.add(charge.multiply(supervision_tax.divide(SWCalculationConstant.HUNDRED)));
+			charge = charge.add(charge.multiply(gst_tax.divide(SWCalculationConstant.HUNDRED)));
+
 		}
 		return charge;
 	}

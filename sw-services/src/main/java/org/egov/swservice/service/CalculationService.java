@@ -9,6 +9,7 @@ import org.egov.swservice.model.CalculationRes;
 import org.egov.swservice.model.Property;
 import org.egov.swservice.model.SewerageConnectionRequest;
 import org.egov.swservice.repository.ServiceRequestRepository;
+import org.egov.swservice.util.SWConstants;
 import org.egov.swservice.util.SewerageServicesUtil;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class CalculationService {
 	 * 
 	 */
 	public void calculateFeeAndGenerateDemand(SewerageConnectionRequest request, Property property) {
-		if (request.getSewerageConnection().getProcessInstance().getAction().equalsIgnoreCase("APPROVE_FOR_CONNECTION")){
+		if(SWConstants.APPROVE_CONNECTION_CONST.equalsIgnoreCase(request.getSewerageConnection().getProcessInstance().getAction())){
 			StringBuilder uri = sewerageServicesUtil.getCalculatorURL();
 			CalculationCriteria criteria = CalculationCriteria.builder()
 					.applicationNo(request.getSewerageConnection().getApplicationNo())

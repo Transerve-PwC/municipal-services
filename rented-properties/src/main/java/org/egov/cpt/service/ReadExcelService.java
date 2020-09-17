@@ -48,6 +48,29 @@ public class ReadExcelService {
 	private static final String HEADER_CELL = "Month";
 	private static final String FOOTER_CELL = "Total";
 
+	public Integer checkFormatOfexcel(InputStream inputStream, int sheetIndex) {
+		Integer formatFlag = null;
+		try {
+			Workbook workbook = WorkbookFactory.create(inputStream);
+			Sheet sheet = workbook.getSheetAt(sheetIndex);
+			Iterator<Row> rowIterator = sheet.iterator();
+			while (rowIterator.hasNext()) {
+				Row currentRow = rowIterator.next();
+				if("Month".equalsIgnoreCase(String.valueOf(currentRow.getCell(0)))) {
+					formatFlag =0;
+					break;
+				}else if("YEAR".equalsIgnoreCase(String.valueOf(currentRow.getCell(0)))) {
+					formatFlag =1;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("File reading operation fails due to :" + e.getMessage());
+		}
+		return formatFlag;
+	}
+
 	public RentDemandResponse getDatafromExcel(InputStream inputStream, int sheetIndex) {
 		List<RentDemand> demands = new ArrayList<>();
 		List<RentPayment> payments = new ArrayList<>();
@@ -202,25 +225,25 @@ public class ReadExcelService {
 	private Object getValueFromCell(Cell cell1) {
 		Object objValue = "";
 		switch (cell1.getCellType()) {
-			case BLANK:
-				objValue = "";
-				break;
-			case STRING:
-				objValue = cell1.getRichStringCellValue().getString();
-				break;
-			case NUMERIC:
-				if (DateUtil.isCellDateFormatted(cell1)) {
-					objValue = cell1.getDateCellValue().getTime();
-				} else {
-					objValue = cell1.getNumericCellValue();
-				}
-				break;
-			case FORMULA:
+		case BLANK:
+			objValue = "";
+			break;
+		case STRING:
+			objValue = cell1.getRichStringCellValue().getString();
+			break;
+		case NUMERIC:
+			if (DateUtil.isCellDateFormatted(cell1)) {
+				objValue = cell1.getDateCellValue().getTime();
+			} else {
 				objValue = cell1.getNumericCellValue();
-				break;
+			}
+			break;
+		case FORMULA:
+			objValue = cell1.getNumericCellValue();
+			break;
 
-			default:
-				objValue = "";
+		default:
+			objValue = "";
 		}
 		return objValue;
 	}

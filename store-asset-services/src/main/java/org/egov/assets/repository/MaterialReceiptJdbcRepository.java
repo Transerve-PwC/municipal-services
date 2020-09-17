@@ -224,14 +224,14 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
 	}
 
 	public Pagination<MaterialBalanceRate> searchBalanceRate(MaterialReceiptSearch materialReceiptSearch) {
-		String searchQuery = "select * from (select materialreceipt.tenantid as tenantId, materialreceipt.id as receiptId,rctdtl.id as receiptDetailId,rctdtl.mrnnumber as mrnNumber,receivingstore as issueStoreCode, material as materialCode, uomno as uomCode,\n"
+		String searchQuery = "select * from (select materialreceipt.tenantid as tenantId, materialreceipt.id as receiptId,rctdtl.id as receiptDetailId,rctdtl.mrnnumber as mrnNumber,receivingstore as issueStoreCode, material as materialCode, uomno as uomCode,materialreceipt.receiptdate as receiptDate,\n"
 				+ "(COALESCE(addinfo.quantity,acceptedqty) - COALESCE (case when addinfo.id is not null then (select sum(issuereceipt.quantity) from materialissuedfromreceipt\n"
 				+ "issuereceipt where addinfo.id=issuereceipt.receiptdetailaddnlinfoid and issuereceipt.receiptdetailid=rctdtl.id and issuereceipt.status=true)\n"
 				+ "else (select sum(issuereceipt.quantity) from materialissuedfromreceipt issuereceipt where issuereceipt.receiptdetailid=rctdtl.id and issuereceipt.status=true) end,0)) as balance , unitRate \n"
 				+ "from materialreceipt left outer join materialreceiptdetail rctdtl on materialreceipt.mrnnumber = rctdtl.mrnnumber left outer join\n"
 				+ "materialreceiptdetailaddnlinfo  addinfo on rctdtl.id= addinfo.receiptdetailid\n"
 				+ "where  (isscrapitem IS NULL or isscrapitem=false) and (rctdtl.deleted=false or rctdtl.deleted is null ) and receivingstore= :store  and materialreceipt.tenantid= :tenantId\n"
-				+ ":materialcondition and mrnstatus in ('APPROVED') and receiptdate <= :date order by addinfo.expirydate,addinfo.receiveddate,receiptdate)as fifo where balance >0";
+				+ ":materialcondition and mrnstatus in ('Approved') and receiptdate <= :date order by addinfo.expirydate,addinfo.receiveddate,receiptdate)as fifo where balance >0";
 
 		Map<String, Object> paramValues = new HashMap<>();
 

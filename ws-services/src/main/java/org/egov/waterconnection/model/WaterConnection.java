@@ -29,20 +29,22 @@ public class WaterConnection extends Connection {
 	private Long meterInstallationDate = null;
 
 	@JsonProperty("proposedPipeSize")
-	private Double proposedPipeSize = null;
+	private String proposedPipeSize = null;
 
 	@JsonProperty("proposedTaps")
 	private Integer proposedTaps = null;
 
 	@JsonProperty("pipeSize")
-	private Double pipeSize = null;
+	private String pipeSize = null;
 
 	@JsonProperty("noOfTaps")
 	private Integer noOfTaps = null;
 	
 	@JsonProperty("waterApplicationType")
 	private String waterApplicationType = null;
-
+	
+	@JsonProperty("securityCharge")
+	private Double securityCharge = null;
 
 	public WaterConnection waterSource(String waterSource) {
 		this.waterSource = waterSource;
@@ -152,20 +154,20 @@ public class WaterConnection extends Connection {
 	 **/
 	@ApiModelProperty(value = "No of proposed Pipe size is citizen input")
 
-	public Double getProposedPipeSize() {
+	public String getProposedPipeSize() {
 		return proposedPipeSize;
 	}
 
-	public void setProposedPipeSize(Double proposedPipeSize) {
+	public void setProposedPipeSize(String proposedPipeSize) {
 		this.proposedPipeSize = proposedPipeSize;
 	}
 
-	public WaterConnection proposedPipeSize(Double proposedPipeSize) {
+	public WaterConnection proposedPipeSize(String proposedPipeSize) {
 		this.proposedPipeSize = proposedPipeSize;
 		return this;
 	}
 
-	public WaterConnection pipeSize(Double pipeSize) {
+	public WaterConnection pipeSize(String pipeSize) {
 		this.pipeSize = pipeSize;
 		return this;
 	}
@@ -177,11 +179,11 @@ public class WaterConnection extends Connection {
 	 **/
 	@ApiModelProperty(value = "Pipe size for non-metered calulation attribute.")
 
-	public Double getPipeSize() {
+	public String getPipeSize() {
 		return pipeSize;
 	}
 
-	public void setPipeSize(Double pipeSize) {
+	public void setPipeSize(String pipeSize) {
 		this.pipeSize = pipeSize;
 	}
 
@@ -233,5 +235,13 @@ public class WaterConnection extends Connection {
 
 	public void setWaterApplicationType(String waterApplicationType) {
 		this.waterApplicationType = waterApplicationType;
+	}
+
+	public Double getSecurityCharge() {
+		return securityCharge;
+	}
+
+	public void setSecurityCharge(Double securityCharge) {
+		this.securityCharge = securityCharge;
 	}
 }

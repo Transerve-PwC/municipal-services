@@ -1,0 +1,2 @@
+ALTER TABLE eg_hc_service_request
+ADD COLUMN serviceRequestSubtype jsonb;

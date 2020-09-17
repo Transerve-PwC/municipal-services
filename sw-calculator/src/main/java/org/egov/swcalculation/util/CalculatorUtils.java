@@ -235,12 +235,11 @@ public class CalculatorUtils {
 	 */
 	public MdmsCriteriaReq getEstimationMasterCriteria(RequestInfo requestInfo, String tenantId) {
 		List<MasterDetail> details = new ArrayList<>();
-		details.add(MasterDetail.builder().name(SWCalculationConstant.SC_PLOTSLAB_MASTER)
+		details.add(MasterDetail.builder().name(SWCalculationConstant.SW_REGULAR_CHARGES_MASTER)
 				.filter("[?(@.isActive== " + true + ")]").build());
-		details.add(MasterDetail.builder().name(SWCalculationConstant.SC_PROPERTYUSAGETYPE_MASTER)
+		details.add(MasterDetail.builder().name(SWCalculationConstant.SW_ROAD_CUT_TAX_CHARGES)
 				.filter("[?(@.isActive== " + true + ")]").build());
-		details.add(MasterDetail.builder().name(SWCalculationConstant.SC_FEESLAB_MASTER)
-				.filter("[?(@.isActive== " + true + ")]").build());
+		
 		details.add(MasterDetail.builder().name(SWCalculationConstant.SC_ROADTYPE_MASTER)
 				.filter("[?(@.isActive== " + true + ")]").build());
 		ModuleDetail mdDtl = ModuleDetail.builder().masterDetails(details)

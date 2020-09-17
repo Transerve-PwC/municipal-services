@@ -1,0 +1,207 @@
+{
+
+	"SERVICEREQUESTCREATE":{
+      "description":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "latitude":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+       "longitude":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "address":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "mohalla":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	  "houseNoAndStreetName":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	  
+	  "landmark":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	  "ownerName":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	   "contactNumber":{
+         "mandatory":"false",
+         "validateRegularExp":"^[0-9]{10}$"
+      },
+     "email":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "serviceType":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "treeCount":{
+         "mandatory":"false",
+         "validateRegularExp":"^(0?[1-9]|[1-9][0-9])$"
+      },
+       "city":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+     
+      "tenantId":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+     "isEditState":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	"media":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      }
+   },
+   
+   "SERVICEREQUESTGET":{
+      "tenantId":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+	   "fromDate":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+       "toDate":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "service_request_id":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "serviceType":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "serviceRequestStatus":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "houseNoAndStreetName":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "ownerContactNumber":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      }
+
+   },
+   
+   "SERVICEREQUESTGETDETAIL":{
+      
+	   "contactNumber":{
+         "mandatory":"false",
+         "validateRegularExp":"^[0-9]{10}$"
+      },
+     
+       "serviceType":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      
+      "tenantId":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "service_request_id":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "serviceRequestStatus":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "fromDate":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+       "toDate":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      }
+     
+   },
+   
+  "SERVICEREQUESTUPDATE":{
+      "comment":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "assignee":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+       "roleList":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "isRoleSpecific":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "serviceType":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	  "houseNoAndStreetName":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	  
+	  "landmark":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	  "ownerName":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+	   "service_request_id":{
+         "mandatory":"false",
+         "validateRegularExp":"^[0-9]{10}$"
+      },
+     "wfDocuments":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "action":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "treeCount":{
+         "mandatory":"false",
+         "validateRegularExp":"^(0?[1-9]|[1-9][0-9])$"
+      },
+     "city":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+     
+      "tenantId":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
+      },
+     "isEditState":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      }
+   }
+}
