@@ -1001,16 +1001,12 @@ public class PropertyValidator {
 		Integer maxValue = (Integer) mdmsDocuments.stream()
 				.filter(code -> code.get("code").equals("TRANSIT_SITE_IMAGES")).map(max -> max.get("maxCount"))
 				.findFirst().get();
-		Integer minValue = (Integer) mdmsDocuments.stream()
-				.filter(code -> code.get("code").equals("TRANSIT_SITE_IMAGES")).map(max -> max.get("minCount"))
-				.findFirst().get();
 
 		Map<String, String> errorMap = new HashMap<>();
 		propertyImagesRequest.getPropertyImagesApplications().forEach(application -> {
-			if (application.getApplicationDocuments().size() < minValue.intValue()) {
+			if (CollectionUtils.isEmpty(application.getApplicationDocuments())) {
 				errorMap.put("PROPERTY_IMAGES_NOT_FOUND", "no property images found");
-			}
-			if (application.getApplicationDocuments().size() > maxValue.intValue()) {
+			}else if (application.getApplicationDocuments().size() > maxValue.intValue()) {
 				errorMap.put("PROPERTY_IMAGES_LIMIT_EXCEEDS", "property images upload limit exceeds");
 			}
 		});
