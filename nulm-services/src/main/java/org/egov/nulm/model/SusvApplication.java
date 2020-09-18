@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.nulm.workflow.model.Document;
 import org.json.simple.JSONArray;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -33,15 +34,21 @@ public class SusvApplication {
 
 	private String nulmApplicationId;
 
-	@NotNull
+	
 	@JsonProperty("applicationStatus")
 	private StatusEnum applicationStatus;
 
 	public enum StatusEnum {
-		DRAFTED("DRAFTED"), CREATED("CREATED"), FORWARDEDTOJA("FORWARDEDTOJA"), FORWARDEDTOSDO(
-				"FORWARDEDTOSDO"), FORWARDEDTOACMC("FORWARDEDTOACMC"), REASSIGNTOJA("REASSIGNTOJA"), REASSIGNTOSDO(
-						"REASSIGNTOSDO"), REASSIGNTOCITIZEN(
-								"REASSIGNTOCITIZEN"), APPROVED("APPROVED"), REJECTED("REJECTED");
+		DRAFTED("Drafted"), 
+		CREATED("Created"), 
+		FORWARDEDTOJA("Forwarded To JA"),
+		FORWARDEDTOSDO("Forwarded To SDO"), 
+		FORWARDEDTOACMC("Forwarded To ACMC"),
+		REASSIGNTOJA("Reassign To JA"), 
+		REASSIGNTOSDO("Reassign To SDO"), 
+		REASSIGNTOCITIZEN("Reassign To Citizen"), 
+		APPROVED("Approved"), 
+		REJECTED("Rejected");
 
 		private String value;
 
@@ -155,5 +162,15 @@ public class SusvApplication {
 
 	@JsonProperty("date")
 	private String date;
+	
+	@JsonProperty("assignee")
+	private List<String> assignee = null;
 
+	@JsonProperty("action")
+	private String action = null;
+
+
+
+	@JsonProperty("wfDocuments")
+    private List<Document> wfDocuments;
 }

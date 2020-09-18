@@ -1,0 +1,563 @@
+{
+  
+   "CHALLANGET": {
+      "searchtext": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "action": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+      },
+      
+      "STOREREGISTRATION": {
+      "searchtext": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "action": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+      },
+  	
+  	"CHALLANCREATE": {
+      "violationDate": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "violationTime": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "licenseNoCov": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "violatorName": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "address": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "fatherName": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "contactNumber": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "numberOfViolation": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "emailId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "encroachmentType": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "sector": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "natureOfViolation": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "latitude": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "longitude": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "location": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "siName": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+
+      "violationItem":{
+       "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+      "remarks": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "status": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "isActive": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "notificationTemplate": {
+        "email": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+        "subject": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+        "body": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+        "attachmentUrls": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+        "mobileNumber": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+        "message": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        },
+        "isHtml": {
+          "mandatory": "false",
+          "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        }
+      }
+    },
+    
+    "CHALLANUPDATE": {
+      "challanId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "challanUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "status": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+    },
+    
+	"ITEMMASTERGET": {
+	    "tenant_id": {
+	      "mandatory": "false",
+	      "validateRegularExp": "[a-zA-Z-_ ]++$"
+	    },
+	    "itemUid": {
+	      "mandatory": "false",
+	      "validateRegularExp": "[a-zA-Z-_ ]++$"
+	    }
+	  },
+    "FINEMASTERUPDATE": {
+      "fineUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "encroachmentTypeName": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "encroachmentType": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "numberOfViolation": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "penaltyAmount": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "effectiveStartDate": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "effectiveEndDate": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "approvalStatus": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "isActive": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "storageCharges": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+    },
+"FINEMASTERCREATE": {
+      "encroachmentType": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "numberOfViolation": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "penaltyAmount": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "effectiveStartDate": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "effectiveEndDate": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "approvalStatus": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "isActive": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "storageCharges": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+    },
+"AUCTIONCREATE": {
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "challanUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "violationUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "auctionList": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+    },
+    
+    "AUCTIONGET": {
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "action": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "offset": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "limit": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "orderDir": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "orderColumn": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "searchText": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      }
+    },
+    
+    "AUCTIONUPDATE": {
+      "status": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "challanId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "challanUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "auctionUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "auctionList":{
+      	 "mandatory": "false",
+         "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+        }
+  },
+    
+  "ITEMMASTERCREATE": {
+    "itemName": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z-_ ]++$"
+    },
+    "description": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+    },
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+    },
+    "approvalStatus": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-/,()_'&.\" ]{1,25}$"
+    },
+    "isActive": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+    }
+  },
+  
+  "REPORTAGEINGGET": {
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-, ]{1,200}"
+    },
+    "reportType": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-, ]{1,200}"
+    },
+    "fromDate": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z-_ ]++$"
+    },
+    "toDate": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z-_ ]++$"
+    },
+    "itemsAgeFrom": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+    },
+    "itemsAgeTo": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+    }
+  },
+  "REPORTPAYMENTGET": {
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-, ]{1,200}"
+    },
+    "reportType": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-, ]{1,200}"
+    },
+    "fromDate": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z-_ ]++$"
+    },
+    "toDate": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z-_ ]++$"
+    },
+    "paymentStatus": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+    }
+  },
+  "REPORTSEIZUREGET": {
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "reportType": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "fromDate": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-/,()_'&.\" ]*$"
+    },
+    "toDate": {
+      "mandatory": "false",
+      "validateRegularExp": "^[a-zA-Z0-9-/,()_'&.\" ]{1,100}$"
+    },
+    "encroachmentType": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "sector": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "siName": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "challanStatus": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    }
+  },
+  "VENDDORGET": {
+    "tenant_id": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    }
+  },
+  "VENDDORCREATE": {
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "vendorRegistrationList": {
+      "address": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "contactNumber": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "covNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "fatherSpouseName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "isActive": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "name": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "streetVendorArea": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "transportMode": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "vendorCategory": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "vendorUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      }
+    }
+  },
+  "VENDDORUPDATE": {
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "vendorRegistrationList": {
+      "address": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "contactNumber": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "covNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "fatherSpouseName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "isActive": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "name": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "streetVendorArea": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "transportMode": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "vendorCategory": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "vendorUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      }
+    },
+    
+    "FINEMASTERGET": {
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      }
+    }
+    }
+    }

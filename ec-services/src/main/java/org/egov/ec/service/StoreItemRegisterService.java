@@ -10,6 +10,7 @@ import org.egov.ec.repository.StoreItemRegisterRepository;
 import org.egov.ec.service.validator.CustomBeanValidator;
 import org.egov.ec.web.models.EcPayment;
 import org.egov.ec.web.models.EcSearchCriteria;
+import org.egov.ec.web.models.Report;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
 import org.egov.ec.web.models.StoreItemRegister;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,12 +61,27 @@ public class StoreItemRegisterService {
 			List<StoreItemRegister> storeItemRegister = null;
 			EcSearchCriteria searchCriteria = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),EcSearchCriteria.class);
 			
-				 storeItemRegister = repository.getStoreItemRegister(searchCriteria);
+			String responseValidate = "";
 			
-			return new ResponseEntity<>(
-					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
-							.responseBody(storeItemRegister).build(),
-					HttpStatus.OK);
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(searchCriteria, EcSearchCriteria.class);
+			
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.REPORTAGEINGGET);
+		
+			if(responseValidate.equals("")) 
+			{
+			
+					 storeItemRegister = repository.getStoreItemRegister(searchCriteria);
+				
+				return new ResponseEntity<>(
+						ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+								.responseBody(storeItemRegister).build(),
+						HttpStatus.OK);
+			}
+			else
+			{
+				throw new CustomException("STOREITEM_GET_EXCEPTION", responseValidate);
+			}
 
 		} catch (Exception e) {
 			log.error("Store Item Service - Get Store Item Exception"+e.getMessage());
@@ -86,57 +103,72 @@ public class StoreItemRegisterService {
 		try {
 			StoreItemRegister storeItemRegister = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					StoreItemRegister.class);
-			storeItemRegister.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			storeItemRegister.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-			storeItemRegister.setCreatedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			storeItemRegister.setCreatedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-
-			String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "addStoreItemEvent",
-					storeItemRegister.getTenantId(), requestInfoWrapper.getAuditDetails());
-			storeItemRegister.getDocument().stream().forEach((c) -> {
-				c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-				c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-				c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-				c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-				c.setViolationUuid(storeItemRegister.getViolationUuid());
-				c.setIsActive(true);
-				c.setDocumentUuid(UUID.randomUUID().toString());
-				c.setTenantId(storeItemRegister.getTenantId());
-				c.setChallanId(storeItemRegister.getChallanUuid());
-			});
-			storeItemRegister.getStoreItemRegister().stream().forEach((c) -> {
-				c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-				c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-				c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-				c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-				c.setAuctionedQuantity((long) 0);
-				c.setIsReturned(false);
-				c.setStoreItemUuid(UUID.randomUUID().toString());
-				c.setChallanUuid(storeItemRegister.getChallanUuid());
-				c.setSourceUuid(sourceUuid);
-			});
-			ProcessInstance processInstance = new ProcessInstance();
-			processInstance.setBusinessId(storeItemRegister.getChallanId());
-			processInstance.setTenantId(storeItemRegister.getTenantId());
-			processInstance.setBusinessService(EcConstants.WORKFLOW_CHALLAN);
-			processInstance.setAction(storeItemRegister.getStatus());
-			processInstance.setModuleName(EcConstants.WORKFLOW_MODULE);
-			List<ProcessInstance> processList = Arrays.asList(processInstance);
-
-			ResponseInfo response= wfIntegrator.callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList)
-					.requestInfo(requestInfoWrapper.getRequestInfo()).build());
 			
-			validate.validateFields(storeItemRegister.getStoreItemRegister());
+			String responseValidate = "";
 			
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(storeItemRegister, StoreItemRegister.class);
+			
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.STOREREGISTRATION);
 		
-			if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
-				repository.saveStoreItem(storeItemRegister);
+			if(responseValidate.equals("")) 
+			{
+					storeItemRegister.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					storeItemRegister.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+					storeItemRegister.setCreatedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					storeItemRegister.setCreatedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+		
+					String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "addStoreItemEvent",
+							storeItemRegister.getTenantId(), requestInfoWrapper.getAuditDetails());
+					storeItemRegister.getDocument().stream().forEach((c) -> {
+						c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+						c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+						c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+						c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+						c.setViolationUuid(storeItemRegister.getViolationUuid());
+						c.setIsActive(true);
+						c.setDocumentUuid(UUID.randomUUID().toString());
+						c.setTenantId(storeItemRegister.getTenantId());
+						c.setChallanId(storeItemRegister.getChallanUuid());
+					});
+					storeItemRegister.getStoreItemRegister().stream().forEach((c) -> {
+						c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+						c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+						c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+						c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+						c.setAuctionedQuantity((long) 0);
+						c.setIsReturned(false);
+						c.setStoreItemUuid(UUID.randomUUID().toString());
+						c.setChallanUuid(storeItemRegister.getChallanUuid());
+						c.setSourceUuid(sourceUuid);
+					});
+					ProcessInstance processInstance = new ProcessInstance();
+					processInstance.setBusinessId(storeItemRegister.getChallanId());
+					processInstance.setTenantId(storeItemRegister.getTenantId());
+					processInstance.setBusinessService(EcConstants.WORKFLOW_CHALLAN);
+					processInstance.setAction(storeItemRegister.getStatus());
+					processInstance.setModuleName(EcConstants.WORKFLOW_MODULE);
+					List<ProcessInstance> processList = Arrays.asList(processInstance);
+		
+					ResponseInfo response= wfIntegrator.callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList)
+							.requestInfo(requestInfoWrapper.getRequestInfo()).build());
+					
+					validate.validateFields(storeItemRegister.getStoreItemRegister());
+					
+				
+					if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
+						repository.saveStoreItem(storeItemRegister);
+					}
+				
+					return new ResponseEntity<>(
+							ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+									.responseBody(storeItemRegister).build(),
+							HttpStatus.OK);
 			}
-		
-			return new ResponseEntity<>(
-					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
-							.responseBody(storeItemRegister).build(),
-					HttpStatus.OK);
+			else
+			{
+				throw new CustomException("STOREITEM_ADDSTORE_EXCEPTION", responseValidate);
+			}
 
 		} catch (Exception e) {
 			log.error("Store Item Service - Add Store Item Exception"+e.getMessage());
@@ -156,33 +188,48 @@ public class StoreItemRegisterService {
 		try {
 			StoreItemRegister storeItemRegister = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					StoreItemRegister.class);
-			storeItemRegister.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			storeItemRegister.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-			storeItemRegister.setCreatedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			storeItemRegister.setCreatedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-
+			
+			String responseValidate = "";
+			
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(storeItemRegister, StoreItemRegister.class);
+			
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.STOREREGISTRATION);
 		
-			
-			ProcessInstance processInstance = new ProcessInstance();
-			processInstance.setBusinessId(storeItemRegister.getChallanId());
-			processInstance.setTenantId(storeItemRegister.getTenantId());
-			processInstance.setBusinessService(EcConstants.WORKFLOW_CHALLAN);
-			processInstance.setAction(storeItemRegister.getStatus());
-			processInstance.setModuleName(EcConstants.WORKFLOW_MODULE);
-			List<ProcessInstance> processList = Arrays.asList(processInstance);
-
-			ResponseInfo response= wfIntegrator.callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList)
-					.requestInfo(requestInfoWrapper.getRequestInfo()).build());
-			if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
-				repository.updateStoreItem(storeItemRegister);
-				}
-			
-			
-
-			return new ResponseEntity<>(
-					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
-							.responseBody(storeItemRegister).build(),
-					HttpStatus.OK);
+			if(responseValidate.equals("")) 
+			{
+					storeItemRegister.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					storeItemRegister.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+					storeItemRegister.setCreatedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					storeItemRegister.setCreatedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+		
+				
+					
+					ProcessInstance processInstance = new ProcessInstance();
+					processInstance.setBusinessId(storeItemRegister.getChallanId());
+					processInstance.setTenantId(storeItemRegister.getTenantId());
+					processInstance.setBusinessService(EcConstants.WORKFLOW_CHALLAN);
+					processInstance.setAction(storeItemRegister.getStatus());
+					processInstance.setModuleName(EcConstants.WORKFLOW_MODULE);
+					List<ProcessInstance> processList = Arrays.asList(processInstance);
+		
+					ResponseInfo response= wfIntegrator.callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList)
+							.requestInfo(requestInfoWrapper.getRequestInfo()).build());
+					if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
+						repository.updateStoreItem(storeItemRegister);
+						}
+					
+					
+		
+					return new ResponseEntity<>(
+							ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+									.responseBody(storeItemRegister).build(),
+							HttpStatus.OK);
+			}
+			else
+			{
+				throw new CustomException("STOREITEM_UPDATE_EXCEPTION", responseValidate);
+			}
 
 		} catch (Exception e) {
 			log.error("Store Item Service - Update Store Item Exception"+e.getMessage());
@@ -200,27 +247,42 @@ public class StoreItemRegisterService {
 		log.info("Store Item Service - Update Store Item");
 		try {
 			EcPayment ecPayment = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), EcPayment.class);
-			ecPayment.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-			ecPayment.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-			ecPayment.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			ecPayment.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-			ProcessInstance processInstance = new ProcessInstance();
-			processInstance.setBusinessId(ecPayment.getChallanUuid());
-			processInstance.setTenantId(ecPayment.getTenantId());
-			processInstance.setBusinessService(EcConstants.WORKFLOW_PAYMENT);
-			processInstance.setAction(ecPayment.getPaymentStatus());
-			processInstance.setModuleName(EcConstants.WORKFLOW_MODULE);
-			List<ProcessInstance> processList = Arrays.asList(processInstance);
-
-			ResponseInfo response= wfIntegrator.callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList)
-					.requestInfo(requestInfoWrapper.getRequestInfo()).build());
-
-			if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
-				repository.updateStorePayment(ecPayment);
-			}
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
-					.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(ecPayment).build(),
-					HttpStatus.OK);
+			
+			String responseValidate = "";
+			
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(ecPayment, EcPayment.class);
+			
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.STOREREGISTRATION);
+		
+			if(responseValidate.equals("")) 
+			{
+					ecPayment.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+					ecPayment.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+					ecPayment.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					ecPayment.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+					ProcessInstance processInstance = new ProcessInstance();
+					processInstance.setBusinessId(ecPayment.getChallanUuid());
+					processInstance.setTenantId(ecPayment.getTenantId());
+					processInstance.setBusinessService(EcConstants.WORKFLOW_PAYMENT);
+					processInstance.setAction(ecPayment.getPaymentStatus());
+					processInstance.setModuleName(EcConstants.WORKFLOW_MODULE);
+					List<ProcessInstance> processList = Arrays.asList(processInstance);
+		
+					ResponseInfo response= wfIntegrator.callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList)
+							.requestInfo(requestInfoWrapper.getRequestInfo()).build());
+		
+					if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
+						repository.updateStorePayment(ecPayment);
+					}
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(ecPayment).build(),
+							HttpStatus.OK);
+					}
+			else
+				{
+						throw new CustomException("STOREITEM_ADDPAYMENT_EXCEPTION", responseValidate);
+				}
 		} catch (Exception e) {
 			log.error("Store Item Service - Add Payment Exception"+e.getMessage());
 			throw new CustomException("STOREITEM_ADDPAYMENT_EXCEPTION", e.getMessage());

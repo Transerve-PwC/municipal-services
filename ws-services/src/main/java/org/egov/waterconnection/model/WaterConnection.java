@@ -45,6 +45,12 @@ public class WaterConnection extends Connection {
 	
 	@JsonProperty("securityCharge")
 	private Double securityCharge = null;
+	
+	@JsonProperty("inWorkflow")
+	private Boolean inWorkflow = false;
+	
+	@JsonProperty("activityType")
+	private String activityType = null;
 
 	public WaterConnection waterSource(String waterSource) {
 		this.waterSource = waterSource;
@@ -243,5 +249,21 @@ public class WaterConnection extends Connection {
 
 	public void setSecurityCharge(Double securityCharge) {
 		this.securityCharge = securityCharge;
+	}
+
+	public Boolean getInWorkflow() {
+		return inWorkflow;
+	}
+
+	public void setInWorkflow(Boolean inWorkflow) {
+		this.inWorkflow = inWorkflow;
+	}
+
+	public String getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
 	}
 }

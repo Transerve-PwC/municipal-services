@@ -27,23 +27,30 @@ public class WsQueryBuilder {
 	private static final String INNER_JOIN_STRING = "INNER JOIN";
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 //	private static final String Offset_Limit_String = "OFFSET ? LIMIT ?";
-	private static final String WATER_SEARCH_QUERY = "SELECT conn.*, wc.*, document.*, plumber.*, wc.connectionCategory, wc.connectionType, wc.waterSource,"
+	private static final String WATER_SEARCH_QUERY = "SELECT conn.*, wc.*, document.*, plumber.*, application.*, property.*, wc.connectionCategory, wc.connectionType, wc.waterSource,"
 			+ " wc.meterId, wc.meterInstallationDate, wc.pipeSize, wc.noOfTaps, wc.proposedPipeSize, wc.proposedTaps, wc.connection_id as connection_Id, wc.connectionExecutionDate, wc.initialmeterreading, wc.appCreatedDate,"
 			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, "
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
 			+ " conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason,"
 			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
 			+ " conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime, "
-			+ " conn.roadtype, document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id,"
+			+ " conn.roadtype, conn.waterApplicationType, conn.securityCharge, conn.inworkflow, "
+			+ " document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id,"
 			+ " plumber.name as plumber_name, plumber.licenseno,"
-			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress,"
-			+ " plumber.relationship FROM eg_ws_connection conn "
+			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship, "
+			+ " application.id as application_id, application.applicationno as water_application, application.activitytype as water_activitytype, application.applicationstatus as water_applicationstatus, application.action as water_action, application.comments as water_comments, "
+			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory "
+			+ " FROM eg_ws_connection conn "
 			+  INNER_JOIN_STRING 
 			+" eg_ws_service wc ON wc.connection_id = conn.id"
 			+  LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_applicationdocument document ON document.wsid = conn.id" 
+			+ "eg_ws_applicationdocument document ON document.applicationid = application.id" 
 			+  LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id";
+			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id"
+			+  LEFT_OUTER_JOIN_STRING
+			+ "eg_ws_application application ON application.wsid = conn.id"
+			+  LEFT_OUTER_JOIN_STRING
+			+ "eg_ws_property property ON property.property_id = conn.property_id";
 	
 	private static final String NO_OF_CONNECTION_SEARCH_QUERY = "SELECT count(*) FROM eg_ws_connection WHERE";
 	

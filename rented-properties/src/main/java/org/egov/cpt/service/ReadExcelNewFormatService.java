@@ -83,7 +83,6 @@ public class ReadExcelNewFormatService {
 					}
 				}
 			}
-			System.out.println(demands.size() + "<:temp:>" + payments.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("File reading operation fails due to :" + e.getMessage());

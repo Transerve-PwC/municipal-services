@@ -40,11 +40,11 @@ public class IdGenRepository {
 	 * @param count       Total Number of idGen ids required
 	 * @return
 	 */
-	public IdGenerationResponse getId(RequestInfo requestInfo, String tenantId, String name, String format, int count) {
+	public IdGenerationResponse getId(RequestInfo requestInfo, String tenantId, String name, int count) {
 
 		List<IdRequest> reqList = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
-			reqList.add(IdRequest.builder().idName(name).format(format).tenantId(tenantId).build());
+			reqList.add(IdRequest.builder().idName(name).tenantId(tenantId).build());
 		}
 		IdGenerationRequest req = IdGenerationRequest.builder().idRequests(reqList).requestInfo(requestInfo).build();
 		IdGenerationResponse response = null;

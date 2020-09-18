@@ -72,6 +72,13 @@ public class DuplicateCopyService {
 			wfIntegrator.callDuplicateCopyWorkFlow(duplicateCopyRequest);
 		}
 		producer.push(config.getSaveDuplicateCopyTopic(), duplicateCopyRequest);
+		/**
+		 * calling Rent summary
+		 */
+		
+		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications());
+		
+		
 		return duplicateCopyRequest.getDuplicateCopyApplications();
 	}
 
@@ -105,23 +112,7 @@ public class DuplicateCopyService {
 		if (applications.isEmpty())
 			return Collections.emptyList();
 		
-		
-		applications.stream().filter(application -> application.getProperty().getId() != null).forEach(application -> {
-			
-			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
-					.propertyId(application.getProperty().getId()).build();
-
-			List<Property> propertiesFromDB = repository.getProperties(propertyCriteria);
-			List<RentDemand> demands = repository
-					.getPropertyRentDemandDetails(propertyCriteria);
-			
-			RentAccount rentAccount = repository
-					.getPropertyRentAccountDetails(propertyCriteria);
-			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
-				application.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
-						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
-			}
-		});
+		addRentSummary(applications);
 		
 		return applications;
 	}
@@ -148,7 +139,33 @@ public class DuplicateCopyService {
 		}
 		producer.push(config.getUpdateDuplicateCopyTopic(), duplicateCopyRequest);
 		notificationService.process(duplicateCopyRequest);
+		
+		/**
+		 * calling Rent summary
+		 */
+		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications());
+		
 		return duplicateCopyRequest.getDuplicateCopyApplications();
+	}
+	
+	private void addRentSummary(List<DuplicateCopy> duplicateCopyApplications) {
+		duplicateCopyApplications.stream().filter(application -> application.getProperty().getId() != null)
+		.forEach(application -> {
+			
+			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
+					.propertyId(application.getProperty().getId()).build();
+
+			List<Property> propertiesFromDB = repository.getProperties(propertyCriteria);
+			List<RentDemand> demands = repository
+					.getPropertyRentDemandDetails(propertyCriteria);
+			
+			RentAccount rentAccount = repository
+					.getPropertyRentAccountDetails(propertyCriteria);
+			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				application.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
+			}
+		});
 	}
 
 }

@@ -3,19 +3,22 @@ package org.egov.nulm.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.idgen.model.IdGenerationResponse;
-import org.egov.nulm.model.NulmShgMemberRequest;
 import org.egov.nulm.model.NulmSusvRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
-import org.egov.nulm.model.SmidShgMemberApplication;
+import org.egov.nulm.model.SmidApplication;
 import org.egov.nulm.model.SusvApplication;
 import org.egov.nulm.model.SusvApplicationDocument;
 import org.egov.nulm.repository.SusvRepository;
@@ -29,8 +32,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class SusvService {
@@ -46,6 +52,11 @@ public class SusvService {
 	private WorkFlowRepository workFlowRepository;
 	
 	private AuditDetailsUtil auditDetailsUtil;
+	private static final String PROCESSINSTANCESJOSNKEY = "$.ProcessInstances";
+
+	private static final String BUSINESSIDJOSNKEY = "$.businessId";
+	private static final String STATUSJSONKEY = "$.state.applicationStatus";
+
 	
 	@Autowired
 	public SusvService(SusvRepository repository, ObjectMapper objectMapper, IdGenRepository idgenrepository,
@@ -99,10 +110,11 @@ public class SusvService {
 				element.setAuditDetails(auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_CREATE));
 			
 			});
-		if(susvApplication.getApplicationStatus().toString()!=SusvApplication.StatusEnum.DRAFTED.toString()) {
-			 //workflow service call to integrate tender workflow
-			workflowIntegration(request.getRequestInfo(), susvApplication);
-			
+		if(!susvApplication.getAction().toString().equalsIgnoreCase(SusvApplication.StatusEnum.DRAFTED.toString())) {
+			 //workflow service call to integrate nulm workflow
+			String workflowStatus=workflowIntegration(request.getRequestInfo(), susvApplication);
+			System.out.println(workflowStatus);
+			susvApplication.setApplicationStatus(SusvApplication.StatusEnum.fromValue(workflowStatus));
 		}
 			repository.createSusvApplication(susvApplication);
 
@@ -123,26 +135,53 @@ public class SusvService {
 	 *
 	 * @param susv object
 	 */
-	private void workflowIntegration(RequestInfo requestInfo ,SusvApplication susvApplication) {
+	private String workflowIntegration(RequestInfo requestInfo ,SusvApplication susvApplication) {
+		String workflowResponse =null;
 		try {
 			ProcessInstanceRequest workflowRequest = new ProcessInstanceRequest();
 			workflowRequest.setRequestInfo(requestInfo);
 			ProcessInstance processInstances = new ProcessInstance();
 			processInstances.setTenantId(susvApplication.getTenantId());
-			processInstances.setAction(susvApplication.getApplicationStatus()!=null ? susvApplication.getApplicationStatus().toString() :"");
+			processInstances.setAction(susvApplication.getAction());
 			processInstances.setBusinessId(susvApplication.getApplicationId());
 			processInstances.setModuleName(config.getBusinessservice());
 			processInstances.setBusinessService(config.getBusinessservice());
+			processInstances.setDocuments(susvApplication.getWfDocuments());
+			processInstances.setComment(susvApplication.getRemark());
+			List<Map<String, String>> uuidmaps = new LinkedList<>();
+
+			if(!CollectionUtils.isEmpty(susvApplication.getAssignee())){
+				// Adding assignes to processInstance
+				User user=new User();
+				susvApplication.getAssignee().forEach(assignee -> {
+					user.setUuid(assignee);
+				});
+				processInstances.setAssignee(user);
+			}
+
 			List<ProcessInstance> processList = Arrays.asList(processInstances);
 			workflowRequest.setProcessInstances(processList);
-			ResponseInfo workflowResponse = workFlowRepository.createWorkflowRequest(workflowRequest);
-			if (workflowResponse == null || !workflowResponse.getStatus().equals(CommonConstants.SUCCESSFUL)) {
-				throw new CustomException(CommonConstants.SUSV_APPLICATION_EXCEPTION_CODE,
-						(workflowResponse != null ? workflowResponse.getMsgId() : CommonConstants.WORKFLOW_MESSAGE));
-			}
+			 workflowResponse = workFlowRepository.createWorkflowRequest(workflowRequest);
+			
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.SUSV_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
+		
+		/*
+		 * on success result from work-flow read the data and set the status back 
+		 * object
+		 */
+		DocumentContext responseContext = JsonPath.parse(workflowResponse);
+		List<Map<String, Object>> responseArray = responseContext.read(PROCESSINSTANCESJOSNKEY);
+		Map<String, String> idStatusMap = new HashMap<>();
+		responseArray.forEach(object -> {
+
+			DocumentContext instanceContext = JsonPath.parse(object);
+			idStatusMap.put(instanceContext.read(BUSINESSIDJOSNKEY), instanceContext.read(STATUSJSONKEY));
+		});
+		System.out.println(idStatusMap);
+	 return idStatusMap.get(susvApplication.getApplicationId());
+
 	}
 	
 	public ResponseEntity<ResponseInfoWrapper> updateSusvApplication(NulmSusvRequest request) {
@@ -165,8 +204,6 @@ public class SusvService {
 				document.setIsActive(true);
 				document.setTenantId(susvApplication.getTenantId());
 				susvdoc.add(document);
-				
-
 			}
 			susvApplication.setApplicationDocument(susvdoc);
 			susvApplication.getSusvApplicationFamilyDetails().stream().forEach(element -> {
@@ -177,9 +214,10 @@ public class SusvService {
 				element.setAuditDetails(auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_CREATE));
 			
 			});
-			if(susvApplication.getApplicationStatus().toString()!=SusvApplication.StatusEnum.DRAFTED.toString()) {
+			if(!susvApplication.getAction().toString().equalsIgnoreCase(SusvApplication.StatusEnum.DRAFTED.toString())) {
 				 //workflow service call to integrate tender workflow
-				workflowIntegration(request.getRequestInfo(), susvApplication);
+				String workflowStatus = workflowIntegration(request.getRequestInfo(), susvApplication);
+				susvApplication.setApplicationStatus(SusvApplication.StatusEnum.fromValue(workflowStatus));
 				
 			}
 			repository.updateSusvApplication(susvApplication);
@@ -198,11 +236,12 @@ public class SusvService {
 					SusvApplication.class);
 			susvApplication.setIsActive(true);
 			susvApplication.setAuditDetails(auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_UPDATE));
-			if(susvApplication.getApplicationStatus().toString()!=SusvApplication.StatusEnum.DRAFTED.toString()) {
-				 //workflow service call to integrate tender workflow
-				workflowIntegration(request.getRequestInfo(), susvApplication);
+			
+				 //workflow service call to integrate nulm workflow
+				String workflowStatus =workflowIntegration(request.getRequestInfo(), susvApplication);
+				susvApplication.setApplicationStatus(SusvApplication.StatusEnum.fromValue(workflowStatus));
 				
-			}
+			
 			repository.updateSusvApplicationStatus(susvApplication);
 
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()

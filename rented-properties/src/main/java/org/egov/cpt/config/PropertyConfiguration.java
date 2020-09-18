@@ -59,10 +59,10 @@ public class PropertyConfiguration {
 
 	@Value("${persister.update.duplicateCopy.topic}")
 	private String UpdateDuplicateCopyTopic;
-	
+
 	@Value("${persister.save.propertyImages.topic}")
 	private String savePropertyImagesTopic;
-	
+
 	@Value("${persister.update.propertyImages.topic}")
 	private String UpdatePropertyImagesTopic;
 
@@ -71,22 +71,21 @@ public class PropertyConfiguration {
 
 	@Value("${ownership.transfer.update.topic}")
 	private String ownershipTransferUpdateTopic;
-	
+
 	@Value("${persister.save.mortgage.topic}")
 	private String saveMortgageTopic;
-	
+
 	@Value("${persister.update.mortgage.topic}")
 	private String updateMortgageTopic;
 
 	@Value("${persister.cancel.property.topic}")
 	private String cancelPropertyTopic;
-	
+
 	@Value("${persister.save.notice.topic}")
 	private String saveNoticeTopic;
-	
+
 	@Value("${persister.update.notice.topic}")
 	private String updateNoticeTopic;
-	
 
 	@Value("${persister.cancel.property.assessment.topic}")
 	private String cancelPropertyAssessmentTopic;
@@ -97,25 +96,6 @@ public class PropertyConfiguration {
 
 	@Value("${egov.user.search.path}")
 	private String userSearchEndpoint;
-
-	// IDGEN
-//	@Value("${egov.idgen.ack.name}")
-//	private String acknowldgementIdGenName;
-//
-//	@Value("${egov.idgen.ack.format}")
-//	private String acknowldgementIdGenFormat;
-//
-//	@Value("${egov.idgen.assm.name}")
-//	private String assessmentIdGenName;
-//
-//	@Value("${egov.idgen.assm.format}")
-//	private String assessmentIdGenFormat;
-//
-//	@Value("${egov.idgen.ptid.name}")
-//	private String propertyIdGenName;
-//
-//	@Value("${egov.idgen.ptid.format}")
-//	private String propertyIdGenFormat;
 
 	// NOTIFICATION TOPICS
 	@Value("${kafka.topics.notification.sms}")
@@ -132,10 +112,10 @@ public class PropertyConfiguration {
 
 	@Value("${notification.sms.enabled}")
 	private Boolean isSMSNotificationEnabled;
-	
+
 	@Value("${notification.email.enabled}")
 	private Boolean isEMAILNotificationEnabled;
-	
+
 	@Value("${kafka.topics.notification.email}")
 	private String emailNotifTopic;
 
@@ -222,7 +202,7 @@ public class PropertyConfiguration {
 
 	@Value("${duplicateCopy.workflow.name}")
 	private String duplicateCopyBusinessServiceValue;
-	
+
 	@Value("${mortgage.workflow.name}")
 	private String mortgageBusinessServiceValue;
 
@@ -245,7 +225,7 @@ public class PropertyConfiguration {
 	@Value("${property.module.name}")
 	private String propertyModuleName;
 
-//	ID Generation
+	// ID Generation
 
 	@Value("${egov.idgen.host}")
 	private String idGenHost;
@@ -256,40 +236,22 @@ public class PropertyConfiguration {
 	@Value("${egov.idgen.rp.applicationNum.name}")
 	private String applicationNumberIdgenNameRP;
 
-	@Value("${egov.idgen.rp.applicationNum.format}")
-	private String applicationNumberIdgenFormatRP;
-	
 	@Value("${egov.idgen.rp.allotmentNum.name}")
 	private String allotmentNumberIdgenNameRP;
-
-	@Value("${egov.idgen.rp.allotmentNum.format}")
-	private String allotmentNumberIdgenFormatRP;
 
 	@Value("${egov.idgen.dc.applicationNum.name}")
 	private String applicationNumberIdgenNameDC;
 
-	@Value("${egov.idgen.dc.applicationNum.format}")
-	private String applicationNumberIdgenFormatDC;
-	
 	@Value("${egov.idgen.mg.applicationNum.name}")
 	private String applicationNumberIdgenNameMG;
 
-	@Value("${egov.idgen.mg.applicationNum.format}")
-	private String applicationNumberIdgenFormatMG;
-	
 	@Value("${egov.idgen.pi.applicationNum.name}")
 	private String applicationNumberIdgenNamePI;
-	
-	@Value("${egov.idgen.pi.applicationNum.format}")
-	private String applicationNumberIdgenFormatPI;
-	
+
 	@Value("${egov.idgen.ng.memoNum.name}")
 	private String memoNumberIdgenNameNG;
 
-	@Value("${egov.idgen.ng.memoNum.format}")
-	private String memoNumbeIdgenFormatNG;
-	
-//	BilllingService generating demand 
+	// BilllingService generating demand
 
 	@Value("${egov.billingservice.host}")
 	private String billingHost;
@@ -305,18 +267,14 @@ public class PropertyConfiguration {
 
 	@Value("${egov.demand.update.endpoint}")
 	private String demandUpdateEndpoint;
-	
+
 	@Value("${egov.bill.gen.endpoint}")
 	private String billGenearateEndpoint;
-	
+
 	@Value("${egov.collectionservice.host}")
 	private String collectionPaymentHost;
-	
-	
+
 	@Value("${egov.collectionservice.payment.create.path}")
 	private String collectionPaymentEndPoint;
-	
-	
-	
 
 }

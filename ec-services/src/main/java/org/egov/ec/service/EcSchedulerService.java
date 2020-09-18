@@ -45,6 +45,7 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -283,9 +284,10 @@ public class EcSchedulerService {
 	 * @param urlResponse
 	 * @param ecSearchCriteria 
 	 * @param req 
+	 * @throws JSONException 
 	 *
 	 */
-	private void sendMail(FileStore urlResponse, EcSearchCriteria ecSearchCriteria, RequestInfoWrapper req) {
+	private void sendMail(FileStore urlResponse, EcSearchCriteria ecSearchCriteria, RequestInfoWrapper req) throws JSONException {
 		String subject = "";
 		String body = "";
 System.out.println(urlResponse);
