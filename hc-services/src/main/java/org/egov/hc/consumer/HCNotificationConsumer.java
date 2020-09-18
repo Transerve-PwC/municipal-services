@@ -48,8 +48,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 
 @org.springframework.stereotype.Service
 @Slf4j
@@ -115,6 +117,9 @@ public class HCNotificationConsumer {
 			if (serviceReqRequest.getActionInfo().get(0).getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
 				//String role = HCConstants.EXECUTIVE_ENGINEER;
 				
+				String serviceCode = getServiceCode(serviceReqRequest);
+				serviceReqRequest.getServices().get(0).setServiceType(serviceCode);
+				
 				String role = workflowIntegrator.parseBussinessServiceData(workflowIntegrator.getbussinessServiceDatafromprocesinstanceEdit(serviceReqRequest),serviceReqRequest);
 
 				getRolewiseUserList(serviceReqRequest, role, messageMap);
@@ -123,6 +128,49 @@ public class HCNotificationConsumer {
 
 		}
 
+	}
+
+	private String getServiceCode(ServiceRequest service) {
+		String servicetype =service.getServices().get(0).getServiceType();
+		
+		try
+		{
+			
+			String payloadData ="{\"RequestInfo\": {\"apiId\": \"Rainmaker\",\"ver\": \".01\",\"ts\": \"\",\"action\": \"_search\",\"did\": \"1\",\"key\": \"\",\"msgId\": \"20170310130900|en_IN\",\"authToken\": null},\"MdmsCriteria\": {\"tenantId\": \"ch\",\"moduleDetails\": [{\"moduleName\": \"eg-horticulture\",\"masterDetails\": [{\"name\": \"ServiceType\"}]}]}}" ;
+
+			String mdmsData =  sendPostRequest(
+					hcConfiguration.getMdmsHost().concat(hcConfiguration.getMdmsEndpoint()).concat("?").concat("&tenantId=ch"),
+					payloadData);
+
+			if(null != mdmsData)
+			{
+				org.json.JSONObject mdmsDataobj = new org.json.JSONObject(mdmsData);
+				org.json.JSONObject MdmsResObj = mdmsDataobj.getJSONObject("MdmsRes");
+				org.json.JSONObject eghorticultureObj = MdmsResObj.getJSONObject("eg-horticulture");
+			
+				org.json.JSONArray mdmsServiceTypes = eghorticultureObj.getJSONArray("ServiceType");
+				
+				for(int cnt =0 ; cnt <= mdmsServiceTypes.length() ; cnt ++)
+				{
+					org.json.JSONObject mdmsServiceTypesObj = new org.json.JSONObject(
+							mdmsServiceTypes.get(cnt).toString());
+					
+					String serviceName = mdmsServiceTypesObj.getString("name");
+					
+					if(serviceName.equals(service.getServices().get(0).getServiceType()))
+					{
+						servicetype = mdmsServiceTypesObj.getString("code");
+						break;
+					}
+				}
+			}
+
+			
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return servicetype;
 	}
 
 	public void getRolewiseUserList(ServiceRequest serviceReqRequest, String role, Map<String, String> messageMap) {
@@ -238,7 +286,8 @@ public class HCNotificationConsumer {
 				
 				//call to mdms and get servicetype
 				
-				String mdmsServiceTypeName = getMdmsServiceTypeName(service);
+				String mdmsServiceTypeName =service.getServiceType();
+				mdmsServiceTypeName=getMdmsServiceTypeName(serviceReqRequest);
 				
 				service.setServiceType(mdmsServiceTypeName); 
 				 
@@ -285,36 +334,43 @@ public class HCNotificationConsumer {
 
 	}
 
-	private String getMdmsServiceTypeName(ServiceRequestData service) {
+	private String getMdmsServiceTypeName(ServiceRequest service) {
 		
-		String servicetype = null;
+		String servicetype =service.getServices().get(0).getServiceType();
+		
 		try
 		{
-			String payloadData ="{\"MdmsCriteria\": {\"tenantId\": \"ch\",\"moduleDetails\": [{\"moduleName\": \"eg-horticulture\",\"masterDetails\": [{\"name\":\"ServiceType\"}]}]}}" ;
+			
+			String payloadData ="{\"RequestInfo\": {\"apiId\": \"Rainmaker\",\"ver\": \".01\",\"ts\": \"\",\"action\": \"_search\",\"did\": \"1\",\"key\": \"\",\"msgId\": \"20170310130900|en_IN\",\"authToken\": null},\"MdmsCriteria\": {\"tenantId\": \"ch\",\"moduleDetails\": [{\"moduleName\": \"eg-horticulture\",\"masterDetails\": [{\"name\": \"ServiceType\"}]}]}}" ;
 
-			String mdmsData = sendPostRequest(
-					hcConfiguration.getMdmsHost().concat(hcConfiguration.getMdmsEndpoint()).concat("?").concat("&tenantId=" + service.getTenantId()),
+			String mdmsData =  sendPostRequest(
+					hcConfiguration.getMdmsHost().concat(hcConfiguration.getMdmsEndpoint()).concat("?").concat("&tenantId=ch"),
 					payloadData);
 
-			org.json.JSONObject mdmsDataobj = new org.json.JSONObject(mdmsData);
-			org.json.JSONObject MdmsResObj = mdmsDataobj.getJSONObject("MdmsRes");
-			org.json.JSONObject eghorticultureObj = MdmsResObj.getJSONObject("eg-horticulture");
-		
-			org.json.JSONArray mdmsServiceTypes = eghorticultureObj.getJSONArray("ServiceType");
-			
-			for(int cnt =0 ; cnt <= mdmsServiceTypes.length() ; cnt ++)
+			if(null != mdmsData)
 			{
-				org.json.JSONObject mdmsServiceTypesObj = new org.json.JSONObject(
-						mdmsServiceTypes.get(cnt).toString());
+				org.json.JSONObject mdmsDataobj = new org.json.JSONObject(mdmsData);
+				org.json.JSONObject MdmsResObj = mdmsDataobj.getJSONObject("MdmsRes");
+				org.json.JSONObject eghorticultureObj = MdmsResObj.getJSONObject("eg-horticulture");
+			
+				org.json.JSONArray mdmsServiceTypes = eghorticultureObj.getJSONArray("ServiceType");
 				
-				String servicecode = mdmsServiceTypesObj.getString("code");
-				
-				if(servicecode.equals(service.getServiceType()))
+				for(int cnt =0 ; cnt <= mdmsServiceTypes.length() ; cnt ++)
 				{
-					servicetype = mdmsServiceTypesObj.getString("name");
-					break;
+					org.json.JSONObject mdmsServiceTypesObj = new org.json.JSONObject(
+							mdmsServiceTypes.get(cnt).toString());
+					
+					String servicecode = mdmsServiceTypesObj.getString("code");
+					
+					if(servicecode.equals(service.getServices().get(0).getServiceType()))
+					{
+						servicetype = mdmsServiceTypesObj.getString("name");
+						break;
+					}
 				}
 			}
+
+			
 		}
 		catch (Exception e) {
 			// TODO: handle exception
@@ -1040,8 +1096,8 @@ public class HCNotificationConsumer {
                  
                  	//call to mdms and get servicetype
  				
- 					String mdmsServiceTypeName = getMdmsServiceTypeName(service);
- 				
+                 	String mdmsServiceTypeName =service.getServiceType();
+ 					mdmsServiceTypeName=getMdmsServiceTypeName(serviceReqRequest);
  					service.setServiceType(mdmsServiceTypeName); 
              
                 	{ 	

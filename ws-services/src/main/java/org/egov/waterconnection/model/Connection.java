@@ -91,6 +91,14 @@ public class Connection {
 	@JsonProperty("plumberInfo")
 	@Valid
 	private List<PlumberInfo> plumberInfo = null;
+	
+	@JsonProperty("waterApplication")
+	@Valid
+	private List<WaterApplication> waterApplication = null;
+	
+	@JsonProperty("waterProperty")
+	@Valid
+	private WaterProperty waterProperty = null;
 
 	@JsonProperty("roadType")
 	private String roadType = null;
@@ -573,6 +581,36 @@ public class Connection {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public List<WaterApplication> getWaterApplication() {
+		return waterApplication;
+	}
+
+	public void setWaterApplication(List<WaterApplication> waterApplication) {
+		this.waterApplication = waterApplication;
+	}
+	
+	public Connection waterApplication(List<WaterApplication> waterApplication) {
+		this.waterApplication = waterApplication;
+		return this;
+	}
+
+	public Connection addWaterApplication(WaterApplication application) {
+		if (this.waterApplication == null) {
+			this.waterApplication = new ArrayList<WaterApplication>();
+		}
+		if (!this.waterApplication.contains(application))
+			this.waterApplication.add(application);
+		return this;
+	}
+
+	public WaterProperty getWaterProperty() {
+		return waterProperty;
+	}
+
+	public void setWaterProperty(WaterProperty waterProperty) {
+		this.waterProperty = waterProperty;
 	}
 
 }

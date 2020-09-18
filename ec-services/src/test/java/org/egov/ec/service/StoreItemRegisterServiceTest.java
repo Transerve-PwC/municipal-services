@@ -10,11 +10,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.ec.config.EcConstants;
 import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.StoreItemRegisterRepository;
 import org.egov.ec.service.DeviceSourceService;
 import org.egov.ec.service.StoreItemRegisterService;
 import org.egov.ec.service.validator.CustomBeanValidator;
+import org.egov.ec.web.models.Auction;
 import org.egov.ec.web.models.AuditDetails;
 import org.egov.ec.web.models.Document;
 import org.egov.ec.web.models.EcPayment;
@@ -35,6 +37,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StoreItemRegisterServiceTest {
@@ -81,9 +84,20 @@ public class StoreItemRegisterServiceTest {
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), StoreItemRegister.class)).thenReturn(storeItemnMaster);
 		
 		EcSearchCriteria searchCriteria = EcSearchCriteria.builder().build();
+		searchCriteria.setChallanId("dfghjvbnm");
+		searchCriteria.setSearchText("dfghjcvb");
+		
+		RequestInfoWrapper getinfoWrapper = RequestInfoWrapper.builder().requestBody(searchCriteria)
+				.requestInfo(RequestInfo.builder().userInfo(userInfo).build()).build();
+		
+		Mockito.when(objectMapper.convertValue(getinfoWrapper.getRequestBody(), EcSearchCriteria.class)).thenReturn(searchCriteria);
+		
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(getinfoWrapper.getRequestBody(), EcSearchCriteria.class);
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.REPORTAGEINGGET)).thenReturn("");
 		
 		Mockito.when(repository.getStoreItemRegister(searchCriteria)).thenReturn(new ArrayList<StoreItemRegister>());
-		Assert.assertEquals(HttpStatus.OK, service.getStoreRegisterItem(infoWrapper).getStatusCode());
+		Assert.assertEquals(HttpStatus.OK, service.getStoreRegisterItem(getinfoWrapper).getStatusCode());
 	}
 	
 	@Test
@@ -98,9 +112,20 @@ public class StoreItemRegisterServiceTest {
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), StoreItemRegister.class)).thenReturn(storeItemnMaster);
 		
 		EcSearchCriteria searchCriteria = EcSearchCriteria.builder().build();
+		searchCriteria.setChallanId("dfghjvbnm");
+		searchCriteria.setSearchText("dfghjcvb");
+		
+		RequestInfoWrapper getinfoWrapper = RequestInfoWrapper.builder().requestBody(searchCriteria)
+				.requestInfo(RequestInfo.builder().userInfo(userInfo).build()).build();
+		
+		Mockito.when(objectMapper.convertValue(getinfoWrapper.getRequestBody(), EcSearchCriteria.class)).thenReturn(searchCriteria);
+		
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(getinfoWrapper.getRequestBody(), EcSearchCriteria.class);
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.REPORTAGEINGGET)).thenReturn("");
 		
 		Mockito.when(repository.getStoreItemRegister(searchCriteria)).thenReturn(new ArrayList<StoreItemRegister>());
-		Assert.assertEquals(HttpStatus.OK, service.getStoreRegisterItem(infoWrapper).getStatusCode());
+		Assert.assertEquals(HttpStatus.OK, service.getStoreRegisterItem(getinfoWrapper).getStatusCode());
 	}
 
 	@Test(expected = CustomException.class)
@@ -110,6 +135,11 @@ public class StoreItemRegisterServiceTest {
 
 	@Test
 	public void testCreateStoreItemRegister() {
+		
+		StoreItemRegister StoreItemRegister2 = StoreItemRegister.builder().storeItemUuid("aasdjiasdu8ahs89asdy8da9h").build();
+		ArrayList<StoreItemRegister> StoreItemRegister2List=new ArrayList<>();
+		StoreItemRegister2List.add(StoreItemRegister2);
+		
 		List<StoreItemRegister> storeItemRegister=new ArrayList<StoreItemRegister>();
 		List<Document> document=Arrays.asList(Document.builder().documentUuid("hbhjbhjbjb").documentType("hbhbj").build());
 		StoreItemRegister storeItemnMaster = StoreItemRegister.builder().storeItemUuid("aasdjiasdu8ahs89asdy8a9h").document(document).build();
@@ -118,12 +148,22 @@ public class StoreItemRegisterServiceTest {
 		
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(storeItemnMaster)
 				.build();
-		storeItemRegister.add(storeItemnMaster);
+		storeItemRegister.add(storeItemnMaster); 
 		storeItemnMaster.setStoreItemRegister(storeItemRegister);
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), StoreItemRegister.class)).thenReturn(storeItemnMaster);
+		
+		StoreItemRegister storeItemnMasternew = StoreItemRegister.builder().document(document).storeItemRegister(StoreItemRegister2List).storeItemUuid("aasdjiasdu8ahs89asdy8a9h").build();
+		RequestInfoWrapper infoWrappernew = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(storeItemnMasternew)
+				.build();
+		Mockito.when(objectMapper.convertValue(infoWrappernew.getRequestBody(), StoreItemRegister.class)).thenReturn(storeItemnMasternew);
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(storeItemnMasternew, StoreItemRegister.class);
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.STOREREGISTRATION)).thenReturn("");
+		
 		when(wfIntegrator.callWorkFlow(Matchers.any(ProcessInstanceRequest.class)))
+		
 		.thenReturn(ResponseInfo.builder().status("successful").build());
-		Assert.assertEquals(HttpStatus.OK, service.createStoreRegisterItem(infoWrapper,"vhbk").getStatusCode());
+		Assert.assertEquals(HttpStatus.OK, service.createStoreRegisterItem(infoWrappernew,"vhbk").getStatusCode());
 
 	}
 
@@ -138,6 +178,10 @@ public class StoreItemRegisterServiceTest {
 
 	@Test
 	public void testUpdateStoreItemRegister() {
+		
+		StoreItemRegister StoreItemRegister2 = StoreItemRegister.builder().storeItemUuid("aasdjiasdu8ahs89asdy8da9h").build();
+		ArrayList<StoreItemRegister> StoreItemRegister2List=new ArrayList<>();
+		StoreItemRegister2List.add(StoreItemRegister2);
 		List<StoreItemRegister> storeItemRegister=new ArrayList<StoreItemRegister>();
 		StoreItemRegister storeItemnMaster = StoreItemRegister.builder().storeItemUuid("aasdjiasdu8ahs89asdy8a9h").build();
 		AuditDetails auditDetails = AuditDetails.builder().createdBy("1").createdTime(1546515646L).lastModifiedBy("1")
@@ -147,9 +191,17 @@ public class StoreItemRegisterServiceTest {
 		storeItemRegister.add(storeItemnMaster);
 		storeItemnMaster.setStoreItemRegister(storeItemRegister);
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), StoreItemRegister.class)).thenReturn(storeItemnMaster);
+
+		StoreItemRegister storeItemnMasternew = StoreItemRegister.builder().storeItemRegister(StoreItemRegister2List).storeItemUuid("aasdjiasdu8ahs89asdy8a9h").build();
+		RequestInfoWrapper infoWrappernew = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(storeItemnMasternew)
+				.build();
+		Mockito.when(objectMapper.convertValue(infoWrappernew.getRequestBody(), StoreItemRegister.class)).thenReturn(storeItemnMasternew);
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(infoWrappernew.getRequestBody(), StoreItemRegister.class);
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.STOREREGISTRATION)).thenReturn("");
 		when(wfIntegrator.callWorkFlow(Matchers.any(ProcessInstanceRequest.class)))
 		.thenReturn(ResponseInfo.builder().status("successful").build());
-		Assert.assertEquals(HttpStatus.OK, service.updateStoreRegisterItem(infoWrapper).getStatusCode());
+		Assert.assertEquals(HttpStatus.OK, service.updateStoreRegisterItem(infoWrappernew).getStatusCode());
 	}
 
 	@Test(expected = CustomException.class)
@@ -172,6 +224,9 @@ public class StoreItemRegisterServiceTest {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(paymentMaster)
 				.build();
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), EcPayment.class)).thenReturn(paymentMaster);
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(infoWrapper.getRequestBody(), EcPayment.class);
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.STOREREGISTRATION)).thenReturn("");
 		when(wfIntegrator.callWorkFlow(Matchers.any(ProcessInstanceRequest.class)))
 		.thenReturn(ResponseInfo.builder().status("successful").build());
 		Assert.assertEquals(HttpStatus.OK, service.updateStorePayment(infoWrapper).getStatusCode());

@@ -300,13 +300,15 @@ public class EnrichmentService {
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 		estimateDue.setEstimateAmount(new BigDecimal(0.0));
 		estimateDue.setCategory(Category.FEE);
-		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT,
+				PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateDue);
 
 		TaxHeadEstimate estimateCharges = new TaxHeadEstimate();
 		estimateCharges.setEstimateAmount(new BigDecimal(0.0));
 		estimateCharges.setCategory(Category.FEE);
-		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
+		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT,
+				PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateCharges);
 
 		Calculation calculation = Calculation.builder()
@@ -331,13 +333,15 @@ public class EnrichmentService {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(owner.getOwnerDetails().getDueAmount());
 			estimate1.setCategory(Category.FEE);
-			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT,
+					PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
 
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(owner.getOwnerDetails().getAproCharge());
 			estimate2.setCategory(Category.FEE);
-			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
+			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_OT,
+					PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate2);
 		}
 		// estimates.add(estimate);
@@ -350,7 +354,7 @@ public class EnrichmentService {
 	private String getTaxHeadCode(String billingBusService, Category category) {
 		return String.format("%s_%s", billingBusService, category.toString());
 	}
-	
+
 	private String getTaxHeadCodeWithCharge(String billingBusService, String chargeFor, Category category) {
 		return String.format("%s_%s_%s", billingBusService, chargeFor, category.toString());
 	}
@@ -384,9 +388,8 @@ public class EnrichmentService {
 	 * @param count       Number of ids to be generated
 	 * @return List of ids generated using idGen service
 	 */
-	private List<String> getIdList(RequestInfo requestInfo, String tenantId, String idKey, String idformat, int count) {
-		List<IdResponse> idResponses = idGenRepository.getId(requestInfo, tenantId, idKey, idformat, count)
-				.getIdResponses();
+	private List<String> getIdList(RequestInfo requestInfo, String tenantId, String idKey, int count) {
+		List<IdResponse> idResponses = idGenRepository.getId(requestInfo, tenantId, idKey, count).getIdResponses();
 
 		if (CollectionUtils.isEmpty(idResponses))
 			throw new CustomException("IDGEN ERROR", "No ids returned from idgen Service");
@@ -406,10 +409,10 @@ public class EnrichmentService {
 		int peopertiesSize = request.getOwners().size();
 
 		List<String> applicationNumbers = setIdgenIds(requestInfo, tenantId, peopertiesSize,
-				config.getApplicationNumberIdgenNameRP(), config.getApplicationNumberIdgenFormatRP());
+				config.getApplicationNumberIdgenNameRP());
 		ListIterator<String> itr = applicationNumbers.listIterator();
 		List<String> allotmentNumbers = setIdgenIds(requestInfo, tenantId, peopertiesSize,
-				config.getAllotmentNumberIdgenNameRP(), config.getAllotmentNumberIdgenFormatRP());
+				config.getAllotmentNumberIdgenNameRP());
 		ListIterator<String> allotmentitr = allotmentNumbers.listIterator();
 		if (!CollectionUtils.isEmpty(owners)) {
 			owners.forEach(owner -> {
@@ -475,13 +478,15 @@ public class EnrichmentService {
 		TaxHeadEstimate estimateFee = new TaxHeadEstimate();
 		estimateFee.setEstimateAmount(new BigDecimal(0.0));
 		estimateFee.setCategory(Category.FEE);
-		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC,
+				PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateFee);
 
 		TaxHeadEstimate estimateCharges = new TaxHeadEstimate();
 		estimateCharges.setEstimateAmount(new BigDecimal(0.0));
 		estimateCharges.setCategory(Category.FEE);
-		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
+		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC,
+				PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateCharges);
 
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
@@ -505,13 +510,15 @@ public class EnrichmentService {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(application.getApplicant().get(0).getFeeAmount());
 			estimate1.setCategory(Category.FEE);
-			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC,
+					PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
 
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(application.getApplicant().get(0).getAproCharge());
 			estimate2.setCategory(Category.FEE);
-			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC, PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
+			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_DC,
+					PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate2);
 		}
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
@@ -525,7 +532,7 @@ public class EnrichmentService {
 		List<DuplicateCopy> applications = request.getDuplicateCopyApplications();
 
 		List<String> applicationNumbers = setIdgenIds(requestInfo, tenantId, applications.size(),
-				config.getApplicationNumberIdgenNameDC(), config.getApplicationNumberIdgenFormatDC());
+				config.getApplicationNumberIdgenNameDC());
 		ListIterator<String> itr = applicationNumbers.listIterator();
 		applications.forEach(application -> {
 			application.setApplicationNumber(itr.next());
@@ -539,7 +546,7 @@ public class EnrichmentService {
 		List<PropertyImages> applications = propertyImagesRequest.getPropertyImagesApplications();
 
 		List<String> applicationNumbers = setIdgenIds(requestInfo, tenantId, applications.size(),
-				config.getApplicationNumberIdgenNamePI(), config.getApplicationNumberIdgenFormatPI());
+				config.getApplicationNumberIdgenNamePI());
 		ListIterator<String> itr = applicationNumbers.listIterator();
 		applications.forEach(application -> {
 			application.setApplicationNumber(itr.next());
@@ -634,7 +641,7 @@ public class EnrichmentService {
 		String tenantId = request.getMortgageApplications().get(0).getTenantId();
 		List<Mortgage> applications = request.getMortgageApplications();
 		List<String> applicationNumbers = setIdgenIds(requestInfo, tenantId, applications.size(),
-				config.getApplicationNumberIdgenNameMG(), config.getApplicationNumberIdgenFormatMG());
+				config.getApplicationNumberIdgenNameMG());
 		ListIterator<String> itr = applicationNumbers.listIterator();
 		applications.forEach(application -> {
 			application.setApplicationNumber(itr.next());
@@ -642,11 +649,10 @@ public class EnrichmentService {
 
 	}
 
-	private List<String> setIdgenIds(RequestInfo requestInfo, String tenantId, int size, String idGenName,
-			String idGenFormate) {
+	private List<String> setIdgenIds(RequestInfo requestInfo, String tenantId, int size, String idGenName) {
 		List<String> applicationNumbers = null;
 
-		applicationNumbers = getIdList(requestInfo, tenantId, idGenName, idGenFormate, size);
+		applicationNumbers = getIdList(requestInfo, tenantId, idGenName, size);
 
 		Map<String, String> errorMap = new HashMap<>();
 		if (applicationNumbers.size() != size) {
@@ -832,8 +838,7 @@ public class EnrichmentService {
 		RequestInfo requestInfo = request.getRequestInfo();
 		String tenantId = request.getNoticeApplications().get(0).getTenantId();
 		List<NoticeGeneration> notice = request.getNoticeApplications();
-		List<String> memoNumbers = setIdgenIds(requestInfo, tenantId, notice.size(), config.getMemoNumberIdgenNameNG(),
-				config.getMemoNumbeIdgenFormatNG());
+		List<String> memoNumbers = setIdgenIds(requestInfo, tenantId, notice.size(), config.getMemoNumberIdgenNameNG());
 		ListIterator<String> itr = memoNumbers.listIterator();
 		notice.forEach(application -> {
 			application.setMemoNumber(itr.next());

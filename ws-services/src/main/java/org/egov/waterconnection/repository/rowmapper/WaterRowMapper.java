@@ -13,7 +13,9 @@ import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.Document;
 import org.egov.waterconnection.model.PlumberInfo;
+import org.egov.waterconnection.model.WaterApplication;
 import org.egov.waterconnection.model.WaterConnection;
+import org.egov.waterconnection.model.WaterProperty;
 import org.egov.waterconnection.model.enums.Status;
 import org.egov.waterconnection.model.workflow.ProcessInstance;
 import org.springframework.dao.DataAccessException;
@@ -50,6 +52,8 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 				currentWaterConnection.setProposedTaps(rs.getInt("proposedTaps"));
 				currentWaterConnection.setWaterApplicationType(rs.getString("waterApplicationType"));
 				currentWaterConnection.setSecurityCharge(rs.getDouble("securityCharge"));
+				currentWaterConnection.setInWorkflow(rs.getBoolean("inWorkflow"));
+				currentWaterConnection.setActivityType(rs.getString("water_activitytype"));
 				currentWaterConnection.setRoadCuttingArea(rs.getFloat("roadcuttingarea"));
 				currentWaterConnection.setRoadType(rs.getString("roadtype"));
 				HashMap<String, Object> additionalDetails = new HashMap<>();
@@ -114,6 +118,27 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 			plumber.setCorrespondenceAddress(rs.getString("correspondenceaddress"));
 			plumber.setFatherOrHusbandName(rs.getString("fatherorhusbandname"));
 			waterConnection.addPlumberInfoItem(plumber);
+		}
+		
+		String applicationId=rs.getString("application_id");
+		if (!StringUtils.isEmpty(applicationId)) {
+			WaterApplication app = new WaterApplication();
+			app.setId(rs.getString("application_id"));
+			app.setApplicationNo(rs.getString("application_id"));
+			app.setActivityType(rs.getString("application_id"));
+			app.setApplicationStatus(rs.getString("application_id"));
+			app.setAction(rs.getString("application_id"));
+			app.setComments(rs.getString("application_id"));
+			waterConnection.addWaterApplication(app);
+		}
+		
+		String waterpropertyid=rs.getString("waterpropertyid");
+		if (!StringUtils.isEmpty(waterpropertyid)) {
+			WaterProperty property = new WaterProperty();
+			property.setId(rs.getString("waterpropertyid"));
+			property.setUsageCategory(rs.getString("usagecategory"));
+			property.setUsageSubCategory(rs.getString("usagesubcategory"));
+			waterConnection.setWaterProperty(property);
 		}
 	}
 }

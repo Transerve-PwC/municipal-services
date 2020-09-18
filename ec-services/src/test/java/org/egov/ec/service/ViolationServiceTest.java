@@ -9,12 +9,11 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.ec.config.EcConstants;
 import org.egov.ec.config.EchallanConfiguration;
 import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.IdGenRepository;
 import org.egov.ec.repository.ViolationRepository;
-import org.egov.ec.service.DeviceSourceService;
-import org.egov.ec.service.ViolationService;
 import org.egov.ec.service.validator.CustomBeanValidator;
 import org.egov.ec.web.models.AuditDetails;
 import org.egov.ec.web.models.Document;
@@ -38,9 +37,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.TestPropertySource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ViolationServiceTest {
@@ -108,6 +107,11 @@ public class ViolationServiceTest {
 				
 		  Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(),
 		  EcSearchCriteria.class)).thenReturn(searchCriteria);
+		  
+		  Gson gson = new Gson();
+			String payloadData = gson.toJson(searchCriteria, EcSearchCriteria.class);
+
+			Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.CHALLANGET)).thenReturn("");
 		 		
 		Mockito.when(repository.getChallan(searchCriteria)).thenReturn(new ArrayList<Violation>());
 		Assert.assertEquals(HttpStatus.OK, service.getChallan(infoWrapper).getStatusCode());
@@ -125,6 +129,10 @@ public class ViolationServiceTest {
 				
 		  Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(),
 		  EcSearchCriteria.class)).thenReturn(searchCriteria);
+		  Gson gson = new Gson();
+			String payloadData = gson.toJson(searchCriteria, EcSearchCriteria.class);
+
+			Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.CHALLANGET)).thenReturn("");
 		 		
 		Mockito.when(repository.getChallan(searchCriteria)).thenReturn(new ArrayList<Violation>());
 		Assert.assertEquals(HttpStatus.OK, service.getChallan(infoWrapper).getStatusCode());
@@ -142,6 +150,11 @@ public class ViolationServiceTest {
 				
 		  Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(),
 		  EcSearchCriteria.class)).thenReturn(searchCriteria);
+		  
+		  Gson gson = new Gson();
+			String payloadData = gson.toJson(searchCriteria, EcSearchCriteria.class);
+
+			Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.CHALLANGET)).thenReturn("");
 		 		
 		Mockito.when(repository.getChallan(searchCriteria)).thenReturn(new ArrayList<Violation>());
 		Assert.assertEquals(HttpStatus.OK, service.getChallan(infoWrapper).getStatusCode());
@@ -161,6 +174,10 @@ public class ViolationServiceTest {
 		
 		  Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(),
 		  EcSearchCriteria.class)).thenReturn(searchCriteria);
+		  Gson gson = new Gson();
+			String payloadData = gson.toJson(searchCriteria, EcSearchCriteria.class);
+
+			Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.CHALLANGET)).thenReturn("");
 		 				
 		Mockito.when(repository.getChallan(searchCriteria)).thenReturn(new ArrayList<Violation>());
 		Assert.assertEquals(HttpStatus.OK, service.getChallan(infoWrapper).getStatusCode());
@@ -189,6 +206,12 @@ public class ViolationServiceTest {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(violation)
 				.build();
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), Violation.class)).thenReturn(violation);
+		
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(infoWrapper.getRequestBody(),Violation.class);
+		
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.CHALLANCREATE)).thenReturn("");
+		
 		List<IdResponse> idResponses=Arrays.asList(IdResponse.builder().id("djbjbd").build());
 		IdGenerationResponse list=IdGenerationResponse.builder().idResponses(idResponses).build();
 		when(idGenRepository.getId((infoWrapper.getRequestInfo()), (violation.getTenantId()), 
@@ -249,6 +272,10 @@ public class ViolationServiceTest {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(violation)
 				.build();
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), Violation.class)).thenReturn(violation);
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(violation, Violation.class);
+
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.CHALLANUPDATE)).thenReturn("");
 		when(wfIntegrator.callWorkFlow(Matchers.any(ProcessInstanceRequest.class)))
 		.thenReturn(ResponseInfo.builder().status("successful").build());
 		Assert.assertEquals(HttpStatus.OK, service.updateChallan(infoWrapper).getStatusCode());
@@ -273,6 +300,12 @@ public class ViolationServiceTest {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().auditDetails(auditDetails).requestBody(ecPayment)
 				.build();
 		Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(), EcPayment.class)).thenReturn(ecPayment);
+		
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(ecPayment, EcPayment.class);
+
+		Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.AUCTIONCREATE)).thenReturn("");
+		
 		Assert.assertEquals(HttpStatus.OK, service.addPayment(infoWrapper).getStatusCode());
 
 	}
@@ -297,6 +330,11 @@ public class ViolationServiceTest {
 				
 		  Mockito.when(objectMapper.convertValue(infoWrapper.getRequestBody(),
 		  Violation.class)).thenReturn(violation);
+		  
+		  Gson gson = new Gson();
+			String payloadData = gson.toJson(violation, Violation.class);
+
+			Mockito.when(wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.VENDDORGET)).thenReturn("");
 		 		
 		Mockito.when(repository.getSearchChallan(violation)).thenReturn(new ArrayList<Violation>());
 		Assert.assertEquals(HttpStatus.OK, service.getSearchChallan(infoWrapper).getStatusCode());

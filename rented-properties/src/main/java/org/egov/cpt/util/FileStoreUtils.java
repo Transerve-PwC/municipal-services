@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.egov.cpt.models.ExcelSearchCriteria;
 import org.egov.cpt.models.Property;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ByteArrayResource;
@@ -40,17 +41,15 @@ public class FileStoreUtils {
 	@Cacheable(value = "fileUrl", sync = true)
 	@SuppressWarnings("unchecked")
 	public String fetchFileStoreUrl(ExcelSearchCriteria searchCriteria) {
-		String responseMap = "";
 		StringBuilder uri = new StringBuilder(fileStoreUrl);
-		uri.append("?tenantId=" + searchCriteria.getTenantId() + "&fileStoreIds=" + searchCriteria.getFileStoreId());
-		try {
-			Map<String, Object> response = (Map<String, Object>) (restTemplate.getForObject(uri.toString(),
-					HashMap.class));
-			responseMap = String.valueOf(response.get(searchCriteria.getFileStoreId()));
-		} catch (Exception e) {
-			log.error("Exception while fetching file url: ", e);
+		String stateLevelTenantId = this.getStateLevelTenantId(searchCriteria.getTenantId());
+		uri.append("?tenantId=" + stateLevelTenantId + "&fileStoreIds=" + searchCriteria.getFileStoreId());
+		Map<String, Object> response = (Map<String, Object>) (restTemplate.getForObject(uri.toString(), HashMap.class));
+		if (!response.containsKey(searchCriteria.getFileStoreId())) {
+			throw new CustomException("FILE_NOT_FOUND", String.format("File store id %s not found with tenant id %s",
+					searchCriteria.getFileStoreId(), stateLevelTenantId));
 		}
-		return responseMap;
+		return String.valueOf(response.get(searchCriteria.getFileStoreId()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -109,6 +108,14 @@ public class FileStoreUtils {
 			log.error("Exception while fetching file store id: ", e);
 		}
 		return null;
+	}
+
+	private String getStateLevelTenantId(String tenantId) {
+		String[] components = tenantId.split(".");
+		if (components.length == 0) {
+			return "ch";
+		}
+		return components[0];
 	}
 
 }

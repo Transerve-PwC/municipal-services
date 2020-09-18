@@ -108,7 +108,7 @@ public class PTConstants {
 
 	public static final String BILL_AMOUNT_JSONPATH = "$.billResponse.Bill[0].totalAmount";
 
-	public static final String MODULE = "rainmaker-tl";
+	public static final String MODULE = "rainmaker-rp";
 
 	public static final String NOTIFICATION_LOCALE = "en_IN";
 

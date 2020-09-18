@@ -7,6 +7,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ec.config.EcConstants;
 import org.egov.ec.repository.ItemRepository;
 import org.egov.ec.service.validator.CustomBeanValidator;
+import org.egov.ec.web.models.FineMaster;
 import org.egov.ec.web.models.ItemMaster;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,23 +55,38 @@ public class ItemService {
 		log.info("Item Service - Add Item");
 		try {
 			ItemMaster itemMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), ItemMaster.class);
-			itemMaster.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-			itemMaster.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-			itemMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			itemMaster.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-			validate.validateFields(itemMaster);
-
-
-			itemMaster.setItemUuid(UUID.randomUUID().toString());
 			
-			String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "AddItemEvent",
-					itemMaster.getTenantId(), requestInfoWrapper.getAuditDetails());
-			itemMaster.setSourceUuid(sourceUuid);
-
-			repository.addItems(itemMaster);
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
-					.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(itemMaster).build(),
-					HttpStatus.OK);
+			String responseValidate = "";
+			
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(itemMaster, ItemMaster.class);
+			
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.ITEMMASTERCREATE);
+		
+			if(responseValidate.equals("")) 
+			{
+					itemMaster.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+					itemMaster.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+					itemMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					itemMaster.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+					validate.validateFields(itemMaster);
+		
+		
+					itemMaster.setItemUuid(UUID.randomUUID().toString());
+					
+					String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "AddItemEvent",
+							itemMaster.getTenantId(), requestInfoWrapper.getAuditDetails());
+					itemMaster.setSourceUuid(sourceUuid);
+		
+					repository.addItems(itemMaster);
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(itemMaster).build(),
+							HttpStatus.OK);
+			}
+			else
+			{
+				throw new CustomException("ITEMMASTER_ADD_EXCEPTION", responseValidate);
+			}
 		} catch (Exception e) {
 			log.error("Item Service - Add Item Exception"+e.getMessage());
 			throw new CustomException("ITEMMASTER_ADD_EXCEPTION", e.getMessage());
@@ -88,17 +105,32 @@ public class ItemService {
 		log.info("Item Service - Update Item");
 		try {
 			ItemMaster itemMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), ItemMaster.class);
-			itemMaster.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-			itemMaster.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-			itemMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			itemMaster.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-			validate.validateFields(itemMaster);
-
-
-			repository.updateItem(itemMaster);
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
-					.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(itemMaster).build(),
-					HttpStatus.OK);
+			
+			String responseValidate = "";
+			
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(itemMaster, ItemMaster.class);
+			
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.ITEMMASTERCREATE);
+		
+			if(responseValidate.equals("")) 
+			{
+				itemMaster.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+				itemMaster.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+				itemMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+				itemMaster.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+				validate.validateFields(itemMaster);
+	
+	
+				repository.updateItem(itemMaster);
+				return new ResponseEntity<>(ResponseInfoWrapper.builder()
+						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(itemMaster).build(),
+						HttpStatus.OK);
+			}
+			else
+			{
+				throw new CustomException("ITEMMASTER_UPDATE_EXCEPTION", responseValidate);
+			}
 		} catch (Exception e) {
 			log.error("Item Service - Update Item Exception"+e.getMessage());
 			throw new CustomException("ITEMMASTER_UPDATE_EXCEPTION", e.getMessage());
@@ -116,11 +148,25 @@ public class ItemService {
 	public ResponseEntity<ResponseInfoWrapper> getItem(RequestInfoWrapper requestInfoWrapper) {
 		log.info("Item Service - Get Item");
 		try {
+			
+			ItemMaster itemMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), ItemMaster.class);
+			String responseValidate = "";
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(itemMaster, ItemMaster.class);
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData,EcConstants.ITEMMASTERGET);
+			if(responseValidate.equals("")) 
+			{
+			
 			List<ItemMaster> listItemMaster = repository.getItem(requestInfoWrapper);
 			return new ResponseEntity<>(
 					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
 							.responseBody(listItemMaster).build(),
 					HttpStatus.OK);
+			}
+			else
+			{
+				throw new CustomException("ITEMMASTER_GET_EXCEPTION", responseValidate);
+			}
 		} catch (Exception e) {
 			log.error("Item Service - Get Item Exception"+e.getMessage());
 			throw new CustomException("ITEMMASTER_GET_EXCEPTION", e.getMessage());
