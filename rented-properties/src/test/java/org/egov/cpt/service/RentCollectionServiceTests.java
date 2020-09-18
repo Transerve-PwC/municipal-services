@@ -376,7 +376,7 @@ public class RentCollectionServiceTests {
     }
 
     private RentPayment getPayment(double amount, String date) throws ParseException {
-        return RentPayment.builder().amountPaid(amount).dateOfPayment(getEpochFromDateString(date)).build();
+        return RentPayment.builder().amountPaid(amount).receiptNo("X-1212").dateOfPayment(getEpochFromDateString(date)).build();
     }
 
     private RentDemand getDemand(double amount, String date) throws ParseException {

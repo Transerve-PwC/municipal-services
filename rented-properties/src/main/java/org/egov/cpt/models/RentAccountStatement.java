@@ -41,6 +41,12 @@ public class RentAccountStatement {
 
     @JsonProperty("remainingBalance")
     private double remainingBalance;
+    
+    /**
+	 * Receipt no of the payment
+	 */
+	@JsonProperty("receiptNo")
+	private String receiptNo;
 
     public double getRemainingBalance() {
         return Math.max(0, this.remainingBalance - this.remainingInterest);
