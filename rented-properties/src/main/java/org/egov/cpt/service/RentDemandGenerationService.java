@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AuditDetails;
 import org.egov.cpt.models.Property;
@@ -58,7 +57,7 @@ public class RentDemandGenerationService {
 		this.demandNotificationService = demandNotificationService;
 	}
 
-	public void createDemand(RentDemandCriteria demandCriteria, RequestInfo requestInfo) {
+	public void createDemand(RentDemandCriteria demandCriteria) {
 
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
 		propertyCriteria.setRelations(Collections.singletonList("owner"));
@@ -85,14 +84,14 @@ public class RentDemandGenerationService {
 						if (!dateList.contains(currentDate.toString())) {
 							// generate demand
 							generateRentDemand(property, collectionDemand.get(), currentDate, rentDemandList,
-									rentPaymentList, rentAccount, requestInfo);
+									rentPaymentList, rentAccount);
 						}
 					} else {
 						LocalDate date = LocalDate.parse(demandCriteria.getDate(), FORMATTER);
 						if (!dateList.contains(date.toString())) {
 							// generate demand
 							generateRentDemand(property, collectionDemand.get(), date, rentDemandList, rentPaymentList,
-									rentAccount, requestInfo);
+									rentAccount);
 						}
 					}
 				} else {
@@ -107,7 +106,7 @@ public class RentDemandGenerationService {
 	}
 
 	private void generateRentDemand(Property property, RentDemand collectionDemand, LocalDate date,
-			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount, RequestInfo requestInfo) {
+			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount) {
 
 		int oldYear = new Date(collectionDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDate().getYear();
@@ -174,7 +173,7 @@ public class RentDemandGenerationService {
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
-		demandNotificationService.process(rentDemand, property, requestInfo);
+		demandNotificationService.process(rentDemand, property);
 	}
 
 }

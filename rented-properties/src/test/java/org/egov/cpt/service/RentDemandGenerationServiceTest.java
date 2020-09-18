@@ -5,7 +5,6 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.ModeEnum;
 import org.egov.cpt.models.Property;
@@ -53,7 +52,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	@Test
@@ -62,7 +61,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteriaWhereDemandAlreadyExists(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteriaWhereDemandAlreadyExists());
 	}
 
 	@Test
@@ -70,7 +69,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	@Test
@@ -81,7 +80,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(new RentDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(new RentDemandCriteria());
 	}
 
 	@Test
@@ -91,7 +90,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(new RentDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(new RentDemandCriteria());
 	}
 
 	@Test
@@ -102,7 +101,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	@Test
@@ -110,14 +109,14 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentDemandDetails(Mockito.any())).thenReturn(buildRentDemandList());
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	@Test
 	public void createDemandTestWithoutPayments() {
 		Mockito.when(propertyRepository.getPropertyRentDemandDetails(Mockito.any())).thenReturn(buildRentDemandList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	@Test
@@ -129,7 +128,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	@Test
@@ -141,7 +140,7 @@ public class RentDemandGenerationServiceTest {
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
-		rentDemandGenerationService.createDemand(buildDemandCriteria(), buildRequestInfo());
+		rentDemandGenerationService.createDemand(buildDemandCriteria());
 	}
 
 	private RentDemandCriteria buildDemandCriteria() {
@@ -242,12 +241,4 @@ public class RentDemandGenerationServiceTest {
 		return Collections.singletonList(rentCollection);
 	}
 
-	private RequestInfo buildRequestInfo() {
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setApiId("Rainmaker");
-		requestInfo.setAuthToken("86fb987a-9a56-4ed7-9b96-bcc516a34352");
-		requestInfo.setVer(".01");
-		requestInfo.setMsgId("20170310130900|en_IN");
-		return requestInfo;
-	}
 }

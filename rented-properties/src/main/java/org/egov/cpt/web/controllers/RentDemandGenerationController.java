@@ -29,9 +29,8 @@ public class RentDemandGenerationController {
 	}
 
 	@PostMapping("/_create")
-	public ResponseEntity<?> create(@Valid @ModelAttribute RentDemandCriteria demandCriteria,
-			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
-		demandGenerationService.createDemand(demandCriteria, requestInfoWrapper.getRequestInfo());
+	public ResponseEntity<?> create(@Valid @ModelAttribute RentDemandCriteria demandCriteria) {
+		demandGenerationService.createDemand(demandCriteria);
 		log.info("Rend Demand generation request for year: " + demandCriteria.getDate());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

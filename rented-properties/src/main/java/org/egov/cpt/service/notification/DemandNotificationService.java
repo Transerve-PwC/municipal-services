@@ -30,7 +30,9 @@ public class DemandNotificationService {
 		this.util = util;
 	}
 
-	public void process(RentDemand rentDemand, Property property, RequestInfo requestInfo) {
+	public void process(RentDemand rentDemand, Property property) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("20170310130900|en_IN");
 
 		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
 		List<EmailRequest> emailRequest = new LinkedList<>();
