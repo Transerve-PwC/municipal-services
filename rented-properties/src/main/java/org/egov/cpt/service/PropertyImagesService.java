@@ -38,6 +38,7 @@ public class PropertyImagesService {
 	public List<PropertyImages> createPropertyImages(PropertyImagesRequest propertyImagesRequest) {
 		propertyValidator.isPropertyPIExist(propertyImagesRequest);
 //		propertyValidator.validateDuplicateCopyCreateRequest(propertyImagesRequest);
+		propertyValidator.validatePropertyImagesUpdateLimit(propertyImagesRequest);
 		enrichmentService.enrichpropertyImageCreateRequest(propertyImagesRequest);
 
 		producer.push(config.getSavePropertyImagesTopic(), propertyImagesRequest);

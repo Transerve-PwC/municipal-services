@@ -984,4 +984,40 @@ public class PropertyValidator {
 					PTConstants.BUSINESS_SERVICE_FL_RP);
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	public void validatePropertyImagesUpdateLimit(PropertyImagesRequest propertyImagesRequest) {
+		String tenantId = propertyImagesRequest.getPropertyImagesApplications().get(0).getTenantId().split("\\.")[0];
+		String filter = "[?(@.code=='" + PTConstants.BUSINESS_SERVICE_PM + "')].documentList";
+
+		/**
+		 * Get list of application documents from MDMS
+		 */
+		List<Map<String, Object>> data = (List<Map<String, Object>>) mdmsService.getMDMSResponse(
+				propertyImagesRequest.getRequestInfo(), tenantId, PTConstants.MDMS_PT_MOD_NAME, "applications", filter,
+				PTConstants.JSONPATH_CODES + ".applications");
+		List<Map<String, Object>> mdmsDocuments = (List<Map<String, Object>>) (data.get(0));
+
+		Integer maxValue = (Integer) mdmsDocuments.stream()
+				.filter(code -> code.get("code").equals("TRANSIT_SITE_IMAGES")).map(max -> max.get("maxCount"))
+				.findFirst().get();
+		Integer minValue = (Integer) mdmsDocuments.stream()
+				.filter(code -> code.get("code").equals("TRANSIT_SITE_IMAGES")).map(max -> max.get("minCount"))
+				.findFirst().get();
+
+		Map<String, String> errorMap = new HashMap<>();
+		propertyImagesRequest.getPropertyImagesApplications().forEach(application -> {
+			if (application.getApplicationDocuments().size() < minValue.intValue()) {
+				errorMap.put("PROPERTY_IMAGES_NOT_FOUND", "no property images found");
+			}
+			if (application.getApplicationDocuments().size() > maxValue.intValue()) {
+				errorMap.put("PROPERTY_IMAGES_LIMIT_EXCEEDS", "property images upload limit exceeds");
+			}
+		});
+
+		if (!errorMap.isEmpty()) {
+			throw new CustomException(errorMap);
+		}
+
+	}
 }
