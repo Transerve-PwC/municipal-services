@@ -370,6 +370,7 @@ public class NotificationUtil {
 
 	public String getDemandGenerationMsg(RentDemand rentDemand, Property property, String localizationMessages) {
 		String messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_DEMAND_GENERATION, localizationMessages);
+		messageTemplate = messageTemplate.replace("<1>", property.getOwners().get(0).getOwnerDetails().getName());
 		messageTemplate = messageTemplate.replace("<2>", rentDemand.getCollectionPrincipal().toString());
 		messageTemplate = messageTemplate.replace("<3>", property.getTransitNumber());
 		LocalDate localDate = new Date(rentDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())

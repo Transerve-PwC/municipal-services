@@ -72,6 +72,7 @@ public class DemandNotificationService {
 			if (owner.getOwnerDetails().getPhone() != null && owner.getActiveState()) {
 				mobileNumberToOwner.put(owner.getOwnerDetails().getPhone(), owner.getOwnerDetails().getName());
 			}
+			message = message.replace("\\n", "\n");
 			smsRequests.addAll(util.createSMSRequest(message, mobileNumberToOwner));
 		}
 
