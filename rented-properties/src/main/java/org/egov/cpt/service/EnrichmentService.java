@@ -463,7 +463,7 @@ public class EnrichmentService {
 						.setId(propertyImagesRequest.getPropertyImagesApplications().get(0).getProperty().getId());
 				application.setAuditDetails(propertyAuditDetails);
 
-						application.setCapturedBy(requestInfo.getUserInfo().getName());
+				application.setCapturedBy(requestInfo.getUserInfo().getName());
 
 				enrichDocuments(application.getApplicationDocuments(), requestInfo, application.getProperty().getId(),
 						application.getId(), application.getTenantId());
