@@ -31,7 +31,7 @@ public class RentPaymentRowMapper implements ResultSetExtractor<List<RentPayment
 						.lastModifiedBy(rs.getString("payment_modified_by"))
 						.lastModifiedTime(rs.getLong("payment_modified_date")).build();
 				RentPayment rentPayment = RentPayment.builder().id(rs.getString("payment_id")).propertyId("payment_pid")
-						.receiptNo(rs.getString("payment_receiptNo")).processed(rs.getBoolean("processed"))
+						.receiptNo(rs.getString("payment_receiptNo")).processed(rs.getBoolean("payment_processed"))
 						.amountPaid(rs.getDouble("payment_amtPaid")).dateOfPayment(rs.getLong("payment_dateOfPayment"))
 						.mode(ModeEnum.fromValue(rs.getString("payment_mode"))).auditDetails(paymentAuditDetails)
 						.build();

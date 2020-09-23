@@ -37,7 +37,7 @@ public class RentDemandRowMapper implements ResultSetExtractor<List<RentDemand>>
 						.collectionPrincipal(rs.getDouble("demand_colPrincipal"))
 						.remainingPrincipal(rs.getDouble("demand_remPrincipal"))
 						.interestSince(rs.getLong("demand_intSince"))
-						.status(PaymentStatusEnum.fromValue(rs.getString("status")))
+						.status(PaymentStatusEnum.fromValue(rs.getString("demand_status")))
 						.mode(ModeEnum.fromValue(rs.getString("demand_mode"))).auditDetails(demandAuditDetails).build();
 				demandMap.put(demandId, rentDemand);
 			}
