@@ -24,44 +24,54 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 		LinkedHashMap<String, Owner> ownerMap = new LinkedHashMap<>();
 		while (rs.next()) {
 			String ownerId = rs.getString("oid");
-			String applicationType = rs.getString("application_type");
+			String applicationType = rs.getString("odapplication_type");
 			Owner currentOwner = ownerMap.get(ownerId);
 
 			if (null == currentOwner && applicationType != null
 					&& applicationType.equalsIgnoreCase("CitizenApplication")) {
 
-				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("ocreated_by"))
-						.createdTime(rs.getLong("ocreated_date")).lastModifiedBy(rs.getString("omodified_by"))
-						.lastModifiedTime(rs.getLong("omodified_date")).build();
+				AuditDetails auditdetails = AuditDetails.builder()
+						
+						 // .createdBy(rs.getString("ocreated_by"))
+						 // .createdTime(rs.getLong("ocreated_date"))
+						  .lastModifiedBy(rs.getString("omodified_by"))
+						 						.lastModifiedTime(rs.getLong("omodified_date")).build();
 
 				OwnerDetails ownerDetails = OwnerDetails.builder().id(rs.getString("odid"))
-						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("owner_id"))
-						.tenantId(rs.getString("otenantid")).name(rs.getString("name")).email(rs.getString("email"))
-						.phone(rs.getString("phone")).gender(rs.getString("gender"))
-						.dateOfBirth(rs.getLong("date_of_birth")).aadhaarNumber(rs.getString("aadhaar_number"))
-						.allotmentStartdate(rs.getLong("allotment_startdate"))
-						.allotmentEnddate(rs.getLong("allotment_enddate"))
-						.posessionStartdate(rs.getLong("posession_startdate"))
-						.posessionEnddate(rs.getLong("posession_enddate")).monthlyRent(rs.getString("monthly_rent"))
-						.revisionPeriod(rs.getString("revision_period"))
-						.revisionPercentage(rs.getString("revision_percentage"))
-						.fatherOrHusband(rs.getString("father_or_husband")).relation(rs.getString("relation"))
-						.applicationType(OwnerDetails.ApplicationTypeEnum.fromValue(rs.getString("application_type")))
-						.applicationNumber(rs.getString("application_number"))
-						.dateOfDeathAllottee(rs.getLong("date_of_death_allottee"))
-						.relationWithDeceasedAllottee(rs.getString("relation_with_deceased_allottee"))
-						.permanent(rs.getBoolean("permanent")).dueAmount(rs.getBigDecimal("due_amount"))
-						.aproCharge(rs.getBigDecimal("apro_charge")).auditDetails(auditdetails).build();
+						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("odowner_id"))
+						.tenantId(rs.getString("otenantid")).name(rs.getString("odname")).email(rs.getString("odemail"))
+						.phone(rs.getString("odphone"))
+						//.gender(rs.getString("odgender"))
+						//.dateOfBirth(rs.getLong("oddate_of_birth"))
+						.aadhaarNumber(rs.getString("odaadhaar_number"))
+						//.allotmentStartdate(rs.getLong("odallotment_startdate"))
+						//.allotmentEnddate(rs.getLong("odallotment_enddate"))
+						//.posessionStartdate(rs.getLong("odposession_startdate"))
+						//.posessionEnddate(rs.getLong("odposession_enddate")).monthlyRent(rs.getString("odmonthly_rent"))
+						//.revisionPeriod(rs.getString("odrevision_period"))
+						//.revisionPercentage(rs.getString("odrevision_percentage"))
+						//.fatherOrHusband(rs.getString("odfather_or_husband"))
+						.relation(rs.getString("odrelation"))
+						.applicationType(OwnerDetails.ApplicationTypeEnum.fromValue(rs.getString("odapplication_type")))
+						.applicationNumber(rs.getString("odapplication_number"))
+						.dateOfDeathAllottee(rs.getLong("oddate_of_death_allottee"))
+						.relationWithDeceasedAllottee(rs.getString("odrelation_with_deceased_allottee"))
+						//.permanent(rs.getBoolean("odpermanent"))
+						.dueAmount(rs.getBigDecimal("due_amount"))
+						//.aproCharge(rs.getBigDecimal("apro_charge"))
+						.auditDetails(auditdetails).build();
 
 				Property property = Property.builder().id(rs.getString("pid"))
-						.transitNumber(rs.getString("transit_number")).colony(rs.getString("colony"))
-						.pincode(rs.getString("pincode")).area(rs.getString("area")).build();
+						.transitNumber(rs.getString("pttransit_number")).colony(rs.getString("ptcolony"))
+						.pincode(rs.getString("addresspincode"))
+						.area(rs.getString("aaddressrea"))
+						.build();
 
 				currentOwner = Owner.builder().id(rs.getString("oid")).property(property)
 						.tenantId(rs.getString("otenantid")).allotmenNumber(rs.getString("oallotmen_number"))
 						.activeState(rs.getBoolean("oactive_state")).isPrimaryOwner(rs.getBoolean("ois_primary_owner"))
-						.applicationState(rs.getString("application_state"))
-						.applicationAction(rs.getString("application_action")).ownerDetails(ownerDetails)
+						.applicationState(rs.getString("oapplication_state"))
+						.applicationAction(rs.getString("oapplication_action")).ownerDetails(ownerDetails)
 						.auditDetails(auditdetails).build();
 
 				ownerMap.put(ownerId, currentOwner);
@@ -74,14 +84,17 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 
 	private void addChildrenToProperty(ResultSet rs, Owner owner) throws SQLException {
 		if (rs.getString("docid") != null && rs.getBoolean("docis_active")) {
-			AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("ocreated_by"))
-					.createdTime(rs.getLong("ocreated_date")).lastModifiedBy(rs.getString("omodified_by"))
-					.lastModifiedTime(rs.getLong("omodified_date")).build();
-
+			/*
+			 * AuditDetails auditdetails =
+			 * AuditDetails.builder().createdBy(rs.getString("ocreated_by"))
+			 * .createdTime(rs.getLong("ocreated_date")).lastModifiedBy(rs.getString(
+			 * "omodified_by")) .lastModifiedTime(rs.getLong("omodified_date")).build();
+			 */
 			Document ownershipTransferDocument = Document.builder().id(rs.getString("docid"))
 					.referenceId(rs.getString("doc_referenceId")).tenantId(rs.getString("doctenantid"))
 					.active(rs.getBoolean("docis_active")).documentType(rs.getString("document_type"))
-					.fileStoreId(rs.getString("fileStore_id")).auditDetails(auditdetails)
+					.fileStoreId(rs.getString("fileStore_id"))
+					//.auditDetails(auditdetails)
 					.propertyId(rs.getString("doc_propertyId")).build();
 			owner.getOwnerDetails().addownershipTransferDocumentsItem(ownershipTransferDocument);
 		}

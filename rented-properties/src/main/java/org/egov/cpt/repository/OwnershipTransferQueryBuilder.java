@@ -23,23 +23,26 @@ public class OwnershipTransferQueryBuilder {
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
 	// reference from pt-services-v2 package:package org.egov.pt.repository.builder;
-	private static final String SEARCH_QUERY = SELECT + "pt.*,address.*,ownership.*,od.*,doc.*,"
+	private static final String SEARCH_QUERY = SELECT 
+			//+ "pt.*,address.*,ownership.*,od.*,doc.*,"
 
-			+ " pt.id as pid, pt.transit_number, pt.colony,"
+			+ " pt.id as pid, pt.transit_number as pttransit_number, pt.colony as ptcolony,"
 
-			+ " address.pincode, address.area,"
+			+ " address.pincode as addresspincode, address.area as addressarea,"
 
 			+ " ownership.id as oid, ownership.property_id as oproperty_id,"
 			+ " ownership.tenantid as otenantid, ownership.allotmen_number as oallotmen_number,"
 			+ " ownership.active_state as oactive_state, ownership.is_primary_owner as ois_primary_owner,"
-			+ " ownership.application_state, ownership.application_action,"
-			+ " ownership.created_by as ocreated_by, ownership.created_date as ocreated_date, ownership.modified_by as omodified_by, ownership.modified_date as omodified_date,"
+			+ " ownership.application_state as oapplication_state, ownership.application_action as oapplication_action,"
+			+ " ownership.modified_date as omodified_date,"
 
-			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id odowner_id, od.tenantid as odtenantid,"
-			+ " od.name, od.email, od.phone," + " od.gender, od.date_of_birth, od.aadhaar_number,"
-			+ " od.allotment_startdate, od.allotment_enddate," + " od.posession_startdate, od.posession_enddate,"
-			+ " od.monthly_rent, od.revision_period, od.revision_percentage, od.father_or_husband, od.relation,"
-			+ " od.relation_with_deceased_allottee, od.date_of_death_allottee, od.application_number, od.application_type, od.permanent,"
+			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id as odowner_id, od.tenantid as odtenantid,"
+			+ " od.name as odname, od.email as odemail, od.phone as odphone," + " od.aadhaar_number as odaadhaar_number,"
+			//+ " od.allotment_startdate as odallotment_startdate, od.allotment_enddate as odallotment_enddate," + " od.posession_startdate as odposession_startdate, od.posession_enddate as odposession_enddate,"
+			//+ " od.monthly_rent as odmonthly_rent, od.revision_period as odrevision_period, od.revision_percentage as odrevision_percentage, od.father_or_husband as odfather_or_husband, 
+			+ " od.relation as odrelation,"
+			+ " od.relation_with_deceased_allottee as odrelation_with_deceased_allottee, od.date_of_death_allottee as oddate_of_death_allottee, od.application_number as odapplication_number, od.application_type as odapplication_type,"
+			//+ " od.permanent as odpermanent,"
 
 			+ " doc.id as docid, doc.reference_id as doc_referenceId, doc.tenantid as doctenantid,"
 			+ " doc.is_active as docis_active, doc.document_type, doc.fileStore_id,doc.property_id as doc_propertyId"

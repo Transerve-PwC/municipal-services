@@ -26,15 +26,15 @@ public class NoticeRowMapper implements ResultSetExtractor<List<NoticeGeneration
 			NoticeGeneration currentapplication = applicationMap.get(noticeId);
 
 			if (null == currentapplication) {
-				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("created_by"))
-						.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("modified_by"))
-						.lastModifiedTime(rs.getLong("modified_time")).build();
+				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("ngcreated_by"))
+						.createdTime(rs.getLong("ngcreated_time")).lastModifiedBy(rs.getString("ngmodified_by"))
+						.lastModifiedTime(rs.getLong("ngModifiedTime")).build();
 				
 				Property property = Property.builder().id(rs.getString("pid"))
-						.transitNumber(rs.getString("transit_number")).colony(rs.getString("colony")).build();
+						.transitNumber(rs.getString("pttransit_number")).colony(rs.getString("ptcolony")).build();
 				
 				currentapplication = NoticeGeneration.builder().id(noticeId).property(property)
-						.tenantId(rs.getString("tenantid"))
+						.tenantId(rs.getString("ngtenantid"))
 						.memoNumber(rs.getString("memoNumber"))
 						.memoDate(rs.getLong("memoDate"))
 						.noticeType(rs.getString("noticeType"))
@@ -58,9 +58,9 @@ public class NoticeRowMapper implements ResultSetExtractor<List<NoticeGeneration
 
 	private void addChildrenToProperty(ResultSet rs, NoticeGeneration currentapplication) throws SQLException {
 
-		AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("created_by"))
-				.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("modified_by"))
-				.lastModifiedTime(rs.getLong("created_time")).build();
+		AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("doccreated_by"))
+				.createdTime(rs.getLong("doccreated_time")).lastModifiedBy(rs.getString("docmodified_by"))
+				.lastModifiedTime(rs.getLong("doccreated_time")).build();
 		
 		if (rs.getString("docId") != null && rs.getBoolean("doc_active")) {
 			Document applicationDocument = Document.builder()

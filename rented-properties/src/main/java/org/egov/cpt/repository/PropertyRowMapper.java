@@ -41,24 +41,24 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 				Address address = Address.builder().id(rs.getString("aid")).propertyId(rs.getString("aproperty_id"))
 						.transitNumber(rs.getString("atransit_number")).tenantId(tenantId)
-						.colony(rs.getString("colony")).area(rs.getString("addressArea"))
-						.district(rs.getString("district")).state(rs.getString("state"))
-						.country(rs.getString("country")).pincode(rs.getString("pincode"))
-						.landmark(rs.getString("landmark")).build();
+						.colony(rs.getString("acolony")).area(rs.getString("addressArea"))
+						.district(rs.getString("adistrict")).state(rs.getString("astate"))
+						.country(rs.getString("acountry")).pincode(rs.getString("apincode"))
+						.landmark(rs.getString("alandmark")).build();
 
 				PropertyDetails propertyDetails = PropertyDetails.builder().id(rs.getString("pdid"))
-						.propertyId(rs.getString("pdproperty_id")).transitNumber(rs.getString("transit_number"))
-						.tenantId(tenantId).area(rs.getString("area")).rentPerSqyd(rs.getString("rent_per_sqyd"))
-						.currentOwner(rs.getString("current_owner")).floors(rs.getString("floors"))
-						.additionalDetails(rs.getString("additional_details")).address(address)
+						.propertyId(rs.getString("pdproperty_id")).transitNumber(rs.getString("pdtransit_number"))
+						.tenantId(tenantId).area(rs.getString("ptarea")).rentPerSqyd(rs.getString("ptrent_per_sqyd"))
+						.currentOwner(rs.getString("ptcurrent_owner")).floors(rs.getString("ptfloors"))
+						.additionalDetails(rs.getString("ptadditional_details")).address(address)
 						.rentIncrementPercentage(rs.getDouble("pd_rent_inc_pg"))
 						.rentIncrementPeriod(rs.getInt("pd_rent_inc_period")).interestRate(rs.getDouble("pd_int_rate"))
 						.auditDetails(auditdetails).build();
 
-				currentProperty = Property.builder().id(propertyId).transitNumber(rs.getString("transit_number"))
-						.tenantId(tenantId).colony(rs.getString("colony"))
-						.masterDataState(rs.getString("master_data_state"))
-						.masterDataAction(rs.getString("master_data_action")).propertyDetails(propertyDetails)
+				currentProperty = Property.builder().id(propertyId).transitNumber(rs.getString("ptransit_number"))
+						.tenantId(tenantId).colony(rs.getString("pcolony"))
+						.masterDataState(rs.getString("pmaster_data_state"))
+						.masterDataAction(rs.getString("pmaster_data_action")).propertyDetails(propertyDetails)
 						.auditDetails(auditdetails).build();
 				propertyMap.put(propertyId, currentProperty);
 			}
@@ -93,21 +93,21 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.lastModifiedTime(rs.getLong("omodified_date")).build();
 
 				OwnerDetails ownerDetails = OwnerDetails.builder().id(rs.getString("odid"))
-						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("owner_id"))
-						.tenantId(rs.getString("otenantid")).name(rs.getString("name")).email(rs.getString("email"))
-						.phone(rs.getString("phone")).gender(rs.getString("gender"))
-						.dateOfBirth(rs.getLong("date_of_birth")).aadhaarNumber(rs.getString("aadhaar_number"))
-						.allotmentStartdate(rs.getLong("allotment_startdate"))
-						.allotmentEnddate(rs.getLong("allotment_enddate"))
-						.posessionStartdate(rs.getLong("posession_startdate"))
-						.posessionEnddate(rs.getLong("posession_enddate")).monthlyRent(rs.getString("monthly_rent"))
-						.revisionPeriod(rs.getString("revision_period"))
-						.revisionPercentage(rs.getString("revision_percentage"))
-						.fatherOrHusband(rs.getString("father_or_husband")).relation(rs.getString("relation"))
-						.applicationType(OwnerDetails.ApplicationTypeEnum.fromValue(rs.getString("application_type")))
+						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("odowner_id"))
+						.tenantId(rs.getString("otenantid")).name(rs.getString("odname")).email(rs.getString("odemail"))
+						.phone(rs.getString("odphone")).gender(rs.getString("odgender"))
+						.dateOfBirth(rs.getLong("oddate_of_birth")).aadhaarNumber(rs.getString("odaadhaar_number"))
+						.allotmentStartdate(rs.getLong("odallotment_startdate"))
+						.allotmentEnddate(rs.getLong("odallotment_enddate"))
+						.posessionStartdate(rs.getLong("odposession_startdate"))
+						.posessionEnddate(rs.getLong("odposession_enddate")).monthlyRent(rs.getString("odmonthly_rent"))
+						.revisionPeriod(rs.getString("odrevision_period"))
+						.revisionPercentage(rs.getString("odrevision_percentage"))
+						.fatherOrHusband(rs.getString("odfather_or_husband")).relation(rs.getString("odrelation"))
+						.applicationType(OwnerDetails.ApplicationTypeEnum.fromValue(rs.getString("odapplication_type")))
 						.applicationNumber(rs.getString("odapplication_number"))
-						.dateOfDeathAllottee(rs.getLong("date_of_death_allottee"))
-						.relationWithDeceasedAllottee(rs.getString("relation_with_deceased_allottee"))
+						.dateOfDeathAllottee(rs.getLong("oddate_of_death_allottee"))
+						.relationWithDeceasedAllottee(rs.getString("odrelation_with_deceased_allottee"))
 						.permanent(rs.getBoolean("od_permanent")).auditDetails(auditdetails).build();
 
 				Owner owners = Owner.builder().id(rs.getString("oid")).property(property)

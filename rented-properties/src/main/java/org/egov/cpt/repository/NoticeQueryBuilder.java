@@ -22,17 +22,18 @@ public class NoticeQueryBuilder {
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY ngModifiedTime desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
-	private static final String NOTICE_SEARCH_QUERY = SELECT + "ng.*,doc.*,pt.*,"
-			+ " ng.id as ngid, ng.propertyid, ng.tenantid as ngtenantid,ng.memo_number as memoNumber,"
+	private static final String NOTICE_SEARCH_QUERY = SELECT 
+			//+ "ng.*,doc.*,pt.*,"
+			+ " ng.id as ngid, ng.propertyid as ngpropertyid, ng.tenantid as ngtenantid,ng.memo_number as memoNumber,"
 			+ "ng.memo_date as memoDate,ng.notice_type as noticeType,ng.guardian as guardian,ng.relationship as relationship,"
 			+ "ng.violations as violations,ng.description as description,ng.demand_notice_from as demandNoticeFrom,"
 			+ "ng.demand_notice_to as demandNoticeTo,ng.recovery_type as recoveryType, ng.amount as amount,"
-			+ "ng.modified_time as ngModifiedTime,"
+			+ "ng.created_by as ngcreated_by, ng.created_time as ngcreated_time, ng.modified_by as ngmodified_by, ng.modified_time as ngModifiedTime,"
 
-			+ " pt.id as pid, pt.transit_number, pt.colony,"
+			+ " pt.id as pid, pt.transit_number as pttransit_number, pt.colony as ptcolony,"
 
 			+ " doc.id as docId,doc.reference_id as doc_referenceId, doc.tenantId as doctenantid,doc.document_type as doctype , doc.filestore_id as doc_filestoreid,"
-			+ " doc.property_id as doc_propertyid , doc.is_active as doc_active"
+			+ " doc.property_id as doc_propertyid , doc.is_active as doc_active, doc.created_by as doccreated_by, doc.created_date as doccreated_date, doc.modified_by as docmodified_by, doc.modified_date as docmodified_date"
 
 			+ " FROM cs_pt_notice_generation_application ng " + INNER_JOIN
 			+ " cs_pt_property_v1 pt on ng.propertyid=pt.id " + LEFT_JOIN

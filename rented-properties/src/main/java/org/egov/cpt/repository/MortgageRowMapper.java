@@ -29,18 +29,18 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 			Mortgage currentapplication = applicationMap.get(mortgageId);
 
 			if (null == currentapplication) {
-				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("created_by"))
-						.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("modified_by"))
-						.lastModifiedTime(rs.getLong("modified_time")).build();
+				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("mgcreated_by"))
+						.createdTime(rs.getLong("mgcreated_time")).lastModifiedBy(rs.getString("mgmodified_by"))
+						.lastModifiedTime(rs.getLong("mgModifiedTime")).build();
 
 				// List<Owner> owners = addOwnersToProperty(rs, currentProperty);
 
 				Property property = Property.builder().id(rs.getString("pid"))
-						.transitNumber(rs.getString("transit_number")).colony(rs.getString("colony"))
-						.pincode(rs.getString("pincode")).area(rs.getString("area")).build();
+						.transitNumber(rs.getString("pttransit_number")).colony(rs.getString("ptcolony"))
+						.pincode(rs.getString("addresspincode")).area(rs.getString("addressarea")).build();
 
 				currentapplication = Mortgage.builder().id(mortgageId).property(property)
-						.tenantId(rs.getString("tenantid")).state(rs.getString("state")).action(rs.getString("action"))
+						.tenantId(rs.getString("mgtenantid")).state(rs.getString("mgstate")).action(rs.getString("mgaction"))
 						.applicationNumber(rs.getString("app_number"))
 						.allotmentNumber(rs.getString("owner_allot_number"))
 						.allotmentStartDate(rs.getString("allot_start_date"))
@@ -58,16 +58,16 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 		Map<String, MortgageApplicant> applicantMap = new HashMap<>();
 		MortgageApplicant applicant = null;
 
-		AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("created_by"))
-				.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("modified_by"))
-				.lastModifiedTime(rs.getLong("created_time")).build();
+		AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("apcreated_by"))
+				.createdTime(rs.getLong("apcreated_time")).lastModifiedBy(rs.getString("apmodified_by"))
+				.lastModifiedTime(rs.getLong("apcreated_time")).build();
 
 		if (currentapplication.getApplicant() == null) {
 			if (rs.getString("aid") != null) {
 				applicant = MortgageApplicant.builder().id(rs.getString("aid")).tenantId(rs.getString("aptenantid"))
-						.mortgageId(rs.getString("mg_id")).name(rs.getString("name")).email(rs.getString("email"))
-						.phone(rs.getString("mobileno")).guardian(rs.getString("guardian"))
-						.relationship(rs.getString("relationship")).adhaarNumber(rs.getString("adhaarnumber"))
+						.mortgageId(rs.getString("mg_id")).name(rs.getString("apname")).email(rs.getString("apemail"))
+						.phone(rs.getString("apmobileno")).guardian(rs.getString("apguardian"))
+						.relationship(rs.getString("aprelationship")).adhaarNumber(rs.getString("adhaarnumber"))
 						.auditDetails(auditDetails).build();
 				applicantMap.put(rs.getString("aid"), applicant);
 				currentapplication.setApplicant(new ArrayList<>(applicantMap.values()));
@@ -75,7 +75,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 		}
 
 		if (currentapplication.getProperty() == null) {
-			Property property = Property.builder().id(rs.getString("pid")).transitNumber(rs.getString("transit_number"))
+			Property property = Property.builder().id(rs.getString("pid")).transitNumber(rs.getString("pttransit_number"))
 					.build();
 			currentapplication.setProperty(property);
 		}
