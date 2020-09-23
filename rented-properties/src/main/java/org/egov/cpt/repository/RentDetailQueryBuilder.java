@@ -16,10 +16,12 @@ public class RentDetailQueryBuilder {
 
 	private static final String SELECT = "SELECT ";
 
-	private final String paginationWrapper = "SELECT * FROM "
-			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY property_id desc) offset_ FROM " + "({})"
-			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
-
+	/*
+	 * private final String paginationWrapper = "SELECT * FROM " +
+	 * "(SELECT *, DENSE_RANK() OVER (ORDER BY property_id desc) offset_ FROM " +
+	 * "({})" + " result) result_offset " +
+	 * "WHERE offset_ > :start AND offset_ <= :end";
+	 */
 	private static final String DEMAND_SEARCH_QUERY = SELECT
 			//+ " demand.*,"
 			+ " demand.id as demand_id,demand.property_id as demand_pid,demand.initialGracePeriod as demand_IniGracePeriod, demand.generationDate as demand_genDate,"
@@ -47,7 +49,7 @@ public class RentDetailQueryBuilder {
 
 			+ " FROM cs_pt_payment payment ";
 
-	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
+	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria, String paginationWrapper) {
 
 		/*
 		 * if (criteria.getLimit() == null && criteria.getOffset() == null) return
@@ -83,6 +85,10 @@ public class RentDetailQueryBuilder {
 
 	public String getPropertyRentDemandSearchQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
 
+		 String paginationWrapper = "SELECT * FROM "
+				+ "(SELECT *, DENSE_RANK() OVER (ORDER BY demand_pid desc) offset_ FROM " + "({})"
+				+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
+
 		StringBuilder builder = new StringBuilder(DEMAND_SEARCH_QUERY);
 
 		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
@@ -91,10 +97,14 @@ public class RentDetailQueryBuilder {
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 
-		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria, paginationWrapper);
 	}
 
 	public String getPropertyRentPaymentSearchQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
+
+		String paginationWrapper = "SELECT * FROM "
+				+ "(SELECT *, DENSE_RANK() OVER (ORDER BY payment_pid desc) offset_ FROM " + "({})"
+				+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
 		StringBuilder builder = new StringBuilder(PAYMENT_SEARCH_QUERY);
 
@@ -104,11 +114,15 @@ public class RentDetailQueryBuilder {
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 
-		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria, paginationWrapper);
 	}
 
 	public String getPropertyRentAccountSearchQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
 		StringBuilder builder = new StringBuilder(ACCOUNT_SEARCH_QUERY);
+
+		String paginationWrapper = "SELECT * FROM "
+				+ "(SELECT *, DENSE_RANK() OVER (ORDER BY account_pid desc) offset_ FROM " + "({})"
+				+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
 		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
 			addClauseIfRequired(preparedStmtList, builder);
@@ -116,6 +130,6 @@ public class RentDetailQueryBuilder {
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 
-		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria, paginationWrapper);
 	}
 }
