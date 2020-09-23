@@ -29,8 +29,10 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 			Mortgage currentapplication = applicationMap.get(mortgageId);
 
 			if (null == currentapplication) {
-				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("mgcreated_by"))
-						.createdTime(rs.getLong("mgcreated_time")).lastModifiedBy(rs.getString("mgmodified_by"))
+				AuditDetails auditdetails = AuditDetails.builder()
+						//.createdBy(rs.getString("mgcreated_by"))
+						//.createdTime(rs.getLong("mgcreated_time"))
+						.lastModifiedBy(rs.getString("mgmodified_by"))
 						.lastModifiedTime(rs.getLong("mgModifiedTime")).build();
 
 				// List<Owner> owners = addOwnersToProperty(rs, currentProperty);
@@ -42,9 +44,9 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 				currentapplication = Mortgage.builder().id(mortgageId).property(property)
 						.tenantId(rs.getString("mgtenantid")).state(rs.getString("mgstate")).action(rs.getString("mgaction"))
 						.applicationNumber(rs.getString("app_number"))
-						.allotmentNumber(rs.getString("owner_allot_number"))
-						.allotmentStartDate(rs.getString("allot_start_date"))
-						.allotmentEndDate(rs.getString("allot_end_date"))
+						//.allotmentNumber(rs.getString("owner_allot_number"))
+						//.allotmentStartDate(rs.getString("allot_start_date"))
+						//.allotmentEndDate(rs.getString("allot_end_date"))
 						.auditDetails(auditdetails).build();
 				applicationMap.put(mortgageId, currentapplication);
 			}
@@ -58,17 +60,21 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 		Map<String, MortgageApplicant> applicantMap = new HashMap<>();
 		MortgageApplicant applicant = null;
 
-		AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("apcreated_by"))
-				.createdTime(rs.getLong("apcreated_time")).lastModifiedBy(rs.getString("apmodified_by"))
-				.lastModifiedTime(rs.getLong("apcreated_time")).build();
-
+		/*
+		 * AuditDetails auditDetails =
+		 * AuditDetails.builder().createdBy(rs.getString("apcreated_by"))
+		 * .createdTime(rs.getLong("apcreated_time")).lastModifiedBy(rs.getString(
+		 * "apmodified_by")) .lastModifiedTime(rs.getLong("apcreated_time")).build();
+		 */
 		if (currentapplication.getApplicant() == null) {
 			if (rs.getString("aid") != null) {
 				applicant = MortgageApplicant.builder().id(rs.getString("aid")).tenantId(rs.getString("aptenantid"))
 						.mortgageId(rs.getString("mg_id")).name(rs.getString("apname")).email(rs.getString("apemail"))
-						.phone(rs.getString("apmobileno")).guardian(rs.getString("apguardian"))
+						.phone(rs.getString("apmobileno"))
+						//.guardian(rs.getString("apguardian"))
 						.relationship(rs.getString("aprelationship")).adhaarNumber(rs.getString("adhaarnumber"))
-						.auditDetails(auditDetails).build();
+						//.auditDetails(auditDetails)
+						.build();
 				applicantMap.put(rs.getString("aid"), applicant);
 				currentapplication.setApplicant(new ArrayList<>(applicantMap.values()));
 			}
@@ -99,7 +105,8 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 					.fileStoreId(rs.getString("doc_filestoreid")).id(rs.getString("docId"))
 					.tenantId(rs.getString("doctenantid")).active(rs.getBoolean("doc_active"))
 					.referenceId(rs.getString("doc_referenceid")).propertyId(rs.getString("doc_propertyid"))
-					.auditDetails(auditDetails).build();
+					//.auditDetails(auditDetails)
+					.build();
 			currentapplication.addApplicationDocumentsItem(applicationDocument);
 		}
 

@@ -25,13 +25,14 @@ public class MortgageQueryBuilder {
 	private static final String MORTGAGE_SEARCH_QUERY = SELECT 
 			//+ "mg.*,ap.*,doc.*,pt.*,address.*,ownership.*,od.*,gd.*,"
 			+ " mg.id as mgid, mg.propertyid as mgpropertyid, mg.tenantid as mgtenantid, mg.state as mgstate, mg.action as mgaction,mg.application_number as app_number,"
-			+ "mg.created_by as mgcreated_by, mg.created_time as mgcreated_time, mg.modified_by as mgmodified_by, mg.modified_time as mgModifiedTime,"
+			//+ "mg.created_by as mgcreated_by, mg.created_time as mgcreated_time, "
+			+ " mg.modified_by as mgmodified_by, mg.modified_time as mgModifiedTime,"
 
 			+ " pt.id as pid, pt.transit_number as pttransit_number, pt.colony as ptcolony,"
 
-			+ " ownership.allotmen_number as owner_allot_number,"
+			//+ " ownership.allotmen_number as owner_allot_number,"
 			
-			+ " od.allotment_startdate as allot_start_date, od.allotment_enddate as allot_end_date,"
+			//+ " od.allotment_startdate as allot_start_date, od.allotment_enddate as allot_end_date,"
 
 			+ " address.pincode as addresspincode, address.area as addressarea,"
 
@@ -41,8 +42,10 @@ public class MortgageQueryBuilder {
 			+ " gd.created_by as gdcreated_by, gd.modified_by as gdmodified_by, gd.created_time as gdcreated_time, gd.modified_time as gdmodified_time,"
 
 			+ " ap.id as aid, ap.mortgage_id as mg_id,ap.tenantid as aptenantid,"
-			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,ap.guardian as apguardian,ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
-			+ " ap.created_by as apcreated_by, ap.created_time as apcreated_time, ap.modified_by as apmodified_by, ap.modified_time as apmodified_time,"
+			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,"
+			//+ "ap.guardian as apguardian,"
+			+ "ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
+			//+ " ap.created_by as apcreated_by, ap.created_time as apcreated_time, ap.modified_by as apmodified_by, ap.modified_time as apmodified_time,"
 			
 			+ " doc.id as docId,doc.reference_id as doc_referenceid, doc.tenantId as doctenantid,doc.document_type as doctype , doc.filestore_id as doc_filestoreid,"
 			+ " doc.property_id as doc_propertyid, doc.is_active as doc_active"
