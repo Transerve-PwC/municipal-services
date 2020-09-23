@@ -38,11 +38,15 @@ public class OwnershipTransferQueryBuilder {
 
 			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id as odowner_id, od.tenantid as odtenantid,"
 			+ " od.name as odname, od.email as odemail, od.phone as odphone," + " od.aadhaar_number as odaadhaar_number,"
-			//+ " od.allotment_startdate as odallotment_startdate, od.allotment_enddate as odallotment_enddate," + " od.posession_startdate as odposession_startdate, od.posession_enddate as odposession_enddate,"
-			//+ " od.monthly_rent as odmonthly_rent, od.revision_period as odrevision_period, od.revision_percentage as odrevision_percentage, od.father_or_husband as odfather_or_husband, 
+			+ " od.allotment_startdate as odallotment_startdate,"
+			//+ " od.allotment_enddate as odallotment_enddate," + " od.posession_startdate as odposession_startdate, od.posession_enddate as odposession_enddate,"
+			+ " od.monthly_rent as odmonthly_rent,"
+			//+ " od.revision_period as odrevision_period, od.revision_percentage as odrevision_percentage,"
+			+ " od.father_or_husband as odfather_or_husband,"
 			+ " od.relation as odrelation,"
 			+ " od.relation_with_deceased_allottee as odrelation_with_deceased_allottee, od.date_of_death_allottee as oddate_of_death_allottee, od.application_number as odapplication_number, od.application_type as odapplication_type,"
 			//+ " od.permanent as odpermanent,"
+			+ "od.due_amount as oddue_amount, od.apro_charge as odapro_charge,"
 
 			+ " doc.id as docid, doc.reference_id as doc_referenceId, doc.tenantid as doctenantid,"
 			+ " doc.is_active as docis_active, doc.document_type, doc.fileStore_id,doc.property_id as doc_propertyId"
