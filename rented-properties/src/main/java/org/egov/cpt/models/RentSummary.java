@@ -1,7 +1,5 @@
 package org.egov.cpt.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -40,7 +38,7 @@ public class RentSummary {
 
 	@Builder.Default
 	private double balanceAmount = 0D;
-	
+
 	public double getBalanceAmount() {
 		if (this.balanceAmount == 0) {
 			return this.balanceAmount;

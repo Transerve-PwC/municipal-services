@@ -23,6 +23,7 @@ import org.egov.cpt.models.RentDemandCriteria;
 import org.egov.cpt.models.RentPayment;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.PropertyRepository;
+import org.egov.cpt.service.notification.DemandNotificationService;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,21 +43,24 @@ public class RentDemandGenerationService {
 
 	private RentCollectionService rentCollectionService;
 
+	private DemandNotificationService demandNotificationService;
+
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
 	@Autowired
 	public RentDemandGenerationService(PropertyRepository propertyRepository, Producer producer,
-			PropertyConfiguration config, RentCollectionService rentCollectionService) {
+			PropertyConfiguration config, RentCollectionService rentCollectionService, DemandNotificationService demandNotificationService) {
 		this.propertyRepository = propertyRepository;
 		this.producer = producer;
 		this.config = config;
 		this.rentCollectionService = rentCollectionService;
+		this.demandNotificationService = demandNotificationService;
 	}
 
 	public void createDemand(RentDemandCriteria demandCriteria) {
 
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
-		propertyCriteria.setRelations(new ArrayList<>());
+		propertyCriteria.setRelations(Collections.singletonList("owner"));
 		List<Property> propertyList = propertyRepository.getProperties(propertyCriteria);
 
 		propertyList.forEach(property -> {
@@ -169,6 +173,7 @@ public class RentDemandGenerationService {
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+		demandNotificationService.process(rentDemand, property);
 	}
 
 }

@@ -30,7 +30,7 @@ public class DuplicateCopyQueryBuilder {
 			+ " pt.id as pid, pt.transit_number as pttransit_number,pt.colony as ptcolony,pt.modified_date as pmodified_date,"
 
 			+ " ownership.allotmen_number as owner_allot_number,"
-			
+
 			+ " od.allotment_startdate as allot_start_date, od.allotment_enddate as allot_end_date,"
 
 			+ " address.pincode as addresspincode, address.area as addressarea,"
@@ -46,7 +46,7 @@ public class DuplicateCopyQueryBuilder {
 			+ " cs_pt_property_v1 pt on dca.property_id=pt.id " + INNER_JOIN
 			+ " cs_pt_address_v1 address ON pt.id=address.property_id " + LEFT_JOIN
 			+ " cs_pt_ownership_v1 ownership ON dca.property_id = ownership.property_id " + LEFT_JOIN
-			+ " cs_pt_ownershipdetails_v1 od ON ownership.id = od.owner_id "+LEFT_JOIN
+			+ " cs_pt_ownershipdetails_v1 od ON ownership.id = od.owner_id " + LEFT_JOIN
 			+ " cs_pt_duplicatecopy_applicant ap ON dca.id =ap.application_id " + LEFT_JOIN
 			+ " cs_pt_documents_v1 doc ON doc.reference_id =  dca.id";
 
@@ -109,6 +109,11 @@ public class DuplicateCopyQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("dca.application_number=:appNumber");
 			preparedStmtList.put("appNumber", criteria.getApplicationNumber());
+		}
+		if (null != criteria.getCreatedBy()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("dca.created_by = :createdBy");
+			preparedStmtList.put("createdBy", criteria.getCreatedBy());
 		}
 		if (null != criteria.getColony()) {
 			addClauseIfRequired(preparedStmtList, builder);

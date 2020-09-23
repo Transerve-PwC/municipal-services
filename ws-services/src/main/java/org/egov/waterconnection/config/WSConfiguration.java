@@ -172,5 +172,20 @@ public class WSConfiguration {
 
 	@Value("${egov.waterservice.savefilestoreIds}")
 	private String saveFileStoreIdsTopic;
+
+	@Value("${egov.user.create.path}")
+	private String userCreateEndPoint;
+
+	@Value("${egov.user.update.path}")
+	private String userUpdateEndPoint;
    
+	
+	@Value("${create.ws.disconnection.workflow.name}")
+	private String businessServiceDisconnectionValue;
+	
+	@Value("${create.ws.rename.workflow.name}")
+	private String businessServiceRenameValue;
+	
+	@Value("${create.ws.conversion.workflow.name}")
+	private String businessServiceConversionValue;
 }

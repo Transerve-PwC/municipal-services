@@ -46,6 +46,9 @@ public class WaterConnection extends Connection {
 	@JsonProperty("securityCharge")
 	private Double securityCharge = null;
 	
+	@JsonProperty("connectionUsagesType")
+	private String connectionUsagesType = null;
+	
 	@JsonProperty("inWorkflow")
 	private Boolean inWorkflow = false;
 	
@@ -265,5 +268,13 @@ public class WaterConnection extends Connection {
 
 	public void setActivityType(String activityType) {
 		this.activityType = activityType;
+	}
+
+	public String getConnectionUsagesType() {
+		return connectionUsagesType;
+	}
+
+	public void setConnectionUsagesType(String connectionUsagesType) {
+		this.connectionUsagesType = connectionUsagesType;
 	}
 }

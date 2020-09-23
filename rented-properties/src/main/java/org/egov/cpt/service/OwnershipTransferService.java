@@ -77,19 +77,19 @@ public class OwnershipTransferService {
 			wfIntegrator.callOwnershipTransferWorkFlow(request);
 		}
 		producer.push(config.getOwnershipTransferSaveTopic(), request);
-		
+
 		/**
 		 * calling rent Summary
 		 */
-		
+
 		addRentSummary(request.getOwners());
-		
+
 		return request.getOwners();
 	}
 
 	public List<Owner> searchOwnershipTransfer(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
 		if (criteria.isEmpty() && requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)) {
-			criteria.setApplicantMobNo(requestInfo.getUserInfo().getUserName());
+			criteria.setCreatedBy(requestInfo.getUserInfo().getUuid());
 		}
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_EMPLOYEE)
 				&& CollectionUtils.isEmpty(criteria.getStatus())) {
@@ -111,7 +111,7 @@ public class OwnershipTransferService {
 
 		if (CollectionUtils.isEmpty(owners))
 			return Collections.emptyList();
-		
+
 		/**
 		 * calling rent Summary
 		 */
@@ -142,15 +142,15 @@ public class OwnershipTransferService {
 		}
 
 		notificationService.process(request);
-		
+
 		/**
 		 * calling rent Summary
 		 */
 		addRentSummary(request.getOwners());
-		
+
 		return request.getOwners();
 	}
-	
+
 	private void addRentSummary(List<Owner> owners) {
 		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
 
@@ -166,7 +166,7 @@ public class OwnershipTransferService {
 						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
 			}
 		});
-		
+
 	}
 
 }

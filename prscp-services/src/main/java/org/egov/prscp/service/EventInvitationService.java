@@ -145,12 +145,30 @@ public class EventInvitationService {
 					case 1:
 						nextCell.setCellType(Cell.CELL_TYPE_STRING);
 						String email = nextCell.getStringCellValue();
+						if(email ==null || email.isEmpty())
+						{
+							email = "";	
+						}
 						user.setGuestEmail(email);
 						break;
 					case 2:
+						
+						String mobile="0";
+						
+//						int type = nextCell.getCellType();
+//						
+//							if(type==0)	
+//							{
+//								mobile="0";
+//							}
+//							else
+//							{
 						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-						String mobile = nextCell.getStringCellValue();
+						 mobile = nextCell.getStringCellValue();
+						
+						
 						user.setGuestMobile(mobile);
+							//}
 						break;
 					default:
 						break;
@@ -164,6 +182,8 @@ public class EventInvitationService {
 						.collect(Collectors.toList());
 
 				if (isExists.isEmpty()) {
+					if(user.getGuestName()!=null && !user.getGuestName().isEmpty())
+					{
 					String uuid = UUID.randomUUID().toString();
 					user.setEventGuestType(guests.getEventGuestType());
 					user.setEventDetailUuid(guests.getEventDetailUuid());
@@ -177,7 +197,21 @@ public class EventInvitationService {
 					user.setTenantId(guests.getTenantId());
 					user.setModuleCode(guests.getModuleCode());
 					user.setSourceUuid(sourceUuid);
+					
+					if(user.getGuestMobile()==null || user.getGuestMobile().isEmpty())
+					{
+						
+						user.setGuestMobile("0");
+					}
+					
+					if(user.getGuestEmail()==null || user.getGuestEmail().isEmpty())
+					{
+						
+						user.setGuestEmail(" ");
+					}
+					
 					userList.add(user);
+					}
 				}
 			}
 			log.debug(

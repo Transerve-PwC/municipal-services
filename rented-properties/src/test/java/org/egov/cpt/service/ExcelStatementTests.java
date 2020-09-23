@@ -27,6 +27,7 @@ public class ExcelStatementTests {
         this.utils = new RentCollectionUtils();
     }
 
+    @SuppressWarnings("deprecation")
     private List<RentAccountStatement> _testSheetWithIndex(String excelFileToParse, int index) {
         InputStream inputStream = ReadExcelServiceTests.class.getClassLoader().getResourceAsStream(excelFileToParse);
         RentDemandResponse rentDemandResponse = this.readExcelService.getDatafromExcel(inputStream, index);

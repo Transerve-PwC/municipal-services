@@ -378,6 +378,11 @@ public class EstimationService {
 		ArrayList<String> billingSlabIds = new ArrayList<>();
 		billingSlabIds.add("");
 		List<TaxHeadEstimate> taxHeadEstimates = new ArrayList<TaxHeadEstimate>();
+		String activityType = criteria.getWaterConnection().getActivityType();
+		if(activityType.equalsIgnoreCase(WSCalculationConstant.WS_PERMANENT_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE)){
+			 taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData,
+						requestInfo);
+		}else {
 		if(criteria.getWaterConnection().getWaterApplicationType().equalsIgnoreCase(WSCalculationConstant.WS_TEMP_CONNECTION_TYPE)) {
 		 taxHeadEstimates = getTaxHeadForFeeEstimationForTempAppCon(criteria, masterData,
 				requestInfo);
@@ -385,12 +390,37 @@ public class EstimationService {
 		 taxHeadEstimates = getTaxHeadForRegularConnection(criteria, masterData,
 					requestInfo);
 		}
+		}
 		Map<String, List> estimatesAndBillingSlabs = new HashMap<>();
 		estimatesAndBillingSlabs.put("estimates", taxHeadEstimates);
 		// //Billing slab id
 		estimatesAndBillingSlabs.put("billingSlabIds", billingSlabIds);
 		return estimatesAndBillingSlabs;
 	}
+
+	private List<TaxHeadEstimate> getTaxHeadForwaterActivity(CalculationCriteria criteria,
+			Map<String, Object> masterData, RequestInfo requestInfo) {
+		List<TaxHeadEstimate> estimates = new ArrayList<>();
+
+		JSONArray regularSlab = (JSONArray) masterData.getOrDefault(WSCalculationConstant.WS_WATER_ACTIVITY, null);
+		JSONObject masterSlab = new JSONObject();
+
+		if (regularSlab != null) {
+			masterSlab.put("waterActivity", regularSlab);
+			JSONArray filteredMasters = JsonPath.read(masterSlab, "$.waterActivity[?(@.code=='" + criteria.getWaterConnection().getActivityType() + "')]");
+			JSONObject charge = mapper.convertValue(filteredMasters.get(0), JSONObject.class);
+			BigDecimal unitCost = BigDecimal.ZERO;
+			unitCost = new BigDecimal(charge.getAsNumber(WSCalculationConstant.UNIT_COST_CONST).toString());
+			
+			if (!(unitCost.compareTo(BigDecimal.ZERO) == 0))
+				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FORM_FEE)
+						.estimateAmount(unitCost.setScale(2, 2)).build());
+			
+			
+			return estimates;
+
+		}
+		return estimates;}
 
 	private List<TaxHeadEstimate> getTaxHeadForFeeEstimationForTempAppCon(CalculationCriteria criteria,
 			Map<String, Object> masterData, RequestInfo requestInfo) {
@@ -415,7 +445,7 @@ public class EstimationService {
 		List<BillingSlab> billingSlabs = null;
 
 		billingSlabs = mappingBillingSlab.stream().filter(slab -> {
-			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(property.getUsageCategory());// property.usagecategory
+			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(criteria.getWaterConnection().getWaterProperty().getUsageCategory());// property.usagecategory
 
 			return isBuildingTypeMatching;
 		}).collect(Collectors.toList());
@@ -423,12 +453,12 @@ public class EstimationService {
 		Double multiplier = 0.0;
 		for (Slab slabs : billingSlabs.get(0).getSlabs()) {
 
-			if (property.getUsageCategory().equalsIgnoreCase(WSCalculationConstant.WS_COMMERCIAL) && slabs.getCode().equalsIgnoreCase("GENERAL_BOOTHS")
+			if (criteria.getWaterConnection().getWaterProperty().getUsageCategory().equalsIgnoreCase(WSCalculationConstant.WS_COMMERCIAL) && slabs.getCode().equalsIgnoreCase(criteria.getWaterConnection().getWaterProperty().getUsageSubCategory())
 					&& property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo()) {
 				multiplier = slabs.getCharge();
 				break;
 			} else if (property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo()
-					&& (!property.getUsageCategory().equalsIgnoreCase(WSCalculationConstant.WS_COMMERCIAL))) {
+					&& (!criteria.getWaterConnection().getWaterProperty().getUsageCategory().equalsIgnoreCase(WSCalculationConstant.WS_COMMERCIAL))) {
 				multiplier = slabs.getCharge();
 			}
 
@@ -463,7 +493,7 @@ public class EstimationService {
 
 		if (regularSlab != null) {
 			masterSlab.put("PipeSize", regularSlab);
-			JSONArray filteredMasters = JsonPath.read(masterSlab, "$.PipeSize[?(@.size=='" + "15" + "')]");
+			JSONArray filteredMasters = JsonPath.read(masterSlab, "$.PipeSize[?(@.size=='" + criteria.getWaterConnection().getProposedPipeSize() + "')]");
 			JSONObject chargesSlab = new JSONObject();
 
 			chargesSlab.put("Charges", filteredMasters.get(0));
@@ -569,7 +599,7 @@ public class EstimationService {
 			roadPlotCharge = getPlotSizeFee(masterData, property.getLandArea());
 		BigDecimal usageTypeCharge = BigDecimal.ZERO;
 		if (criteria.getWaterConnection().getRoadCuttingArea() != null)
-			usageTypeCharge = getUsageTypeFee(masterData, property.getUsageCategory(),
+			usageTypeCharge = getUsageTypeFee(masterData, criteria.getWaterConnection().getWaterProperty().getUsageCategory(),
 					criteria.getWaterConnection().getRoadCuttingArea());
 		BigDecimal tax = BigDecimal.ZERO;
 		BigDecimal totalCharge = BigDecimal.ZERO;

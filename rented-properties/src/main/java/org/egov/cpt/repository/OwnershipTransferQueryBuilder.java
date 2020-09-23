@@ -103,6 +103,12 @@ public class OwnershipTransferQueryBuilder {
 			preparedStmtList.put("phone", criteria.getApplicantMobNo());
 		}
 
+		if (null != criteria.getCreatedBy()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("ownership.created_by = :createdBy");
+			preparedStmtList.put("createdBy", criteria.getCreatedBy());
+		}
+
 		if (null != criteria.getPropertyId()) {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.id = :id");

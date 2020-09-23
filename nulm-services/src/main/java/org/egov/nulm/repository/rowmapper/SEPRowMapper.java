@@ -13,6 +13,8 @@ import org.egov.nulm.model.AuditDetails;
 import org.egov.nulm.model.SepApplication;
 import org.egov.nulm.model.SepApplicationDocument;
 import org.egov.tracer.model.CustomException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -29,28 +31,30 @@ public class SEPRowMapper implements ResultSetExtractor<List<SepApplication>> {
 	@Override
 	public List<SepApplication> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, SepApplication> sepMap = new HashMap<>();
-		List<SepApplication> listSEPApplication = new ArrayList<>();
 		
+		List<SepApplication> listSEPApplication = new ArrayList<>();
+
 		try {
 			while (rs.next()) {
 				String id = rs.getString("application_uuid");
 				SepApplication sepapp = new SepApplication();
+				
 				sepapp = sepapp.builder().build();
 				if (!sepMap.containsKey(id)) {
-					AuditDetails audit=AuditDetails.builder().createdBy(rs.getString("created_by")).createdTime(rs.getLong("created_time")).
-							lastModifiedBy(rs.getString("last_modified_by")).lastModifiedTime(rs.getLong("last_modified_time")).build();
+					AuditDetails audit = AuditDetails.builder().createdBy(rs.getString("created_by"))
+							.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("last_modified_by"))
+							.lastModifiedTime(rs.getLong("last_modified_time")).build();
 					sepapp.setAddress(rs.getString("address"));
 					sepapp.setAdharNo(rs.getString("adhar_no"));
 					sepapp.setAge(rs.getInt("age"));
 					sepapp.setApplicationId(rs.getString("application_id"));
-			    	sepapp.setApplicationStatus(SepApplication.StatusEnum.fromValue(rs.getString("application_status")));
+					sepapp.setApplicationStatus(
+							SepApplication.StatusEnum.fromValue(rs.getString("application_status")));
 					sepapp.setApplicationUuid(rs.getString("application_uuid"));
-					sepapp.setBankDetails(rs.getString("bank_details"));
 					sepapp.setBplNo(rs.getString("bpl_no"));
 					sepapp.setCategory(rs.getString("category"));
 					sepapp.setContact(rs.getString("contact"));
 					sepapp.setAuditDetails(audit);
-					sepapp.setProjectCost(rs.getBigDecimal("project_cost"));
 					sepapp.setSinceHowLongInChandigarh(rs.getString("since_how_long_in_chandigarh"));
 					sepapp.setDob(rs.getString("dob"));
 					sepapp.setFatherOrHusbandName(rs.getString("father_or_husband_name"));
@@ -70,14 +74,25 @@ public class SEPRowMapper implements ResultSetExtractor<List<SepApplication>> {
 					sepapp.setOccupation(rs.getString("occupation"));
 					sepapp.setPlaceOfWork(rs.getString("place_of_work"));
 					sepapp.setPreviousExperience(rs.getString("previous_experience"));
-					sepapp.setProjectCost(rs.getBigDecimal("project_cost"));
 					sepapp.setQualification(rs.getString("qualification"));
-					sepapp.setRecommendedAmount(rs.getBigDecimal("recommended_amount"));
 					sepapp.setRemark(rs.getString("remark"));
 					sepapp.setRecommendedBy(rs.getString("recommended_by"));
 					sepapp.setRepresentativeAddress(rs.getString("representative_address"));
 					sepapp.setRepresentativeName(rs.getString("representative_name"));
 					sepapp.setTenantId(rs.getString("tenant_id"));
+					sepapp.setAccountName(rs.getString("account_name"));
+					sepapp.setBankName(rs.getString("bank_name"));
+					sepapp.setBranchName(rs.getString("branch_name"));
+					sepapp.setIsDisabilityCertificateAvailable(rs.getBoolean("is_disability_certificate_available"));
+					sepapp.setTaskCommitteeApprovedAmount(rs.getString("task_committee_approved_amount"));
+					sepapp.setTaskCommitteeRemark(rs.getString("task_committee_remark"));
+					sepapp.setTaskCommitteeActionDate(rs.getString("task_committee_action_date"));
+					sepapp.setTaskCommitteeStatus(rs.getString("task_committee_status"));
+					sepapp.setCommitteeBankName(rs.getString("committee_bank_name"));
+					sepapp.setCommitteeBranchName(rs.getString("committee_branch_name"));
+					sepapp.setApplicationForwardedOnDate(rs.getString("application_forwarded_on_date"));
+					sepapp.setSanctionDate(rs.getString("sanction_date"));
+					sepapp.setSanctionRemarks(rs.getString("sanction_remarks"));
 					sepapp.setTypeOfBusinessToBeStarted(rs.getString("type_of_business_to_be_started"));
 					List<SepApplicationDocument> documentAttachment = null;
 					if (rs.getString("document") != null) {
@@ -86,14 +101,14 @@ public class SEPRowMapper implements ResultSetExtractor<List<SepApplication>> {
 					}
 					sepapp.setApplicationDocument(documentAttachment);
 					sepMap.put(id, sepapp);
-				listSEPApplication.add(sepapp);
+					listSEPApplication.add(sepapp);
 				}
 			}
-		
-	} catch (Exception e) {
-		throw new CustomException(CommonConstants.SEP_APPLICATION_EXCEPTION_CODE, e.getMessage());
+
+		} catch (Exception e) {
+			throw new CustomException(CommonConstants.SEP_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+		return listSEPApplication;
 	}
-	return listSEPApplication;
-}
 
 }

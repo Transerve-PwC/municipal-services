@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class DuplicateCopySearchCriteria {
-	
+
 	@Builder.Default
 	private String tenantId = "ch.chandigarh";
 
@@ -37,6 +37,8 @@ public class DuplicateCopySearchCriteria {
 	private Long offset;
 
 	private Long limit;
+
+	private String createdBy;
 
 	public boolean isEmpty() {
 		return (this.transitNumber == null && this.colony == null && this.status == null

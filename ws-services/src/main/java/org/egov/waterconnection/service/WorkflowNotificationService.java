@@ -1,33 +1,17 @@
 package org.egov.waterconnection.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
-import org.egov.waterconnection.model.Action;
-import org.egov.waterconnection.model.ActionItem;
-import org.egov.waterconnection.model.CalculationCriteria;
-import org.egov.waterconnection.model.CalculationReq;
-import org.egov.waterconnection.model.CalculationRes;
-import org.egov.waterconnection.model.Event;
-import org.egov.waterconnection.model.EventRequest;
-import org.egov.waterconnection.model.Property;
-import org.egov.waterconnection.model.Recepient;
-import org.egov.waterconnection.model.SMSRequest;
-import org.egov.waterconnection.model.Source;
-import org.egov.waterconnection.model.WaterConnection;
-import org.egov.waterconnection.model.WaterConnectionRequest;
+import org.egov.waterconnection.model.*;
 import org.egov.waterconnection.model.workflow.BusinessService;
 import org.egov.waterconnection.model.workflow.State;
 import org.egov.waterconnection.repository.ServiceRequestRepository;
@@ -39,13 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-
-import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -71,7 +55,7 @@ public class WorkflowNotificationService {
 	
 	@Autowired
 	private ValidateProperty validateProperty;
-	
+
 	String tenantIdReplacer = "$tenantId";
 	String fileStoreIdsReplacer = "$.filestoreIds";
 	String urlReplacer = "url";
@@ -92,14 +76,12 @@ public class WorkflowNotificationService {
 	
 	/**
 	 * 
-	 * @param record record is bill response.
+	 * @param request record is bill response.
 	 * @param topic topic is bill generation topic for water.
 	 */
 	public void process(WaterConnectionRequest request, String topic) {
 		try {
-			String applicationStatus = workflowService.getApplicationStatus(request.getRequestInfo(),
-					request.getWaterConnection().getApplicationNo(),
-					request.getWaterConnection().getTenantId());
+			String applicationStatus = request.getWaterConnection().getApplicationStatus();
 			
 			if (!WCConstants.NOTIFICATION_ENABLE_FOR_STATUS.contains(request.getWaterConnection().getProcessInstance().getAction()+"_"+applicationStatus)) {
 				log.info("Notification Disabled For State :" + applicationStatus);
@@ -124,18 +106,25 @@ public class WorkflowNotificationService {
 		}
 	}
 	
+
 	/**
-	 * 
-	 * @param waterConnection
+	 *
+	 * @param request
 	 * @param topic
-	 * @param requestInfo
-	 * @return EventRequest Object
+	 * @param property
+	 * @param applicationStatus
+	 * @return
 	 */
 	private EventRequest getEventRequest(WaterConnectionRequest request, String topic, Property property, String applicationStatus) {
 		String localizationMessage = notificationUtil
 				.getLocalizationMessages(property.getTenantId(), request.getRequestInfo());
+		int reqType = WCConstants.UPDATE_APPLICATION;
+		if ((!request.getWaterConnection().getProcessInstance().getAction().equalsIgnoreCase(WCConstants.ACTIVATE_CONNECTION))
+				&& waterServiceUtil.isModifyConnectionRequest(request)) {
+			reqType = WCConstants.MODIFY_CONNECTION;
+		}
 		String message = notificationUtil.getCustomizedMsgForInApp(request.getWaterConnection().getProcessInstance().getAction(), applicationStatus,
-				localizationMessage);
+				localizationMessage, reqType);
 		if (message == null) {
 			log.info("No message Found For Topic : " + topic);
 			return null;
@@ -145,6 +134,16 @@ public class WorkflowNotificationService {
 			if (owner.getMobileNumber() != null)
 				mobileNumbersAndNames.put(owner.getMobileNumber(), owner.getName());
 		});
+		
+		//send the notification to the connection holders
+		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
+			request.getWaterConnection().getConnectionHolders().forEach(holder -> {
+				if (!StringUtils.isEmpty(holder.getMobileNumber())) {
+					mobileNumbersAndNames.put(holder.getMobileNumber(), holder.getName());
+				}
+			});
+		}
+		
 		Map<String, String> mobileNumberAndMesssage = getMessageForMobileNumber(mobileNumbersAndNames, request,
 				message, property);
 		Set<String> mobileNumbers = mobileNumberAndMesssage.keySet().stream().collect(Collectors.toSet());
@@ -179,10 +178,13 @@ public class WorkflowNotificationService {
 		}
 	}
 	
+
 	/**
-	 * 
-	 * @param messageTemplate
-	 * @param connection
+	 *
+	 * @param mobileNumberAndMesssage
+	 * @param mobileNumber
+	 * @param connectionRequest
+	 * @param property
 	 * @return return action link
 	 */
 	public Action getActionForEventNotification(Map<String, String> mobileNumberAndMesssage,
@@ -213,37 +215,59 @@ public class WorkflowNotificationService {
 				actionLink = actionLink.replace(applicationNumberReplacer, connectionRequest.getWaterConnection().getApplicationNo());
 				actionLink = actionLink.replace(tenantIdReplacer, property.getTenantId());
 			}
+			if (code.equalsIgnoreCase("View History Link")) {
+				actionLink = config.getNotificationUrl() + config.getViewHistoryLink();
+				actionLink = actionLink.replace(mobileNoReplacer, mobileNumber);
+				actionLink = actionLink.replace(applicationNumberReplacer,
+						connectionRequest.getWaterConnection().getApplicationNo());
+				actionLink = actionLink.replace(tenantIdReplacer, property.getTenantId());
+				actionLink = actionLink.replace("<View History Link>",
+						waterServiceUtil.getShortnerURL(actionLink));
+			}
 			ActionItem item = ActionItem.builder().actionUrl(actionLink).code(code).build();
 			items.add(item);
 			mobileNumberAndMesssage.replace(mobileNumber, messageTemplate);
 		}
 		return Action.builder().actionUrls(items).build();
 	}
-	
+
 	/**
-	 * 
-	 * @param mappedRecord
-	 * @param waterConnection
+	 *
+	 * @param waterConnectionRequest
 	 * @param topic
-	 * @param requestInfo
+	 * @param property
+	 * @param applicationStatus
 	 * @return
 	 */
 	private List<SMSRequest> getSmsRequest(WaterConnectionRequest waterConnectionRequest, String topic,
 			Property property, String applicationStatus) {
 		String localizationMessage = notificationUtil.getLocalizationMessages(property.getTenantId(),
 				waterConnectionRequest.getRequestInfo());
+		int reqType = WCConstants.UPDATE_APPLICATION;
+		if ((!waterConnectionRequest.getWaterConnection().getProcessInstance().getAction().equalsIgnoreCase(WCConstants.ACTIVATE_CONNECTION))
+				&& waterServiceUtil.isModifyConnectionRequest(waterConnectionRequest)) {
+			reqType = WCConstants.MODIFY_CONNECTION;
+		}
 		String message = notificationUtil.getCustomizedMsgForSMS(
 				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction(), applicationStatus,
-				localizationMessage);
+				localizationMessage, reqType);
 		if (message == null) {
 			log.info("No message Found For Topic : " + topic);
-			return null;
+			return Collections.emptyList();
 		}
 		Map<String, String> mobileNumbersAndNames = new HashMap<>();
 		property.getOwners().forEach(owner -> {
 			if (owner.getMobileNumber() != null)
 				mobileNumbersAndNames.put(owner.getMobileNumber(), owner.getName());
 		});
+		//send the notification to the connection holders
+		if (!CollectionUtils.isEmpty(waterConnectionRequest.getWaterConnection().getConnectionHolders())) {
+			waterConnectionRequest.getWaterConnection().getConnectionHolders().forEach(holder -> {
+				if (!StringUtils.isEmpty(holder.getMobileNumber())) {
+					mobileNumbersAndNames.put(holder.getMobileNumber(), holder.getName());
+				}
+			});
+		}
 		Map<String, String> mobileNumberAndMesssage = getMessageForMobileNumber(mobileNumbersAndNames,
 				waterConnectionRequest, message, property);
 		List<SMSRequest> smsRequest = new ArrayList<>();
@@ -269,7 +293,7 @@ public class WorkflowNotificationService {
 				messageToreplace = getMessageForPlumberInfo(waterConnectionRequest.getWaterConnection(), messageToreplace);
 			
 			if (messageToreplace.contains("<SLA>"))
-				messageToreplace = messageToreplace.replace("<SLA>", getSLAForState(waterConnectionRequest, property));
+				messageToreplace = messageToreplace.replace("<SLA>", getSLAForState(waterConnectionRequest, property, waterConnectionRequest.getWaterConnection().getActivityType()));
 
 			if (messageToreplace.contains("<Application number>"))
 				messageToreplace = messageToreplace.replace("<Application number>", waterConnectionRequest.getWaterConnection().getApplicationNo());
@@ -315,6 +339,19 @@ public class WorkflowNotificationService {
 				messageToreplace = messageToreplace.replace("<connection details page>",
 						waterServiceUtil.getShortnerURL(connectionDetaislLink));
 			}
+			if (messageToreplace.contains("<Date effective from>")) {
+				if (waterConnectionRequest.getWaterConnection().getDateEffectiveFrom() != null) {
+					LocalDate date = Instant
+							.ofEpochMilli(waterConnectionRequest.getWaterConnection().getDateEffectiveFrom() > 10
+									? waterConnectionRequest.getWaterConnection().getDateEffectiveFrom()
+									: waterConnectionRequest.getWaterConnection().getDateEffectiveFrom() * 1000)
+							.atZone(ZoneId.systemDefault()).toLocalDate();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+					messageToreplace = messageToreplace.replace("<Date effective from>", date.format(formatter));
+				} else {
+					messageToreplace = messageToreplace.replace("<Date effective from>", "");
+				}
+			}
 			messagetoreturn.put(mobileAndName.getKey(), messageToreplace);
 		}
 		return messagetoreturn;
@@ -358,18 +395,18 @@ public class WorkflowNotificationService {
 
 	}
 	
+
 	/**
 	 * Fetches SLA of CITIZENs based on the phone number.
-	 * 
-	 * @param waterConnection
-	 * @param requestInfo
-	 * @return string consisting SLA
+	 *
+	 * @param connectionRequest
+	 * @param property
+	 * @return
 	 */
-
-	public String getSLAForState(WaterConnectionRequest connectionRequest, Property property) {
+	public String getSLAForState(WaterConnectionRequest connectionRequest, Property property, String businessServiceName) {
 		String resultSla = "";
 		BusinessService businessService = workflowService.getBusinessService(property.getTenantId(),
-				connectionRequest.getRequestInfo());
+				connectionRequest.getRequestInfo(), businessServiceName);
 		if (businessService != null && businessService.getStates() != null && businessService.getStates().size() > 0) {
 			for (State state : businessService.getStates()) {
 				if (WCConstants.PENDING_FOR_CONNECTION_ACTIVATION.equalsIgnoreCase(state.getState())) {
@@ -416,13 +453,14 @@ public class WorkflowNotificationService {
     	return mapOfPhnoAndUUIDs;
     }
     
-    /**
-     * Fetch URL for application download link
-     * 
-     * @param waterConnection
-     * @param requestInfo
-     * @return application download link
-     */
+
+	/**
+	 * Fetch URL for application download link
+	 *
+	 * @param waterConnectionRequest
+	 * @param property
+	 * @return application download link
+	 */
 	private String getApplicationDownlonadLink(WaterConnectionRequest waterConnectionRequest, Property property) {
 		CalculationCriteria criteria = CalculationCriteria.builder().applicationNo(waterConnectionRequest.getWaterConnection().getApplicationNo())
 				.waterConnection(waterConnectionRequest.getWaterConnection()).tenantId(property.getTenantId()).build();
@@ -447,13 +485,21 @@ public class WorkflowNotificationService {
 			throw new CustomException("WATER_CALCULATION_EXCEPTION", "Calculation response can not parsed!!!");
 		}
 	}
+
+
+
+
+
+
+
+
 	/**
 	 * Get file store id from PDF service
-	 * 
+	 *
 	 * @param waterobject
 	 * @param requestInfo
 	 * @param tenantId
-	 * @return file store id
+	 * @return
 	 */
 	private String getFielStoreIdFromPDFService(JSONObject waterobject, RequestInfo requestInfo, String tenantId) {
 		JSONArray waterconnectionlist = new JSONArray();

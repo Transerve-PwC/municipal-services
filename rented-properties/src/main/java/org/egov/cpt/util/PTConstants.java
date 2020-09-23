@@ -264,4 +264,6 @@ public class PTConstants {
 	public static final String false_value = "false";
 	public static final String true_value = "true";
 
+	//Demand Generation Notifications
+	public static final String NOTIFICATION_DEMAND_GENERATION = "rp.en.counter.demand";
 }

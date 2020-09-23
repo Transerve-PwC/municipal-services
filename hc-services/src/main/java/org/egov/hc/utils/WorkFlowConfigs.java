@@ -35,6 +35,9 @@ public class WorkFlowConfigs {
 	public static final String ACTION_REJECT = "REJECT";
 	public static final String ACTION_COMPLETE = "COMPLETE";
 	
+	public static final String VERIFY_FOR_CLOSURE = "VERIFYFORCLOSURE";
+	public static final String FORWARDED_FOR_COMPLETION = "FORWARDFORCOMPLETION";
+	
 	public static final String ACTION_INITIATED = "INITIATED";
 	
 

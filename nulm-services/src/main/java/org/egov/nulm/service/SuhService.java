@@ -53,6 +53,7 @@ public class SuhService {
 			SuhApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),
 					SuhApplication.class);
 			repository.checkShelterName(suhapplication);
+			repository.checkOrganizationUuid(suhapplication);
 			String suhid = UUID.randomUUID().toString();
 			 // idgen service call to genrate event id
 			IdGenerationResponse id = idgenrepository.getId(request.getRequestInfo(), suhapplication.getTenantId(),
@@ -97,6 +98,7 @@ public class SuhService {
 		try {
 			SuhApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),
 					SuhApplication.class);
+			repository.checkOrganizationUuid(suhapplication);
 			suhapplication.setIsActive(true);
 			suhapplication.setAuditDetails(auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 			suhapplication.setAddressPictureDoc(suhapplication.getAddressPicture()!=null?suhapplication.getAddressPicture().toJSONString():null);

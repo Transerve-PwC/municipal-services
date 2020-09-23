@@ -8,6 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.service.UserService;
 import org.egov.waterconnection.util.WaterServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,38 +25,49 @@ public class WsQueryBuilder {
 	@Autowired
 	private WSConfiguration config;
 
-	private static final String INNER_JOIN_STRING = "INNER JOIN";
+	@Autowired
+	private UserService userService;
+
+	private static final String INNER_JOIN_STRING = " INNER JOIN ";
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
-//	private static final String Offset_Limit_String = "OFFSET ? LIMIT ?";
-	private static final String WATER_SEARCH_QUERY = "SELECT conn.*, wc.*, document.*, plumber.*, application.*, property.*, wc.connectionCategory, wc.connectionType, wc.waterSource,"
+
+	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype, holdershippercentage, connectionholder.relationship as holderrelationship, connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
+	
+	private static final String WATER_SEARCH_QUERY = "SELECT "
+			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
+			+ " wc.connectionCategory, wc.connectionType, wc.waterSource,"
 			+ " wc.meterId, wc.meterInstallationDate, wc.pipeSize, wc.noOfTaps, wc.proposedPipeSize, wc.proposedTaps, wc.connection_id as connection_Id, wc.connectionExecutionDate, wc.initialmeterreading, wc.appCreatedDate,"
 			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, "
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
-			+ " conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason,"
+			+ " conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
 			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
 			+ " conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime, "
-			+ " conn.roadtype, conn.waterApplicationType, conn.securityCharge, conn.inworkflow, "
+			+ " conn.roadtype, conn.waterApplicationType, conn.securityCharge, conn.connectionusagestype, conn.inworkflow, "
 			+ " document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id,"
 			+ " plumber.name as plumber_name, plumber.licenseno,"
-			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship, "
-			+ " application.id as application_id, application.applicationno as water_application, application.activitytype as water_activitytype, application.applicationstatus as water_applicationstatus, application.action as water_action, application.comments as water_comments, "
+			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress,"
+			+ " plumber.relationship, " + holderSelectValues
+			+ " application.id as application_id, application.applicationno as app_applicationno, application.activitytype as app_activitytype, application.applicationstatus as app_applicationstatus, application.action as app_action, application.comments as app_comments, "
+			+ " application.createdBy as app_createdBy, application.lastModifiedBy as app_lastModifiedBy, application.createdTime as app_createdTime, application.lastModifiedTime as app_lastModifiedTime, "
 			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory "
 			+ " FROM eg_ws_connection conn "
 			+  INNER_JOIN_STRING 
-			+" eg_ws_service wc ON wc.connection_id = conn.id"
+			+ "eg_ws_service wc ON wc.connection_id = conn.id"
+			+  INNER_JOIN_STRING
+			+ "eg_ws_application application ON application.wsid = conn.id"
+			+  INNER_JOIN_STRING
+			+ "eg_ws_property property ON property.wsid = conn.id"
 			+  LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_applicationdocument document ON document.applicationid = application.id" 
+			+ "eg_ws_applicationdocument document ON document.applicationid = application.id"
 			+  LEFT_OUTER_JOIN_STRING
 			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id"
-			+  LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_application application ON application.wsid = conn.id"
-			+  LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_property property ON property.property_id = conn.property_id";
+			+ LEFT_OUTER_JOIN_STRING
+		    + "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id";
 	
 	private static final String NO_OF_CONNECTION_SEARCH_QUERY = "SELECT count(*) FROM eg_ws_connection WHERE";
 	
 	private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
-            "(SELECT *, DENSE_RANK() OVER (ORDER BY conn_id) offset_ FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY app_applicationno) offset_ FROM " +
             "({})" +
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";
@@ -76,16 +88,32 @@ public class WsQueryBuilder {
 		if (criteria.isEmpty())
 				return null;
 		StringBuilder query = new StringBuilder(WATER_SEARCH_QUERY);
+		boolean propertyIdsPresent = false;
 		if (!StringUtils.isEmpty(criteria.getMobileNumber())) {
 			Set<String> propertyIds = new HashSet<>();
 			List<Property> propertyList = waterServicesUtil.propertySearchOnCriteria(criteria, requestInfo);
 			propertyList.forEach(property -> propertyIds.add(property.getId()));
 			if (!propertyIds.isEmpty()) {
 				addClauseIfRequired(preparedStatement, query);
-				query.append(" conn.property_id in (").append(createQuery(propertyIds)).append(" )");
+				query.append(" (conn.property_id in (").append(createQuery(propertyIds)).append(" )");
 				addToPreparedStatement(preparedStatement, propertyIds);
+				propertyIdsPresent = true;
 			}
-
+		}
+		if(!StringUtils.isEmpty(criteria.getMobileNumber())) {
+			Set<String> uuids = userService.getUUIDForUsers(criteria.getMobileNumber(), criteria.getTenantId(), requestInfo);
+			boolean userIdsPresent = false;
+			if (!CollectionUtils.isEmpty(uuids)) {
+				addORClauseIfRequired(preparedStatement, query);
+				if(!propertyIdsPresent)
+					query.append("(");
+				query.append(" connectionholder.userid in (").append(createQuery(uuids)).append(" ))");
+				addToPreparedStatement(preparedStatement, uuids);
+				userIdsPresent = true;
+			}
+			if(propertyIdsPresent && !userIdsPresent){
+				query.append(")");
+			}
 		}
 		if (!StringUtils.isEmpty(criteria.getTenantId())) {
 			addClauseIfRequired(preparedStatement, query);
@@ -120,12 +148,12 @@ public class WsQueryBuilder {
 		}
 		if (!StringUtils.isEmpty(criteria.getApplicationNumber())) {
 			addClauseIfRequired(preparedStatement, query);
-			query.append(" conn.applicationno = ? ");
+			query.append(" application.applicationno = ? ");
 			preparedStatement.add(criteria.getApplicationNumber());
 		}
 		if (!StringUtils.isEmpty(criteria.getApplicationStatus())) {
 			addClauseIfRequired(preparedStatement, query);
-			query.append(" conn.applicationStatus = ? ");
+			query.append(" application.applicationStatus = ? ");
 			preparedStatement.add(criteria.getApplicationStatus());
 		}
 		if (criteria.getFromDate() != null) {
@@ -138,6 +166,11 @@ public class WsQueryBuilder {
 			query.append("  wc.appCreatedDate <= ? ");
 			preparedStatement.add(criteria.getToDate());
 		}
+		if(!StringUtils.isEmpty(criteria.getApplicationType())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.applicationType = ? ");
+			preparedStatement.add(criteria.getApplicationType());
+		}
 		query.append(ORDER_BY_CLAUSE);
 		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
 	}
@@ -147,6 +180,14 @@ public class WsQueryBuilder {
 			queryString.append(" WHERE ");
 		else {
 			queryString.append(" AND");
+		}
+	}
+
+	private void addORClauseIfRequired(List<Object> values, StringBuilder queryString){
+		if (values.isEmpty())
+			queryString.append(" WHERE ");
+		else {
+			queryString.append(" OR");
 		}
 	}
 

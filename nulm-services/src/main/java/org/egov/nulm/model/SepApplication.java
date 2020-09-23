@@ -3,8 +3,11 @@ package org.egov.nulm.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,8 +43,10 @@ public class SepApplication {
 	    DRAFTED("DRAFTED"),
 	    CREATED("CREATED"),
 	    APPROVED("APPROVED"),
-		REJECTED("REJECTED");
-
+		REJECTED("REJECTED"),
+	    FORWARDEDTOTASKFORCECOMMITTEE("Forwarded to Task force Committee"),
+		SENDTOBANKFORPROCESSING("Send to bank for processing"),
+		SANCTIONEDBYBANKBank("Sanctioned by Bank");
 	    private String value;
 
 	    StatusEnum(String value) {
@@ -84,7 +89,7 @@ public class SepApplication {
 	@JsonProperty("dob")
 	private String dob ;
 	
-	
+	 @Pattern(regexp = "^[0-9]{4,4}$", message = "AdharNumber should be last 4 digit number")
 	@JsonProperty("adharNo")
 	private String adharNo ;
 	
@@ -104,7 +109,7 @@ public class SepApplication {
 	@JsonProperty("address")
 	private String address ;
 	
-	
+	 @Pattern(regexp = "^[6-9][0-9]{9}$", message = "Invalid contact number")
 	@JsonProperty("contact")
 	private String contact ;
 	
@@ -138,6 +143,8 @@ public class SepApplication {
 	@JsonProperty("isHandicapped")
 	private Boolean isHandicapped ;
 	
+	@JsonProperty("isDisabilityCertificateAvailable")
+	private Boolean isDisabilityCertificateAvailable ;
 	
 	@JsonProperty("typeOfBusinessToBeStarted")
 	private String typeOfBusinessToBeStarted ;
@@ -149,26 +156,13 @@ public class SepApplication {
 	
 	@JsonProperty("placeOfWork")
 	private String placeOfWork ;
-	
-	
-	@JsonProperty("bankDetails")
-	private String bankDetails ;
-	
-	
+		
 	@JsonProperty("noOfFamilyMembers")
-	private String noOfFamilyMembers ;	
+	private String noOfFamilyMembers ;		
 	
-	@JsonProperty("projectCost")
-	private BigDecimal projectCost ;
-	
-	
+	@DecimalMax(value = "200000", message = "The loan amount can not be more than 2L")
 	@JsonProperty("loanAmount")
 	private BigDecimal loanAmount ;
-	
-	
-	@JsonProperty("recommendedAmount")
-	private BigDecimal recommendedAmount ;
-	
 	
 	@JsonProperty("isLoanFromBankinginstitute")
 	private Boolean isLoanFromBankinginstitute ;
@@ -188,25 +182,56 @@ public class SepApplication {
 	
 	@JsonProperty("isActive")
 	private Boolean isActive ;
-	
-	@JsonProperty("applicationDocument")
-	private List<SepApplicationDocument> applicationDocument;
-	
+		
 	@JsonProperty("fromDate")
 	private String fromDate;
 
 	@JsonProperty("toDate")
 	private String toDate;
 	
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails ;
-
-	
 	@JsonProperty("remark")
 	private String remark ;
 	
+	@JsonProperty("accountName")
+	private String accountName ;
 	
+	@JsonProperty("bankName")
+	private String bankName;
 	
-
-
+	@JsonProperty("branchName")
+	private String branchName;
+	
+	@JsonProperty("taskCommitteeApprovedAmount")
+	private String taskCommitteeApprovedAmount;
+	
+	@JsonProperty("taskCommitteeRemark")
+	private String taskCommitteeRemark;
+	
+	@JsonProperty("taskCommitteeActionDate")
+	private String taskCommitteeActionDate;
+	
+	@JsonProperty("taskCommitteeStatus")
+	private String taskCommitteeStatus;
+	
+	@JsonProperty("committeeBankName")
+	private String committeeBankName;
+	
+	@JsonProperty("committeeBranchName")
+	private String committeeBranchName;
+	
+	@JsonProperty("applicationForwardedOnDate")
+	private String applicationForwardedOnDate;
+	
+	@JsonProperty("sanctionDate")
+	private String sanctionDate;
+	
+	@JsonProperty("sanctionRemarks")
+	private String sanctionRemarks;
+	
+	@JsonProperty("applicationDocument")
+	private List<SepApplicationDocument> applicationDocument;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails ;
+	
 }

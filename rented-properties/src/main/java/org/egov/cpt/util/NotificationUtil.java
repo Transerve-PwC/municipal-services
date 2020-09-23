@@ -2,7 +2,10 @@ package org.egov.cpt.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +19,8 @@ import org.egov.cpt.models.EmailRequest;
 import org.egov.cpt.models.Mortgage;
 import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.Owner;
+import org.egov.cpt.models.Property;
+import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.ServiceRequestRepository;
@@ -363,4 +368,15 @@ public class NotificationUtil {
 		return messageTemplate;
 	}
 
+	public String getDemandGenerationMsg(RentDemand rentDemand, Property property, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_DEMAND_GENERATION, localizationMessages);
+		messageTemplate = messageTemplate.replace("<1>", property.getOwners().get(0).getOwnerDetails().getName());
+		messageTemplate = messageTemplate.replace("<2>", rentDemand.getCollectionPrincipal().toString());
+		messageTemplate = messageTemplate.replace("<3>", property.getTransitNumber());
+		LocalDate localDate = new Date(rentDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
+				.toLocalDate();
+		messageTemplate = messageTemplate.replace("<4>", localDate.getMonth().toString().substring(0,3));
+		messageTemplate = messageTemplate.replace("<5>", String.valueOf(localDate.getYear()).substring(2, 4));
+		return messageTemplate;
+	}
 }

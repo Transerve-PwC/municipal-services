@@ -116,12 +116,17 @@ public class WorkflowIntegrator {
 							document.setId(UUID.randomUUID().toString());
 							document.setFileStoreId(servicerequestdata.getMedia().get(index).toString());
 							document.setActive(true);
-							document.setDocumentType(servicerequestdata.getDocumentType());
+							
+							if(index==0)
+								document.setDocumentType("ID_Proof");
+								
+							else
+								document.setDocumentType(servicerequestdata.getDocumentType());
+							
 							document.setTenantId(wfTenantId);
 							wfDocument.add(document);  				    
 				 
 							}
-				  
 						}
 					else
 					  {
@@ -204,8 +209,6 @@ public class WorkflowIntegrator {
 				response = rest.postForObject(config.getWfHost().concat(config.getWfTransitionPath()), workFlowRequest, String.class);
 			} catch (HttpClientErrorException e) {
 				
-
-
 				/*
 				 * extracting message from client error exception
 				 */
@@ -260,7 +263,7 @@ public class WorkflowIntegrator {
 		
 	}
 	
-	
+
 	public String parseBussinessServiceData(String bussinessServiceData, ServiceRequest request) throws JSONException {
 		
 		String newactions = null;

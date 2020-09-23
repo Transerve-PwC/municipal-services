@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
+import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.workflow.ProcessInstance;
 import org.egov.waterconnection.model.workflow.ProcessInstanceRequest;
 import org.egov.waterconnection.model.workflow.ProcessInstanceResponse;
+import org.egov.waterconnection.util.WaterServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +42,9 @@ public class WorkflowIntegrator {
 	
 	@Autowired
 	private RestTemplate rest;
+	
+	@Autowired
+	private WaterServicesUtil wsUtil;
 
 	/**
 	 * Method to integrate with workflow
@@ -53,11 +58,16 @@ public class WorkflowIntegrator {
 	 * @param waterConnectionRequest
 	 */
 	public void callWorkFlow(WaterConnectionRequest waterConnectionRequest, Property property) {
-		ProcessInstance processInstance = ProcessInstance.builder()
+
+		String activityType = waterConnectionRequest.getWaterConnection().getActivityType();
+		String businessService = getBusinessService(activityType);
+				
+				ProcessInstance processInstance = ProcessInstance.builder()
 				.businessId(waterConnectionRequest.getWaterConnection().getApplicationNo())
 				.tenantId(property.getTenantId())
-				.businessService(config.getBusinessServiceValue()).moduleName(MODULENAMEVALUE)
+				.businessService(businessService).moduleName(MODULENAMEVALUE)
 				.action(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()).build();
+	
 		if (!StringUtils.isEmpty(waterConnectionRequest.getWaterConnection().getProcessInstance())) {
 			if (!CollectionUtils
 					.isEmpty(waterConnectionRequest.getWaterConnection().getProcessInstance().getAssignes())) {
@@ -121,5 +131,25 @@ public class WorkflowIntegrator {
 						.setApplicationStatus(pInstance.getState().getApplicationStatus());
 			}
 		});
+	}
+	
+	public String getBusinessService(String activityType) {
+
+		switch (activityType) {
+		case WCConstants.WS_NEWCONNECTION:
+		case WCConstants.WS_APPLY_FOR_REGULAR_INFO:
+			
+			return config.getBusinessServiceConversionValue();
+			
+		case WCConstants.WS_PERMANENT_DISCONNECTION:
+		case WCConstants.WS_TEMPORARY_DISCONNECTION:
+		case WCConstants.WS_REACTIVATE:
+			return config.getBusinessServiceDisconnectionValue();
+		case WCConstants.WS_CHANGE_OWNER_INFO:
+			return config.getBusinessServiceRenameValue();
+		case WCConstants.WS_CONVERSION:
+			return config.getBusinessServiceConversionValue();
+		}
+		return "";
 	}
 }

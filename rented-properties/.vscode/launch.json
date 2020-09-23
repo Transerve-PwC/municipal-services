@@ -8,6 +8,7 @@
       "type": "java",
       "name": "Debug (Launch)-Rented Properties",
       "request": "launch",
+      "vmArgs": "-Xmx128m -Xms64m",
       "mainClass": "org.egov.cpt.CSPropertyApplication",
       "projectName": "rented-properties"
     },

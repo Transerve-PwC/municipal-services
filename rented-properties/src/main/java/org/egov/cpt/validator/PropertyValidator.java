@@ -984,4 +984,43 @@ public class PropertyValidator {
 					PTConstants.BUSINESS_SERVICE_FL_RP);
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	public void validatePropertyImagesUpdateLimit(PropertyImagesRequest propertyImagesRequest) {
+		String tenantId = propertyImagesRequest.getPropertyImagesApplications().get(0).getTenantId().split("\\.")[0];
+		String filter = "[?(@.code=='" + PTConstants.BUSINESS_SERVICE_PM + "')].documentList";
+
+		/**
+		 * Get list of application documents from MDMS
+		 */
+		List<Map<String, Object>> data = (List<Map<String, Object>>) mdmsService.getMDMSResponse(
+				propertyImagesRequest.getRequestInfo(), tenantId, PTConstants.MDMS_PT_MOD_NAME, "applications", filter,
+				PTConstants.JSONPATH_CODES + ".applications");
+		List<Map<String, Object>> mdmsDocuments = (List<Map<String, Object>>) (data.get(0));
+
+		Integer maxValue = (Integer) mdmsDocuments.stream()
+				.filter(document -> document.get("code").equals("TRANSIT_SITE_IMAGES"))
+				.map(document -> document.get("maxCount")).findFirst().get();
+		Integer minValue = (Integer) mdmsDocuments.stream()
+				.filter(document -> document.get("code").equals("TRANSIT_SITE_IMAGES"))
+				.map(document -> document.get("minCount")).findFirst().get();
+
+		Map<String, String> errorMap = new HashMap<>();
+		propertyImagesRequest.getPropertyImagesApplications().forEach(application -> {
+			if (CollectionUtils.isEmpty(application.getApplicationDocuments())) {
+				errorMap.put("PROPERTY_IMAGES_NOT_FOUND", "No property images found");
+			} else if (application.getApplicationDocuments().size() > maxValue.intValue()) {
+				errorMap.put("PROPERTY_IMAGES_LIMIT_EXCEEDS",
+						"Property images upload limit exceeds max limit " + maxValue);
+			} else if (application.getApplicationDocuments().size() < minValue.intValue()) {
+				errorMap.put("PROPERTY_IMAGES_LIMIT_NOT_REACHED",
+						"Property images uploaded should be minimum of " + minValue);
+			}
+		});
+
+		if (!errorMap.isEmpty()) {
+			throw new CustomException(errorMap);
+		}
+
+	}
 }

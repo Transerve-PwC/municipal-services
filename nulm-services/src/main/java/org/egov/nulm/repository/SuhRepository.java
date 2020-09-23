@@ -74,6 +74,18 @@ public class SuhRepository {
 			throw new CustomException(errorMap);
 		}
 	}
+	public void checkOrganizationUuid(SuhApplication suhapplication) {
+		Map<String, String> errorMap = new HashMap<>();
+		int i = 0;
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_ORGANIZATION_UUID_QUERY,
+				new Object[] {suhapplication.getTenantId(),suhapplication.getAssignedTo() }, Integer.class);
+
+		if (i == 0) {
+			errorMap.put(CommonConstants.INVALID_SUH_REQUEST, CommonConstants.INVALID_SUH_ASSIGNED_TO);
+			throw new CustomException(errorMap);
+		}
+		
+	}
 	
 	public List<SuhApplication> getSuhApplication(SuhApplication suh, List<Role> role, Long userId) {
 		List<SuhApplication> suhApp = new ArrayList<>();
@@ -142,6 +154,7 @@ public class SuhRepository {
 					}
 					
 					paramValues.put("createdBy", "");
+					paramValues.put("userId",userId.toString());
 					paramValues.put("status", statusEmplyee);
 					return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUH_SHELTER_NAME_QUERY, paramValues,
 							columnsRowMapper);
@@ -157,8 +170,7 @@ public class SuhRepository {
 			statusCitizen.add(suh.getApplicationStatus() == null ? "" : suh.getApplicationStatus().toString());
 			paramValues.put("status", statusCitizen);
 			paramValues.put("createdBy", userId.toString());
-		
-
+				paramValues.put("userId",userId.toString());
 			return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUH_SHELTER_NAME_QUERY, paramValues, columnsRowMapper);
 
 		} catch (Exception e) {
@@ -167,6 +179,7 @@ public class SuhRepository {
 		}
 
 	}
+
 	
 	
 }

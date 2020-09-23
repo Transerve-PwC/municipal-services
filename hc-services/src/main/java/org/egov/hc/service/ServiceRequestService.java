@@ -487,15 +487,18 @@ public class ServiceRequestService {
 				
 				String bussinessServiceData = getbussinessServiceDatafromprocesinstance(request);
 				
-				if ((request.getServices().get(servReqCount).getAction().equals(HCConstants.APPROVE))
-						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_AND_FORWARD_TO_SDO)
-						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARD_FOR_INSPECTION))
+				if (request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_AND_FORWARD_TO_SDO)
+						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARD_FOR_INSPECTION)
+//						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_FOR_CLOSURE)
+//						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARDED_FOR_COMPLETION)
+						)
 				{
 				 getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceData,request);
 				
 				 request.getServices().get(servReqCount).setRole(getroles);
 				}
-				if(request.getServices().get(servReqCount).getAction().equals(HCConstants.INSPECT))
+				if(request.getServices().get(servReqCount).getAction().equals(HCConstants.INSPECT) || 
+						(request.getServices().get(servReqCount).getAction().equals(HCConstants.APPROVE)))
 				{
 					getroles = parseInspectedBussinessServiceData(bussinessServiceData,request);
 					 request.getServices().get(servReqCount).setRole(getroles);
@@ -527,6 +530,8 @@ public class ServiceRequestService {
 				List<String> assigneeListSplited = new ArrayList<>();
 				assigneeListSplited.add(roleSplit[0]);
 				assigneeList = assigneeListSplited;
+				//roleList.add(getroles);
+				request.getServices().get(servReqCount).setAssignee(assigneeList);
 				
 			}
 
@@ -602,7 +607,9 @@ public class ServiceRequestService {
 			updateRequest.setTenantId(serviceRequest.getTenantId());
 			
 
-			if (request.getServices().get(servReqCount).getAction().equals(HCConstants.APPROVE))
+			if (request.getServices().get(servReqCount).getAction().equals(HCConstants.APPROVE) 
+					|| request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_FOR_CLOSURE) 
+					|| request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARD_FOR_COMPLETION))
 				updateRequest.setService_request_status(HCConstants.APPROVED_STATUS);
 			else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.COMPLETE))
 				updateRequest.setService_request_status(HCConstants.COMPLETED_STATUS);
@@ -618,7 +625,8 @@ public class ServiceRequestService {
 				updateRequest.setService_request_status(HCConstants.REJECTED_STATUS);
 			else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARD_FOR_INSPECTION))
 				updateRequest.setService_request_status(HCConstants.INSPECTED_STATUS);
-
+		
+			
 			updateRequest.setServiceMedia(documentDetailsJson.toJSONString());
 			updateRequest.setLastModifiedBy(auditDetails.getLastModifiedBy());
 			updateRequest.setLastModifiedTime(auditDetails.getLastModifiedTime());
@@ -773,6 +781,9 @@ public class ServiceRequestService {
 
 				infowraperforupdate = RequestInfoWrapper.builder().actionInfo(actionInfos).requestInfo(requestInfo)
 						.requestBody(updateRequest).services(request.getServices()).build();
+				
+//				infowraperforupdate = RequestInfoWrapper.builder().actionInfo(actionInfos).requestInfo(requestInfo)
+//						.requestBody(updateRequest).build();
 
 				hCProducer.push(hcConfiguration.getUpdateTopic(), infowraperforupdate);
 
@@ -1040,7 +1051,7 @@ public class ServiceRequestService {
 				try {
 				 serviceRequest = serviceRepository.getServiceRequest(requestData);
 			
-				} catch (Exception e) {
+				} catch (Exception e) { 
 					log.info("null");
 				}
 				String bisinesssla = getBussinessServiceSla(requestData);
@@ -1656,7 +1667,7 @@ public class ServiceRequestService {
 			serviceRequestGetData = procesinstanceBulkData(procesinstanceData,bussinessServiceData,serviceRequestGetData,service_request_id,service_request_id_new,bussinessServiceDataOld);
 	
 		} catch (HttpClientErrorException e) {
-			log.info("Handled exception");
+			log.info("Handled exception"); 
 		}
 
 		serviceRequestGetData.getRequestInfo().setUserInfo(employeeData);
@@ -2228,33 +2239,10 @@ public class ServiceRequestService {
 	public ServiceResponse scheduler(ServiceRequest requestInfo, String tenantId) {
 		
 		log.info("Scheduler started ......");
-		
-		
-
+	
 		String serviceRequestId = null;
-		//Long serviceRequestDateEpoc = null;
-				
-	//get data from service request
  		List <ServiceRequestData> serviceRequestList = getServiceRequest();
- 		
- 		//generate current date
- 	//	String currentDate = getCurrentDateTimeMS();
- 		//long currentDateepoch=0 ; 
- 		try
-		{ 
-		
-		/*SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-		Date date = df.parse(currentDate);
-		currentDateepoch = date.getTime();	*/
-			
-		//log.info("service current date in mili  :  "+currentDate);
-		//log.info("currentDate in Epoc convert  "+ currentDateepoch);
-		}
- 		catch(Exception ex)
- 		{
- 			
- 		}
-		
+ 	
  		if(null !=serviceRequestList || serviceRequestList.size()>0)
  		{
  		for(ServiceRequestData request: serviceRequestList)
@@ -2262,20 +2250,12 @@ public class ServiceRequestService {
  			String role = null;
 			role = request.getCurrent_assignee();
 			serviceRequestId = request.getService_request_id();
-			//serviceRequestDateEpoc = request.getCreatedTime();
 			
 			log.info("Role :" +role + " And  serviceRequestId "+ serviceRequestId);
 
 	//convert in epoc
 		try
-		{	
-		
-   //old date - current date		
-		  /*long dateDifference = (serviceRequestDateEpoc - currentDateepoch); 
-			  
-		  log.info("Date difference  :  "+ dateDifference);*/
-
-   // taking days from bussines service
+		{
 		 String  processInstanceSplit[] = null;
 		 long businessSla = 0;
 		
@@ -2286,11 +2266,6 @@ public class ServiceRequestService {
 		if(processInstanceSplit != null) {	
 		 businessSla= Long.parseLong(processInstanceSplit[1]);
 		}
-		 
-		//String processInstanceData = getProcessInstanceData(request,serviceRequestId,tenantId);
-		
-		//String serviceRequestType = getServiceRequestType(processInstanceData);
-	//check days greter or less than
 
 		if( businessSla >= 0 )
 		{

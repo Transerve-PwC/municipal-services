@@ -63,7 +63,7 @@ public class ServiceController {
 			
 					if (serviceRequest.getServices().get(0).getIsEditState() == 1) {	
 						response =service.updateServiceRequest(serviceRequest, request);
-					} else {
+					} else { 
 						response = service.create(serviceRequest, request);
 					}
 					return new ResponseEntity<>(response, HttpStatus.CREATED);

@@ -240,4 +240,5 @@ public class RentDemandGenerationServiceTest {
 		rentCollection.setCollectedAt(1599046968891L);
 		return Collections.singletonList(rentCollection);
 	}
+
 }

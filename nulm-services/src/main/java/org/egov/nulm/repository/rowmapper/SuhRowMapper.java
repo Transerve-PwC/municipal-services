@@ -101,6 +101,7 @@ public class SuhRowMapper implements ResultSetExtractor<List<SuhApplication>> {
 							.userChargesRemark(rs.getString("user_charges_remark"))
 							.visitsRemark(rs.getString("created_by")).addressPicture(addressPicture)
 							.programPicture(programPicture).documentAttachment(documentAttachment)
+							.assignedTo(rs.getString("assigned_to"))
 							.weatherCondition(rs.getString("weather_condition")).build();
 					List<SuhFacilitiesDetails> facilitiesList = null;
 					if (rs.getString("facilities") != null) {

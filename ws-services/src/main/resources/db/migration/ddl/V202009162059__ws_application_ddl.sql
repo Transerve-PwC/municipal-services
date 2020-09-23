@@ -1,8 +1,8 @@
 CREATE TABLE eg_ws_application
 (
 	id character varying(64) NOT NULL,
-	wsid character varying(64) NOT NULL,
 	tenantid character varying(64) NOT NULL,
+	wsid character varying(64) NOT NULL,
 	applicationno character varying(64) NOT NULL,
 	activitytype character varying(64),
 	applicationstatus character varying(64),

@@ -407,11 +407,13 @@ public class HCNotificationConsumer {
 				|| actionInfo.getAction().equals(WorkFlowConfigs.ACTION_ASSIGN)
 				|| actionInfo.getAction().equals(WorkFlowConfigs.ACTION_INITIATE)
 				|| actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REQUEST_FOR_REASSIGN)
-				||actionInfo.getAction().equals(WorkFlowConfigs.VERIFY_AND_FORWARD_TO_SDO)
-				||actionInfo.getAction().equals(WorkFlowConfigs.FORWARDFORINSPECTION)
-				||actionInfo.getAction().equals(WorkFlowConfigs.REQUESTCLARIFICATION)
-				||actionInfo.getAction().equals(WorkFlowConfigs.INSPECT)
-				||actionInfo.getAction().equals(WorkFlowConfigs.VERIFYANDFORWARD)) {
+				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFY_AND_FORWARD_TO_SDO)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.FORWARDFORINSPECTION)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.REQUESTCLARIFICATION)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.INSPECT)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFYANDFORWARD)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFY_FOR_CLOSURE)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.FORWARDED_FOR_COMPLETION)) {
 
 			employeeNameRetrived = serviceReq.getOwnerName();
 			message = getMessage(actionInfo.getAction(), serviceReq, requestInfo, messageMap, employeeNameRetrived,
@@ -494,7 +496,9 @@ public class HCNotificationConsumer {
 				|| actionInfo.getAction().equals(WorkFlowConfigs.FORWARDFORINSPECTION)
 				|| actionInfo.getAction().equals(WorkFlowConfigs.REQUESTCLARIFICATION)
 				||actionInfo.getAction().equals(WorkFlowConfigs.INSPECT)
-				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFYANDFORWARD)) {
+				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFYANDFORWARD)
+				||actionInfo.getAction().equals(WorkFlowConfigs.VERIFY_FOR_CLOSURE)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.FORWARDED_FOR_COMPLETION)) {
 
 			emailIdRetrived = serviceReq.getEmail();
 			employeeNameRetrived=serviceReq.getOwnerName();
@@ -579,8 +583,15 @@ public class HCNotificationConsumer {
 			break;
 			
 		case WorkFlowConfigs.ACTION_COMPLETE:
-
 			text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_EMAIL_SUBJECT_ACTION_COMPLETE);
+			break;
+			
+		case WorkFlowConfigs.VERIFY_FOR_CLOSURE:
+			text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_EMAIL_SUBJECT_NOTIFICATION);
+			break;
+			
+		case WorkFlowConfigs.FORWARDED_FOR_COMPLETION:
+			text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_EMAIL_SUBJECT_NOTIFICATION);
 			break;
 
 		
@@ -626,7 +637,9 @@ public class HCNotificationConsumer {
 				||actionInfo.getAction().equals(WorkFlowConfigs.REQUESTCLARIFICATION)
 				|| actionInfo.getAction().equals(WorkFlowConfigs.ACTION_INITIATE)
 				||actionInfo.getAction().equals(WorkFlowConfigs.INSPECT)
-				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFYANDFORWARD)) {
+				|| actionInfo.getAction().equals(WorkFlowConfigs.VERIFYANDFORWARD)
+				||actionInfo.getAction().equals(WorkFlowConfigs.VERIFY_FOR_CLOSURE)
+				|| actionInfo.getAction().equals(WorkFlowConfigs.FORWARDED_FOR_COMPLETION)) {
 			
 			
 			if (!serviceReq.getIsRoleSpecific())
@@ -973,6 +986,40 @@ public class HCNotificationConsumer {
 			text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY,  serviceReq.getOwnerName())
 					.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id_old())
 					.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+					.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+			}
+			break;
+			
+		case WorkFlowConfigs.VERIFY_FOR_CLOSURE:
+
+			if (notifcationType.equals(HCConstants.SMS)) {
+				text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_SMS_NOTIFICATION);
+			} else if (notifcationType.equals(HCConstants.EMAIL)) {
+				text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_EMAIL_NOTIFICATION);
+			} else if (notifcationType.equals(HCConstants.PUSH)) {
+				text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_PUSH_NOTIFICATION);
+			}
+			if(text != null)
+			{
+			text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY,  serviceReq.getOwnerName())
+					.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+					.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+			}
+			break;
+			
+		case WorkFlowConfigs.FORWARDED_FOR_COMPLETION:
+
+			if (notifcationType.equals(HCConstants.SMS)) {
+				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_SMS_NOTIFICATION);
+			} else if (notifcationType.equals(HCConstants.EMAIL)) {
+				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_EMAIL_NOTIFICATION);
+			} else if (notifcationType.equals(HCConstants.PUSH)) {
+				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_PUSH_NOTIFICATION);
+			}
+			if(text != null)
+			{
+			text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY,  serviceReq.getOwnerName())
+					.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
 					.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
 			}
 			break;

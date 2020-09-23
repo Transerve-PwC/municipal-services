@@ -208,5 +208,8 @@ public class SuhApplication {
 
 	@JsonProperty("toDate")
 	private String toDate;
+	
+	@JsonProperty("assignedTo")
+	private String assignedTo;
 
 }
