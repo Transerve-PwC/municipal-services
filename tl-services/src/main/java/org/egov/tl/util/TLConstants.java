@@ -33,9 +33,9 @@ public class TLConstants {
 
     public static final String NOTIFICATION_PAID = "tl.en.counter.pending.approval";
 
-    public static final String NOTIFICATION_APPROVED = "tl.en.counter.approved";
+    public static final String NOTIFICATION_APPROVED = "tl.en.counter.approved.sms";
 
-    public static final String NOTIFICATION_REJECTED = "tl.en.counter.rejected";
+    public static final String NOTIFICATION_REJECTED = "tl.en.counter.rejected.sms";
 
     public static final String NOTIFICATION_CANCELLED = "tl.en.counter.cancelled";
 
@@ -47,13 +47,13 @@ public class TLConstants {
 
     public static final String NOTIFICATION_OBJECT_MODIFIED = "tl.en.edit.object.modified";
 
-    public static final String NOTIFICATION_SENDBACK_CITIZEN= "tl.en.sendback.citizen";
+    public static final String NOTIFICATION_SENDBACK_CITIZEN= "tl.en.counter.sendback.sms";
 
     public static final String NOTIFICATION_FORWARD_CITIZEN = "tl.en.forward.citizen";
     
-    public static final String NOTIFICATION_SUBMITTED = "tl.en.counter.submitted";
+    public static final String NOTIFICATION_SUBMITTED = "tl.en.counter.submitted.sms";
 
-    public static final String NOTIFICATION_APRROVED_AND_PAYMENT_PENDING = "tl.en.counter.approved.payment.pending";
+    public static final String NOTIFICATION_APRROVED_AND_PAYMENT_PENDING = "tl.en.counter.approved.payment.pending.sms";
     
     public static final String DEFAULT_OBJECT_MODIFIED_MSG = "Dear <1>,Your Trade License with application number <APPLICATION_NUMBER> was modified.";
     

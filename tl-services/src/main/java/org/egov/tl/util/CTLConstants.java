@@ -10,8 +10,8 @@ public class CTLConstants {
 	public static final String businessService_DHOBI_GHAT = "CTL.DHOBI_GHAT";
 	public static final String businessService_BOOK_SHOP = "CTL.OLD_BOOK_MARKET";
 	
-	 public static final String CTL_NOTIFICATION_PAYMENT_PAYER = "ctl.en.counter.payment.successful.payer";
-	 public static final String CTL_NOTIFICATION_PAYMENT_OWNER = "ctl.en.counter.payment.successful.owner";
+	 public static final String CTL_NOTIFICATION_PAYMENT_PAYER = "tl.en.counter.payment.successful.payer.sms";
+	 public static final String CTL_NOTIFICATION_PAYMENT_OWNER = "tl.en.counter.payment.successful.owner.sms";
 	 public static final String STATUS_PENDINGCLARIFICATION = "PENDINGCLARIFICATION";
 	 public static final String STATUS_MODIFIED = "MODIFIED";
 	 public static final String EMAIL_SIGNATURE = "tl.email.signature";
@@ -26,13 +26,13 @@ public class CTLConstants {
 	 public static final String ACTION_SENDFORCLARIFICATION_CLERK  = "SENDBACK_PENDINGCLARIFICATION";
 	 
 	 //Email notification constants
-	 public static final String NOTIFICATION_SUBMITTED_EMAIL = "tl.en.counter.email.submitted";
-	 public static final String NOTIFICATION_SENDBACK_CITIZEN_EMAIL= "tl.en.sendback.email.citizen";
-	 public static final String NOTIFICATION_REJECTED_EMAIL = "tl.en.counter.email.rejected";
-	 public static final String NOTIFICATION_APRROVED_AND_PAYMENT_PENDING_EMAIL = "tl.en.counter.email.approved.payment.pending";
-	 public static final String NOTIFICATION_APPROVED_EMAIL = "tl.en.counter.email.approved";
-	 public static final String CTL_NOTIFICATION_PAYMENT_PAYER_EMAIL = "ctl.en.counter.email.payment.successful.payer";
-	 public static final String CTL_NOTIFICATION_PAYMENT_OWNER_EMAIL = "ctl.en.counter.email.payment.successful.owner";
+	 public static final String NOTIFICATION_SUBMITTED_EMAIL = "tl.en.counter.submitted.email";
+	 public static final String NOTIFICATION_SENDBACK_CITIZEN_EMAIL= "tl.en.counter.sendback.email";
+	 public static final String NOTIFICATION_REJECTED_EMAIL = "tl.en.counter.rejected.email";
+	 public static final String NOTIFICATION_APRROVED_AND_PAYMENT_PENDING_EMAIL = "tl.en.counter.approved.payment.pending.email";
+	 public static final String NOTIFICATION_APPROVED_EMAIL = "tl.en.counter.approved.email";
+	 public static final String CTL_NOTIFICATION_PAYMENT_PAYER_EMAIL = "tl.en.counter.payment.successful.payer.email";
+	 public static final String CTL_NOTIFICATION_PAYMENT_OWNER_EMAIL = "tl.en.counter.payment.successful.owner.email";
 	 
 	 public static final String MAIL_NOTIFICATION ="MAIL";
 	 public static final String SMS_NOTIFICATION ="SMS";
