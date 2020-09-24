@@ -486,9 +486,13 @@ public class NotificationUtil {
 	 *            Message from localization
 	 * @return message for completed payment for payer
 	 */
-	public String getCTLPayerPaymentMsg(TradeLicense license, Map<String, String> valMap, String localizationMessages) {
+	public String getCTLPayerPaymentMsg(TradeLicense license, Map<String, String> valMap, String localizationMessages,String notificationMode) {
 		String messageTemplate=null;
-		messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_PAYER, localizationMessages);
+		if(notificationMode.equalsIgnoreCase(CTLConstants.MAIL_NOTIFICATION)){
+			 messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_PAYER_EMAIL, localizationMessages);
+		}else{
+		     messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_PAYER, localizationMessages);
+		}
 		messageTemplate = messageTemplate.replace("<2>", valMap.get(amountPaidKey));
 		messageTemplate = messageTemplate.replace("<3>", license.getApplicationNumber());
 		messageTemplate = messageTemplate.replace("<4>", valMap.get(receiptNumberKey));
@@ -638,7 +642,7 @@ public class NotificationUtil {
 					.email(entryset.getKey())
 					.subject(TLConstants.EMAIL_SUBJECT)
 					.body(customizedMsg)
-					.isHTML(false)
+					.isHTML(true)
 					.build());
 		}
 		return emailRequest;

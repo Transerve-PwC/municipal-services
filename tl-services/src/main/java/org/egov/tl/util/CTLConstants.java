@@ -31,6 +31,7 @@ public class CTLConstants {
 	 public static final String NOTIFICATION_REJECTED_EMAIL = "tl.en.counter.email.rejected";
 	 public static final String NOTIFICATION_APRROVED_AND_PAYMENT_PENDING_EMAIL = "tl.en.counter.email.approved.payment.pending";
 	 public static final String NOTIFICATION_APPROVED_EMAIL = "tl.en.counter.email.approved";
+	 public static final String CTL_NOTIFICATION_PAYMENT_PAYER_EMAIL = "ctl.en.counter.email.payment.successful.payer";
 	 
 	 public static final String MAIL_NOTIFICATION ="MAIL";
 	 public static final String SMS_NOTIFICATION ="SMS";
