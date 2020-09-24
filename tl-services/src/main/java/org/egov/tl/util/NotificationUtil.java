@@ -545,8 +545,7 @@ public class NotificationUtil {
 		if (isEMAILEnabled) {
 			this.sendEMAIL(emailRequestList.stream().map(
 				request -> {
-					String body = new StringBuilder(request.getBody()).append(emailSignature).toString();
-					body = body.replace("\\n", "<br/>");
+					String body = request.getBody();
 					return EmailRequest.builder()
 						.isHTML(true)
 						.attachments(request.getAttachments())
