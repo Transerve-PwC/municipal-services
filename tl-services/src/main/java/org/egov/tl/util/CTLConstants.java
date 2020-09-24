@@ -24,4 +24,14 @@ public class CTLConstants {
 	 public static final String CTL_RECEIPT_GENERATED_BY_KEY = "generateBy";
 	 
 	 public static final String ACTION_SENDFORCLARIFICATION_CLERK  = "SENDBACK_PENDINGCLARIFICATION";
+	 
+	 //Email notification constants
+	 public static final String NOTIFICATION_SUBMITTED_EMAIL = "tl.en.counter.email.submitted";
+	 public static final String NOTIFICATION_SENDBACK_CITIZEN_EMAIL= "tl.en.sendback.email.citizen";
+	 public static final String NOTIFICATION_REJECTED_EMAIL = "tl.en.counter.email.rejected";
+	 public static final String NOTIFICATION_APRROVED_AND_PAYMENT_PENDING_EMAIL = "tl.en.counter.email.approved.payment.pending";
+	 public static final String NOTIFICATION_APPROVED_EMAIL = "tl.en.counter.email.approved";
+	 
+	 public static final String MAIL_NOTIFICATION ="MAIL";
+	 public static final String SMS_NOTIFICATION ="SMS";
 }

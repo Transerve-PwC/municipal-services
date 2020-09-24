@@ -138,7 +138,7 @@ public class TLNotificationService {
 				case businessService_DHOBI_GHAT:
 				case businessService_BOOK_SHOP:
 					localizationMessages = util.getLocalizationMessages(tenantId, request.getRequestInfo());
-					message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages);
+					message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages,CTLConstants.SMS_NOTIFICATION);
 					break;
 			}
             if(message==null) continue;
@@ -191,18 +191,19 @@ public class TLNotificationService {
 				case businessService_DHOBI_GHAT:
 				case businessService_BOOK_SHOP:
 					localizationMessages = util.getLocalizationMessages(tenantId, request.getRequestInfo());
-					message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages);
+					message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages,CTLConstants.MAIL_NOTIFICATION);
 					
-					if (message != null) {						
+					/*if (message != null) {						
 						//Append email signature to all outgoing messages.
 						String emailSignature = util.getMessageTemplate(CTLConstants.EMAIL_SIGNATURE, localizationMessages);
 						message = new StringBuilder(message).append("\n").append(emailSignature).toString();
-					}
+					}*/
 					break;
 			}
             if(message==null) continue;
 
-			message = message.replace("\\n", "\n");
+//			message = message.replace("\\n", "\n");
+            log.info("message:"+message);
             emailRequests.addAll(util.createEMAILRequest(message,emailIdToOwner));
         }
     }
@@ -221,7 +222,7 @@ public class TLNotificationService {
         String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
         for(TradeLicense license : request.getLicenses()){
 
-            String message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages);
+            String message = util.getCustomizedCTLMessage(request.getRequestInfo(), license, localizationMessages,CTLConstants.SMS_NOTIFICATION);
             if(message == null) continue;
             message = message.replace("\\n"," ");
             Map<String,String > mobileNumberToOwner = new HashMap<>();

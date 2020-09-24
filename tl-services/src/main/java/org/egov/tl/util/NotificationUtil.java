@@ -120,35 +120,60 @@ public class NotificationUtil {
 	 *            The messages from localization
 	 * @return customized message based on tradelicense
 	 */
-	public String getCustomizedCTLMessage(RequestInfo requestInfo, TradeLicense license, String localizationMessage) {
-		String message = null, messageTemplate;
+	public String getCustomizedCTLMessage(RequestInfo requestInfo, TradeLicense license, String localizationMessage,String notificationType) {
+		String message = null, messageTemplate,messageCode;
 		String ACTION_STATUS = license.getAction() + "_" + license.getStatus();
 		switch (ACTION_STATUS) {
 		
 			case ACTION_FORWARD_CLERK:
-				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_SUBMITTED, localizationMessage);
+				if(notificationType.equalsIgnoreCase(CTLConstants.MAIL_NOTIFICATION)){
+					messageCode=CTLConstants.NOTIFICATION_SUBMITTED_EMAIL;
+				}else{
+					messageCode=TLConstants.NOTIFICATION_SUBMITTED;
+				}
+				messageTemplate = getMessageTemplate(messageCode, localizationMessage);
 				message = getSubittedMsg(license, messageTemplate, localizationMessage);
 				break;
 				
 			case ACTION_SENDFORCLARIFICATION_CLERK:
-				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_SENDBACK_CITIZEN, localizationMessage);
+				if(notificationType.equalsIgnoreCase(CTLConstants.MAIL_NOTIFICATION)){
+					messageCode=CTLConstants.NOTIFICATION_SENDBACK_CITIZEN_EMAIL;
+				}else{
+					messageCode=TLConstants.NOTIFICATION_SENDBACK_CITIZEN;
+				}
+				messageTemplate = getMessageTemplate(messageCode, localizationMessage);
 				message = getSendBackToCitizen(license, messageTemplate, localizationMessage);
 				break;
 				
 			case ACTION_STATUS_REJECTED:
-				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_REJECTED, localizationMessage);
+				if(notificationType.equalsIgnoreCase(CTLConstants.MAIL_NOTIFICATION)){
+					messageCode=CTLConstants.NOTIFICATION_REJECTED_EMAIL;
+				}else{
+					messageCode=TLConstants.NOTIFICATION_REJECTED;
+				}
+				messageTemplate = getMessageTemplate(messageCode, localizationMessage);
 				message = getRejectedMsgForCitizen(license, messageTemplate, localizationMessage);
 				break;
 				
 			case ACTION_STATUS_APPROVED:
+				if(notificationType.equalsIgnoreCase(CTLConstants.MAIL_NOTIFICATION)){
+					messageCode=CTLConstants.NOTIFICATION_APRROVED_AND_PAYMENT_PENDING_EMAIL;
+				}else{
+					messageCode=TLConstants.NOTIFICATION_APRROVED_AND_PAYMENT_PENDING;
+				}
 				BigDecimal amountToBePaid = getAmountToBePaid(requestInfo, license);
-				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_APRROVED_AND_PAYMENT_PENDING, localizationMessage);
+				messageTemplate = getMessageTemplate(messageCode, localizationMessage);
 				message = getApprovedAndPaymentPendingMsg(license,messageTemplate, localizationMessage, amountToBePaid);
 				break;
 				
 			case ACTION_STATUS_PAY:
+				if(notificationType.equalsIgnoreCase(CTLConstants.MAIL_NOTIFICATION)){
+					messageCode=CTLConstants.NOTIFICATION_APPROVED_EMAIL;
+				}else{
+					messageCode=TLConstants.NOTIFICATION_APPROVED;
+				}
 				BigDecimal amountToBePaid1 = getAmountToBePaid(requestInfo, license);
-				messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_APPROVED, localizationMessage);
+				messageTemplate = getMessageTemplate(messageCode, localizationMessage);
 				message = getApprovedMsg(license, localizationMessage, messageTemplate);
 				break;
 		}
@@ -462,7 +487,8 @@ public class NotificationUtil {
 	 * @return message for completed payment for payer
 	 */
 	public String getCTLPayerPaymentMsg(TradeLicense license, Map<String, String> valMap, String localizationMessages) {
-		String messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_PAYER, localizationMessages);
+		String messageTemplate=null;
+		messageTemplate = getMessageTemplate(CTLConstants.CTL_NOTIFICATION_PAYMENT_PAYER, localizationMessages);
 		messageTemplate = messageTemplate.replace("<2>", valMap.get(amountPaidKey));
 		messageTemplate = messageTemplate.replace("<3>", license.getApplicationNumber());
 		messageTemplate = messageTemplate.replace("<4>", valMap.get(receiptNumberKey));
