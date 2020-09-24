@@ -219,7 +219,7 @@ public class PaymentUpdateService {
      * @return The list of the SMS Requests
      */
     private SMSRequest getCTLOwnerSMSRequest(TradeLicense license, OwnerInfo owner, String localizationMessages){
-        String message = notificationUtil.getCTLOwnerPaymentMsg(license, new HashMap<String, String>(), localizationMessages);
+        String message = notificationUtil.getCTLOwnerPaymentMsg(license, new HashMap<String, String>(), localizationMessages,CTLConstants.SMS_NOTIFICATION);
         String customizedMsg = message.replace("<1>", owner.getName());
         SMSRequest smsRequest = new SMSRequest(owner.getMobileNumber(),customizedMsg);
         return smsRequest;
@@ -234,7 +234,7 @@ public class PaymentUpdateService {
      * @return The list of the SMS Requests
      */
     private EmailRequest getCTLOwnerEmailRequest(TradeLicense license, OwnerInfo owner,String localizationMessages){
-        String message = notificationUtil.getCTLOwnerPaymentMsg(license, new HashMap<String, String>(), localizationMessages);
+        String message = notificationUtil.getCTLOwnerPaymentMsg(license, new HashMap<String, String>(), localizationMessages,CTLConstants.MAIL_NOTIFICATION);
         
         String customizedMsg = message.replace("<1>", owner.getName());
         EmailRequest emailRequest = EmailRequest.builder()
