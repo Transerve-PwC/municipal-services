@@ -46,6 +46,7 @@ public class ReadExcelController {
 			if (StringUtils.isBlank(filePath)) {
 				throw new CustomException("FILE_NOT_FOUND", "Cannot find rent history file that is uploaded");
 			}
+			filePath = filePath.replaceAll(" ", "%20");
 			File tempFile = File.createTempFile("File" + System.currentTimeMillis(), ".xlsx");
 			FileUtils.copyURLToFile(new URI(filePath).toURL(), tempFile);
 			RentDemandResponse data = this.readExcelService.getDatafromExcel(tempFile, 0);

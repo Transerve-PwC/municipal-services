@@ -46,7 +46,7 @@ public class CommonService {
 	
 	@Value("${egov.idgen.ack.name}")
 	private String idName;
-	
+
 
 	public String generateApplicationId(String tenantId) {
 
@@ -101,4 +101,5 @@ public class CommonService {
 		}
 		return responseInfo;
 	}
+	
 }

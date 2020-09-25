@@ -184,7 +184,7 @@ public class WorkflowService {
 		url.append(config.getWfProcessSearchPath());
 		url.append("?tenantId=");
 		url.append(tenantId);
-		url.append("&businessservices=");
+		url.append("&businessServices=");
 		url.append(businessServiceValue);
 		url.append("&businessIds=");
 		for(String appNo : applicationNos) {

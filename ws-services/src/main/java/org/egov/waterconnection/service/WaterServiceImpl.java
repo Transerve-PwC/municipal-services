@@ -138,7 +138,7 @@ public class WaterServiceImpl implements WaterService {
 		BusinessService businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
 				waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
 		log.info("businessService: {},Business: {}",businessService.getBusinessService(),businessService.getBusiness());
-		WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getId(), waterConnectionRequest.getRequestInfo());
+		WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getWaterApplication().getId(), waterConnectionRequest.getRequestInfo());
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		String previousApplicationStatus = workflowService.getApplicationStatus(waterConnectionRequest.getRequestInfo(),
 				waterConnectionRequest.getWaterConnection().getApplicationNo(),
@@ -160,6 +160,8 @@ public class WaterServiceImpl implements WaterService {
 		
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
 				waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
+				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
 		
 		log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		boolean isTerminateState = workflowService.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);

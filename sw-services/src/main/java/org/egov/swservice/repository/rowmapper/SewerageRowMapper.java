@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.swservice.model.AuditDetails;
 import org.egov.swservice.model.Connection.StatusEnum;
 import org.egov.swservice.model.Document;
 import org.egov.swservice.model.PlumberInfo;
+import org.egov.swservice.model.SWProperty;
 import org.egov.swservice.model.SewerageConnection;
 import org.egov.swservice.model.Status;
 import org.egov.swservice.model.workflow.ProcessInstance;
@@ -70,6 +72,16 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 	                        .lastModifiedTime(rs.getLong("sw_lastModifiedTime"))
 	                        .build();
 				 sewarageConnection.setAuditDetails(auditdetails);
+				 
+				String waterpropertyid=rs.getString("seweragepropertyid");
+				if (!StringUtils.isEmpty(waterpropertyid)) {
+					SWProperty property = new SWProperty();
+					property.setId(rs.getString("seweragepropertyid"));
+					property.setUsageCategory(rs.getString("usagecategory"));
+					property.setUsageSubCategory(rs.getString("usagesubcategory"));
+					property.setAuditDetails(auditdetails);
+					sewarageConnection.setSwProperty(property);
+				}
 				 
 				// Add documents id's
 				connectionListMap.put(Id, sewarageConnection);

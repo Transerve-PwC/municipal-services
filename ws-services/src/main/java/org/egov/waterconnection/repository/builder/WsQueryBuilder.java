@@ -127,7 +127,7 @@ public class WsQueryBuilder {
 //		}
 		if (!CollectionUtils.isEmpty(criteria.getIds())) {
 			addClauseIfRequired(preparedStatement, query);
-			query.append(" conn.id in (").append(createQuery(criteria.getIds())).append(" )");
+			query.append(" application.id in (").append(createQuery(criteria.getIds())).append(" )");
 			addToPreparedStatement(preparedStatement, criteria.getIds());
 		}
 		if (!StringUtils.isEmpty(criteria.getOldConnectionNumber())) {

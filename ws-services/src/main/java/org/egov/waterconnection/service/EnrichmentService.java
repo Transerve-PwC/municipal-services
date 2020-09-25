@@ -196,6 +196,11 @@ public class EnrichmentService {
 				plumberInfo.setAuditDetails(auditDetails);
 			});
 		}
+		if (WCConstants.STATUS_PENDING_FOR_REGULAR.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getApplicationStatus())
+				&& WCConstants.WS_APPLY_FOR_REGULAR_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())){
+			waterConnectionRequest.getWaterConnection().setWaterApplicationType(WCConstants.STATUS_TEMPORARY_TO_REGULAR);
+			
+		}
 		enrichingAdditionalDetails(waterConnectionRequest);
 		enrichWaterApplication(waterConnectionRequest);
 	}
@@ -211,7 +216,6 @@ public class EnrichmentService {
 			waterConnectionrequest.getWaterConnection().getWaterApplication().setId(UUID.randomUUID().toString());
 			waterConnectionrequest.getWaterConnection().getWaterApplication().setApplicationNo(waterConnectionrequest.getWaterConnection().getApplicationNo());
 			waterConnectionrequest.getWaterConnection().getWaterApplication().setActivityType(waterConnectionrequest.getWaterConnection().getActivityType());
-			waterConnectionrequest.getWaterConnection().getWaterApplication().setAction(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction());
 			
 			setApplicationIdgenIds(waterConnectionrequest);
 			

@@ -29,9 +29,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Getter
+@Slf4j
 public class CalculatorUtil {
 
 	@Autowired
@@ -118,6 +120,7 @@ public class CalculatorUtil {
                 response = mapper.convertValue(result, WaterConnectionResponse.class);
         }
         catch (IllegalArgumentException e){
+        	log.error("Error while parsing response of Water Connection Search:",result);
             throw new CustomException("PARSING ERROR","Error while parsing response of Water Connection Search");
         }
 

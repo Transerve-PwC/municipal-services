@@ -131,6 +131,14 @@ public class PaymentUpdateService {
 					
 					wfIntegrator.callWorkFlow(waterConnectionRequest, property);
 					enrichmentService.enrichFileStoreIds(waterConnectionRequest);
+					
+					waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+							waterConnectionRequest.getWaterConnection().getApplicationStatus());
+					waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
+							waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+					
+					log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
+					
 					repo.updateWaterConnection(waterConnectionRequest, false);
 				}
 			}

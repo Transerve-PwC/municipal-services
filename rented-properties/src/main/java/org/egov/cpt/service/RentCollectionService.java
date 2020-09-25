@@ -270,11 +270,10 @@ public class RentCollectionService implements IRentCollectionService {
 	public List<RentAccountStatement> getAccountStatement(List<RentDemand> demands, List<RentPayment> payments,
 			double interestRate, Long fromDateTimestamp, Long toDateTimestamp) {
 		long endTimestamp = toDateTimestamp == null ? System.currentTimeMillis() : toDateTimestamp.longValue();
-		demands = demands.stream().filter(demand -> demand.getGenerationDate() >= fromDateTimestamp.longValue()
-				&& demand.getGenerationDate() <= endTimestamp).collect(Collectors.toList());
-		payments = payments.stream().filter(payment -> payment.getAmountPaid() > 0)
-				.filter(p -> p.getDateOfPayment() >= fromDateTimestamp && p.getDateOfPayment() <= endTimestamp)
+		demands = demands.stream().filter(demand -> demand.getGenerationDate() <= endTimestamp)
 				.collect(Collectors.toList());
+		payments = payments.stream().filter(payment -> payment.getAmountPaid() > 0)
+				.filter(p -> p.getDateOfPayment() <= endTimestamp).collect(Collectors.toList());
 		Collections.sort(demands);
 		Collections.sort(payments);
 		List<RentAccountStatement> accountStatementItems = new ArrayList<RentAccountStatement>();
@@ -331,8 +330,8 @@ public class RentCollectionService implements IRentCollectionService {
 
 	private RentPayment clonePayment(RentPayment rentPayment) {
 		return RentPayment.builder().amountPaid(rentPayment.getAmountPaid())
-				.dateOfPayment(rentPayment.getDateOfPayment()).receiptNo(rentPayment.getReceiptNo())
-				.processed(false).build();
+				.dateOfPayment(rentPayment.getDateOfPayment()).receiptNo(rentPayment.getReceiptNo()).processed(false)
+				.build();
 	}
 
 	private RentSummary getSummaryForDemand(double interestRate, RentAccount rentAccount,

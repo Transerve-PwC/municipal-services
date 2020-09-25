@@ -62,7 +62,7 @@ public class ReadExcelService implements IReadExcelService {
 
 	private Integer checkFormatOfexcel(Workbook workbook, int sheetIndex) {
 		try {
-			Integer formatFlag = null;
+			Integer formatFlag = -1;
 			Sheet sheet = workbook.getSheetAt(sheetIndex);
 			Iterator<Row> rowIterator = sheet.iterator();
 			while (rowIterator.hasNext()) {
@@ -110,7 +110,7 @@ public class ReadExcelService implements IReadExcelService {
 			return this.getDataFromWorkbookFormat2(workbook, 0);
 		} else if (0 == formatFlag) {
 			return this.getDataFromWorkbookFormat1(workbook, 0);
-		}
+		}else
 		throw new CustomException("INVALID_RENT_HISTORY_FORMAT", "Uploaded rent history format cannot be determined");
 	}
 
@@ -255,7 +255,7 @@ public class ReadExcelService implements IReadExcelService {
 					continue;
 				}
 				Integer currentRowYear = ((Double) value).intValue();
-				for (int i = 1; i < currentRow.getLastCellNum() - 1; i++) {
+				for (int i = 1; i < 13; i++) {
 					if (rentDurations.contains(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear)) {
 						payments.add(RentPayment.builder().amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
 								.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))

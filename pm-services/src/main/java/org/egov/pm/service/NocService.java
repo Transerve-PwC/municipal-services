@@ -7,10 +7,8 @@ import java.util.regex.Pattern;
 
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pm.config.ApplicationProperties;
 import org.egov.pm.model.EmailRequest;
 import org.egov.pm.model.EmailTemplateModel;
-import org.egov.pm.model.NOCApplicationDetail;
 import org.egov.pm.model.RequestData;
 import org.egov.pm.producer.Producer;
 import org.egov.pm.repository.NocRepository;
@@ -29,7 +27,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -39,12 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class NocService {
-
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
-
-	@Autowired
-	private ApplicationProperties appProps;
 
 	@Autowired
 	private NocRepository nocRepository;
@@ -251,16 +242,17 @@ public class NocService {
 			JSONParser jsonParser = new JSONParser();
 
 			List<Role> roleList = requestData.getRequestInfo().getUserInfo().getRoles();
-			boolean roleFlag=false;
+			boolean roleFlag = false;
 			JSONObject jsonValidator = (JSONObject) jsonParser.parse(jsonApproveRejectObject.toJSONString());
 			jsonValidator = (JSONObject) jsonValidator.get(requestData.getApplicationType());
 			for (Role role : roleList) {
 				if (role.getCode() != null && role.getCode().isEmpty()) {
 					return "Invalid Role";
 				}
-				if (jsonValidator.get(role.getCode()+"-"+requestData.getCurrentState()) != null) {
-					jsonValidator = (JSONObject) jsonValidator.get(role.getCode()+"-"+requestData.getCurrentState());
-					roleFlag=true;
+				if (jsonValidator.get(role.getCode() + "-" + requestData.getCurrentState()) != null) {
+					jsonValidator = (JSONObject) jsonValidator
+							.get(role.getCode() + "-" + requestData.getCurrentState());
+					roleFlag = true;
 				}
 			}
 
@@ -317,7 +309,8 @@ public class NocService {
 	/**
 	 * Common Validation Method
 	 * 
-	 * @param requested json and validator json
+	 * @param requested
+	 *            json and validator json
 	 */
 	private String commonValidation(JSONObject jsonValidator, JSONObject jsonRequested) {
 
@@ -332,18 +325,18 @@ public class NocService {
 					String isMandatory = actualValidate.get("mandatory").toString();
 					String isRegExpression = actualValidate.get("validateRegularExp").toString();
 					String dataReq = jsonRequested.get(key).toString();
-						if (isMandatory.equals("true") && dataReq.equals("")) {
-							responseText.append(key + " : [Mandatory field]");
-							responseText.append(",");
-						} else {
-							if (!dataReq.equals("")) {
-								Pattern validatePattern = Pattern.compile(isRegExpression);
-								if (!validatePattern.matcher(dataReq).matches()) {
-									responseText.append(key + ":[Invalid data]");
-									responseText.append(",");
-								}
+					if (isMandatory.equals("true") && dataReq.equals("")) {
+						responseText.append(key + " : [Mandatory field]");
+						responseText.append(",");
+					} else {
+						if (!dataReq.equals("")) {
+							Pattern validatePattern = Pattern.compile(isRegExpression);
+							if (!validatePattern.matcher(dataReq).matches()) {
+								responseText.append(key + ":[Invalid data]");
+								responseText.append(",");
 							}
 						}
+					}
 				}
 				if (!responseText.toString().equals("")) {
 					responseText = new StringBuilder(
@@ -360,7 +353,6 @@ public class NocService {
 
 		return responseText.toString();
 	}
-
 
 	/**
 	 * Update status of the application
@@ -473,5 +465,4 @@ public class NocService {
 		rs.setResposneInfo(res);
 		return rs;
 	}
-
 }
