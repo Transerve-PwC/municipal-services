@@ -527,7 +527,7 @@ public class EstimationService {
 				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
 						.estimateAmount(securityFee.setScale(2, 2)).build());
 			else {
-			if (criteria.getWaterConnection().getRoadType() != null)
+			if (criteria.getWaterConnection().getRoadType() != null && !WSCalculationConstant.STATUS_TEMPORARY_TO_REGULAR.equalsIgnoreCase(criteria.getWaterConnection().getWaterApplicationType()))
 				roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getWaterConnection().getRoadType(),
 						criteria.getWaterConnection().getRoadCuttingArea());
 			if (!(securityFee.compareTo(BigDecimal.ZERO) == 0))

@@ -191,7 +191,7 @@ public class PaymentUpdateService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while processing the payment ",e);
 		}
 
 	}

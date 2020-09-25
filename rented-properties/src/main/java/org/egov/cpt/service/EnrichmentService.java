@@ -747,7 +747,7 @@ public class EnrichmentService {
 			date = crunchifyFormat.parse(currentTime);
 			epochTime = date.getTime();
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("Error while parsing date ",e);
 		}
 		return epochTime;
 	}

@@ -147,11 +147,6 @@
 					"fieldName": "gstAmount",
 					"mandatory": "true",
 					"validateRegularExp": "^[0-9 ]+$"
-				},
-				"performanceBankGuaranteeCharges": {
-					"fieldName": "performanceBankGuaranteeCharges",
-					"mandatory": "true",
-					"validateRegularExp": "^[0-9 ]+$"
 				}
 			}
 		},
@@ -807,11 +802,6 @@
 					"fieldName": "gstAmount",
 					"mandatory": "true",
 					"validateRegularExp": "^[0-9. ]+$"
-				},
-				"performanceBankGuaranteeCharges": {
-					"fieldName": "performanceBankGuaranteeCharges",
-					"mandatory": "true",
-					"validateRegularExp": "^[0-9. ]+$"
 				}
 			}
 		}
@@ -1009,11 +999,6 @@
 				},
 				"gstAmount": {
 					"fieldName": "gstAmount",
-					"mandatory": "true",
-					"validateRegularExp": "^[0-9 ]+$"
-				},
-				"performanceBankGuaranteeCharges": {
-					"fieldName": "performanceBankGuaranteeCharges",
 					"mandatory": "true",
 					"validateRegularExp": "^[0-9 ]+$"
 				}

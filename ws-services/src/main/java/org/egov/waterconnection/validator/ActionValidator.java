@@ -41,7 +41,8 @@ public class ActionValidator {
 	 * @param request water connection request
 	 */
 	private void validateDocumentsForUpdate(WaterConnectionRequest request) {
-		if (request.getWaterConnection().getProcessInstance().getAction().equalsIgnoreCase(WCConstants.ACTION_INITIATE)
+		if (WCConstants.WS_NEWCONNECTION.equalsIgnoreCase(request.getWaterConnection().getActivityType())
+				&& WCConstants.ACTION_INITIATE.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())				
 				&& request.getWaterConnection().getDocuments() != null) {
 			throw new CustomException("INVALID STATUS",
 					"Status cannot be INITIATE when application document are provided");

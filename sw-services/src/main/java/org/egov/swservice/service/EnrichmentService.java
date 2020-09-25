@@ -66,6 +66,10 @@ public class EnrichmentService {
 		sewerageConnectionRequest.getSewerageConnection().setAuditDetails(auditDetails);
 		sewerageConnectionRequest.getSewerageConnection().setId(UUID.randomUUID().toString());
 		sewerageConnectionRequest.getSewerageConnection().setStatus(StatusEnum.ACTIVE);
+		
+		if(null != sewerageConnectionRequest.getSewerageConnection().getSwProperty()) {
+			sewerageConnectionRequest.getSewerageConnection().getSwProperty().setId(UUID.randomUUID().toString());
+		}
 		//Application created date
 		HashMap<String, Object> additionalDetail = new HashMap<>();
 	    additionalDetail.put(SWConstants.APP_CREATED_DATE, BigDecimal.valueOf(System.currentTimeMillis()));

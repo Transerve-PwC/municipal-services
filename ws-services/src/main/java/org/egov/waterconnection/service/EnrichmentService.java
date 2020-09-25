@@ -20,6 +20,7 @@ import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.Status;
+import org.egov.waterconnection.model.WaterApplication;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.Idgen.IdResponse;
@@ -69,6 +70,19 @@ public class EnrichmentService {
 	 * @param waterConnectionRequest
 	 */
 	public void enrichWaterConnection(WaterConnectionRequest waterConnectionRequest) {
+		WaterApplication waterApplication = new WaterApplication();
+		waterApplication.setId(UUID.randomUUID().toString());
+		waterApplication.setActivityType(waterConnectionRequest.getWaterConnection().getActivityType());
+		waterApplication.setAction(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
+		waterConnectionRequest.getWaterConnection().getWaterProperty().setId(UUID.randomUUID().toString());
+		
+		if(WCConstants.APPLICATION_PROPERTY_TYPE_DOMESTIC.equalsIgnoreCase(
+				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory())) {
+			waterConnectionRequest.getWaterConnection().setConnectionUsagesType(WCConstants.APPLICATION_PROPERTY_TYPE_DOMESTIC);
+		}
+			
+		waterConnectionRequest.getWaterConnection().setInWorkflow(true);
 		AuditDetails auditDetails = waterServicesUtil
 				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
 		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
@@ -182,6 +196,11 @@ public class EnrichmentService {
 				plumberInfo.setAuditDetails(auditDetails);
 			});
 		}
+		if (WCConstants.STATUS_PENDING_FOR_REGULAR.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getApplicationStatus())
+				&& WCConstants.WS_APPLY_FOR_REGULAR_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())){
+			waterConnectionRequest.getWaterConnection().setWaterApplicationType(WCConstants.STATUS_TEMPORARY_TO_REGULAR);
+			
+		}
 		enrichingAdditionalDetails(waterConnectionRequest);
 		enrichWaterApplication(waterConnectionRequest);
 	}
@@ -192,12 +211,15 @@ public class EnrichmentService {
 	 */
 	public void enrichWaterApplication(WaterConnectionRequest waterConnectionrequest) {
 		if (waterConnectionrequest.getWaterConnection().getProcessInstance().getAction().equalsIgnoreCase(WCConstants.ACTION_INITIATE)) {
+			WaterApplication waterApplication = new WaterApplication();
+			waterConnectionrequest.getWaterConnection().setWaterApplication(waterApplication);
 			waterConnectionrequest.getWaterConnection().getWaterApplication().setId(UUID.randomUUID().toString());
+			waterConnectionrequest.getWaterConnection().getWaterApplication().setApplicationNo(waterConnectionrequest.getWaterConnection().getApplicationNo());
 			waterConnectionrequest.getWaterConnection().getWaterApplication().setActivityType(waterConnectionrequest.getWaterConnection().getActivityType());
-			waterConnectionrequest.getWaterConnection().getWaterApplication().setAction(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction());
-			
 			
 			setApplicationIdgenIds(waterConnectionrequest);
+			
+			waterConnectionrequest.getWaterConnection().setInWorkflow(true);
 		}
 	}
 	
@@ -208,8 +230,8 @@ public class EnrichmentService {
 	 * @param waterConnectionrequest 
 	 */
 	public void postStatusEnrichment(WaterConnectionRequest waterConnectionrequest) {
-		if (WCConstants.ACTIVATE_CONNECTION
-				.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())) {
+		if (WCConstants.ACTIVATE_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_APPROVE_TEMP_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())) {
 			setConnectionNO(waterConnectionrequest);
 		}
 	}

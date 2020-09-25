@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RunWith(JUnit4.class)
 @SuppressWarnings("unused")
 public class RentCollectionServiceTests {
@@ -358,7 +360,7 @@ public class RentCollectionServiceTests {
             try {
                 return getPayment(amount, date);
             } catch (ParseException e) {
-                e.printStackTrace();
+            	log.error("Error while parsing date ",e);
                 return null;
             }
         }).collect(Collectors.toList());// ;);
@@ -369,7 +371,7 @@ public class RentCollectionServiceTests {
             try {
                 return getDemand(amount, date, "Demand-" + index);
             } catch (ParseException e) {
-                e.printStackTrace();
+            	log.error("Error while parsing date ",e);
                 return null;
             }
         }).collect(Collectors.toList());

@@ -182,7 +182,7 @@ public class UserService {
 		try {
 			d = f.parse(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("Error while parsing date ",e);
 		}
 		return d.getTime();
 	}

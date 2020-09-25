@@ -34,6 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class PaymentNotificationService {
 
@@ -174,7 +176,7 @@ public class PaymentNotificationService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to notify the payment information to payer ",e);
 		}
 
 	}
@@ -289,7 +291,7 @@ public class PaymentNotificationService {
 			valMap.put(receiptNumberKey, receiptNumberList.isEmpty() ? null : receiptNumberList.get(0));
 			valMap.put(payerName, context.read("$.Payment.payerName"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while fetching payment reciept values ",e);
 			throw new CustomException("RECEIPT ERROR", "Unable to fetch values from receipt");
 		}
 		return valMap;

@@ -13,6 +13,7 @@ public class CommonConstants {
 	public static final String PAY = "PAY";
 	public static final String APPLIED = "APPLIED";
 	public static final String SYSTEMPAYMENT = "SYSTEM_PAYMENT";
+	public static final String REFUNDSUCCESS = "SUCCESSFUL";
 
 	public static final String INSERT = "I";
 	public static final String UPDATE = "U";

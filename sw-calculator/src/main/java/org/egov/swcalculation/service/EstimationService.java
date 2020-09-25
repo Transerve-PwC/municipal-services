@@ -338,7 +338,7 @@ public class EstimationService {
 		List<BillingSlab> billingSlabs = null;
 
 		billingSlabs = mappingBillingSlab.stream().filter(slab -> {
-			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(property.getUsageCategory());// property.usagecategory
+			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(criteria.getSewerageConnection().getSwProperty().getUsageCategory());// property.usagecategory
 
 			return isBuildingTypeMatching;
 		}).collect(Collectors.toList());
@@ -347,10 +347,10 @@ public class EstimationService {
 
 		for (Slab slabs : billingSlabs.get(0).getSlabs()) {
 
-			if (property.getUsageCategory().equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC) && slabs.getCode().equalsIgnoreCase("FLATS")
+			if ((criteria.getSewerageConnection().getSwProperty().getUsageCategory()).equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC) && slabs.getCode().equalsIgnoreCase(criteria.getSewerageConnection().getSwProperty().getUsageSubCategory())
 					&& property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo()) {
 				charge = slabs.getCharge();
-			} else if (property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo() && (!property.getUsageCategory().equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC))) {
+			} else if (property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo() && (!(criteria.getSewerageConnection().getSwProperty().getUsageCategory()).equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC))) {
 				charge = slabs.getCharge();
 			}
 			

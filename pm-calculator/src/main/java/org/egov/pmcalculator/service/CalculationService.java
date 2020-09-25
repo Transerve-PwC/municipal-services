@@ -146,7 +146,7 @@ public class CalculationService {
 					config.getBaseRoadCutFeeHead() + "_" + calulationCriteria.getOpmsDetail().getRoadCutDivision());
 			estimate.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getAmountRoadCut()).setScale(0,
 					BigDecimal.ROUND_UP));
-
+/*
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setCategory(Category.BANKPERFORMANCE);
 			estimate2.setTaxHeadCode(
@@ -154,6 +154,7 @@ public class CalculationService {
 			estimate2.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getBankPerformanceRoadCut())
 					.setScale(0, BigDecimal.ROUND_UP));
 			taxHeadEstimates.add(estimate2);
+*/
 			taxHeadEstimates.addAll(tax);
 
 		} else if (calulationCriteria.getOpmsDetail().getApplicationType().equals("PETNOC")) {

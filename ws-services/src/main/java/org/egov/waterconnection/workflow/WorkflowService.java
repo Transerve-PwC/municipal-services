@@ -41,8 +41,8 @@ public class WorkflowService {
      */
     public BusinessService getBusinessService(String tenantId, RequestInfo requestInfo, String activityType) {
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        String BusinessService= workflowIntegrator.getBusinessService(activityType); 
-        Object result = serviceRequestRepository.fetchResult(getSearchURLWithParams(tenantId, "NewWS1"), requestInfoWrapper);
+        String businessService= workflowIntegrator.getBusinessService(activityType); 
+        Object result = serviceRequestRepository.fetchResult(getSearchURLWithParams(tenantId, businessService), requestInfoWrapper);
         BusinessServiceResponse response = null;
         try {
             response = mapper.convertValue(result,BusinessServiceResponse.class);
@@ -80,6 +80,20 @@ public class WorkflowService {
        for(State state : businessService.getStates()){
            if(state.getApplicationStatus()!=null && state.getApplicationStatus().equalsIgnoreCase(stateCode))
                return state.getIsStateUpdatable();
+       }
+       return null;
+    }
+    
+    /**
+     * Returns boolean value to specifying if the state is terminated
+     * @param stateCode The stateCode of the license
+     * @param businessService The BusinessService of the application flow
+     * @return State object to be fetched
+     */
+    public Boolean isTerminateState(String stateCode, BusinessService businessService){
+       for(State state : businessService.getStates()){
+           if(state.getApplicationStatus()!=null && state.getApplicationStatus().equalsIgnoreCase(stateCode))
+               return state.getIsTerminateState();
        }
        return null;
     }
@@ -170,7 +184,7 @@ public class WorkflowService {
 		url.append(config.getWfProcessSearchPath());
 		url.append("?tenantId=");
 		url.append(tenantId);
-		url.append("&businessservices=");
+		url.append("&businessServices=");
 		url.append(businessServiceValue);
 		url.append("&businessIds=");
 		for(String appNo : applicationNos) {

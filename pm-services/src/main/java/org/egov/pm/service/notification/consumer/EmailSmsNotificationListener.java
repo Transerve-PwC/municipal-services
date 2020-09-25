@@ -139,7 +139,7 @@ public class EmailSmsNotificationListener {
 		}
 		if (user != null && user.getMobileNumber() != null && !user.getMobileNumber().isEmpty()) {
 			String smsTemplate = map.get(role).getSmsTemplate().replace(CommonConstants.EMAILAPPID,
-					application.getNocNumber());
+					application.getNocNumber()).replace("[:fees:]", application.getTotalamount().toString());
 			log.info(smsTemplate);
 			SMSRequest smsRequest = new SMSRequest(user.getMobileNumber(), smsTemplate);
 			producer.push(smstopic, smsRequest);

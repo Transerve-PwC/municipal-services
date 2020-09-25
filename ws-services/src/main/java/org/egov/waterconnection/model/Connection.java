@@ -635,8 +635,6 @@ public class Connection {
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    connectionNo: ").append(toIndentedString(connectionNo)).append("\n");
 		sb.append("    oldConnectionNo: ").append(toIndentedString(oldConnectionNo)).append("\n");
-		sb.append("    documents: ").append(toIndentedString(documents)).append("\n");
-		sb.append("    plumberInfo: ").append(toIndentedString(plumberInfo)).append("\n");
 		sb.append("    roadType: ").append(toIndentedString(roadType)).append("\n");
 		sb.append("    roadCuttingArea: ").append(toIndentedString(roadCuttingArea)).append("\n");
 		sb.append("    connectionExecutionDate: ").append(toIndentedString(connectionExecutionDate)).append("\n");
@@ -644,7 +642,11 @@ public class Connection {
 		sb.append("    connectionType: ").append(toIndentedString(connectionType)).append("\n");
 		sb.append("    additionalDetails: ").append(toIndentedString(additionalDetails)).append("\n");
 		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+		sb.append("    documents: ").append(toIndentedString(documents)).append("\n");
+		sb.append("    plumberInfo: ").append(toIndentedString(plumberInfo)).append("\n");
 		sb.append("    connectionHolders: ").append(toIndentedString(connectionHolders)).append("\n");
+		sb.append("    waterProperty: ").append(toIndentedString(waterProperty)).append("\n");
+		sb.append("    waterApplication: ").append(toIndentedString(waterApplication)).append("\n");
 		sb.append("    applicationType: ").append(toIndentedString(applicationType)).append("\n");
 		sb.append("	   dateEffectiveFrom: ").append(toIndentedString(dateEffectiveFrom)).append("\n");
 		sb.append("}");

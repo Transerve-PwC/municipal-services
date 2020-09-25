@@ -54,6 +54,7 @@ public class WCConstants {
     
     public static final String ACTION_PAY_FOR_TEMPORARY_CONNECTION  = "PAY_FOR_TEMPORARY_CONNECTION";
 
+    public static final String ACTION_APPROVE_TEMP_CONNECTION  = "APPROVE_TEMP_CONNECTION";
 
 
     public static final String STATUS_INITIATED = "INITIATED";
@@ -112,7 +113,9 @@ public class WCConstants {
 	
 	public static final String ACTIVATE_CONNECTION_CONST = "ACTIVATE_CONNECTION";
 	
-	public static final String APPLY_SECURITY_DEPOSIT = "METER_INSTALLED";
+	public static final String APPLY_SECURITY_DEPOSIT = "APPLY_SECURITY_DEPOSIT";
+	
+	public static final String APPROVE_FOR_CONNECTION_CONVERSION = "APPROVE_FOR_CONNECTION_CONVERSION";
 	
 	
 	public static final List<String> NOTIFICATION_ENABLE_FOR_STATUS = Collections
@@ -230,19 +233,26 @@ public class WCConstants {
 	public static final String APPLICATION_TYPE_TEMPORARY = "TEMPORARY";
 	
 	public static final String APPLICATION_TYPE_REGULAR = "REGULAR";
+	
+	public static final String APPLICATION_PROPERTY_TYPE_DOMESTIC = "DOMESTIC";
+	public static final String APPLICATION_PROPERTY_TYPE_COMMERCIAL = "COMMERCIAL";
 
 	//Activity TYpe
-		public static final String WS_NEWCONNECTION = "NEW_WS_CONNECTION";
+	public static final String WS_NEWCONNECTION = "NEW_WS_CONNECTION";
 
-		public static final String WS_PERMANENT_DISCONNECTION = "PERMANENT_DISCONNECTION";
-		
-		public static final String WS_TEMPORARY_DISCONNECTION = "TEMPORARY_DISCONNECTION";
-		
-		public static final String WS_REACTIVATE = "REACTIVATE_CONNECTION";
+	public static final String WS_PERMANENT_DISCONNECTION = "PERMANENT_DISCONNECTION";
+	
+	public static final String WS_TEMPORARY_DISCONNECTION = "TEMPORARY_DISCONNECTION";
+	
+	public static final String WS_REACTIVATE = "REACTIVATE_CONNECTION";
 
-		public static final String WS_CHANGE_OWNER_INFO = "UPDATE_CONNECTION_HOLDER_INFO";
+	public static final String WS_CHANGE_OWNER_INFO = "UPDATE_CONNECTION_HOLDER_INFO";
 
-		public static final String WS_CONVERSION = "CONNECTION_CONVERSION";
+	public static final String WS_CONVERSION = "CONNECTION_CONVERSION";
 
-		public static final String WS_APPLY_FOR_REGULAR_INFO = "APPLY_FOR_REGULAR_INFO";
+	public static final String WS_APPLY_FOR_REGULAR_CON = "APPLY_FOR_REGULAR_INFO";
+
+	public static final String STATUS_PENDING_FOR_REGULAR = "PENDING_FOR_REGULAR_CONNECTION";
+
+	public static final String STATUS_TEMPORARY_TO_REGULAR = "TEMPORARY_TO_REGULAR";
 }

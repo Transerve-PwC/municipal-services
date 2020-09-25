@@ -97,6 +97,8 @@ public class WaterServiceImpl implements WaterService {
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+				waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
@@ -135,8 +137,8 @@ public class WaterServiceImpl implements WaterService {
 		mDMSValidator.validateMasterData(waterConnectionRequest);
 		BusinessService businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
 				waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
-		log.info("businessService:"+businessService);
-		WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getId(), waterConnectionRequest.getRequestInfo());
+		log.info("businessService: {},Business: {}",businessService.getBusinessService(),businessService.getBusiness());
+		WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getWaterApplication().getId(), waterConnectionRequest.getRequestInfo());
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		String previousApplicationStatus = workflowService.getApplicationStatus(waterConnectionRequest.getRequestInfo(),
 				waterConnectionRequest.getWaterConnection().getApplicationNo(),
@@ -156,6 +158,16 @@ public class WaterServiceImpl implements WaterService {
 		enrichmentService.postStatusEnrichment(waterConnectionRequest);
 		boolean isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+				waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
+				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+		
+		log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		boolean isTerminateState = workflowService.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);
+		if(isTerminateState) {
+			waterConnectionRequest.getWaterConnection().setInWorkflow(false);
+		}
 		waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
 		
 		enrichmentService.postForMeterReading(waterConnectionRequest);

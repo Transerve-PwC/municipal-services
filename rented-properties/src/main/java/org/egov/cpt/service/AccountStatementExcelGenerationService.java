@@ -2,12 +2,14 @@ package org.egov.cpt.service;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -22,6 +24,7 @@ import org.egov.cpt.models.AccountStatementCriteria;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.RentAccountStatement;
+import org.egov.cpt.models.RentAccountStatement.Type;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.util.FileStoreUtils;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
@@ -41,9 +44,9 @@ public class AccountStatementExcelGenerationService {
 
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	private static String[] columns = { "Date", "Amount", "Type", "Interest Due", "Principal Due", "Total Due",
-			"Account Balance" };
-	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Plot No.", "Area",
+	private static String[] columns = { "Date", "Amount", "Type (payment)", "Type (Rent)", "Remaining Principal", "Total Due", "Account Balance",
+			"Remaining Interest", "Receipt Number" };
+	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Transit Site No.", "Area",
 			"Rent", "Security Advance Taken By o/o BDPO U.T.Interest",
 			"Yr. Rent (increase as per Clause 4 of Lease Deed)", "Montly Rent", "Interest" };
 
@@ -133,19 +136,36 @@ public class AccountStatementExcelGenerationService {
 			}
 
 			int rowNum = 14;
+			int sumRemainingPrincipal=0;
+			int sumTotalDue=0;
+			int sumRemainingInterest=0;
 			for (RentAccountStatement rentAccountStmt : accountStatementResponse.getRentAccountStatements()) {
 				Row row = sheet.createRow(rowNum++);
-
+				sumRemainingPrincipal+=rentAccountStmt.getRemainingPrincipal();
+				sumTotalDue+=rentAccountStmt.getDueAmount();
+				sumRemainingInterest+=rentAccountStmt.getRemainingInterest();
 				row.createCell(0).setCellValue(Instant.ofEpochMilli(rentAccountStmt.getDate())
 						.atZone(ZoneId.systemDefault()).toLocalDate().format(FORMATTER));
 				row.createCell(1).setCellValue(rentAccountStmt.getAmount());
-				row.createCell(2).setCellValue(rentAccountStmt.getType().toString());
-				row.createCell(3).setCellValue(rentAccountStmt.getRemainingInterest());
+
+				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
+						.ifPresent(o -> row.createCell(2).setCellValue(o.getType().name()));
+				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.D.name()))
+						.ifPresent(o -> row.createCell(3).setCellValue(o.getType().name()));
+
 				row.createCell(4).setCellValue(rentAccountStmt.getRemainingPrincipal());
 				row.createCell(5).setCellValue(rentAccountStmt.getDueAmount());
 				row.createCell(6).setCellValue(rentAccountStmt.getRemainingBalance());
+				row.createCell(7).setCellValue(rentAccountStmt.getRemainingInterest());
+				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
+						.ifPresent(o -> row.createCell(8).setCellValue(o.getReceiptNo()));
 			}
 
+			Row row = sheet.createRow(rowNum);
+			row.createCell(0).setCellValue("Total as on "+ LocalDate.now().format(FORMATTER));
+			row.createCell(4).setCellValue(sumRemainingPrincipal);
+			row.createCell(5).setCellValue(sumTotalDue);
+			row.createCell(7).setCellValue(sumRemainingInterest);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 			workbook.write(baos);

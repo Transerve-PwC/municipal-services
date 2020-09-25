@@ -327,5 +327,6 @@ public class WSCalculationConstant {
 
 	public static final String WS_CONVERSION = "CONNECTION_CONVERSION";
 
+	public static final String STATUS_TEMPORARY_TO_REGULAR = "TEMPORARY_TO_REGULAR";
 	
 }

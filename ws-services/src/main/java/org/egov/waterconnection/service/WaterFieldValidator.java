@@ -21,9 +21,9 @@ public class WaterFieldValidator implements WaterActionValidator {
 				if (StringUtils.isEmpty(waterConnectionRequest.getWaterConnection().getConnectionType())) {
 					errorMap.put("INVALID_WATER_CONNECTION_TYPE", "Connection type should not be empty");
 				}
-				if (StringUtils.isEmpty(waterConnectionRequest.getWaterConnection().getWaterSource())) {
+				/*if (StringUtils.isEmpty(waterConnectionRequest.getWaterConnection().getWaterSource())) {
 					errorMap.put("INVALID_WATER_SOURCE", "WaterConnection cannot be created  without water source");
-				}
+				}*/
 				if (StringUtils.isEmpty(waterConnectionRequest.getWaterConnection().getRoadType())) {
 					errorMap.put("INVALID_ROAD_TYPE", "Road type should not be empty");
 				}

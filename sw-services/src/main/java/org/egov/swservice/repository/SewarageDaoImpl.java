@@ -57,11 +57,13 @@ public class SewarageDaoImpl implements SewarageDao {
 		if (query == null)
 			return Collections.emptyList();
 		// if (log.isDebugEnabled()) {
-		StringBuilder str = new StringBuilder("Constructed query is:: ").append(query);
-		log.debug(str.toString());
+			StringBuilder str = new StringBuilder("Sewerage query : ").append(query);
+			log.info(str.toString());
 		// }
 		List<SewerageConnection> sewarageConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				sewarageRowMapper);
+		
+		log.info("Sewerage search result:{}",sewarageConnectionList);
 		if (sewarageConnectionList == null) {
 			return Collections.emptyList();
 		}
