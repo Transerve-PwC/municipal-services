@@ -32,8 +32,6 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 
 				AuditDetails auditdetails = AuditDetails.builder()
 						
-						 // .createdBy(rs.getString("ocreated_by"))
-						 // .createdTime(rs.getLong("ocreated_date"))
 						  .lastModifiedBy(rs.getString("omodified_by"))
 						 						.lastModifiedTime(rs.getLong("omodified_date")).build();
 
@@ -41,23 +39,15 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("odowner_id"))
 						.tenantId(rs.getString("otenantid")).name(rs.getString("odname")).email(rs.getString("odemail"))
 						.phone(rs.getString("odphone"))
-						//.gender(rs.getString("odgender"))
-						//.dateOfBirth(rs.getLong("oddate_of_birth"))
 						.aadhaarNumber(rs.getString("odaadhaar_number"))
 						.allotmentStartdate(rs.getLong("odallotment_startdate"))
-						//.allotmentEnddate(rs.getLong("odallotment_enddate"))
-						//.posessionStartdate(rs.getLong("odposession_startdate"))
-						//.posessionEnddate(rs.getLong("odposession_enddate"))
 						.monthlyRent(rs.getString("odmonthly_rent"))
-						//.revisionPeriod(rs.getString("odrevision_period"))
-						//.revisionPercentage(rs.getString("odrevision_percentage"))
 						.fatherOrHusband(rs.getString("odfather_or_husband"))
 						.relation(rs.getString("odrelation"))
 						.applicationType(OwnerDetails.ApplicationTypeEnum.fromValue(rs.getString("odapplication_type")))
 						.applicationNumber(rs.getString("odapplication_number"))
 						.dateOfDeathAllottee(rs.getLong("oddate_of_death_allottee"))
 						.relationWithDeceasedAllottee(rs.getString("odrelation_with_deceased_allottee"))
-						//.permanent(rs.getBoolean("odpermanent"))
 						.dueAmount(rs.getBigDecimal("oddue_amount"))
 						.aproCharge(rs.getBigDecimal("odapro_charge"))
 						.auditDetails(auditdetails).build();
@@ -85,17 +75,11 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 
 	private void addChildrenToProperty(ResultSet rs, Owner owner) throws SQLException {
 		if (rs.getString("docid") != null && rs.getBoolean("docis_active")) {
-			/*
-			 * AuditDetails auditdetails =
-			 * AuditDetails.builder().createdBy(rs.getString("ocreated_by"))
-			 * .createdTime(rs.getLong("ocreated_date")).lastModifiedBy(rs.getString(
-			 * "omodified_by")) .lastModifiedTime(rs.getLong("omodified_date")).build();
-			 */
+			
 			Document ownershipTransferDocument = Document.builder().id(rs.getString("docid"))
 					.referenceId(rs.getString("doc_referenceId")).tenantId(rs.getString("doctenantid"))
 					.active(rs.getBoolean("docis_active")).documentType(rs.getString("document_type"))
 					.fileStoreId(rs.getString("fileStore_id"))
-					//.auditDetails(auditdetails)
 					.propertyId(rs.getString("doc_propertyId")).build();
 			owner.getOwnerDetails().addownershipTransferDocumentsItem(ownershipTransferDocument);
 		}

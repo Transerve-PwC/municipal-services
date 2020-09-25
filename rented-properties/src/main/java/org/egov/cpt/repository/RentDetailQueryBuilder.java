@@ -16,14 +16,7 @@ public class RentDetailQueryBuilder {
 
 	private static final String SELECT = "SELECT ";
 
-	/*
-	 * private final String paginationWrapper = "SELECT * FROM " +
-	 * "(SELECT *, DENSE_RANK() OVER (ORDER BY property_id desc) offset_ FROM " +
-	 * "({})" + " result) result_offset " +
-	 * "WHERE offset_ > :start AND offset_ <= :end";
-	 */
 	private static final String DEMAND_SEARCH_QUERY = SELECT
-			//+ " demand.*,"
 			+ " demand.id as demand_id,demand.property_id as demand_pid,demand.initialGracePeriod as demand_IniGracePeriod, demand.generationDate as demand_genDate,"
 			+ " demand.collectionPrincipal as demand_colPrincipal,demand.remainingPrincipal as demand_remPrincipal, demand.interestSince as demand_intSince,"
 			+ " demand.status as demand_status,"
@@ -33,7 +26,6 @@ public class RentDetailQueryBuilder {
 			+ " FROM  cs_pt_demand demand ";
 
 	private static final String ACCOUNT_SEARCH_QUERY = SELECT
-			//+ " account.*, "
 			+ " account.id as account_id,account.property_id as account_pid,account.remainingAmount as account_remainingAmount, account.remaining_since as account_remaining_since,"
 			+ " account.created_by as account_created_by, account.created_date as account_created_date,"
 			+ " account.modified_by as account_modified_by,account.modified_date as account_modified_date "
@@ -41,7 +33,6 @@ public class RentDetailQueryBuilder {
 			+ " FROM cs_pt_account account ";
 
 	private static final String PAYMENT_SEARCH_QUERY = SELECT
-			//+ " payment.*,"
 			+ " payment.id as payment_id, payment.property_id as payment_pid,payment.receiptNo as payment_receiptNo,payment.amountPaid as payment_amtPaid,"
 			+ " payment.processed as payment_processed,"
 			+ " payment.dateOfPayment as payment_dateOfPayment,payment.mode as payment_mode,payment.created_by as payment_created_by, payment.created_date as payment_created_date,"

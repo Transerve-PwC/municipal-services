@@ -30,8 +30,6 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 
 			if (null == currentapplication) {
 				AuditDetails auditdetails = AuditDetails.builder()
-						//.createdBy(rs.getString("dcacreated_by"))
-						//.createdTime(rs.getLong("dcacreated_time"))
 						.lastModifiedBy(rs.getString("dcamodified_by"))
 						.lastModifiedTime(rs.getLong("dcModifiedTime")).build();
 
@@ -45,9 +43,6 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 						.tenantId(rs.getString("pttenantid")).state(rs.getString("dcastate"))
 						.action(rs.getString("dcaaction"))
 						.applicationNumber(rs.getString("app_number"))
-						//.allotmentNumber(rs.getString("owner_allot_number"))
-						//.allotmentStartDate(rs.getString("allot_start_date"))
-						//.allotmentEndDate(rs.getString("allot_end_date"))
 						.auditDetails(auditdetails).build();
 				applicationMap.put(applicationId, currentapplication);
 			}
@@ -60,21 +55,13 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 		Map<String, Applicant> applicantMap = new HashMap<>();
 		Applicant applicant = null;
 
-		/*
-		 * AuditDetails auditDetails =
-		 * AuditDetails.builder().createdBy(rs.getString("apcreated_by"))
-		 * .createdTime(rs.getLong("apcreated_time")).lastModifiedBy(rs.getString(
-		 * "apmodified_by")) .lastModifiedTime(rs.getLong("apcreated_time")).build();
-		 */
 		if (currentapplication.getApplicant() == null) {
 			if (rs.getString("aid") != null) {
 				applicant = Applicant.builder().id(rs.getString("aid")).tenantId(rs.getString("aptenantid"))
 						.applicationId(rs.getString("app_id")).name(rs.getString("apname")).email(rs.getString("apemail"))
 						.phone(rs.getString("apmobileno"))
-						//.guardian(rs.getString("apguardian"))
 						.relationship(rs.getString("aprelationship")).adhaarNumber(rs.getString("adhaarnumber"))
 						.feeAmount(rs.getBigDecimal("apfee_amount")).aproCharge(rs.getBigDecimal("apapro_charge"))
-						//.auditDetails(auditDetails)
 						.build();
 				applicantMap.put(rs.getString("aid"), applicant);
 				currentapplication.setApplicant(new ArrayList<>(applicantMap.values()));
@@ -92,7 +79,6 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 					.fileStoreId(rs.getString("doc_filestoreid")).id(rs.getString("docId"))
 					.referenceId(rs.getString("doc_referenceid")).tenantId(rs.getString("doctenantid"))
 					.active(rs.getBoolean("doc_active"))
-					//.auditDetails(auditDetails)
 					.propertyId(rs.getString("doc_propertyid")).build();
 			currentapplication.addApplicationDocumentsItem(applicationDocument);
 		}

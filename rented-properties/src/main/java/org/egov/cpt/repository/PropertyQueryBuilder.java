@@ -22,12 +22,6 @@ public class PropertyQueryBuilder {
 	private static final String INNER_JOIN = "INNER JOIN";
 	private static final String LEFT_JOIN = "LEFT OUTER JOIN";
 
-	//private static final String PT_ALL = " pt.*, ptdl.*,doc.*,address.*, ";
-	//private static final String OWNER_ALL = " ownership.*,od.*, ";
-	//private static final String PI_ALL = " pi.*,pidoc.*, ";
-	//private static final String NOTICE_ALL = " ng.*,ngdoc.*, ";
-	//private static final String GD_ALL = " gd.*,";
-
 	private static final String PT_COLUMNS = " pt.id as pid, pt.transit_number as ptransit_number, pt.tenantid as pttenantid, pt.colony as pcolony, pt.master_data_state as pmaster_data_state, pt.master_data_action as pmaster_data_action,"
 			+ " pt.created_by as pcreated_by, pt.created_date as pcreated_date, pt.modified_by as pmodified_by, pt.modified_date as pmodified_date,"
 
@@ -129,7 +123,6 @@ public class PropertyQueryBuilder {
 
 		if (relations == null) {
 			builder = new StringBuilder(SELECT);
-			//builder.append(PT_ALL + OWNER_ALL + PI_ALL + NOTICE_ALL + GD_ALL);
 			builder.append(
 					PT_COLUMNS + "," + OWNER_COLUMNS + "," + PI_COLUMNS + "," + NOTICE_COLUMNS + " , " + GD_COLUMNS);
 			builder.append(PT_TABLE + LEFT_JOIN + OWNER_TABLE + LEFT_JOIN + PI_TABLE + LEFT_JOIN + NOTICE_TABLE
@@ -142,21 +135,7 @@ public class PropertyQueryBuilder {
 
 			String tables[] = { PT_TABLE };
 			List<String> tableList = new ArrayList<>(Arrays.asList(tables));
-
-			
-			/*
-			 * builder.append(PT_ALL);
-			 * 
-			 * if (relations.contains(PTConstants.RELATION_OWNER)) {
-			 * builder.append(OWNER_ALL); }
-			 * 
-			 * if (relations.contains(PTConstants.RELATION_PI)) { builder.append(PI_ALL); }
-			 * 
-			 * if (relations.contains(PTConstants.RELATION_NOTICE)) {
-			 * builder.append(NOTICE_ALL); }
-			 * 
-			 * if (relations.contains(PTConstants.RELATION_GD)) { builder.append(GD_ALL); }
-			 */			 
+		 
 			// columns
 			if (relations.contains("owner")) {
 				columnList.add(OWNER_COLUMNS);

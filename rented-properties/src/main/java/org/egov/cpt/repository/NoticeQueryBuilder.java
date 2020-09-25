@@ -23,7 +23,6 @@ public class NoticeQueryBuilder {
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
 	private static final String NOTICE_SEARCH_QUERY = SELECT 
-			//+ "ng.*,doc.*,pt.*,"
 			+ " ng.id as ngid, ng.propertyid as ngpropertyid, ng.tenantid as ngtenantid,ng.memo_number as memoNumber,"
 			+ "ng.memo_date as memoDate,ng.notice_type as noticeType,ng.guardian as guardian,ng.relationship as relationship,"
 			+ "ng.violations as violations,ng.description as description,ng.demand_notice_from as demandNoticeFrom,"

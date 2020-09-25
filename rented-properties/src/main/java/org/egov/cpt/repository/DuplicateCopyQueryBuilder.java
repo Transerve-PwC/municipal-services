@@ -23,26 +23,18 @@ public class DuplicateCopyQueryBuilder {
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
 	private static final String DUPLICATE_COPY_SEARCH_QUERY = SELECT
-			//+ "dca.*,ap.*,doc.*,pt.*,address.*,ownership.*,"
 			+ " dca.id as appid, dca.property_id as dcaproperty_id, dca.tenantid as pttenantid, dca.state as dcastate, dca.action as dcaaction,"
 			+ " dca.application_number as app_number,"
-			//+ " dca.created_by as dcacreated_by, dca.created_time as dcacreated_time,"
 			+ " dca.modified_by as dcamodified_by, dca.modified_time as dcModifiedTime,"
 
 			+ " pt.id as pid, pt.transit_number as pttransit_number,pt.colony as ptcolony,pt.modified_date as pmodified_date,"
-
-			//+ " ownership.allotmen_number as owner_allot_number,"
-
-			//+ " od.allotment_startdate as allot_start_date, od.allotment_enddate as allot_end_date,"
 
 			+ " address.pincode as addresspincode, address.area as addressarea,"
 
 			+ " ap.id as aid, ap.application_id as app_id,ap.tenantid as aptenantid,"
 			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,"
-			//+ "ap.guardian as apguardian,"
 			+ "ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
 			+ " ap.fee_amount as apfee_amount, ap.apro_charge as apapro_charge,"
-			//+ " ap.created_by as apcreated_by, ap.created_time as apcreated_time,"
 			+ " ap.modified_by as apmodified_by, ap.modified_time as apmodified_time,"
 			
 			+ " doc.id as docId,doc.reference_id as doc_referenceid, doc.tenantId as doctenantid,doc.document_type as doctype , doc.fileStore_id as doc_filestoreid,"
