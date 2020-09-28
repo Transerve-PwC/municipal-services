@@ -2,6 +2,8 @@ package org.egov.nulm.model;
 
 import javax.validation.constraints.NotNull;
 
+import org.json.simple.JSONArray;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -137,7 +139,7 @@ public class SmidApplication {
 	private Boolean isHomeless ;
 	
 	@JsonProperty("documentAttachemnt")
-	private String documentAttachemnt ;
+	private JSONArray documentAttachemnt ;
 	
 	@JsonProperty("accountNo")
 	private String accountNo ;
@@ -166,5 +168,11 @@ public class SmidApplication {
 	
 	@JsonProperty("remark")
 	private String remark ;
+
+	@JsonProperty("isRegistered")
+	private Boolean isRegistered ;
+
+	@JsonProperty("cobNumber")
+	private String cobNumber ;
 
 }

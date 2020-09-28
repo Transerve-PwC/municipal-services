@@ -255,6 +255,7 @@ public class ReadExcelService implements IReadExcelService {
 					continue;
 				}
 				Integer currentRowYear = ((Double) value).intValue();				
+
 				for (int i = 1; i < 13; i++) {
 					if (rentDurations.contains(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear)) {
 						if(!String.valueOf(getValueFromCell(currentRow.getCell(i))).isEmpty()) {

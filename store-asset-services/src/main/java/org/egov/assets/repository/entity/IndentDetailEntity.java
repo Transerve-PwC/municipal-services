@@ -48,7 +48,7 @@ public class IndentDetailEntity  {
 		indentDetail.setUom(new Uom().code(uom));
 		indentDetail.setParentIndentLine(this.parentIndentLine);
 		indentDetail.setOrderNumber(this.orderNumber);
-		indentDetail.setProjectCode(new ProjectCode().id(projectCode));
+		indentDetail.setProjectCode(new ProjectCode().code(projectCode));
 		indentDetail.setAsset(new Asset().code(asset));
 		indentDetail.setUserQuantity(this.userQuantity); 
 		indentDetail.setIndentQuantity(this.indentQuantity);

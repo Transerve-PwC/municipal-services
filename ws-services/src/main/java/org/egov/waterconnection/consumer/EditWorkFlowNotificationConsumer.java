@@ -41,7 +41,7 @@ public class EditWorkFlowNotificationConsumer {
 		try {
 			WaterConnectionRequest waterConnectionRequest = mapper.convertValue(record, WaterConnectionRequest.class);
 			WaterConnection searchResult = waterServiceImpl.getConnectionForUpdateRequest(
-					waterConnectionRequest.getWaterConnection().getId(), waterConnectionRequest.getRequestInfo());
+					waterConnectionRequest.getWaterConnection().getWaterApplication().getId(), waterConnectionRequest.getRequestInfo());
 			diffService.checkDifferenceAndSendEditNotification(waterConnectionRequest, searchResult);
 		} catch (Exception ex) {
 			StringBuilder builder = new StringBuilder("Error while listening to value: ").append(record)

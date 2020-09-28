@@ -45,6 +45,9 @@ public class WaterDaoImpl implements WaterDao {
 	@Value("${egov.waterservice.updatewaterconnection}")
 	private String updateWaterConnection;
 	
+	@Value("${egov.waterservice.createwatersubactivity}")
+	private String createWaterSubActivity;
+	
 	@Override
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(createWaterConnection, waterConnectionRequest);
@@ -58,20 +61,24 @@ public class WaterDaoImpl implements WaterDao {
 		if (query == null)
 			return Collections.emptyList();
 //		if (log.isDebugEnabled()) {
-			StringBuilder str = new StringBuilder("Constructed query is:: ").append(query);
-			log.info("Water query: "+str.toString());
+			StringBuilder str = new StringBuilder("Water query: ").append(query);
+			log.info(str.toString());
 //		}
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterRowMapper);
-		if (waterConnectionList == null)
+		
+		if (waterConnectionList == null) {
 			return Collections.emptyList();
+		}else {
+			log.info("Water search result size:{}",waterConnectionList.size());
+		}
 		return waterConnectionList;
 	}
 
 	@Override
 	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest, boolean isStateUpdatable) {
-		if(log.isDebugEnabled()) {
-			log.debug("UpdateWaterConnection: isStateUpdatable ? {}, WaterConnection: {}",isStateUpdatable, waterConnectionRequest.getWaterConnection());
+		if(log.isInfoEnabled()) {
+			log.info("UpdateWaterConnection: isStateUpdatable ? {}, WaterConnection: {}",isStateUpdatable, waterConnectionRequest.getWaterConnection());
 		}
 		if (isStateUpdatable) {
 			waterConnectionProducer.push(updateWaterConnection, waterConnectionRequest);
@@ -118,6 +125,11 @@ public class WaterDaoImpl implements WaterDao {
 	 */
 	public void saveFileStoreIds(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(wsConfiguration.getSaveFileStoreIdsTopic(), waterConnectionRequest);
+	}
+	
+	@Override
+	public void saveWaterSubActivity(WaterConnectionRequest waterConnectionRequest) {
+		waterConnectionProducer.push(createWaterSubActivity, waterConnectionRequest);
 	}
 
 }

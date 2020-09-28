@@ -62,7 +62,7 @@ public class WorkflowIntegrator {
 		String activityType = waterConnectionRequest.getWaterConnection().getActivityType();
 		String businessService = getBusinessService(activityType);
 				
-				ProcessInstance processInstance = ProcessInstance.builder()
+		ProcessInstance processInstance = ProcessInstance.builder()
 				.businessId(waterConnectionRequest.getWaterConnection().getApplicationNo())
 				.tenantId(property.getTenantId())
 				.businessService(businessService).moduleName(MODULENAMEVALUE)
@@ -137,9 +137,9 @@ public class WorkflowIntegrator {
 
 		switch (activityType) {
 		case WCConstants.WS_NEWCONNECTION:
-		case WCConstants.WS_APPLY_FOR_REGULAR_INFO:
+		case WCConstants.WS_APPLY_FOR_REGULAR_CON:
 			
-			return config.getBusinessServiceConversionValue();
+			return config.getBusinessServiceValue();
 			
 		case WCConstants.WS_PERMANENT_DISCONNECTION:
 		case WCConstants.WS_TEMPORARY_DISCONNECTION:

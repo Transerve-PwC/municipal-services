@@ -214,5 +214,10 @@ public class NULMConfiguration {
 	
 	@Value("${persister.update.susvtransaction.topic}")
 	private String SusvTransactionUpdateTopic;
+
+	@Value("${persister.save.suhcitizenngoapplication.topic}")
+	private String SuhCitizenNGOApplicationSaveTopic;
 	
+	@Value("${persister.update.suhcitizenngoapplication.topic}")
+	private String SuhCitizenNGOApplicationUpdateTopic;
 }

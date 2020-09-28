@@ -223,6 +223,11 @@ public class WaterConnection extends Connection {
 		sb.append("    waterSource: ").append(toIndentedString(waterSource)).append("\n");
 		sb.append("    meterId: ").append(toIndentedString(meterId)).append("\n");
 		sb.append("    meterInstallationDate: ").append(toIndentedString(meterInstallationDate)).append("\n");
+		sb.append("    activityType: ").append(toIndentedString(activityType)).append("\n");
+		sb.append("    waterApplicationType: ").append(toIndentedString(waterApplicationType)).append("\n");
+		sb.append("    securityCharge: ").append(toIndentedString(securityCharge)).append("\n");
+		sb.append("    connectionUsagesType: ").append(toIndentedString(connectionUsagesType)).append("\n");
+		sb.append("    inWorkflow: ").append(toIndentedString(inWorkflow)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

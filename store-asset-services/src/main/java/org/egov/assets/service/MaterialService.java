@@ -133,6 +133,7 @@ public class MaterialService extends DomainService {
 		if (!materialFromMdms.isEmpty()) {
 			for (Material material : materialFromMdms) {
 				MaterialSearchRequest request = MaterialSearchRequest.builder().code(material.getCode())
+						.materialType(materialSearchRequest.getMaterialType()).store(materialSearchRequest.getStore())
 						.tenantId(materialSearchRequest.getTenantId()).build();
 
 				Pagination<Material> materialFromDb = materialJdbcRepository.search(request);
@@ -171,7 +172,7 @@ public class MaterialService extends DomainService {
 					}
 				} else {
 					material.setStoreMapping(Collections.EMPTY_LIST);
-					materials.add(material);
+					//materials.add(material);
 				}
 			}
 		}

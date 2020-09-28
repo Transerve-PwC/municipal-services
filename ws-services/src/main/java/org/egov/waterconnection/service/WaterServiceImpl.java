@@ -97,6 +97,8 @@ public class WaterServiceImpl implements WaterService {
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+				waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
@@ -133,29 +135,60 @@ public class WaterServiceImpl implements WaterService {
 		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
 		mDMSValidator.validateMasterData(waterConnectionRequest);
-		BusinessService businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
-				waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
-		log.info("businessService:"+businessService);
-		WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getId(), waterConnectionRequest.getRequestInfo());
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
-		String previousApplicationStatus = workflowService.getApplicationStatus(waterConnectionRequest.getRequestInfo(),
-				waterConnectionRequest.getWaterConnection().getApplicationNo(),
-				waterConnectionRequest.getWaterConnection().getTenantId(),wfIntegrator.getBusinessService(waterConnectionRequest.getWaterConnection().getActivityType()));
-		enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
-		actionValidator.validateUpdateRequest(waterConnectionRequest, businessService, previousApplicationStatus);
 		validateProperty.validatePropertyCriteria(property);
-		waterConnectionValidator.validateUpdate(waterConnectionRequest, searchResult);
-		calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);		
-		//check for edit and send edit notification
-		waterDaoImpl.pushForEditNotification(waterConnectionRequest);
-		//Enrich file store Id After payment
-		enrichmentService.enrichFileStoreIds(waterConnectionRequest);
-		userService.updateUser(waterConnectionRequest, searchResult);
+		boolean isTerminateState = false;
+		boolean isStateUpdatable = true;
+			
+		if (WCConstants.STATUS_PENDING_FOR_REGULAR.equalsIgnoreCase(
+				waterConnectionRequest.getWaterConnection().getApplicationStatus())
+				&& WCConstants.ACTION_APPLY_FOR_REGULAR_CONNECTION.equalsIgnoreCase(
+						waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())){
+			waterConnectionRequest.getWaterConnection().setActivityType(WCConstants.WS_APPLY_FOR_REGULAR_CON);
+			waterConnectionRequest.getWaterConnection().setWaterApplicationType(WCConstants.APPLICATION_TYPE_REGULAR);
+		}
+		
+		if (WCConstants.ACTION_INITIATE.equalsIgnoreCase(
+				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			waterConnectionRequest.getWaterConnection().setDocuments(null);
+			enrichmentService.enrichWaterApplication(waterConnectionRequest);
+			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
+			//waterDao.saveWaterSubActivity(waterConnectionRequest);
+		}else {
+		
+			BusinessService businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
+					waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
+			log.info("businessService: {},Business: {}",businessService.getBusinessService(),businessService.getBusiness());
+			WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getWaterApplication().getId(), waterConnectionRequest.getRequestInfo());
+			String previousApplicationStatus = workflowService.getApplicationStatus(waterConnectionRequest.getRequestInfo(),
+					waterConnectionRequest.getWaterConnection().getApplicationNo(),
+					waterConnectionRequest.getWaterConnection().getTenantId(),wfIntegrator.getBusinessService(waterConnectionRequest.getWaterConnection().getActivityType()));
+			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
+			actionValidator.validateUpdateRequest(waterConnectionRequest, businessService, previousApplicationStatus);
+			waterConnectionValidator.validateUpdate(waterConnectionRequest, searchResult);
+			calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);		
+			//check for edit and send edit notification
+			waterDaoImpl.pushForEditNotification(waterConnectionRequest);
+			//Enrich file store Id After payment
+			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
+			userService.updateUser(waterConnectionRequest, searchResult);
+			isTerminateState = workflowService.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);
+			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
+		}
 		//Call workflow
 		wfIntegrator.callWorkFlow(waterConnectionRequest, property);
 		enrichmentService.postStatusEnrichment(waterConnectionRequest);
-		boolean isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+				waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
+				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+		
+		log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		
+		if(isTerminateState) {
+			waterConnectionRequest.getWaterConnection().setInWorkflow(false);
+		}
 		waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
 		
 		enrichmentService.postForMeterReading(waterConnectionRequest);
@@ -170,6 +203,7 @@ public class WaterServiceImpl implements WaterService {
 	 * @return water connection
 	 */
 	public WaterConnection getConnectionForUpdateRequest(String id, RequestInfo requestInfo) {
+		log.info("Water Application Id:{}",id);
 		Set<String> ids = new HashSet<>(Arrays.asList(id));
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setIds(ids);

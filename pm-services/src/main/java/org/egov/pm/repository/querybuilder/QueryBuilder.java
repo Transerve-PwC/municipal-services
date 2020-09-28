@@ -22,6 +22,9 @@ public class QueryBuilder {
 
 	public static final String ALL_REMARKS_QUERY = "select application_uuid applicationUuid,remark,created_by,document_detail documentDetail,application_status applicationStatus, created_time createdTime from egpm_noc_application_remark WHERE application_uuid=? order by created_time DESC";
 	public static final String SELECT_VIEW_QUERY = "select EA.application_uuid applicationUuid, EA.noc_number nocNumber,EA.application_type applicationType,EA.applicant_name applicantName,ED.application_detail applicationDetail,EA.house_number houseNumber,EA.sector sector,EA.applied_date appliedDate,EA.application_status applicationStatus,EA.amount amount,EA.gst_amount gstAmount,EA.performance_bank_guarantee performanceBankGuaranteeCharges,EA.total_amount totalamount,EA.created_by createdby from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.noc_number=? AND EA.is_active=TRUE AND ED.is_active=TRUE";
+	
+	public static final String GET_REFUND_APPLICATIONS_QUERY = "select  EA.noc_number \"applicationId\",EA.tenant_id tenantId,EA.application_type applicationType,EA.application_status applicationStatus,EA.total_amount totalamount from  egpm_noc_application EA WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status='APPROVEFORWITHDRAW' AND EA.is_active=TRUE";
+	
 	public static final String SELECT_FALLBACK_QUERY = "select EA.application_uuid as applicationUuid, EA.noc_number as nocNumber,EA.application_type as applicationType,\r\n"
 			+ "EA.applicant_name as applicantName,ED.application_detail as applicationDetail,EA.house_number as houseNumber,\r\n"
 			+ "EA.sector as sector,EA.applied_date as appliedDate,EA.application_status as applicationStatus,\r\n"

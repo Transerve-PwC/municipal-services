@@ -327,5 +327,6 @@ public class WSCalculationConstant {
 
 	public static final String WS_CONVERSION = "CONNECTION_CONVERSION";
 
+	public static final String WS_APPLY_FOR_REGULAR_CON = "APPLY_FOR_REGULAR_INFO";
 	
 }

@@ -114,6 +114,19 @@ public class Connection {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+
+	@JsonProperty("swProperty")
+	@Valid
+	private SWProperty swProperty = null;
+
+	public SWProperty getSwProperty() {
+		return swProperty;
+	}
+
+	public void setSwProperty(SWProperty swProperty) {
+		this.swProperty = swProperty;
+	}
 
 	public Connection id(String id) {
 		this.id = id;

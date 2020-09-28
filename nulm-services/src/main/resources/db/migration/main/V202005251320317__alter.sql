@@ -27,3 +27,16 @@ ADD COLUMN assigned_to character varying(64) ;
 
 ALTER TABLE public.nulm_organization ADD CONSTRAINT  nulm_organization_uuidt UNIQUE (organization_uuid);
 ALTER TABLE public.nulm_suh_application_detail ADD CONSTRAINT fk_nulm_suh_application_detail FOREIGN KEY (assigned_to) REFERENCES public.nulm_organization(organization_uuid);
+
+
+alter table public.nulm_smid_application_detail
+DROP COLUMN document_attachemnt;
+
+alter table public.nulm_smid_application_detail
+ADD COLUMN document_attachemnt jsonb;
+
+alter table public.nulm_smid_application_detail
+ADD COLUMN is_registered boolean;
+
+alter table public.nulm_smid_application_detail
+ADD COLUMN cob_number character varying(255);

@@ -527,24 +527,24 @@ public class EstimationService {
 				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
 						.estimateAmount(securityFee.setScale(2, 2)).build());
 			else {
-			if (criteria.getWaterConnection().getRoadType() != null)
-				roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getWaterConnection().getRoadType(),
-						criteria.getWaterConnection().getRoadCuttingArea());
-			if (!(securityFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
-						.estimateAmount(securityFee.setScale(2, 2)).build());
-			if (!(ferruleFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FERRULE_CHARGE)
-						.estimateAmount(ferruleFee.setScale(2, 2)).build());
-			if (!(meterTestingFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_TESTING_CHARGE)
-						.estimateAmount(meterTestingFee.setScale(2, 2)).build());
-			if (!(meterFittingFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_CHARGE)
-						.estimateAmount(meterFittingFee.setScale(2, 2)).build());
-			if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_ROAD_CUTTING_CHARGE)
-						.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
+				if (criteria.getWaterConnection().getRoadType() != null && !WSCalculationConstant.WS_APPLY_FOR_REGULAR_CON.equalsIgnoreCase(criteria.getWaterConnection().getActivityType()))
+					roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getWaterConnection().getRoadType(),
+							criteria.getWaterConnection().getRoadCuttingArea());
+				if (!(securityFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
+							.estimateAmount(securityFee.setScale(2, 2)).build());
+				if (!(ferruleFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FERRULE_CHARGE)
+							.estimateAmount(ferruleFee.setScale(2, 2)).build());
+				if (!(meterTestingFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_TESTING_CHARGE)
+							.estimateAmount(meterTestingFee.setScale(2, 2)).build());
+				if (!(meterFittingFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_CHARGE)
+							.estimateAmount(meterFittingFee.setScale(2, 2)).build());
+				if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_ROAD_CUTTING_CHARGE)
+							.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
 			}
 			return estimates;
 

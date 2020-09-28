@@ -167,4 +167,11 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(TD.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ "AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(TD.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(TD.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END group by TD.uuid    ORDER BY created_time desc";
+
+	public static final String GET_SUH_CITIZEN_QUERY = " select * FROM nulm_suh_citizenngo_application "
+			+ "where suh_citizen_ngo_uuid=(case when :suhCitizenNGOId  <>'' then :suhCitizenNGOId   else suh_citizen_ngo_uuid end)"
+			+ "AND is_active='true'  AND TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate<>'' THEN DATE(:fromDate) ELSE\n"
+			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \n"
+			+ " TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END ";
+
 }

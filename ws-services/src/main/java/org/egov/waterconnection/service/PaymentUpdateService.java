@@ -110,6 +110,14 @@ public class PaymentUpdateService {
 					for (WaterConnection waterConnection : waterConnections) {
 						if(WCConstants.APPLICATION_TYPE_TEMPORARY.equalsIgnoreCase(waterConnection.getWaterApplicationType())){
 							waterConnection.getProcessInstance().setAction(WCConstants.ACTION_PAY_FOR_TEMPORARY_CONNECTION);
+							
+							if(WCConstants.WS_APPLY_FOR_REGULAR_CON.equalsIgnoreCase(waterConnection.getActivityType())){
+								if(WCConstants.STATUS_PENDING_FOR_PAYMENT.equalsIgnoreCase(waterConnection.getApplicationStatus())){
+									waterConnection.getProcessInstance().setAction(WCConstants.ACTION_PAY_FOR_REGULAR_CONNECTION);
+								}else {
+									waterConnection.getProcessInstance().setAction(WCConstants.ACTION_PAY);
+								}
+							}
 						}else if(WCConstants.APPLICATION_TYPE_REGULAR.equalsIgnoreCase(waterConnection.getWaterApplicationType())){
 							if(WCConstants.STATUS_PENDING_FOR_PAYMENT.equalsIgnoreCase(waterConnection.getApplicationStatus())){
 								waterConnection.getProcessInstance().setAction(WCConstants.ACTION_PAY_FOR_REGULAR_CONNECTION);
@@ -131,6 +139,14 @@ public class PaymentUpdateService {
 					
 					wfIntegrator.callWorkFlow(waterConnectionRequest, property);
 					enrichmentService.enrichFileStoreIds(waterConnectionRequest);
+					
+					waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+							waterConnectionRequest.getWaterConnection().getApplicationStatus());
+					waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
+							waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+					
+					log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
+					
 					repo.updateWaterConnection(waterConnectionRequest, false);
 				}
 			}

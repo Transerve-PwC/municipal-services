@@ -70,6 +70,7 @@ public class NocRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
 	@Autowired
 	private NocRowMapper nocRowMapper;
 
@@ -323,9 +324,8 @@ public class NocRepository {
 
 				JSONObject applicationData = (JSONObject) actualResult.get(0);
 
-				if (requestInfo.getRequestInfo().getUserInfo().getType().equals("CITIZEN")
-						&& !applicationData.get("createdby").toString()
-								.equals(requestInfo.getRequestInfo().getUserInfo().getUuid())) {
+				if (requestInfo.getRequestInfo().getUserInfo().getType().equals("CITIZEN") && !applicationData
+						.get("createdby").toString().equals(requestInfo.getRequestInfo().getUserInfo().getUuid())) {
 					return null;
 				}
 
@@ -700,9 +700,8 @@ public class NocRepository {
 					: null);
 			apps.setGstAmount(
 					apps.getGstAmount() != null ? apps.getGstAmount().setScale(0, BigDecimal.ROUND_UP) : null);
-			if (dataPayLoad.get(CommonConstants.GSTAMOUNT) != null && dataPayLoad.get(CommonConstants.AMOUNT) != null
-					&& dataPayLoad.get(CommonConstants.PERFORMANCEBANKGUARANTEECHARGES) != null) {
-				totalamount = apps.getGstAmount().add(apps.getAmount()).add(apps.getPerformanceBankGuarantee());
+			if (dataPayLoad.get(CommonConstants.GSTAMOUNT) != null && dataPayLoad.get(CommonConstants.AMOUNT) != null) {
+				totalamount = apps.getGstAmount().add(apps.getAmount());
 				apps.setTotalamount(totalamount.setScale(0, BigDecimal.ROUND_UP));
 			} else {
 				apps.setTotalamount(totalamount != null ? totalamount.setScale(0, BigDecimal.ROUND_UP) : null);
@@ -726,7 +725,8 @@ public class NocRepository {
 					object.put("NOCApplicationDetail", details);
 					producer.push(updateNOCApplicationDetailsTopic, object);
 				}
-			} else if (dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALAMOUNT) != null && dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALTAXAMOUNT) != null) {
+			} else if (dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALAMOUNT) != null
+					&& dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALTAXAMOUNT) != null) {
 				NOCApplicationDetail applicationDetailModel = jdbcTemplate.queryForObject(
 						QueryBuilder.SELECT_APPLICATION_DETAIL_QUERY, new Object[] { requestData.getApplicationId() },
 						BeanPropertyRowMapper.newInstance(NOCApplicationDetail.class));
@@ -735,13 +735,17 @@ public class NocRepository {
 					ObjectMapper objectMapper = new ObjectMapper();
 					JSONObject applicationDetailData = objectMapper
 							.readValue(applicationDetailModel.getApplicationDetail(), JSONObject.class);
-					BigDecimal amountFromPayload = new BigDecimal(dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALAMOUNT).toString());
-					BigDecimal taxFromPayload = new BigDecimal(dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALTAXAMOUNT).toString());
-					if(amountFromPayload.compareTo(apps.getAmount())>0)
-						throw new CustomException(CommonConstants.WITHDRAWAPPROVALAMOUNTERRORCODE, CommonConstants.WITHDRAWAPPROVALAMOUNTERROR);
+					BigDecimal amountFromPayload = new BigDecimal(
+							dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALAMOUNT).toString());
+					BigDecimal taxFromPayload = new BigDecimal(
+							dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALTAXAMOUNT).toString());
+					if (amountFromPayload.compareTo(apps.getAmount()) > 0)
+						throw new CustomException(CommonConstants.WITHDRAWAPPROVALAMOUNTERRORCODE,
+								CommonConstants.WITHDRAWAPPROVALAMOUNTERROR);
 
-					if(taxFromPayload.compareTo(apps.getGstAmount())>0)
-						throw new CustomException(CommonConstants.WITHDRAWAPPROVALTAXAMOUNTERRORCODE, CommonConstants.WITHDRAWAPPROVALTAXAMOUNTERROR);
+					if (taxFromPayload.compareTo(apps.getGstAmount()) > 0)
+						throw new CustomException(CommonConstants.WITHDRAWAPPROVALTAXAMOUNTERRORCODE,
+								CommonConstants.WITHDRAWAPPROVALTAXAMOUNTERROR);
 
 					applicationDetailData.put(CommonConstants.WITHDRAWAPPROVALAMOUNT,
 							dataPayLoad.get(CommonConstants.WITHDRAWAPPROVALAMOUNT));
@@ -1128,6 +1132,11 @@ public class NocRepository {
 
 	public static Timestamp getCurrentDate() {
 		return new Timestamp(System.currentTimeMillis());
+	}
+
+	public JSONArray getRefundApplications() {
+		return jdbcTemplate.query(QueryBuilder.GET_REFUND_APPLICATIONS_QUERY, columnsNocRowMapper);
+
 	}
 
 }

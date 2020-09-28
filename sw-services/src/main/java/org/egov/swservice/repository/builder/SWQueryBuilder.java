@@ -24,23 +24,28 @@ public class SWQueryBuilder {
 	@Autowired
 	private SWConfiguration config;
 
-	private static final String INNER_JOIN_STRING = "INNER JOIN";
+	private static final String INNER_JOIN_STRING = " INNER JOIN ";
 	 private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 	//private static final String Offset_Limit_String = "OFFSET ? LIMIT ?";
 	
 	private final static String noOfConnectionSearchQuery = "SELECT count(*) FROM eg_sw_connection WHERE";
 	
-	private final static String SEWERAGE_SEARCH_QUERY = "SELECT conn.*, sc.*, document.*, plumber.*, sc.connectionExecutionDate,"
-			+ "sc.noOfWaterClosets, sc.noOfToilets,sc.proposedWaterClosets, sc.proposedToilets, sc.connectionType, sc.connection_id as connection_Id, sc.appCreatedDate,"
-			+ "  sc.detailsprovidedby, sc.estimationfileStoreId , sc.sanctionfileStoreId , sc.estimationLetterDate,"
+	private final static String SEWERAGE_SEARCH_QUERY = "SELECT "
+			/*+ " conn.*, sc.*, document.*, plumber.*, "*/
+			+ " sc.connectionExecutionDate, sc.noOfWaterClosets, sc.noOfToilets,sc.proposedWaterClosets, sc.proposedToilets, sc.connectionType, sc.connection_id as connection_Id, sc.appCreatedDate,"
+			+ " sc.detailsprovidedby, sc.estimationfileStoreId , sc.sanctionfileStoreId , sc.estimationLetterDate,"
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id,"
 			+ " conn.roadcuttingarea, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.createdBy as sw_createdBy,"
 			+ " conn.lastModifiedBy as sw_lastModifiedBy, conn.createdTime as sw_createdTime, conn.lastModifiedTime as sw_lastModifiedTime, "
 			+ " conn.adhocpenaltyreason, conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment,"
 			+ " conn.roadtype, document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id, plumber.name as plumber_name, plumber.licenseno,"
-			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship FROM eg_sw_connection conn "
+			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship, "
+			+ " property.id as seweragepropertyid, property.usagecategory, property.usagesubcategory "
+			+ " FROM eg_sw_connection conn "
 	+  INNER_JOIN_STRING 
 	+" eg_sw_service sc ON sc.connection_id = conn.id"
+	+  INNER_JOIN_STRING
+	+ "eg_sw_property property ON property.swid = conn.id"
 	+  LEFT_OUTER_JOIN_STRING
 	+ "eg_sw_applicationdocument document ON document.swid = conn.id" 
 	+  LEFT_OUTER_JOIN_STRING
