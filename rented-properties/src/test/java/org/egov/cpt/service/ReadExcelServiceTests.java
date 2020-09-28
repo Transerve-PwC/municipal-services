@@ -51,8 +51,8 @@ public class ReadExcelServiceTests {
     @Test
 	public void testReadExcelWithNewFormat() throws FileNotFoundException {
 		RentDemandResponse data = new RentDemandResponse();
-		String filepath ="D:\\Projects\\Transerve\\Docs\\Vikas Nagar Mauli Jagran (451 to 520) (3).xlsx";
-		InputStream inputStream = new FileInputStream(new File(filepath));
+		String filepath = "calculations/Vikas Nagar Mauli Jagran (451 to 520).xlsx";
+		InputStream inputStream = ReadExcelServiceTests.class.getClassLoader().getResourceAsStream(filepath);
 		readExcelService.getDatafromExcel(inputStream, 0);
 		assertThat(data.getDemand().size() > 0);
 		assertThat(data.getPayment().size() > 0);
