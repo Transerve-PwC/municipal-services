@@ -22,6 +22,7 @@ import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.SMSRequest;
+import org.egov.cpt.models.calculation.PaymentDetail;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.ServiceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -377,6 +378,16 @@ public class NotificationUtil {
 				.toLocalDate();
 		messageTemplate = messageTemplate.replace("<4>", localDate.getMonth().toString().substring(0,3));
 		messageTemplate = messageTemplate.replace("<5>", String.valueOf(localDate.getYear()).substring(2, 4));
+		return messageTemplate;
+	}
+
+	public String getRPOwnerPaymentMsg(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
+			String transitNumber) {
+		String messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_PAYMENT_RECIEVED, localizationMessages);
+		messageTemplate = messageTemplate.replace("<1>", owner.getOwnerDetails().getName());
+		messageTemplate = messageTemplate.replace("<2>", paymentDetail.getTotalAmountPaid().toString());
+		messageTemplate = messageTemplate.replace("<3>", transitNumber);
+		messageTemplate = messageTemplate.replace("<4>", paymentDetail.getReceiptNumber());
 		return messageTemplate;
 	}
 }

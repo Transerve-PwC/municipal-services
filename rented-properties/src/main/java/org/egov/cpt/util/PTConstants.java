@@ -266,4 +266,7 @@ public class PTConstants {
 
 	//Demand Generation Notifications
 	public static final String NOTIFICATION_DEMAND_GENERATION = "rp.en.counter.demand";
+
+	//Current Owner Payment Notification
+	public static final String  NOTIFICATION_PAYMENT_RECIEVED = "rp.en.counter.payment";
 }
