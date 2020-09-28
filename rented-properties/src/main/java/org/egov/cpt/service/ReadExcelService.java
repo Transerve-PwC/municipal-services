@@ -110,8 +110,9 @@ public class ReadExcelService implements IReadExcelService {
 			return this.getDataFromWorkbookFormat2(workbook, 0);
 		} else if (0 == formatFlag) {
 			return this.getDataFromWorkbookFormat1(workbook, 0);
-		}else
-		throw new CustomException("INVALID_RENT_HISTORY_FORMAT", "Uploaded rent history format cannot be determined");
+		} else
+			throw new CustomException("INVALID_RENT_HISTORY_FORMAT",
+					"Uploaded rent history format cannot be determined");
 	}
 
 	private RentDemandResponse getDataFromWorkbookFormat1(Workbook workbook, int sheetIndex) {
@@ -257,9 +258,12 @@ public class ReadExcelService implements IReadExcelService {
 				Integer currentRowYear = ((Double) value).intValue();
 				for (int i = 1; i < 13; i++) {
 					if (rentDurations.contains(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear)) {
-						payments.add(RentPayment.builder().amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
-								.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))
-								.build());
+						if (!String.valueOf(getValueFromCell(currentRow.getCell(i))).isEmpty()) {
+							payments.add(RentPayment.builder()
+									.amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
+									.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))
+									.build());
+						}
 					}
 
 				}
@@ -373,25 +377,25 @@ public class ReadExcelService implements IReadExcelService {
 	private Object getValueFromCell(Cell cell1) {
 		Object objValue = "";
 		switch (cell1.getCellType()) {
-			case BLANK:
-				objValue = "";
-				break;
-			case STRING:
-				objValue = cell1.getRichStringCellValue().getString();
-				break;
-			case NUMERIC:
-				if (DateUtil.isCellDateFormatted(cell1)) {
-					objValue = cell1.getDateCellValue().getTime();
-				} else {
-					objValue = cell1.getNumericCellValue();
-				}
-				break;
-			case FORMULA:
+		case BLANK:
+			objValue = "";
+			break;
+		case STRING:
+			objValue = cell1.getRichStringCellValue().getString();
+			break;
+		case NUMERIC:
+			if (DateUtil.isCellDateFormatted(cell1)) {
+				objValue = cell1.getDateCellValue().getTime();
+			} else {
 				objValue = cell1.getNumericCellValue();
-				break;
+			}
+			break;
+		case FORMULA:
+			objValue = cell1.getNumericCellValue();
+			break;
 
-			default:
-				objValue = "";
+		default:
+			objValue = "";
 		}
 		return objValue;
 	}

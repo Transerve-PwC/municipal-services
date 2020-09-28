@@ -1,7 +1,11 @@
 package org.egov.cpt.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
@@ -43,6 +47,16 @@ public class ReadExcelServiceTests {
         assertEquals(expectedTotalRent, totalRent, 1.0);
         assertEquals(expectedTotalPaid, totalPaid, 1.0);
     }
+    
+    @Test
+	public void testReadExcelWithNewFormat() throws FileNotFoundException {
+		RentDemandResponse data = new RentDemandResponse();
+		String filepath ="D:\\Projects\\Transerve\\Docs\\Vikas Nagar Mauli Jagran (451 to 520) (3).xlsx";
+		InputStream inputStream = new FileInputStream(new File(filepath));
+		readExcelService.getDatafromExcel(inputStream, 0);
+		assertThat(data.getDemand().size() > 0);
+		assertThat(data.getPayment().size() > 0);
+	}
 
     @Test
     public void testSimpleParsing() {
