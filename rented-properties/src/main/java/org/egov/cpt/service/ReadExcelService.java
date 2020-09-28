@@ -220,7 +220,6 @@ public class ReadExcelService implements IReadExcelService {
 		List<RentDemand> demands = new ArrayList<>();
 		List<RentPayment> payments = new ArrayList<>();
 		List<String> rentDurations = new ArrayList<>();
-		double temp = 0;
 		/* Prepare list of RentDemands */
 		getRentYearDeatils(sheet).forEach((key, value) -> {
 			List<String> rentDuration = getAllSequenceOfYears(key);
@@ -259,7 +258,6 @@ public class ReadExcelService implements IReadExcelService {
 				for (int i = 1; i < 13; i++) {
 					if (rentDurations.contains(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear)) {
 						if(!String.valueOf(getValueFromCell(currentRow.getCell(i))).isEmpty()) {
-							temp = temp + (Double) getValueFromCell(currentRow.getCell(i));
 							payments.add(RentPayment.builder().amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
 									.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))
 									.build());
