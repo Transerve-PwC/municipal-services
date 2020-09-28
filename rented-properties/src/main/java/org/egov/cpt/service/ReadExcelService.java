@@ -220,6 +220,7 @@ public class ReadExcelService implements IReadExcelService {
 		List<RentDemand> demands = new ArrayList<>();
 		List<RentPayment> payments = new ArrayList<>();
 		List<String> rentDurations = new ArrayList<>();
+		double temp = 0;
 		/* Prepare list of RentDemands */
 		getRentYearDeatils(sheet).forEach((key, value) -> {
 			List<String> rentDuration = getAllSequenceOfYears(key);
@@ -247,24 +248,29 @@ public class ReadExcelService implements IReadExcelService {
 			/* Fetching Data will End after this */
 			if (FOOTER_CELL_FORMAT2.equalsIgnoreCase(String.valueOf(currentRow.getCell(0)))) {
 				break;
-			}
-
+			}	
+			
 			if (shouldParseRows) {
 				Object value = getValueFromCell(currentRow.getCell(0));
 				if (!(value instanceof Double)) {
 					continue;
 				}
-				Integer currentRowYear = ((Double) value).intValue();
+				Integer currentRowYear = ((Double) value).intValue();				
 				for (int i = 1; i < 13; i++) {
 					if (rentDurations.contains(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear)) {
-						payments.add(RentPayment.builder().amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
-								.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))
-								.build());
+						if(!String.valueOf(getValueFromCell(currentRow.getCell(i))).isEmpty()) {
+							temp = temp + (Double) getValueFromCell(currentRow.getCell(i));
+							payments.add(RentPayment.builder().amountPaid((Double) getValueFromCell(currentRow.getCell(i)))
+									.dateOfPayment(convertStrDatetoLong(1 + "-" + MONTHS[i - 1] + "-" + currentRowYear))
+									.build());
+						}
 					}
 
 				}
+				
 			}
-		}
+			
+		}		
 		return new RentDemandResponse(demands, payments);
 	}
 
