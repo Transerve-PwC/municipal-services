@@ -647,6 +647,7 @@ public class Connection {
 		sb.append("    connectionHolders: ").append(toIndentedString(connectionHolders)).append("\n");
 		sb.append("    waterProperty: ").append(toIndentedString(waterProperty)).append("\n");
 		sb.append("    waterApplication: ").append(toIndentedString(waterApplication)).append("\n");
+		sb.append("    processInstance: ").append(toIndentedString(processInstance)).append("\n");
 		sb.append("    applicationType: ").append(toIndentedString(applicationType)).append("\n");
 		sb.append("	   dateEffectiveFrom: ").append(toIndentedString(dateEffectiveFrom)).append("\n");
 		sb.append("}");

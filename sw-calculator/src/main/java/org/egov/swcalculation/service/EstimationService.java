@@ -371,7 +371,7 @@ public class EstimationService {
 					.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
 		
 		
-		
+		addAdhocPenalityAndRebate(estimates, criteria.getSewerageConnection());
 		return estimates;
 	}
 

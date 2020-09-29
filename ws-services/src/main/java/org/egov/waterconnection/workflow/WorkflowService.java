@@ -91,11 +91,13 @@ public class WorkflowService {
      * @return State object to be fetched
      */
     public Boolean isTerminateState(String stateCode, BusinessService businessService){
-       for(State state : businessService.getStates()){
-           if(state.getApplicationStatus()!=null && state.getApplicationStatus().equalsIgnoreCase(stateCode))
-               return state.getIsTerminateState();
-       }
-       return null;
+    	if(null != businessService) {
+	    	for(State state : businessService.getStates()){
+	           if(state.getApplicationStatus()!=null && state.getApplicationStatus().equalsIgnoreCase(stateCode))
+	               return state.getIsTerminateState();
+	    	}
+    	}
+    	return false;
     }
     
    /**

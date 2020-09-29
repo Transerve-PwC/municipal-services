@@ -74,6 +74,7 @@ public class SmidService {
 					.responseBody(smidapplication).build(), HttpStatus.CREATED);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new CustomException(CommonConstants.SMID_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
@@ -136,7 +137,6 @@ public class SmidService {
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
 					.responseBody(SmidApplicationresult).build(), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new CustomException(CommonConstants.SMID_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}

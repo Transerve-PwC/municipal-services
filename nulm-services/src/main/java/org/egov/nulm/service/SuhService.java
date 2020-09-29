@@ -136,7 +136,6 @@ public class SuhService {
 	}
 	public ResponseEntity<ResponseInfoWrapper> getSuhApplication(NulmSuhRequest request) {
 		try {
-
 			SuhApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),
 					SuhApplication.class);
 			List<Role> role=request.getRequestInfo().getUserInfo().getRoles();
@@ -151,7 +150,6 @@ public class SuhService {
 	}
 	public ResponseEntity<ResponseInfoWrapper> getShelterName(NulmSuhRequest request) {
 		try {
-
 			SuhApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),
 					SuhApplication.class);
 			List<Role> role=request.getRequestInfo().getUserInfo().getRoles();

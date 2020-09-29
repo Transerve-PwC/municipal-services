@@ -7,6 +7,7 @@ import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.service.notification.NoticeNotificationService;
+import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.NoticeGenerationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class NoticeGenerationService {
 	
 	public List<NoticeGeneration> createNotice(NoticeGenerationRequest noticeGenerationRequest) {
 		List<Property> propertiesFromDb = propertyValidator.isPropertyExist(noticeGenerationRequest);
+		noticeGenerationRequest.getNoticeApplications().forEach(application -> {
+			if (application.getNoticeType().equals(PTConstants.NG_TYPE_VIOLATION)) {
+				propertyValidator.validateNoticeGenerationDocumentUploadLimit(noticeGenerationRequest);
+			}
+		});
 //		propertyValidator.validateMortgageCreateRequest(noticeGenerationRequest);
 		enrichmentService.enrichNoticeCreateRequest(noticeGenerationRequest);
 		producer.push(config.getSaveNoticeTopic(), noticeGenerationRequest);

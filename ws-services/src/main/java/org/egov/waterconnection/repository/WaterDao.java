@@ -13,4 +13,6 @@ public interface WaterDao {
 	public List<WaterConnection> getWaterConnectionList(SearchCriteria criteria,RequestInfo requestInfo);
 	
 	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest, boolean isStateUpdatable);
+
+	public void saveWaterSubActivity(WaterConnectionRequest waterConnectionRequest);
 }

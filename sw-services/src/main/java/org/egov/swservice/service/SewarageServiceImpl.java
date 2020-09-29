@@ -136,14 +136,7 @@ public class SewarageServiceImpl implements SewarageService {
 
 	@Override
 	public List<SewerageConnection> updateSewarageConnection(SewerageConnectionRequest sewerageConnectionRequest) {
-		StringBuilder str = new StringBuilder();
-		try {
-			str.append("Sewerage Connection Update Request: ")
-					.append(mapper.writeValueAsString(sewerageConnectionRequest));
-			log.info(str.toString());
-		} catch (JsonProcessingException e) {
-			log.debug(e.toString());
-		}
+		log.info("Update SewerageConnection: {}", sewerageConnectionRequest.getSewerageConnection());
 		sewerageConnectionValidator.validateSewerageConnection(sewerageConnectionRequest, true);
 		mDMSValidator.validateMasterData(sewerageConnectionRequest);
 		Property property = validateProperty.getOrValidateProperty(sewerageConnectionRequest);

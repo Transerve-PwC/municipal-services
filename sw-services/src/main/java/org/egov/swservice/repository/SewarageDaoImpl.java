@@ -63,9 +63,10 @@ public class SewarageDaoImpl implements SewarageDao {
 		List<SewerageConnection> sewarageConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				sewarageRowMapper);
 		
-		log.info("Sewerage search result:{}",sewarageConnectionList);
 		if (sewarageConnectionList == null) {
 			return Collections.emptyList();
+		}else {
+			log.info("Sewerage search result size:{}",sewarageConnectionList.size());
 		}
 		return sewarageConnectionList;
 	}
