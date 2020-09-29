@@ -75,7 +75,7 @@ public class PropertyNotificationService {
 			if (message == null)
 				continue;
 			String emailSignature = util.getMessageTemplate(PTConstants.EMAIL_SIGNATURE, localizationMessages);
-			message.concat(emailSignature);
+			message=message.concat(emailSignature);
 			emailRequest.addAll(util.createEMAILRequest(message, emailIdToApplicant));
 		}
 
@@ -98,7 +98,7 @@ public class PropertyNotificationService {
 
 			if (message == null)
 				continue;
-			message.replaceAll("<br/>", "");
+			message = message.replaceAll("<br/>", "");
 			Map<String, String> mobileNumberToOwner = new HashMap<>();
 
 			if (owner.getOwnerDetails().getPhone() != null) {
