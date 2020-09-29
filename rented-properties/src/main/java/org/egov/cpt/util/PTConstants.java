@@ -266,4 +266,7 @@ public class PTConstants {
 
 	//Demand Generation Notifications
 	public static final String NOTIFICATION_DEMAND_GENERATION = "rp.en.counter.demand";
+	
+	//Email Signature
+	public static final String EMAIL_SIGNATURE = "rp.email.signature";
 }

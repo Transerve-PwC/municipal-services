@@ -119,7 +119,7 @@ public class NotificationUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getMessageTemplate(String notificationCode, String localizationMessage) {
+	public String getMessageTemplate(String notificationCode, String localizationMessage) {
 		String path = "$..messages[?(@.code==\"{}\")].message";
 		path = path.replace("{}", notificationCode);
 		String message = null;
@@ -154,7 +154,7 @@ public class NotificationUtil {
 		for (Map.Entry<String, String> entryset : emailIdToApplicant.entrySet()) {
 			String customizedMsg = message.replace("<1>", entryset.getValue());
 			emailRequest.add(EmailRequest.builder().email(entryset.getKey()).subject(PTConstants.EMAIL_SUBJECT)
-					.body(customizedMsg).isHTML(false).build());
+					.body(customizedMsg).isHTML(true).build());
 		}
 		return emailRequest;
 	}
