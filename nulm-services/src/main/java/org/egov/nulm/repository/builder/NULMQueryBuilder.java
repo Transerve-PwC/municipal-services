@@ -85,7 +85,7 @@ public class NULMQueryBuilder {
 
 	public static final String GET_SUH_NAME_QUERY = "select count(*) from public.nulm_suh_application_detail where name_of_shelter=? and tenant_id=? and is_active='true'";
 
-	public static final String GET_SUH_QUERY = "SELECT NA.*,FM.facilities,RM.record,SM.staff FROM public.nulm_suh_application_detail NA \n"
+	public static final String GET_SUH_QUERY = "SELECT NA.*,FM.facilities,RM.record,SM.staff, og.organization_name FROM public.nulm_suh_application_detail NA \n"
 			+ "left join (SELECT count(suh_uuid) facility, suh_uuid,max(tenant_id) tenant_id,array_to_json( array_agg(json_build_object('suhUuid',suh_uuid,'facilityUuid',facility_uuid,'isBedding',is_bedding,'beddingRemark',bedding_remark,\n"
 			+ "'isWashingOfLinen',is_washing_of_linen,'washingOfLinenRemark',washing_of_linen_remark,'isCleaningOfPremises',is_cleaning_of_premises,'cleaningOfPremiseRemark',cleaning_of_premise_remark,\n"
 			+ "'isRecreationFacilities',is_recreation_facilities,'recreationFacilitiesRemark',recreation_facilities_remark,'isDrinkingWater',is_drinking_water,\n"
@@ -111,6 +111,7 @@ public class NULMQueryBuilder {
 			+ "'isSecurityStaff',is_security_staff,'securityStaffRemark',security_staff_remark,'isCleaner',is_cleaner,'cleanerRemark',cleaner_remark,'tenant_id',tenant_id,'is_active',is_active,'created_by',created_by,'created_time',created_time\n"
 			+ ",'last_modified_by',last_modified_by,'last_modified_time',last_modified_time) ))as staff FROM nulm_suh_staff_maintenance GROUP BY suh_uuid ) SM\n"
 			+ "ON NA.suh_uuid=SM.suh_uuid and NA.tenant_id=SM.tenant_id \n"
+			+ "left join nulm_organization og on NA.assigned_to = og.organization_uuid \n"
 			+ "where NA.suh_id=(case when :suhId  <>'' then :suhId   else NA.suh_id end) and NA.created_by=(case when :createdBy  <>'' then :createdBy  else NA.created_by end) AND NA.tenant_id=:tenantId  AND NA.application_status IN (:status) \n"
 			+ "AND NA.is_active='true'  AND TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate<>'' THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \n"
@@ -124,10 +125,10 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END and tenant_id=? and is_active='true'";
 
 	public static final String GET_SUH_LOG_DATE_QUERY = "SELECT log_uuid,created_time FROM public.nulm_suh_occupancy_log where log_uuid=? and tenant_id=? and is_active='true';";
-	public static final String GET_SUH_SHELTER_NAME_QUERY = "SELECT NA.name_of_shelter,NA.suh_id,NA.tenant_id,NA.suh_uuid,NA.assigned_to FROM public.nulm_suh_application_detail NA \n"
-			+ "inner join nulm_organization OG on  OG.tenant_Id=NA.tenant_id where NA.tenant_id=:tenantId AND NA.application_status IN (:status) \n"
-			+ "and assigned_to in (select organization_uuid from nulm_organization where user_id=(:userId) )\n"
-			+ "	 		AND NA.is_active='true'  GROUP BY NA.suh_uuid";
+	public static final String GET_SUH_SHELTER_NAME_QUERY = "select suh.suh_uuid, suh.suh_id, suh.tenant_id, suh.name_of_shelter \n" + 
+			"from nulm_suh_application_detail suh \n" + 
+			"left join nulm_organization og on suh.assigned_to = og.organization_uuid \n" + 
+			"where suh.is_active='true' \n";
 
 	public static final String GET_SUSV_DOCUMENT_QUERY = "SELECT count(*)  FROM public.nulm_susv_application_document  WHERE application_uuid=? and tenant_id=? and filestore_id=? and document_type=? and is_active='true';";
 

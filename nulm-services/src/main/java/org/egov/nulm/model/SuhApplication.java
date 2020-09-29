@@ -211,5 +211,7 @@ public class SuhApplication {
 	
 	@JsonProperty("assignedTo")
 	private String assignedTo;
-
+	
+	@JsonProperty("assignedToName")
+	private String assignedToName;
 }

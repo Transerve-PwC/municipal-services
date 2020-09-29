@@ -137,8 +137,8 @@ public class WaterServiceImpl implements WaterService {
 		mDMSValidator.validateMasterData(waterConnectionRequest);
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		validateProperty.validatePropertyCriteria(property);
-		boolean isTerminateState = false;
 		boolean isStateUpdatable = true;
+		BusinessService businessService = null;
 			
 		if (WCConstants.STATUS_PENDING_FOR_REGULAR.equalsIgnoreCase(
 				waterConnectionRequest.getWaterConnection().getApplicationStatus())
@@ -156,7 +156,7 @@ public class WaterServiceImpl implements WaterService {
 			//waterDao.saveWaterSubActivity(waterConnectionRequest);
 		}else {
 		
-			BusinessService businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
+			businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
 					waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
 			log.info("businessService: {},Business: {}",businessService.getBusinessService(),businessService.getBusiness());
 			WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getWaterApplication().getId(), waterConnectionRequest.getRequestInfo());
@@ -172,7 +172,6 @@ public class WaterServiceImpl implements WaterService {
 			//Enrich file store Id After payment
 			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
 			userService.updateUser(waterConnectionRequest, searchResult);
-			isTerminateState = workflowService.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);
 			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		}
 		//Call workflow
@@ -186,6 +185,7 @@ public class WaterServiceImpl implements WaterService {
 		
 		log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		
+		boolean isTerminateState = workflowService.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);
 		if(isTerminateState) {
 			waterConnectionRequest.getWaterConnection().setInWorkflow(false);
 		}
