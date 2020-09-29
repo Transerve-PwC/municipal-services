@@ -382,12 +382,13 @@ public class NotificationUtil {
 	}
 
 	public String getRPOwnerPaymentMsg(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber) {
+			String transitNumber, String transactionNumber) {
 		String messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_PAYMENT_RECIEVED, localizationMessages);
 		messageTemplate = messageTemplate.replace("<1>", owner.getOwnerDetails().getName());
 		messageTemplate = messageTemplate.replace("<2>", paymentDetail.getTotalAmountPaid().toString());
 		messageTemplate = messageTemplate.replace("<3>", transitNumber);
-		messageTemplate = messageTemplate.replace("<4>", paymentDetail.getReceiptNumber());
+		messageTemplate = messageTemplate.replace("<4>", transactionNumber);
+		messageTemplate = messageTemplate.replace("<5>", paymentDetail.getReceiptNumber());
 		return messageTemplate;
 	}
 }

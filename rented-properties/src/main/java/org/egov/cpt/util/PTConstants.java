@@ -268,5 +268,5 @@ public class PTConstants {
 	public static final String NOTIFICATION_DEMAND_GENERATION = "rp.en.counter.demand";
 
 	//Current Owner Payment Notification
-	public static final String  NOTIFICATION_PAYMENT_RECIEVED = "rp.en.counter.payment";
+	public static final String  NOTIFICATION_PAYMENT_RECIEVED = "rp.en.counter.rent.payment";
 }

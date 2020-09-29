@@ -187,7 +187,7 @@ public class PaymentNotificationService {
 							break;
 
 						case PTConstants.BILLING_BUSINESS_SERVICE_RENT:
-
+							String transactionNumber = paymentRequest.getPayment().getTransactionNumber();
 							String transitNumber = propertyUtil
 									.getTransitNumberFromConsumerCode(paymentDetail.getBill().getConsumerCode());
 							PropertyCriteria propertyCriteria = new PropertyCriteria();
@@ -199,13 +199,13 @@ public class PaymentNotificationService {
 								String localizationMessages = util.getLocalizationMessages(owner.getTenantId(),
 										requestInfo);
 								List<SMSRequest> smsRequests = getRPSMSRequests(owner, paymentDetail,
-										localizationMessages, transitNumber);
+										localizationMessages, transitNumber, transactionNumber);
 								util.sendSMS(smsRequests, config.getIsSMSNotificationEnabled());
 
 								if (config.getIsEMAILNotificationEnabled()) {
 									if (owner.getOwnerDetails().getEmail() != null) {
 										List<EmailRequest> emailRequests = getRPEmailRequests(owner, paymentDetail,
-												localizationMessages, transitNumber);
+												localizationMessages, transitNumber, transactionNumber);
 										util.sendEMAIL(emailRequests, true);
 									}
 								}
@@ -216,7 +216,7 @@ public class PaymentNotificationService {
 										+ paymentDetail.getBill().getConsumerCode());
 							}
 							break;
-					}
+						}
 				}
 			}
 		} catch (Exception e) {
@@ -349,8 +349,9 @@ public class PaymentNotificationService {
 	 */
 
 	private List<SMSRequest> getRPSMSRequests(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber) {
-		String ownerMessage = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber);
+			String transitNumber, String transactionNumber) {
+		String ownerMessage = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber,
+				transactionNumber);
 		ownerMessage = ownerMessage.replace("\\n", "\n");
 		SMSRequest ownerSmsRequest = new SMSRequest(owner.getOwnerDetails().getPhone(), ownerMessage);
 		List<SMSRequest> smsRequestList = new ArrayList<>();
@@ -359,10 +360,10 @@ public class PaymentNotificationService {
 	}
 
 	private List<EmailRequest> getRPEmailRequests(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber) {
+			String transitNumber, String transactionNumber) {
 
 		EmailRequest ownersEmailRequest = getRPOwnerEmailRequest(owner, paymentDetail, localizationMessages,
-				transitNumber);
+				transitNumber, transactionNumber);
 		List<EmailRequest> totalEmails = new LinkedList<>();
 		totalEmails.add(ownersEmailRequest);
 
@@ -371,8 +372,9 @@ public class PaymentNotificationService {
 	}
 
 	private EmailRequest getRPOwnerEmailRequest(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber) {
-		String message = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber);
+			String transitNumber, String transactionNumber) {
+		String message = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber,
+				transactionNumber);
 		message = message.replace("\\n", "<br/>");
 		EmailRequest emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
 				.email(owner.getOwnerDetails().getEmail()).body(message).build();
