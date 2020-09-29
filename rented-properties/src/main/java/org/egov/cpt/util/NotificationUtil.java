@@ -119,7 +119,7 @@ public class NotificationUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getMessageTemplate(String notificationCode, String localizationMessage) {
+	public String getMessageTemplate(String notificationCode, String localizationMessage) {
 		String path = "$..messages[?(@.code==\"{}\")].message";
 		path = path.replace("{}", notificationCode);
 		String message = null;

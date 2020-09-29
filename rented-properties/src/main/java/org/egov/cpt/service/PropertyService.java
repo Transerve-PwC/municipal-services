@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import javax.management.relation.Relation;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
@@ -12,6 +15,7 @@ import org.egov.cpt.models.BillV2;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
+import org.egov.cpt.models.PropertyDueAmount;
 import org.egov.cpt.models.RentAccount;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.RentPayment;
@@ -22,10 +26,12 @@ import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.calculation.DemandRepository;
 import org.egov.cpt.service.calculation.DemandService;
+import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
+import org.egov.cpt.web.contracts.PropertyDueRequest;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
 import org.egov.cpt.workflow.WorkflowService;
@@ -34,7 +40,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Slf4j
 @Service
@@ -78,6 +88,9 @@ public class PropertyService {
 
 	@Autowired
 	private DemandRepository demandRepository;
+	
+	@Autowired
+	private NotificationUtil notificationUtil;
 
 	public List<Property> createProperty(PropertyRequest request) {
 
@@ -292,4 +305,40 @@ public class PropertyService {
 		return Collections.singletonList(property);
 	}
 
+	public void getDueAmount( RequestInfo requestInfo) {
+		PropertyCriteria criteria = PropertyCriteria.builder()
+				.state(Collections.singletonList(PTConstants.PM_STATUS_APPROVED))
+				.relations(Collections.singletonList(PTConstants.RELATION_OWNER)).build();
+		List<Property> properties = repository.getProperties(criteria);
+		if (CollectionUtils.isEmpty(properties))
+			throw new CustomException("NO_PROPERTY_FOUND","No approved property found");
+			
+		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
+//		String tenatId =properties.get(0).getTenantId().split("\\.")[0];
+		String localizationMessages = notificationUtil.getLocalizationMessages(properties.get(0).getTenantId(), requestInfo);
+		
+			properties.stream().forEach(property -> {
+				Optional<Owner> owner = property.getOwners().stream().filter(Owner::getActiveState).findAny();
+				PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(property.getId())
+						.transitNumber(property.getTransitNumber())
+						.tenantId(property.getTenantId())
+						.colony(notificationUtil.getMessageTemplate(property.getColony(), localizationMessages))
+						.ownerName(owner.get().getOwnerDetails().getName())
+						.mobileNumber(owner.get().getOwnerDetails().getPhone())
+						.build();
+				List<RentDemand> demands = repository
+						.getPropertyRentDemandDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
+				RentAccount rentAccount = repository
+						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
+				if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+					propertyDueAmount.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+							property.getPropertyDetails().getInterestRate()));
+				}
+				PropertyDueAmounts.add(propertyDueAmount);
+			});
+			
+			PropertyDueRequest propertyDueRequest =  PropertyDueRequest.builder().requestInfo(requestInfo)
+					.propertyDueAmounts(PropertyDueAmounts).build();
+			producer.push(config.getDueAmountTopic(), propertyDueRequest);	
+	}
 }
