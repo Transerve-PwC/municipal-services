@@ -55,7 +55,7 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 				Property property = Property.builder().id(rs.getString("pid"))
 						.transitNumber(rs.getString("pttransit_number")).colony(rs.getString("ptcolony"))
 						.pincode(rs.getString("addresspincode"))
-						.area(rs.getString("aaddressrea"))
+						.area(rs.getString("addressarea"))
 						.build();
 
 				currentOwner = Owner.builder().id(rs.getString("oid")).property(property)
