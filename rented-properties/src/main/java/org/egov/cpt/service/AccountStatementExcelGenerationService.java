@@ -49,6 +49,8 @@ public class AccountStatementExcelGenerationService {
 	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Transit Site No.", "Area",
 			"Rent", "Security Advance Taken By o/o BDPO U.T.Interest",
 			"Yr. Rent (increase as per Clause 4 of Lease Deed)", "Montly Rent", "Interest" };
+	private static final String PAYMENT = "Payment";
+	private static final String RENT = "Rent";
 
 	@Autowired
 	public AccountStatementExcelGenerationService(PropertyRepository propertyRepository,
@@ -149,9 +151,9 @@ public class AccountStatementExcelGenerationService {
 				row.createCell(1).setCellValue(rentAccountStmt.getAmount());
 
 				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
-						.ifPresent(o -> row.createCell(2).setCellValue(o.getType().name()));
+						.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
 				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.D.name()))
-						.ifPresent(o -> row.createCell(3).setCellValue(o.getType().name()));
+						.ifPresent(o -> row.createCell(3).setCellValue(RENT));
 
 				row.createCell(4).setCellValue(rentAccountStmt.getRemainingPrincipal());
 				row.createCell(5).setCellValue(rentAccountStmt.getDueAmount());

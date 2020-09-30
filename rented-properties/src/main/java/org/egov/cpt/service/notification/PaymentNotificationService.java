@@ -1,6 +1,8 @@
 package org.egov.cpt.service.notification;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +14,8 @@ import org.egov.cpt.models.DuplicateCopy;
 import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.EmailRequest;
 import org.egov.cpt.models.Owner;
+import org.egov.cpt.models.Property;
+import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.models.calculation.PaymentDetail;
 import org.egov.cpt.models.calculation.PaymentRequest;
@@ -20,8 +24,10 @@ import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.DuplicateCopyService;
 import org.egov.cpt.service.EnrichmentService;
 import org.egov.cpt.service.OwnershipTransferService;
+import org.egov.cpt.service.PropertyService;
 import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
+import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
@@ -49,6 +55,10 @@ public class PaymentNotificationService {
 
 	private PropertyConfiguration config;
 
+	private PropertyUtil propertyUtil;
+
+	private PropertyService propertyService;
+
 	@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
 	private Boolean pickWFServiceNameFromPropertyTypeOnly;
 
@@ -59,12 +69,15 @@ public class PaymentNotificationService {
 	public PaymentNotificationService(OwnershipTransferService ownershipTransferService,
 			OwnershipTransferRepository repositoryOt, DuplicateCopyService duplicateCopyService,
 			PropertyRepository propertyRepository, EnrichmentService enrichmentService, ObjectMapper mapper,
-			WorkflowService workflowService, NotificationUtil util, PropertyConfiguration config) {
+			WorkflowService workflowService, NotificationUtil util, PropertyConfiguration config,
+			PropertyUtil propertyUtil, PropertyService propertyService) {
 		this.ownershipTransferService = ownershipTransferService;
 		this.duplicateCopyService = duplicateCopyService;
 		this.mapper = mapper;
 		this.util = util;
 		this.config = config;
+		this.propertyUtil = propertyUtil;
+		this.propertyService = propertyService;
 	}
 
 	final String tenantId = "tenantId";
@@ -172,7 +185,38 @@ public class PaymentNotificationService {
 										+ searchCriteriaDc.getApplicationNumber());
 
 							break;
-					}
+
+						case PTConstants.BILLING_BUSINESS_SERVICE_RENT:
+							String transactionNumber = paymentRequest.getPayment().getTransactionNumber();
+							String transitNumber = propertyUtil
+									.getTransitNumberFromConsumerCode(paymentDetail.getBill().getConsumerCode());
+							PropertyCriteria propertyCriteria = new PropertyCriteria();
+							propertyCriteria.setRelations(Collections.singletonList("owner"));
+							propertyCriteria.setTransitNumber(transitNumber);
+							List<Property> propertyList = propertyService.searchProperty(propertyCriteria, requestInfo);
+							propertyList.forEach(property -> {
+								Owner owner = propertyUtil.getCurrentOwnerFromProperty(property);
+								String localizationMessages = util.getLocalizationMessages(owner.getTenantId(),
+										requestInfo);
+								List<SMSRequest> smsRequests = getRPSMSRequests(owner, paymentDetail,
+										localizationMessages, transitNumber, transactionNumber);
+								util.sendSMS(smsRequests, config.getIsSMSNotificationEnabled());
+
+								if (config.getIsEMAILNotificationEnabled()) {
+									if (owner.getOwnerDetails().getEmail() != null) {
+										List<EmailRequest> emailRequests = getRPEmailRequests(owner, paymentDetail,
+												localizationMessages, transitNumber, transactionNumber);
+										util.sendEMAIL(emailRequests, true);
+									}
+								}
+							});
+
+							if (CollectionUtils.isEmpty(propertyList)) {
+								throw new CustomException("INVALID RECEIPT", "No Owner found for the comsumerCode "
+										+ paymentDetail.getBill().getConsumerCode());
+							}
+							break;
+						}
 				}
 			}
 		} catch (Exception e) {
@@ -304,4 +348,38 @@ public class PaymentNotificationService {
 	 * return smsRequest; }
 	 */
 
+	private List<SMSRequest> getRPSMSRequests(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
+			String transitNumber, String transactionNumber) {
+		String ownerMessage = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber,
+				transactionNumber);
+		ownerMessage = ownerMessage.replace("\\n", "\n");
+		SMSRequest ownerSmsRequest = new SMSRequest(owner.getOwnerDetails().getPhone(), ownerMessage);
+		List<SMSRequest> smsRequestList = new ArrayList<>();
+		smsRequestList.add(ownerSmsRequest);
+		return smsRequestList;
+	}
+
+	private List<EmailRequest> getRPEmailRequests(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
+			String transitNumber, String transactionNumber) {
+
+		EmailRequest ownersEmailRequest = getRPOwnerEmailRequest(owner, paymentDetail, localizationMessages,
+				transitNumber, transactionNumber);
+		List<EmailRequest> totalEmails = new LinkedList<>();
+		totalEmails.add(ownersEmailRequest);
+
+		return totalEmails;
+
+	}
+
+	private EmailRequest getRPOwnerEmailRequest(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
+			String transitNumber, String transactionNumber) {
+		String message = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber,
+				transactionNumber);
+		message = message.replace("\\n", "<br/>");
+		EmailRequest emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
+				.email(owner.getOwnerDetails().getEmail()).body(message).build();
+
+		return emailRequest;
+
+	}
 }

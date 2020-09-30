@@ -45,7 +45,9 @@ public class SepApplication {
 	    APPROVED("APPROVED"),
 		REJECTED("REJECTED"),
 	    FORWARDEDTOTASKFORCECOMMITTEE("Forwarded to Task force Committee"),
-		SENDTOBANKFORPROCESSING("Send to bank for processing"),
+	    APPROVEDBYTASKFORCECOMMITTEE("Approved by Task force committee"),
+	    REJECTEDBYTASKFORCECOMMITTEE("Rejected by Task force committee"),
+		SENDTOBANKFORPROCESSING("Sent to bank for processing"),
 		SANCTIONEDBYBANKBank("Sanctioned by Bank");
 	    private String value;
 

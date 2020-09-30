@@ -479,7 +479,7 @@ public class EstimationService {
 		if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_ROAD_CUTTING_CHARGE)
 					.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
-
+		addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
 		return estimates;
 	}
 
@@ -493,20 +493,20 @@ public class EstimationService {
 
 		if (regularSlab != null) {
 			masterSlab.put("PipeSize", regularSlab);
-			JSONArray filteredMasters = JsonPath.read(masterSlab, "$.PipeSize[?(@.size=='" + criteria.getWaterConnection().getProposedPipeSize() + "')]");
+			JSONArray filteredMasters = JsonPath.read(masterSlab,
+					"$.PipeSize[?(@.size=='" + criteria.getWaterConnection().getProposedPipeSize() + "')]");
 			JSONObject chargesSlab = new JSONObject();
 
 			chargesSlab.put("Charges", filteredMasters.get(0));
 			ObjectMapper mapper = new ObjectMapper();
 			List<BillingSlab> mappingBillingSlab;
 			try {
-				mappingBillingSlab = mapper.readValue(
-						filteredMasters.toJSONString(),
+				mappingBillingSlab = mapper.readValue(filteredMasters.toJSONString(),
 						mapper.getTypeFactory().constructCollectionType(List.class, BillingSlab.class));
 			} catch (IOException e) {
 				throw new CustomException("Parsing Exception", " Billing Slab can not be parsed!");
 			}
-			
+
 			BigDecimal securityFee = BigDecimal.ZERO;
 			BigDecimal ferruleFee = BigDecimal.ZERO;
 			BigDecimal meterTestingFee = BigDecimal.ZERO;
@@ -514,7 +514,8 @@ public class EstimationService {
 
 			if (mappingBillingSlab != null) {
 
-				securityFee = new BigDecimal(criteria.getWaterConnection().getSecurityCharge() == null ? 0.0 : criteria.getWaterConnection().getSecurityCharge());
+				securityFee = new BigDecimal(criteria.getWaterConnection().getSecurityCharge() == null ? 0.0
+						: criteria.getWaterConnection().getSecurityCharge());
 				ferruleFee = new BigDecimal(mappingBillingSlab.get(0).getCharges().get(0).getFerrule());
 
 				meterTestingFee = new BigDecimal(mappingBillingSlab.get(0).getCharges().get(0).getMetertesting());
@@ -523,32 +524,36 @@ public class EstimationService {
 
 			}
 			BigDecimal roadCuttingCharge = BigDecimal.ZERO;
-			if (criteria.getWaterConnection().getApplicationStatus().equalsIgnoreCase(WSCalculationConstant.WS_SECURITY_CHARGE_STATUS))
+			if (criteria.getWaterConnection().getSecurityCharge() != null
+					|| criteria.getWaterConnection().getSecurityCharge() != 0) {
 				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
 						.estimateAmount(securityFee.setScale(2, 2)).build());
-			else {
-			if (criteria.getWaterConnection().getRoadType() != null && !WSCalculationConstant.STATUS_TEMPORARY_TO_REGULAR.equalsIgnoreCase(criteria.getWaterConnection().getWaterApplicationType()))
-				roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getWaterConnection().getRoadType(),
-						criteria.getWaterConnection().getRoadCuttingArea());
-			if (!(securityFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
-						.estimateAmount(securityFee.setScale(2, 2)).build());
-			if (!(ferruleFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FERRULE_CHARGE)
-						.estimateAmount(ferruleFee.setScale(2, 2)).build());
-			if (!(meterTestingFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_TESTING_CHARGE)
-						.estimateAmount(meterTestingFee.setScale(2, 2)).build());
-			if (!(meterFittingFee.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_CHARGE)
-						.estimateAmount(meterFittingFee.setScale(2, 2)).build());
-			if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
-				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_ROAD_CUTTING_CHARGE)
-						.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
+				return estimates;
+			} else {
+				if (criteria.getWaterConnection().getRoadType() != null
+						&& !WSCalculationConstant.WS_APPLY_FOR_REGULAR_CON
+								.equalsIgnoreCase(criteria.getWaterConnection().getActivityType()))
+					roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getWaterConnection().getRoadType(),
+							criteria.getWaterConnection().getRoadCuttingArea());
+				if (!(securityFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
+							.estimateAmount(securityFee.setScale(2, 2)).build());
+				if (!(ferruleFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FERRULE_CHARGE)
+							.estimateAmount(ferruleFee.setScale(2, 2)).build());
+				if (!(meterTestingFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_TESTING_CHARGE)
+							.estimateAmount(meterTestingFee.setScale(2, 2)).build());
+				if (!(meterFittingFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_CHARGE)
+							.estimateAmount(meterFittingFee.setScale(2, 2)).build());
+				if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_ROAD_CUTTING_CHARGE)
+							.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
 			}
-			return estimates;
 
 		}
+		addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
 		return estimates;}
 
 	/**
