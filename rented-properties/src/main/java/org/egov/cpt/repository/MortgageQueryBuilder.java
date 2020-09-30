@@ -36,7 +36,7 @@ public class MortgageQueryBuilder {
 			+ " gd.created_by as gdcreated_by, gd.modified_by as gdmodified_by, gd.created_time as gdcreated_time, gd.modified_time as gdmodified_time,"
 
 			+ " ap.id as aid, ap.mortgage_id as mg_id,ap.tenantid as aptenantid,"
-			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,"
+			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno, ap.guardian as apguardian,"
 			+ "ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
 			
 			+ " doc.id as docId,doc.reference_id as doc_referenceid, doc.tenantId as doctenantid,doc.document_type as doctype , doc.filestore_id as doc_filestoreid,"

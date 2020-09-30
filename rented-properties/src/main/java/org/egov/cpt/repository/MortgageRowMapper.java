@@ -59,7 +59,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 			if (rs.getString("aid") != null) {
 				applicant = MortgageApplicant.builder().id(rs.getString("aid")).tenantId(rs.getString("aptenantid"))
 						.mortgageId(rs.getString("mg_id")).name(rs.getString("apname")).email(rs.getString("apemail"))
-						.phone(rs.getString("apmobileno"))
+						.phone(rs.getString("apmobileno")).guardian(rs.getString("apguardian"))
 						.relationship(rs.getString("aprelationship")).adhaarNumber(rs.getString("adhaarnumber"))
 						.build();
 				applicantMap.put(rs.getString("aid"), applicant);

@@ -32,7 +32,7 @@ public class DuplicateCopyQueryBuilder {
 			+ " address.pincode as addresspincode, address.area as addressarea,"
 
 			+ " ap.id as aid, ap.application_id as app_id,ap.tenantid as aptenantid,"
-			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,"
+			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,ap.guardian as apguardian ,"
 			+ "ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
 			+ " ap.fee_amount as apfee_amount, ap.apro_charge as apapro_charge,"
 			+ " ap.modified_by as apmodified_by, ap.modified_time as apmodified_time,"
