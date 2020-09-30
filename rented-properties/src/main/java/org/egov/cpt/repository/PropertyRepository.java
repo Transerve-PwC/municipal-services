@@ -1,5 +1,7 @@
 package org.egov.cpt.repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.Mortgage;
 import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.NoticeSearchCriteria;
+import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.PropertyImages;
@@ -22,6 +25,7 @@ import org.egov.cpt.producer.Producer;
 import org.egov.cpt.web.contracts.DuplicateCopyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -85,7 +89,10 @@ public class PropertyRepository {
 
 	@Autowired
 	private RentAccountRowMapper rentAccountrowMapper;
-
+	
+	@Autowired
+	private PropertyDueRowMapper propertyDueRowMapper;
+	
 	public List<Property> getProperties(PropertyCriteria criteria) {
 
 		Map<String, Object> preparedStmtList = new HashMap<>();
@@ -94,7 +101,23 @@ public class PropertyRepository {
 		log.info("preparedStmtList:" + preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, rowMapper);
 	}
-
+	
+	public List<String> getPropertyIds(PropertyCriteria criteria) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = rentQueryBuilder.getPropertyIdQuery(criteria, preparedStmtList);
+		log.info("query:" + query);
+		log.info("preparedStmtList:" + preparedStmtList);
+		List<String> propertyIds = namedParameterJdbcTemplate.query(query,preparedStmtList, new RowMapper<String>(){
+            public String mapRow(ResultSet rs, int rowNum) 
+            throws SQLException {
+                 return rs.getString(1);
+            }
+       });
+	  log.info("propertyIds:",propertyIds);
+		return propertyIds;
+		
+	}
+	
 	public List<RentDemand> getPropertyRentDemandDetails(PropertyCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = rentQueryBuilder.getPropertyRentDemandSearchQuery(criteria, preparedStmtList);
@@ -170,4 +193,13 @@ public class PropertyRepository {
 					new DuplicateCopyRequest(requestInfo, dcApplicationsForUpdate));
 		}
 	}
+
+	public List<Property> getPropertyOwner(PropertyCriteria criteria) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = rentQueryBuilder.getPropertyWithActiveOwnerQuery(criteria, preparedStmtList);
+		log.info("query:" + query);
+		log.info("preparedStmtList:" + preparedStmtList);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, propertyDueRowMapper);
+	}
+
 }

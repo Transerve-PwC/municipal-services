@@ -12,6 +12,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
 import org.egov.cpt.models.BillV2;
+import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
@@ -23,6 +24,7 @@ import org.egov.cpt.models.RentSummary;
 import org.egov.cpt.models.calculation.BusinessService;
 import org.egov.cpt.models.calculation.State;
 import org.egov.cpt.producer.Producer;
+import org.egov.cpt.repository.OwnershipTransferRepository;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.calculation.DemandRepository;
 import org.egov.cpt.service.calculation.DemandService;
@@ -91,6 +93,9 @@ public class PropertyService {
 	
 	@Autowired
 	private NotificationUtil notificationUtil;
+	
+	@Autowired
+	private OwnershipTransferRepository otRepository;
 
 	public List<Property> createProperty(PropertyRequest request) {
 
@@ -307,32 +312,34 @@ public class PropertyService {
 
 	public void getDueAmount( RequestInfo requestInfo) {
 		PropertyCriteria criteria = PropertyCriteria.builder()
-				.state(Collections.singletonList(PTConstants.PM_STATUS_APPROVED))
-				.relations(Collections.singletonList(PTConstants.RELATION_OWNER)).build();
-		List<Property> properties = repository.getProperties(criteria);
-		if (CollectionUtils.isEmpty(properties))
+				.state(Arrays.asList(PTConstants.PM_STATUS_APPROVED))
+				.relations(Arrays.asList(PTConstants.RELATION_OWNER))
+				.build();
+		List<String> propertyIds = repository.getPropertyIds(criteria);
+		if (CollectionUtils.isEmpty(propertyIds))
 			throw new CustomException("NO_PROPERTY_FOUND","No approved property found");
 			
 		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
-//		String tenatId =properties.get(0).getTenantId().split("\\.")[0];
-		String localizationMessages = notificationUtil.getLocalizationMessages(properties.get(0).getTenantId(), requestInfo);
+		String localizationMessages = notificationUtil.getLocalizationMessages("ch.chandigarh", requestInfo);
 		
-			properties.stream().forEach(property -> {
-				Optional<Owner> owner = property.getOwners().stream().filter(Owner::getActiveState).findAny();
-				PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(property.getId())
-						.transitNumber(property.getTransitNumber())
-						.tenantId(property.getTenantId())
-						.colony(notificationUtil.getMessageTemplate(property.getColony(), localizationMessages))
-						.ownerName(owner.get().getOwnerDetails().getName())
-						.mobileNumber(owner.get().getOwnerDetails().getPhone())
+		propertyIds.stream().forEach(property -> {
+				criteria.setPropertyId(property); 
+				criteria.setLimit(1L);
+				List<Property> singleProperty = repository.getPropertyOwner(criteria);
+				PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(singleProperty.get(0).getId())
+						.transitNumber(singleProperty.get(0).getTransitNumber())
+						.tenantId(singleProperty.get(0).getTenantId())
+						.colony(notificationUtil.getMessageTemplate(singleProperty.get(0).getColony(), localizationMessages))
+						.ownerName(singleProperty.get(0).getOwners().get(0).getOwnerDetails().getName())
+						.mobileNumber(singleProperty.get(0).getOwners().get(0).getOwnerDetails().getPhone())
 						.build();
 				List<RentDemand> demands = repository
-						.getPropertyRentDemandDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
+						.getPropertyRentDemandDetails(PropertyCriteria.builder().propertyId(property).build());
 				RentAccount rentAccount = repository
-						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
+						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property).build());
 				if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
 					propertyDueAmount.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
-							property.getPropertyDetails().getInterestRate()));
+							singleProperty.get(0).getPropertyDetails().getInterestRate()));
 				}
 				PropertyDueAmounts.add(propertyDueAmount);
 			});
