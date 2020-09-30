@@ -269,4 +269,7 @@ public class PTConstants {
 	
 	//Email Signature
 	public static final String EMAIL_SIGNATURE = "rp.email.signature";
+
+	//Current Owner Payment Notification
+	public static final String  NOTIFICATION_PAYMENT_RECIEVED = "rp.en.counter.rent.payment";
 }

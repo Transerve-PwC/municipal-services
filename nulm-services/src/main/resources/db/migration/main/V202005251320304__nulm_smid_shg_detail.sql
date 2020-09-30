@@ -1,35 +1,25 @@
--- Table: public.nulm_smid_shg_detail
-
--- DROP TABLE public.nulm_smid_shg_detail;
-
-CREATE TABLE public.nulm_smid_shg_detail
-(
-  shg_uuid character varying(256) NOT NULL,
-  shg_id character varying(256) NOT NULL,
-  name character varying(256) NOT NULL,
-  type character varying(256),
-  groups_nominated_by character varying(256),
-  formed_through character varying(256),
-  status character varying(256) NOT NULL,
-  address character varying(256),
-  contact_no character varying(256),
-  date_of_formation timestamp without time zone,
-  account_no character varying(256),
-  date_of_opening_account timestamp without time zone,
-  bank_name character varying(256),
-  branch_name character varying(256),
-  main_activity character varying(256),
-  remark character varying(256),
-  tenant_id character varying(256),
-  is_active boolean,
-  created_by character varying(64),
-  created_time bigint,
-  last_modified_by character varying(64),
-  last_modified_time bigint,
-  CONSTRAINT nulm_smid_shg_detail_pkey PRIMARY KEY (shg_uuid)
-)
-WITH (
-  OIDS=FALSE
+CREATE TABLE nulm_smid_shg_detail (
+	shg_uuid varchar(256) NOT NULL,
+	shg_id varchar(256) NOT NULL,
+	"name" varchar(256) NOT NULL,
+	"type" varchar(256) NULL,
+	groups_nominated_by varchar(256) NULL,
+	formed_through varchar(256) NULL,
+	status varchar(256) NOT NULL,
+	address varchar(256) NULL,
+	contact_no varchar(256) NULL,
+	date_of_formation timestamp NULL,
+	account_no varchar(256) NULL,
+	date_of_opening_account timestamp NULL,
+	bank_name varchar(256) NULL,
+	branch_name varchar(256) NULL,
+	main_activity varchar(256) NULL,
+	remark varchar(256) NULL,
+	tenant_id varchar(256) NULL,
+	is_active bool NULL,
+	created_by varchar(64) NULL,
+	created_time int8 NULL,
+	last_modified_by varchar(64) NULL,
+	last_modified_time int8 NULL,
+	CONSTRAINT nulm_smid_shg_detail_pkey PRIMARY KEY (shg_uuid)
 );
-ALTER TABLE public.nulm_smid_shg_detail
-  OWNER TO postgres;

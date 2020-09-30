@@ -379,7 +379,7 @@ public class EstimationService {
 		billingSlabIds.add("");
 		List<TaxHeadEstimate> taxHeadEstimates = new ArrayList<TaxHeadEstimate>();
 		String activityType = criteria.getWaterConnection().getActivityType();
-		if(activityType.equalsIgnoreCase(WSCalculationConstant.WS_PERMANENT_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE)){
+		if(activityType.equalsIgnoreCase(WSCalculationConstant.WS_PERMANENT_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_CHANGE_OWNER_INFO)){
 			 taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData,
 						requestInfo);
 		}else {
@@ -417,9 +417,11 @@ public class EstimationService {
 						.estimateAmount(unitCost.setScale(2, 2)).build());
 			
 			
-			return estimates;
+			
 
 		}
+		addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
+
 		return estimates;}
 
 	private List<TaxHeadEstimate> getTaxHeadForFeeEstimationForTempAppCon(CalculationCriteria criteria,
