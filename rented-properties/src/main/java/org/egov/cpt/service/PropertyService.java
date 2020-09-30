@@ -4,15 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-
-import javax.management.relation.Relation;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
 import org.egov.cpt.models.BillV2;
-import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
@@ -24,7 +19,6 @@ import org.egov.cpt.models.RentSummary;
 import org.egov.cpt.models.calculation.BusinessService;
 import org.egov.cpt.models.calculation.State;
 import org.egov.cpt.producer.Producer;
-import org.egov.cpt.repository.OwnershipTransferRepository;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.calculation.DemandRepository;
 import org.egov.cpt.service.calculation.DemandService;
@@ -42,11 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
 
 @Slf4j
 @Service
@@ -93,9 +83,7 @@ public class PropertyService {
 	
 	@Autowired
 	private NotificationUtil notificationUtil;
-	
-	@Autowired
-	private OwnershipTransferRepository otRepository;
+
 
 	public List<Property> createProperty(PropertyRequest request) {
 

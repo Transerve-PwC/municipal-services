@@ -3,7 +3,6 @@ package org.egov.cpt.repository;
 import java.util.Map;
 
 import org.egov.cpt.config.PropertyConfiguration;
-import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.PropertyCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

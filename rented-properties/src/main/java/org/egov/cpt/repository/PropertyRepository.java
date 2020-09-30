@@ -14,7 +14,6 @@ import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.Mortgage;
 import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.NoticeSearchCriteria;
-import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.PropertyImages;

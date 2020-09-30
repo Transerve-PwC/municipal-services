@@ -1,22 +1,15 @@
 package org.egov.cpt.repository;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.egov.cpt.models.Address;
-import org.egov.cpt.models.AuditDetails;
-import org.egov.cpt.models.Document;
-import org.egov.cpt.models.MortgageApprovedGrantDetails;
-import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.OwnerDetails;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyDetails;
-import org.egov.cpt.models.PropertyImages;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;

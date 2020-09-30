@@ -1661,11 +1661,11 @@ serviceMaps:
 
       - jsonPath: $.PropertyDueAmounts.*.mobileNumber
       
-      - jsonPath: $.PropertyDueAmounts.*.remainingPrincipal
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balancePrincipal
       
-      - jsonPath: $.PropertyDueAmounts.*.remainingInterest
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceInterest
 
-      - jsonPath: $.PropertyDueAmounts.*.remainingBalance
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceAmount
       
       - jsonPath: $.PropertyDueAmounts.*.ownerName
 
