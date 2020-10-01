@@ -27,6 +27,7 @@ import org.egov.cpt.models.RentAccountStatement;
 import org.egov.cpt.models.RentAccountStatement.Type;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.util.FileStoreUtils;
+import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class AccountStatementExcelGenerationService {
 	private PropertyRepository propertyRepository;
 	private PropertyService propertyService;
 	private FileStoreUtils fileStoreUtils;
+	private NotificationUtil notificationUtil;
 
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -55,10 +57,11 @@ public class AccountStatementExcelGenerationService {
 
 	@Autowired
 	public AccountStatementExcelGenerationService(PropertyRepository propertyRepository,
-			PropertyService propertyService, FileStoreUtils fileStoreUtils) {
+			PropertyService propertyService, FileStoreUtils fileStoreUtils, NotificationUtil notificationUtil) {
 		this.propertyRepository = propertyRepository;
 		this.propertyService = propertyService;
 		this.fileStoreUtils = fileStoreUtils;
+		this.notificationUtil = notificationUtil;
 	}
 
 	public List<HashMap<String, String>> generateAccountStatementExcel(
@@ -110,7 +113,9 @@ public class AccountStatementExcelGenerationService {
 			cell.setCellStyle(headerCellStyle);
 
 			cell = headerRow2.createCell(1);
-			cell.setCellValue(property.getColony() + ", UT Chandigarh");
+			String localizationMessages = notificationUtil.getLocalizationMessages(property.getTenantId(), requestInfo);
+			String colony = notificationUtil.getMessageTemplate(property.getColony(), localizationMessages);
+			cell.setCellValue(colony);
 			cell.setCellStyle(headerCellStyle);
 			int j = 0;
 			for (int i = 3; i < 12; i++) {
