@@ -1,6 +1,7 @@
 package org.egov.cpt.service;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +42,7 @@ public class AccountStatementExcelGenerationService {
 	private PropertyService propertyService;
 	private FileStoreUtils fileStoreUtils;
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	private static String[] columns = { "Date", "Amount(in Rs)", "Type(Payment)", "Type(Rent)", "Principal Due",
 			"Interest Due", "Total Due", "Account Balance", "Receipt Number" };
@@ -50,6 +51,7 @@ public class AccountStatementExcelGenerationService {
 			"Yr. Rent (increase as per Clause 4 of Lease Deed)", "Montly Rent", "Interest" };
 	private static final String PAYMENT = "Payment";
 	private static final String RENT = "Rent";
+	private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 	@Autowired
 	public AccountStatementExcelGenerationService(PropertyRepository propertyRepository,
@@ -71,13 +73,13 @@ public class AccountStatementExcelGenerationService {
 		propertyList.add(property.getOwners().get(0).getOwnerDetails().getName());
 		propertyList.add(getFormattedDate(property.getOwners().get(0).getOwnerDetails().getAllotmentStartdate()));
 		propertyList.add(property.getTransitNumber());
-		propertyList.add(property.getPropertyDetails().getArea());
+		propertyList.add(property.getPropertyDetails().getArea() + " sqyd");
 		propertyList.add(property.getPropertyDetails().getRentPerSqyd());
 		propertyList.add("");
-		propertyList.add(property.getPropertyDetails().getRentIncrementPercentage().toString());
+		propertyList.add(property.getPropertyDetails().getRentIncrementPercentage().intValue() + "%");
 		propertyList.add(property.getOwners().get(0).getOwnerDetails().getMonthlyRent());
 		propertyList.add(
-				property.getPropertyDetails().getInterestRate().toString() + "% P.A as per clause 15 of Lease Deed");
+				property.getPropertyDetails().getInterestRate().intValue() + "% P.A as per clause 15 of Lease Deed");
 		try {
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("AccountStatement");
@@ -108,7 +110,7 @@ public class AccountStatementExcelGenerationService {
 			cell.setCellStyle(headerCellStyle);
 
 			cell = headerRow2.createCell(1);
-			cell.setCellValue("Vikas Nagar, Mauli Jagaran, UT Chandigarh");
+			cell.setCellValue(property.getColony() + ", UT Chandigarh");
 			cell.setCellStyle(headerCellStyle);
 			int j = 0;
 			for (int i = 3; i < 12; i++) {
@@ -141,7 +143,7 @@ public class AccountStatementExcelGenerationService {
 				Row row = sheet.createRow(rowNum++);
 				if (i < statementsSize - 1) {
 					row.createCell(0).setCellValue(getFormattedDate(rentAccountStmt.getDate()));
-					row.createCell(1).setCellValue(rentAccountStmt.getAmount());
+					row.createCell(1).setCellValue(decimalFormat.format(rentAccountStmt.getAmount()));
 					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
 							.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
 					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.D.name()))
@@ -150,10 +152,10 @@ public class AccountStatementExcelGenerationService {
 					row.createCell(0).setCellValue("Balance as on " + getFormattedDate(rentAccountStmt.getDate()));
 				}
 
-				row.createCell(4).setCellValue(rentAccountStmt.getRemainingPrincipal());
-				row.createCell(5).setCellValue(rentAccountStmt.getRemainingInterest());
-				row.createCell(6).setCellValue(rentAccountStmt.getDueAmount());
-				row.createCell(7).setCellValue(rentAccountStmt.getRemainingBalance());
+				row.createCell(4).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingPrincipal()));
+				row.createCell(5).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingInterest()));
+				row.createCell(6).setCellValue(decimalFormat.format(rentAccountStmt.getDueAmount()));
+				row.createCell(7).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingBalance()));
 				if (i < statementsSize - 1) {
 					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
 							.ifPresent(o -> row.createCell(8).setCellValue(o.getReceiptNo()));
