@@ -57,6 +57,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 				currentProperty = Property.builder().id(propertyId).transitNumber(rs.getString("transit_number"))
 						.tenantId(tenantId).colony(rs.getString("colony"))
+						.bankName(rs.getString("rent_bank_name"))
 						.masterDataState(rs.getString("master_data_state"))
 						.masterDataAction(rs.getString("master_data_action")).propertyDetails(propertyDetails)
 						.auditDetails(auditdetails).build();
@@ -145,15 +146,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							propertyImage.addApplicationDocumentsItem(applicationDocument);
 						}
 					}
-
-					/*
-					 * PropertyImages propertyImages1 =
-					 * property.getPropertyImages().stream().filter(p -> { try { return
-					 * p.getId().equalsIgnoreCase(rs.getString("pidocid")); } catch (SQLException e)
-					 * { e.printStackTrace(); } return false; }).findFirst().get();
-					 * propertyImages1.addApplicationDocumentsItem(applicationDocument);
-					 */
-
 				}
 			}
 		}
@@ -190,14 +182,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							notice.addApplicationDocumentsItem(applicationDocument);
 						}
 					}
-
-					/*
-					 * NoticeGeneration notice = property.getNotices().stream().filter(p -> { try {
-					 * return p.getId().equalsIgnoreCase(rs.getString("ngdoc_id")); } catch
-					 * (SQLException e) { e.printStackTrace(); } return false; }).findFirst().get();
-					 * notice.addApplicationDocumentsItem(applicationDocument);
-					 */
-
 				}
 			}
 		}

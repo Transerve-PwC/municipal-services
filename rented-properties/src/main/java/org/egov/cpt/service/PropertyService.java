@@ -287,14 +287,10 @@ public class PropertyService {
 			 */
 			demandService.createCashPayment(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
 					bills.get(0).getId(), owner);
-		} else {
-			/**
-			 * We return the property along with the consumerCode that we set earlier. Also
-			 * save it so the consumer code gets persisted.
-			 */
-			propertyRequest.setProperties(Collections.singletonList(property));
-			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
-		}
+		} 
+		
+		propertyRequest.setProperties(Collections.singletonList(property));
+		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 		return Collections.singletonList(property);
 	}
 

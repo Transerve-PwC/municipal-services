@@ -6,7 +6,7 @@ serviceMaps:
    fromTopic: save-property-create
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO cs_pt_property_v1 (id, transit_number, tenantid, colony,rent_payment_consumer_code, master_data_state, master_data_action, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO cs_pt_property_v1 (id, transit_number, tenantid, colony,rent_payment_consumer_code,bank_name, master_data_state, master_data_action, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: Properties.*
       jsonMaps:
       - jsonPath: $.Properties.*.id
@@ -18,6 +18,8 @@ serviceMaps:
       - jsonPath: $.Properties.*.colony
       
       - jsonPath: $.Properties.*.rentPaymentConsumerCode
+      
+      - jsonPath: $.Properties.*.bankName
       
       - jsonPath: $.Properties.*.masterDataState
 
@@ -360,7 +362,7 @@ serviceMaps:
       jsonMaps:
       - jsonPath: $.Properties.*.id
 
-    - query: UPDATE cs_pt_property_v1 SET tenantid=?, colony=?,rent_payment_consumer_code=?, master_data_state=?, master_data_action=?, modified_by=?, modified_date=? where id=? AND transit_number=?;
+    - query: UPDATE cs_pt_property_v1 SET tenantid=?, colony=?,rent_payment_consumer_code=?,bank_name=?, master_data_state=?, master_data_action=?, modified_by=?, modified_date=? where id=? AND transit_number=?;
       basePath: Properties.*
       jsonMaps:
       - jsonPath: $.Properties.*.tenantId
@@ -368,6 +370,8 @@ serviceMaps:
       - jsonPath: $.Properties.*.colony
       
       - jsonPath: $.Properties.*.rentPaymentConsumerCode
+      
+      - jsonPath: $.Properties.*.bankName
       
       - jsonPath: $.Properties.*.masterDataState
 

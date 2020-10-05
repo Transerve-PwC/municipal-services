@@ -146,7 +146,7 @@ public class PropertyRepository {
 	public List<DuplicateCopy> getDuplicateCopyProperties(DuplicateCopySearchCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = duplicatecopyQueryBuilder.getDuplicateCopyPropertySearchQuery(criteria, preparedStmtList);
-		// log.info("SearchQuery:"+query);
+		 log.info("SearchQuery:"+query);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, duplicateCopyPropertyRowMapper);
 	}
 
