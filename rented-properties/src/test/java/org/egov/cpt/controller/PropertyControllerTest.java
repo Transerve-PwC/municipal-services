@@ -1,17 +1,13 @@
 package org.egov.cpt.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.io.IOUtils;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.cpt.CSPropertyApplication;
 import org.egov.cpt.config.TestConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
@@ -19,8 +15,10 @@ import org.egov.cpt.models.Property;
 import org.egov.cpt.service.AccountStatementExcelGenerationService;
 import org.egov.cpt.service.PropertyService;
 import org.egov.cpt.util.PropertyUtil;
+import org.egov.cpt.util.ResponseInfoFactory;
 import org.egov.cpt.web.contracts.AccountStatementRequest;
 import org.egov.cpt.web.contracts.PropertyRequest;
+import org.egov.cpt.web.contracts.PropertyResponse;
 import org.egov.cpt.web.controllers.PropertyController;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,14 +27,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CSPropertyApplication.class)
@@ -49,9 +45,6 @@ public class PropertyControllerTest {
 	@InjectMocks
 	PropertyController propertyController;
 
-	@Autowired
-	private MockMvc mockMvc;
-
 	@Mock
 	PropertyService propertyService;
 
@@ -60,6 +53,9 @@ public class PropertyControllerTest {
 
 	@Mock
 	private AccountStatementExcelGenerationService accountStatementExcelGeneration;
+
+	@Mock
+	private ResponseInfoFactory responseInfoFactory;
 
 	@Before
 	public void setUp() {
@@ -75,12 +71,20 @@ public class PropertyControllerTest {
 
 		properties.add(property);
 
-		Mockito.when(propertyService.createProperty(Mockito.any(PropertyRequest.class))).thenReturn(properties);
-		mockMvc.perform(post("/property/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(getFileContents("createPropertyServiceRequest.json"))).andExpect(status().isCreated())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("createPropertyServiceResponse.json")));
-
+		PropertyRequest propertyRequest = new PropertyRequest();
+		propertyRequest.setProperties(properties);
+		Mockito.when(responseInfoFactory.createResponseInfoFromRequestInfo(Mockito.any(), Mockito.anyBoolean()))
+		.thenReturn(buildResponseInfo());
+		Mockito.when(propertyService.createProperty(Mockito.any())).thenReturn(properties);
+		ResponseEntity<PropertyResponse> response = propertyController.create(propertyRequest);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals("1", response.getBody().getProperties().get(0).getId());
+		assertEquals("trns001", response.getBody().getProperties().get(0).getTransitNumber());
+		assertEquals("ch.chandigarh", response.getBody().getProperties().get(0).getTenantId());
+		assertEquals("colony", response.getBody().getProperties().get(0).getColony());
+		assertEquals("masterDataState", response.getBody().getProperties().get(0).getMasterDataState());
+		assertEquals("masterDataAction", response.getBody().getProperties().get(0).getMasterDataAction());
+		assertEquals("Rainmaker", response.getBody().getResponseInfo().getApiId());
 	}
 
 	@Test
@@ -111,14 +115,6 @@ public class PropertyControllerTest {
 		assertEquals(response.getBody(), list);
 	}
 
-	private String getFileContents(String fileName) {
-		try {
-			return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	private AccountStatementRequest buildAccountStatementRequest() {
 		AccountStatementRequest accountStatementRequest = new AccountStatementRequest();
 		AccountStatementCriteria criteria = new AccountStatementCriteria();
@@ -136,5 +132,9 @@ public class PropertyControllerTest {
 		criteria.setFromDate(1567775475000L);
 		accountStatementRequest.setCriteria(criteria);
 		return accountStatementRequest;
+	}
+
+	private ResponseInfo buildResponseInfo() {
+		return ResponseInfo.builder().apiId("Rainmaker").build();
 	}
 }
