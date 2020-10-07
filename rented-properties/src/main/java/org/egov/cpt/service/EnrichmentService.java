@@ -892,20 +892,20 @@ public class EnrichmentService {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(new BigDecimal(balInterest));
 			estimate1.setCategory(Category.INTEREST);
-			estimate1.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_RENT, Category.INTEREST));
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_RENT,property.getColony(), Category.INTEREST));
 			estimates.add(estimate1);
 			double remainingAmmount = amount - balInterest;
 			if (remainingAmmount >= balPrincipal) {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(balPrincipal));
 				estimate2.setCategory(Category.PRINCIPAL);
-				estimate2.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_RENT, Category.PRINCIPAL));
+				estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_RENT,property.getColony(), Category.PRINCIPAL));
 				estimates.add(estimate2);
 			} else {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate2.setCategory(Category.PRINCIPAL);
-				estimate2.setTaxHeadCode(getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_RENT, Category.PRINCIPAL));
+				estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_RENT,property.getColony(), Category.PRINCIPAL));
 				estimates.add(estimate2);
 			}
 			remainingAmmount = amount - balInterest - balPrincipal;
@@ -914,7 +914,7 @@ public class EnrichmentService {
 				estimate3.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate3.setCategory(Category.ADVANCE_COLLECTION);
 				estimate3.setTaxHeadCode(
-						getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_RENT, Category.ADVANCE_COLLECTION));
+						getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_RENT,property.getColony(), Category.ADVANCE_COLLECTION));
 				estimates.add(estimate3);
 			}
 		} else {
@@ -922,7 +922,7 @@ public class EnrichmentService {
 			estimate2.setEstimateAmount(new BigDecimal(amount));
 			estimate2.setCategory(Category.ADVANCE_COLLECTION);
 			estimate2.setTaxHeadCode(
-					getTaxHeadCode(PTConstants.BILLING_BUSINESS_SERVICE_RENT, Category.ADVANCE_COLLECTION));
+					getTaxHeadCodeWithCharge(PTConstants.BILLING_BUSINESS_SERVICE_RENT,property.getColony(), Category.ADVANCE_COLLECTION));
 			estimates.add(estimate2);
 		}
 
