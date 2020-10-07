@@ -59,6 +59,8 @@ public class PaymentNotificationService {
 
 	private PropertyService propertyService;
 
+	private final static String CASH = "cash";
+
 	@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
 	private Boolean pickWFServiceNameFromPropertyTypeOnly;
 
@@ -187,7 +189,7 @@ public class PaymentNotificationService {
 							break;
 
 						case PTConstants.BILLING_BUSINESS_SERVICE_RENT:
-							String transactionNumber = paymentRequest.getPayment().getTransactionNumber();
+							//String transactionNumber = paymentRequest.getPayment().getTransactionNumber();
 							String transitNumber = propertyUtil
 									.getTransitNumberFromConsumerCode(paymentDetail.getBill().getConsumerCode());
 							PropertyCriteria propertyCriteria = new PropertyCriteria();
@@ -195,17 +197,21 @@ public class PaymentNotificationService {
 							propertyCriteria.setTransitNumber(transitNumber);
 							List<Property> propertyList = propertyService.searchProperty(propertyCriteria, requestInfo);
 							propertyList.forEach(property -> {
-								Owner owner = propertyUtil.getCurrentOwnerFromProperty(property);
+								Owner owner = null;
+								if (paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) {
+									owner = propertyUtil.getCurrentOwnerFromProperty(property);
+								}
 								String localizationMessages = util.getLocalizationMessages(owner.getTenantId(),
 										requestInfo);
 								List<SMSRequest> smsRequests = getRPSMSRequests(owner, paymentDetail,
-										localizationMessages, transitNumber, transactionNumber);
+										localizationMessages, transitNumber, paymentRequest);
 								util.sendSMS(smsRequests, config.getIsSMSNotificationEnabled());
 
 								if (config.getIsEMAILNotificationEnabled()) {
-									if (owner.getOwnerDetails().getEmail() != null) {
+									if (owner.getOwnerDetails().getEmail() != null
+											|| paymentRequest.getRequestInfo().getUserInfo().getEmailId() != null) {
 										List<EmailRequest> emailRequests = getRPEmailRequests(owner, paymentDetail,
-												localizationMessages, transitNumber, transactionNumber);
+												localizationMessages, transitNumber, paymentRequest);
 										util.sendEMAIL(emailRequests, true);
 									}
 								}
@@ -353,21 +359,27 @@ public class PaymentNotificationService {
 	 */
 
 	private List<SMSRequest> getRPSMSRequests(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber, String transactionNumber) {
+			String transitNumber, PaymentRequest paymentRequest) {
 		String ownerMessage = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber,
-				transactionNumber);
+				paymentRequest);
 		ownerMessage = ownerMessage.replaceAll("<br/>", "");
-		SMSRequest ownerSmsRequest = new SMSRequest(owner.getOwnerDetails().getPhone(), ownerMessage);
-		List<SMSRequest> smsRequestList = new ArrayList<>();
+		SMSRequest ownerSmsRequest = null;
+		if (paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) {
+			ownerSmsRequest = new SMSRequest(owner.getOwnerDetails().getPhone(), ownerMessage);
+		} else {
+			ownerSmsRequest = new SMSRequest(paymentRequest.getRequestInfo().getUserInfo().getMobileNumber(),
+					ownerMessage);
+		}
+		 List<SMSRequest> smsRequestList = new ArrayList<>();
 		smsRequestList.add(ownerSmsRequest);
 		return smsRequestList;
 	}
 
 	private List<EmailRequest> getRPEmailRequests(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber, String transactionNumber) {
+			String transitNumber, PaymentRequest paymentRequest) {
 
 		EmailRequest ownersEmailRequest = getRPOwnerEmailRequest(owner, paymentDetail, localizationMessages,
-				transitNumber, transactionNumber);
+				transitNumber, paymentRequest);
 		List<EmailRequest> totalEmails = new LinkedList<>();
 		totalEmails.add(ownersEmailRequest);
 
@@ -376,14 +388,19 @@ public class PaymentNotificationService {
 	}
 
 	private EmailRequest getRPOwnerEmailRequest(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber, String transactionNumber) {
+			String transitNumber, PaymentRequest paymentRequest) {
 		String message = util.getRPOwnerPaymentMsg(owner, paymentDetail, localizationMessages, transitNumber,
-				transactionNumber);
+				paymentRequest);
 		String emailSignature = util.getMessageTemplate(PTConstants.EMAIL_SIGNATURE, localizationMessages);
 		message=message.concat(emailSignature);
-		EmailRequest emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
-				.email(owner.getOwnerDetails().getEmail()).body(message).build();
-
+		EmailRequest emailRequest = null;
+		if (paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) {
+			emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
+					.email(owner.getOwnerDetails().getEmail()).body(message).build();
+		} else {
+			emailRequest = EmailRequest.builder().subject(PTConstants.EMAIL_SUBJECT).isHTML(true)
+					.email(paymentRequest.getRequestInfo().getUserInfo().getEmailId()).body(message).build();
+		}
 		return emailRequest;
 
 	}
