@@ -54,10 +54,10 @@ public class Mortgage {
 	private String applicationNumber;
 	
 	@JsonProperty("allotmentStartDate")
-	private String allotmentStartDate;
+	private Long allotmentStartDate;
 	
 	@JsonProperty("allotmentEndDate")
-	private String allotmentEndDate;
+	private Long allotmentEndDate;
 	
 	@JsonProperty("allotmentNumber")
 	private String allotmentNumber;
