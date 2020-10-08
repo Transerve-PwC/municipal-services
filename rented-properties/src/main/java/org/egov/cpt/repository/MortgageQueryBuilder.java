@@ -24,18 +24,20 @@ public class MortgageQueryBuilder {
 
 	private static final String MORTGAGE_SEARCH_QUERY = SELECT 
 			+ " mg.id as mgid, mg.propertyid as mgpropertyid, mg.tenantid as mgtenantid, mg.state as mgstate, mg.action as mgaction,mg.application_number as app_number,"
-			+ " mg.modified_by as mgmodified_by, mg.modified_time as mgModifiedTime,"
+			+ " mg.modified_by as mgmodified_by,mg.modified_time as mgModifiedTime,"
 
 			+ " pt.id as pid, pt.transit_number as pttransit_number, pt.colony as ptcolony,"
 
 			+ " address.pincode as addresspincode, address.area as addressarea,"
+			
+			+ " owner_allot_number.allotment_number as owner_allot_number"
 
-			+ " gd.id as gdid, gd.property_id as gdproperty_detail_id, gd.owner_id as gdowner_id, gd.tenantid as gdtenantid,"
+			+ " gd.id as gdid, gd.property_id as gdproperty_detail_id, gd.owner_id as gdowner_id,"
 			+ " gd.bank_name as gdbank_name, gd.mortgage_amount as gdmortgage_amount,"
 			+ " gd.sanction_letter_number as gdsanction_letter_number, gd.sanction_date as gdsanction_date, gd.mortgage_end_date as gdmortgage_end_date,"
-			+ " gd.created_by as gdcreated_by, gd.modified_by as gdmodified_by, gd.created_time as gdcreated_time, gd.modified_time as gdmodified_time,"
+			+ " gd.created_by as gdcreated_by,"
 
-			+ " ap.id as aid, ap.mortgage_id as mg_id,ap.tenantid as aptenantid,"
+			+ " ap.id as aid, ap.mortgage_id as mg_id,"
 			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno, ap.guardian as apguardian,"
 			+ "ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
 			

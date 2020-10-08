@@ -40,7 +40,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 						.pincode(rs.getString("addresspincode")).area(rs.getString("addressarea")).build();
 
 				currentapplication = Mortgage.builder().id(mortgageId).property(property)
-						.tenantId(rs.getString("mgtenantid")).state(rs.getString("mgstate")).action(rs.getString("mgaction"))
+						.state(rs.getString("mgstate")).action(rs.getString("mgaction"))
 						.applicationNumber(rs.getString("app_number"))
 						.allotmentNumber(rs.getString("owner_allot_number"))
 						.allotmentStartDate(rs.getLong("allot_start_date"))
@@ -78,8 +78,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 
 		if (rs.getString("gdid") != null) {
 			AuditDetails magdAuditDetails = AuditDetails.builder().createdBy(rs.getString("gdcreated_by"))
-					.createdTime(rs.getLong("gdcreated_time")).lastModifiedBy(rs.getString("gdmodified_by"))
-					.lastModifiedTime(rs.getLong("gdmodified_time")).build();
+					.build();
 			MortgageApprovedGrantDetails mortgageApprovedGrantDetails = MortgageApprovedGrantDetails.builder()
 					.id(rs.getString("gdid")).propertyDetailId(rs.getString("gdproperty_detail_id"))
 					.ownerId(rs.getString("gdowner_id")).tenentId(rs.getString("gdtenantid"))

@@ -27,7 +27,6 @@ public class NoticeRowMapper implements ResultSetExtractor<List<NoticeGeneration
 
 			if (null == currentapplication) {
 				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("ngcreated_by"))
-						.createdTime(rs.getLong("ngcreated_time")).lastModifiedBy(rs.getString("ngmodified_by"))
 						.lastModifiedTime(rs.getLong("ngModifiedTime")).build();
 				
 				Property property = Property.builder().id(rs.getString("pid"))
@@ -59,7 +58,6 @@ public class NoticeRowMapper implements ResultSetExtractor<List<NoticeGeneration
 	private void addChildrenToProperty(ResultSet rs, NoticeGeneration currentapplication) throws SQLException {
 
 		AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("doccreated_by"))
-				.createdTime(rs.getLong("doccreated_time")).lastModifiedBy(rs.getString("docmodified_by"))
 				.lastModifiedTime(rs.getLong("doccreated_time")).build();
 		
 		if (rs.getString("docId") != null && rs.getBoolean("doc_active")) {
@@ -68,7 +66,6 @@ public class NoticeRowMapper implements ResultSetExtractor<List<NoticeGeneration
 					.fileStoreId(rs.getString("doc_filestoreid"))
 					.id(rs.getString("docId"))
 				    .propertyId(rs.getString("doc_propertyid"))
-					.tenantId(rs.getString("doctenantid"))
 					.active(rs.getBoolean("doc_active"))
 					.referenceId(rs.getString("doc_referenceid"))
 					.auditDetails(auditDetails)
