@@ -129,7 +129,10 @@ public class PaymentNotificationService {
 					valMap.put(emailKey, paymentDetail.getBill().getPayerEmail());
 
 					switch (paymentDetail.getBusinessService()) {
-						case PTConstants.BILLING_BUSINESS_SERVICE_OT:
+					case PTConstants.BUSINESS_SERVICE_CM_OT:
+					case PTConstants.BUSINESS_SERVICE_CK_OT:
+					case PTConstants.BUSINESS_SERVICE_CS_OT:
+					case PTConstants.BUSINESS_SERVICE_VN_OT:
 
 							DuplicateCopySearchCriteria searchCriteria = new DuplicateCopySearchCriteria();
 							searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
@@ -157,7 +160,10 @@ public class PaymentNotificationService {
 
 							break;
 
-						case PTConstants.BILLING_BUSINESS_SERVICE_DC:
+					case PTConstants.BUSINESS_SERVICE_CM_DC:
+					case PTConstants.BUSINESS_SERVICE_CK_DC:
+					case PTConstants.BUSINESS_SERVICE_CS_DC:
+					case PTConstants.BUSINESS_SERVICE_VN_DC:
 
 							DuplicateCopySearchCriteria searchCriteriaDc = new DuplicateCopySearchCriteria();
 							searchCriteriaDc.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
@@ -186,7 +192,10 @@ public class PaymentNotificationService {
 
 							break;
 
-						case PTConstants.BILLING_BUSINESS_SERVICE_RENT:
+					case PTConstants.BUSINESS_SERVICE_CM_RENT:
+					case PTConstants.BUSINESS_SERVICE_CK_RENT:
+					case PTConstants.BUSINESS_SERVICE_CS_RENT:
+					case PTConstants.BUSINESS_SERVICE_VN_RENT:
 							String transactionNumber = paymentRequest.getPayment().getTransactionNumber();
 							String transitNumber = propertyUtil
 									.getTransitNumberFromConsumerCode(paymentDetail.getBill().getConsumerCode());

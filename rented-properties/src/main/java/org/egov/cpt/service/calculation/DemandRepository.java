@@ -75,11 +75,11 @@ public class DemandRepository {
 
 	}
 
-	public List<BillV2> fetchBill(RequestInfo requestInfo, String tenantId, String consumerCode) {
+	public List<BillV2> fetchBill(RequestInfo requestInfo, String tenantId, String consumerCode,String colony) {
 		StringBuilder url = new StringBuilder(config.getBillingHost());
 		String uri = config.getBillGenearateEndpoint().replace("$tenantId", tenantId)
 				.replace("$consumerCode", consumerCode)
-				.replace("$businessService", PTConstants.BILLING_BUSINESS_SERVICE_RENT);
+				.replace("$businessService", PTConstants.BILLING_BUSINESS_SERVICE_RENT.replace("<colony>", colony));
 		url.append(uri);
 		Object result = serviceRequestRepository.fetchResult(url, Collections.singletonMap("requestInfo", requestInfo));
 		BillResponseV2 response = null;

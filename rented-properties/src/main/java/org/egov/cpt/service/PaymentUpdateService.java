@@ -98,8 +98,11 @@ public class PaymentUpdateService {
 				if (allowedservices.contains(paymentDetail.getBusinessService())) {
 
 					switch (paymentDetail.getBusinessService()) {
-						case PTConstants.BILLING_BUSINESS_SERVICE_OT: {
-
+						case PTConstants.BUSINESS_SERVICE_CM_OT:
+						case PTConstants.BUSINESS_SERVICE_CK_OT:
+						case PTConstants.BUSINESS_SERVICE_CS_OT:
+						case PTConstants.BUSINESS_SERVICE_VN_OT:
+						{
 							DuplicateCopySearchCriteria searchCriteria = new DuplicateCopySearchCriteria();
 							searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
 
@@ -133,7 +136,10 @@ public class PaymentUpdateService {
 							repositoryOt.update(updateRequest, idToIsStateUpdatableMap);
 							break;
 						}
-						case PTConstants.BILLING_BUSINESS_SERVICE_DC: {
+						case PTConstants.BUSINESS_SERVICE_CM_DC:
+						case PTConstants.BUSINESS_SERVICE_CK_DC:
+						case PTConstants.BUSINESS_SERVICE_CS_DC:
+						case PTConstants.BUSINESS_SERVICE_VN_DC: {
 
 							DuplicateCopySearchCriteria searchCriteriaDc = new DuplicateCopySearchCriteria();
 							searchCriteriaDc.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
@@ -166,7 +172,10 @@ public class PaymentUpdateService {
 							propertyRepository.updateDcPayment(updateDCRequest, idToIsStateUpdatableMapDc);
 							break;
 						}
-						case PTConstants.BILLING_BUSINESS_SERVICE_RENT: {
+						case PTConstants.BUSINESS_SERVICE_CM_RENT:
+						case PTConstants.BUSINESS_SERVICE_CK_RENT:
+						case PTConstants.BUSINESS_SERVICE_CS_RENT:
+						case PTConstants.BUSINESS_SERVICE_VN_RENT: {
 							String consumerCode = paymentDetail.getBill().getConsumerCode();
 
 							PropertyCriteria searchCriteria = new PropertyCriteria();

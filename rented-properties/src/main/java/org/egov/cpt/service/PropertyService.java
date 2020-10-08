@@ -275,7 +275,7 @@ public class PropertyService {
 		 * Get the bill generated.
 		 */
 		List<BillV2> bills = demandRepository.fetchBill(propertyRequest.getRequestInfo(), property.getTenantId(),
-				property.getRentPaymentConsumerCode());
+				property.getRentPaymentConsumerCode(),property.getColony());
 		if (CollectionUtils.isEmpty(bills)) {
 			throw new CustomException("BILL_NOT_GENERATED",
 					"No bills were found for the consumer code " + property.getRentPaymentConsumerCode());
