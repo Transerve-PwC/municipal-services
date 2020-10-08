@@ -128,7 +128,7 @@ public class DemandService {
 			Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)
 					.demandDetails(demandDetails).payer(user).minimumAmountPayable(config.getMinimumPayableAmount())
 					.tenantId(tenantId).taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo)
-					.consumerType("rentedproperties").businessService(PTConstants.BILLING_BUSINESS_SERVICE_OT)
+					.consumerType("rentedproperties").businessService(owner.getBillingBusinessService())
 					.additionalDetails(null).build();
 
 			demands.add(singleDemand);
@@ -149,7 +149,7 @@ public class DemandService {
 
 			List<Demand> searchResult = searchDemand(owner.getTenantId(),
 					Collections.singleton(owner.getOwnerDetails().getApplicationNumber()), requestInfo,
-					PTConstants.BILLING_BUSINESS_SERVICE_OT);
+					owner.getBillingBusinessService());
 
 			if (CollectionUtils.isEmpty(searchResult)) {
 				demands = createDemand(requestInfo, owners);
@@ -302,7 +302,7 @@ public class DemandService {
 			Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)
 					.demandDetails(demandDetails).payer(user).minimumAmountPayable(config.getMinimumPayableAmount())
 					.tenantId(tenantId).taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo)
-					.consumerType("rentedproperties").businessService(PTConstants.BILLING_BUSINESS_SERVICE_DC)
+					.consumerType("rentedproperties").businessService(application.getBillingBusinessService())
 					.additionalDetails(null).build();
 
 			demands.add(singleDemand);
@@ -319,7 +319,7 @@ public class DemandService {
 
 			List<Demand> searchResult = searchDemand(application.getTenantId(),
 					Collections.singleton(application.getApplicationNumber()), requestInfo,
-					PTConstants.BILLING_BUSINESS_SERVICE_DC);
+					application.getBillingBusinessService());
 			if (CollectionUtils.isEmpty(searchResult)) {
 				demands = createDuplicateCopyDemand(requestInfo, duplicateCopyApplications);
 				/*
@@ -389,7 +389,7 @@ public class DemandService {
 		if (existingConsumerCode != null) {
 			List<Demand> searchResult = searchDemand(property.getTenantId(),
 					Collections.singleton(property.getRentPaymentConsumerCode()), requestInfo,
-					PTConstants.BILLING_BUSINESS_SERVICE_RENT);
+					property.getBillingBusinessService());
 
 			if (!CollectionUtils.isEmpty(searchResult)) {
 				Demand demand = searchResult.get(0);
@@ -465,7 +465,7 @@ public class DemandService {
 				.consumerCode(property.getRentPaymentConsumerCode()).demandDetails(demandDetails).payer(user)
 				.minimumAmountPayable(config.getMinimumPayableAmount()).tenantId(property.getTenantId())
 				.taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo).consumerType("rentedproperties")
-				.businessService(PTConstants.BILLING_BUSINESS_SERVICE_RENT).additionalDetails(null).build());
+				.businessService(property.getBillingBusinessService()).additionalDetails(null).build());
 		return demandRepository.saveDemand(requestInfo, demands);
 	}
 
@@ -508,12 +508,12 @@ public class DemandService {
 	 *                      bill.
 	 * @return
 	 */
-	public Object createCashPayment(RequestInfo requestInfo, Double paymentAmount, String billId, Owner owner) {
+	public Object createCashPayment(RequestInfo requestInfo, Double paymentAmount, String billId, Owner owner,String billingBusinessService) {
 		String tenantId = owner.getTenantId();
 		OwnerDetails ownerDetails = owner.getOwnerDetails();
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
 				.totalAmountPaid(BigDecimal.valueOf(paymentAmount)).receiptDate(System.currentTimeMillis())
-				.businessService(PTConstants.BILLING_BUSINESS_SERVICE_RENT).billId(billId).build();
+				.businessService(billingBusinessService).billId(billId).build();
 		CollectionPayment payment = CollectionPayment.builder().paymentMode(CollectionPaymentModeEnum.CASH)
 				.tenantId(tenantId).totalAmountPaid(BigDecimal.valueOf(paymentAmount)).payerName(ownerDetails.getName())
 				.paidBy("COUNTER").mobileNumber(ownerDetails.getPhone())

@@ -275,7 +275,7 @@ public class PropertyService {
 		 * Get the bill generated.
 		 */
 		List<BillV2> bills = demandRepository.fetchBill(propertyRequest.getRequestInfo(), property.getTenantId(),
-				property.getRentPaymentConsumerCode());
+				property.getRentPaymentConsumerCode(),property.getBillingBusinessService());
 		if (CollectionUtils.isEmpty(bills)) {
 			throw new CustomException("BILL_NOT_GENERATED",
 					"No bills were found for the consumer code " + property.getRentPaymentConsumerCode());
@@ -286,7 +286,7 @@ public class PropertyService {
 			 * if offline, create a payment.
 			 */
 			demandService.createCashPayment(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
-					bills.get(0).getId(), owner);
+					bills.get(0).getId(), owner,property.getBillingBusinessService());
 		} else {
 			/**
 			 * We return the property along with the consumerCode that we set earlier. Also

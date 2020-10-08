@@ -240,11 +240,20 @@ public class Property {
 	 */
 	@JsonProperty("rentPaymentConsumerCode")
 	private String rentPaymentConsumerCode;
-	
+
 	@JsonProperty("transactionId")
 	private String transactionId;
-	
+
 	@JsonProperty("bankName")
 	private String bankName;
 
+	@JsonProperty("billingBusinessService")
+	private String billingBusinessService;
+
+	/**
+	 * RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.RENT
+	 */
+	public String getBillingBusinessService() {
+		return String.format("RENTED_PROPERTIES_%s.RENT", this.getColony());
+	}
 }

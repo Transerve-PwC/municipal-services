@@ -88,6 +88,20 @@ public class DuplicateCopy {
 
 	@JsonProperty("calculation")
 	Calculation calculation;
+	
+	@JsonProperty("billingBusinessService")
+	private String billingBusinessService;
+
+	/**
+	 * RENTED_PROPERTIES_COLONY_MILK.DUPLICATE_ALLOTMENT_LETTER
+	 * @return
+	 */
+	public String getBillingBusinessService() {
+		if (this.property == null) {
+			return "";
+		}
+		return String.format("RENTED_PROPERTIES_%s.DUPLICATE_ALLOTMENT_LETTER", this.property.getColony());
+	}
 
 	public DuplicateCopy addApplicationDocumentsItem(Document newApplicationDocumentsItem) {
 		if (this.applicationDocuments == null) {
