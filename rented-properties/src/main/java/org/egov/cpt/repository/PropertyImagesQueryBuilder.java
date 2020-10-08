@@ -22,15 +22,15 @@ public class PropertyImagesQueryBuilder {
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY piModifiedTime desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
-	private static final String PROPERTY_IMAGES_SEARCH_QUERY = SELECT + "pi.*,doc.*,pt.*,"
+	private static final String PROPERTY_IMAGES_SEARCH_QUERY = SELECT
 			+ " pi.id as piid, pi.propertyid, pi.tenantid as pitenantid, pi.application_number as app_number, pi.description as pidescription,"
-			+ "pi.modified_time as piModifiedTime,"
+			+ "pi.modified_time as piModifiedTime,pi.created_by as piCreateBy,"
 
 			+ " pt.id as pid, pt.transit_number, pt.colony,"
 
 			+ " address.pincode, address.area,"
 
-			+ " doc.id as docId,doc.reference_id as doc_referenceId, doc.tenantId as doctenantid, doc.document_type as doctype , doc.filestore_id as doc_filestoreid,"
+			+ " doc.id as docId,doc.reference_id as doc_referenceId, doc.document_type as doctype , doc.filestore_id as doc_filestoreid,"
 			+ " doc.property_id as doc_propertyId , doc.is_active as doc_active"
 
 			+ " FROM cs_pt_property_images_application pi " + INNER_JOIN

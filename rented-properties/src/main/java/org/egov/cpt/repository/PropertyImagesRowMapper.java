@@ -34,7 +34,6 @@ public class PropertyImagesRowMapper implements ResultSetExtractor<List<Property
 
 			if (null == currentapplication) {
 				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("created_by"))
-						.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("modified_by"))
 						.lastModifiedTime(rs.getLong("modified_time")).build();
 
 				// List<Owner> owners = addOwnersToProperty(rs, currentProperty);
@@ -71,7 +70,7 @@ public class PropertyImagesRowMapper implements ResultSetExtractor<List<Property
 		if (rs.getString("docId") != null && rs.getBoolean("doc_active")) {
 			Document applicationDocument = Document.builder()
 					.documentType(rs.getString("doctype")).fileStoreId(rs.getString("doc_filestoreid"))
-					.id(rs.getString("docId")).tenantId(rs.getString("doctenantid")).active(rs.getBoolean("doc_active"))
+					.id(rs.getString("docId")).active(rs.getBoolean("doc_active"))
 					.referenceId(rs.getString("doc_referenceId"))
 					.propertyId(rs.getString("doc_propertyId"))
 					.auditDetails(auditDetails).build();

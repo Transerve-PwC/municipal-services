@@ -36,7 +36,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 			if (null == currentProperty) {
 				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("pcreated_by"))
-						.createdTime(rs.getLong("pcreated_date")).lastModifiedBy(rs.getString("pmodified_by"))
 						.lastModifiedTime(rs.getLong("pmodified_date")).build();
 
 				Address address = Address.builder().id(rs.getString("aid")).propertyId(rs.getString("aproperty_id"))
@@ -72,15 +71,12 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 		String docPropertyId = rs.getString("docproperty_id");
 		if (rs.getString("docid") != null && rs.getBoolean("docis_active") && docPropertyId.equals(property.getId())) {
 
-			AuditDetails docAuditdetails = AuditDetails.builder().createdBy(rs.getString("dcreated_by"))
-					.createdTime(rs.getLong("dcreated_date")).lastModifiedBy(rs.getString("dmodified_by"))
-					.lastModifiedTime(rs.getLong("dmodified_date")).build();
 
 			Document applicationDocument = Document.builder().id(rs.getString("docid"))
 					.referenceId(rs.getString("docreference_id")).propertyId(rs.getString("docproperty_id"))
-					.tenantId(rs.getString("doctenantid")).active(rs.getBoolean("docis_active"))
+					.active(rs.getBoolean("docis_active"))
 					.documentType(rs.getString("doc_document_type")).fileStoreId(rs.getString("doc_fileStore_id"))
-					.auditDetails(docAuditdetails).build();
+					.build();
 			property.getPropertyDetails().addApplicationDocumentsItem(applicationDocument);
 		}
 
@@ -89,12 +85,11 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			if (rs.getString("oid") != null && OwnerPropertyId.equals(property.getId())) {
 
 				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("ocreated_by"))
-						.createdTime(rs.getLong("ocreated_date")).lastModifiedBy(rs.getString("omodified_by"))
 						.lastModifiedTime(rs.getLong("omodified_date")).build();
 
 				OwnerDetails ownerDetails = OwnerDetails.builder().id(rs.getString("odid"))
 						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("odowner_id"))
-						.tenantId(rs.getString("otenantid")).name(rs.getString("odname")).email(rs.getString("odemail"))
+						.name(rs.getString("odname")).email(rs.getString("odemail"))
 						.phone(rs.getString("odphone")).gender(rs.getString("odgender"))
 						.dateOfBirth(rs.getLong("oddate_of_birth")).aadhaarNumber(rs.getString("odaadhaar_number"))
 						.allotmentStartdate(rs.getLong("odallotment_startdate"))
@@ -123,7 +118,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			if (rs.getString("piid") != null && propertyImagesPropertyId.equals(property.getId())) {
 
 				AuditDetails piAuditDetails = AuditDetails.builder().createdBy(rs.getString("piCreatedBy"))
-						.createdTime(rs.getLong("piCreatedTime")).lastModifiedBy(rs.getString("piModifiedBy"))
 						.lastModifiedTime(rs.getLong("piModifiedTime")).build();
 
 				PropertyImages propertyImages = PropertyImages.builder().id(rs.getString("piid")).property(property)
@@ -136,7 +130,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 				if (rs.getString("pidocid") != null && rs.getBoolean("pidoc_active")) {
 					Document applicationDocument = Document.builder().documentType(rs.getString("pidoctype"))
 							.fileStoreId(rs.getString("pidoc_filestoreid")).id(rs.getString("pidocId"))
-							.tenantId(rs.getString("pidoctenantid")).active(rs.getBoolean("pidoc_active"))
+							.active(rs.getBoolean("pidoc_active"))
 							.referenceId(rs.getString("pidoc_referenceid")).propertyId(rs.getString("pidoc_propertyid"))
 							.auditDetails(piAuditDetails).build();
 
@@ -163,7 +157,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			if (rs.getString("ngid") != null && rs.getString("ng_propertyid").equals(property.getId())) {
 
 				AuditDetails ngAuditDetails = AuditDetails.builder().createdBy(rs.getString("ngCreatedBy"))
-						.createdTime(rs.getLong("ngCreatedTime")).lastModifiedBy(rs.getString("ngModifiedBy"))
 						.lastModifiedTime(rs.getLong("ngModifiedTime")).build();
 
 				NoticeGeneration noticeGeneration = NoticeGeneration.builder().id(rs.getString("ngid"))
@@ -206,7 +199,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 		if (hasColumn(rs, "gd_id")) {
 			if (rs.getString("gd_id") != null) {
 				AuditDetails magdAuditDetails = AuditDetails.builder().createdBy(rs.getString("gd_createdBy"))
-						.createdTime(rs.getLong("gd_createdTime")).lastModifiedBy(rs.getString("gd_modifiedBy"))
 						.lastModifiedTime(rs.getLong("gd_modifiedTime")).build();
 				MortgageApprovedGrantDetails mortgageApprovedGrantDetails = MortgageApprovedGrantDetails.builder()
 						.id(rs.getString("gd_id")).propertyDetailId(rs.getString("gd_property_id"))

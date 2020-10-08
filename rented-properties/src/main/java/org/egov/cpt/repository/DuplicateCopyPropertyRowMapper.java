@@ -30,7 +30,7 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 
 			if (null == currentapplication) {
 				AuditDetails auditdetails = AuditDetails.builder()
-						.lastModifiedBy(rs.getString("dcamodified_by"))
+						.createdBy(rs.getString("dcCreatedBy"))
 						.lastModifiedTime(rs.getLong("dcModifiedTime")).build();
 
 				// List<Owner> owners = addOwnersToProperty(rs, currentProperty);
@@ -60,7 +60,7 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 
 		if (currentapplication.getApplicant() == null) {
 			if (rs.getString("aid") != null) {
-				applicant = Applicant.builder().id(rs.getString("aid")).tenantId(rs.getString("aptenantid"))
+				applicant = Applicant.builder().id(rs.getString("aid"))
 						.applicationId(rs.getString("app_id")).name(rs.getString("apname")).email(rs.getString("apemail"))
 						.phone(rs.getString("apmobileno")).guardian(rs.getString("apguardian"))
 						.relationship(rs.getString("aprelationship")).adhaarNumber(rs.getString("adhaarnumber"))
@@ -80,7 +80,7 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 		if (rs.getString("docId") != null && rs.getBoolean("doc_active")) {
 			Document applicationDocument = Document.builder().documentType(rs.getString("doctype"))
 					.fileStoreId(rs.getString("doc_filestoreid")).id(rs.getString("docId"))
-					.referenceId(rs.getString("doc_referenceid")).tenantId(rs.getString("doctenantid"))
+					.referenceId(rs.getString("doc_referenceid"))
 					.active(rs.getBoolean("doc_active"))
 					.propertyId(rs.getString("doc_propertyid")).build();
 			currentapplication.addApplicationDocumentsItem(applicationDocument);

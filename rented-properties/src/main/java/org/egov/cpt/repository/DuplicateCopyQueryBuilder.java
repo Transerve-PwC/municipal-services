@@ -25,19 +25,22 @@ public class DuplicateCopyQueryBuilder {
 	private static final String DUPLICATE_COPY_SEARCH_QUERY = SELECT
 			+ " dca.id as appid, dca.property_id as dcaproperty_id, dca.tenantid as pttenantid, dca.state as dcastate, dca.action as dcaaction,"
 			+ " dca.application_number as app_number,"
-			+ " dca.modified_by as dcamodified_by, dca.modified_time as dcModifiedTime,"
+			+ " dca.modified_time as dcModifiedTime, dca.created_by as dcCreatedBy,"
 
 			+ " pt.id as pid, pt.transit_number as pttransit_number,pt.colony as ptcolony,pt.modified_date as pmodified_date,"
 
 			+ " address.pincode as addresspincode, address.area as addressarea,"
-
-			+ " ap.id as aid, ap.application_id as app_id,ap.tenantid as aptenantid,"
-			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,ap.guardian as apguardian ,"
-			+ "ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
-			+ " ap.fee_amount as apfee_amount, ap.apro_charge as apapro_charge,"
-			+ " ap.modified_by as apmodified_by, ap.modified_time as apmodified_time,"
 			
-			+ " doc.id as docId,doc.reference_id as doc_referenceid, doc.tenantId as doctenantid,doc.document_type as doctype , doc.fileStore_id as doc_filestoreid,"
+			+ " ownership.allotmen_number as owner_allot_number,"
+
+			+ " od.allotment_startdate as allot_start_date, od.allotment_enddate as allot_end_date,"
+
+			+ " ap.id as aid, ap.application_id as app_id,"
+			+ " ap.name as apname,ap.email as apemail,ap.mobileno as apmobileno,ap.guardian as apguardian ,"
+			+ " ap.relationship as aprelationship,ap.aadhaar_number as adhaarnumber,"
+			+ " ap.fee_amount as apfee_amount, ap.apro_charge as apapro_charge,"
+			
+			+ " doc.id as docId,doc.reference_id as doc_referenceid, doc.document_type as doctype , doc.fileStore_id as doc_filestoreid,"
 			+ " doc.property_id as doc_propertyid , doc.is_active as doc_active"
 
 			+ " FROM cs_pt_duplicate_ownership_application dca " + INNER_JOIN

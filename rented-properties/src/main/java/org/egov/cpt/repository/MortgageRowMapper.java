@@ -41,6 +41,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 
 				currentapplication = Mortgage.builder().id(mortgageId).property(property)
 						.state(rs.getString("mgstate")).action(rs.getString("mgaction"))
+						.tenantId(rs.getString("mgtenantid"))
 						.applicationNumber(rs.getString("app_number"))
 						.allotmentNumber(rs.getString("owner_allot_number"))
 						.allotmentStartDate(rs.getLong("allot_start_date"))
@@ -60,7 +61,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 
 		if (currentapplication.getApplicant() == null) {
 			if (rs.getString("aid") != null) {
-				applicant = MortgageApplicant.builder().id(rs.getString("aid")).tenantId(rs.getString("aptenantid"))
+				applicant = MortgageApplicant.builder().id(rs.getString("aid"))
 						.mortgageId(rs.getString("mg_id")).name(rs.getString("apname")).email(rs.getString("apemail"))
 						.phone(rs.getString("apmobileno")).guardian(rs.getString("apguardian"))
 						.relationship(rs.getString("aprelationship")).adhaarNumber(rs.getString("adhaarnumber"))
@@ -81,7 +82,7 @@ public class MortgageRowMapper implements ResultSetExtractor<List<Mortgage>> {
 					.build();
 			MortgageApprovedGrantDetails mortgageApprovedGrantDetails = MortgageApprovedGrantDetails.builder()
 					.id(rs.getString("gdid")).propertyDetailId(rs.getString("gdproperty_detail_id"))
-					.ownerId(rs.getString("gdowner_id")).tenentId(rs.getString("gdtenantid"))
+					.ownerId(rs.getString("gdowner_id"))
 					.bankName(rs.getString("gdbank_name")).mortgageAmount(rs.getBigDecimal("gdmortgage_amount"))
 					.sanctionLetterNumber(rs.getString("gdsanction_letter_number"))
 					.sanctionDate(rs.getLong("gdsanction_date")).mortgageEndDate(rs.getLong("gdmortgage_end_date"))

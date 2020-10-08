@@ -23,42 +23,41 @@ public class PropertyQueryBuilder {
 	private static final String LEFT_JOIN = "LEFT OUTER JOIN";
 
 	private static final String PT_COLUMNS = " pt.id as pid, pt.transit_number as ptransit_number, pt.tenantid as pttenantid, pt.colony as pcolony, pt.master_data_state as pmaster_data_state, pt.master_data_action as pmaster_data_action,"
-			+ " pt.created_by as pcreated_by, pt.created_date as pcreated_date, pt.modified_by as pmodified_by, pt.modified_date as pmodified_date,"
+			+ " pt.created_by as pcreated_by, pt.modified_date as pmodified_date,"
 
 			+ " ptdl.id as pdid, ptdl.property_id as pdproperty_id, ptdl.transit_number as pdtransit_number,"
 			+ " ptdl.interest_rate as pd_int_rate,ptdl.rent_increment_percentage as pd_rent_inc_pg,ptdl.rent_increment_period as pd_rent_inc_period,"
 			+ " ptdl.tenantid as pdtenantid, ptdl.area as ptarea, ptdl.rent_per_sqyd as ptrent_per_sqyd, ptdl.current_owner as ptcurrent_owner, ptdl.floors as ptfloors, ptdl.additional_details as ptadditional_details, "
 
 			+ " address.id as aid, address.property_id as aproperty_id, address.transit_number as atransit_number,"
-			+ " address.tenantid as atenantid, address.colony as acolony, address.area as addressArea, address.district as adistrict,"
+			+ " address.colony as acolony, address.area as addressArea, address.district as adistrict,"
 			+ " address.state as astate, address.country as acountry, address.pincode as apincode, address.landmark as alandmark,"
 
-			+ " doc.id as docid, doc.property_id as docproperty_id,doc.reference_id as docreference_id, doc.tenantid as doctenantid,"
-			+ " doc.is_active as docis_active, doc.document_type as doc_document_type, doc.fileStore_id as doc_fileStore_id,"
-			+ " doc.created_by as dcreated_by, doc.created_date as dcreated_date, doc.modified_by as dmodified_by, doc.modified_date as dmodified_date ";
+			+ " doc.id as docid, doc.property_id as docproperty_id,doc.reference_id as docreference_id, "
+			+ " doc.is_active as docis_active, doc.document_type as doc_document_type, doc.fileStore_id as doc_fileStore_id ";
 
 	private static final String OWNER_COLUMNS = " ownership.id as oid, ownership.property_id as oproperty_id,"
 			+ " ownership.tenantid as otenantid, ownership.allotmen_number as oallotmen_number,"
 			+ " ownership.active_state as oactive_state, ownership.is_primary_owner as ois_primary_owner,"
-			+ " ownership.created_by as ocreated_by, ownership.created_date as ocreated_date, ownership.modified_by as omodified_by, ownership.modified_date as omodified_date,"
+			+ " ownership.created_by as ocreated_by, ownership.modified_date as omodified_date,"
 
-			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id as odowner_id, od.tenantid as odtenantid,"
+			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id as odowner_id,"
 			+ " od.name as odname, od.email as odemail, od.phone as odphone,"
 			+ " od.gender as odgender, od.date_of_birth as oddate_of_birth, od.aadhaar_number as odaadhaar_number,od.permanent as od_permanent,"
 			+ " od.allotment_startdate as odallotment_startdate, od.allotment_enddate as odallotment_enddate," + " od.posession_startdate as odposession_startdate, od.posession_enddate as odposession_enddate,"
 			+ " od.monthly_rent as odmonthly_rent, od.revision_period as odrevision_period, od.revision_percentage as odrevision_percentage, od.father_or_husband as odfather_or_husband, od.relation as odrelation, od.relation_with_deceased_allottee as odrelation_with_deceased_allottee, od.date_of_death_allottee as oddate_of_death_allottee, od.application_number as odapplication_number, od.application_type as odapplication_type ";
 
 	private static final String PI_COLUMNS = " pi.id as piid, pi.propertyid as pipropertyid, pi.tenantid as pitenantid, pi.application_number as piapp_number, pi.description as pidescription, pi.capturedby as picapturedBy,"
-			+ " pi.created_by as piCreatedBy, pi.created_time as piCreatedTime, pi.modified_by as piModifiedBy, pi.modified_time as piModifiedTime,"
+			+ " pi.created_by as piCreatedBy, pi.modified_time as piModifiedTime,"
 
-			+ " pidoc.id as pidocid,pidoc.reference_id as pidoc_referenceid, pidoc.tenantId as pidoctenantid, pidoc.document_type as pidoctype , pidoc.filestore_id as pidoc_filestoreid,"
+			+ " pidoc.id as pidocid,pidoc.reference_id as pidoc_referenceid, pidoc.document_type as pidoctype , pidoc.filestore_id as pidoc_filestoreid,"
 			+ " pidoc.property_id as pidoc_propertyid , pidoc.is_active as pidoc_active ";
 
 	private static final String NOTICE_COLUMNS = " ng.id as ngid, ng.propertyid as ng_propertyid, ng.tenantid as ngtenantid,ng.memo_number as ng_memoNumber,"
 			+ " ng.memo_date as ng_memoDate,ng.notice_type as ng_noticeType,ng.guardian as ng_guardian,ng.relationship as ng_relationship,"
 			+ " ng.violations as ng_violations,ng.description as ng_description,ng.demand_notice_from as ng_demandNoticeFrom,"
 			+ " ng.demand_notice_to as ng_demandNoticeTo,ng.recovery_type as ng_recoveryType, ng.amount as ng_amount, ng.property_image_id as ng_p_image_id,"
-			+ " ng.modified_time as ngModifiedTime,ng.modified_by as ngModifiedBy,ng.created_by as ngCreatedBy,ng.created_time as ngCreatedTime,"
+			+ " ng.modified_time as ngModifiedTime,ng.created_by as ngCreatedBy,"
 
 			+ " ngdoc.id as ngdoc_id,ngdoc.reference_id as ngdoc_referenceid, ngdoc.tenantId as ngdoc_tenantid,ngdoc.document_type as ngdoc_type , ngdoc.filestore_id as ngdoc_filestoreid,"
 			+ " ngdoc.property_id as ngdoc_propertyid , ngdoc.is_active as ngdoc_active ";
@@ -66,7 +65,7 @@ public class PropertyQueryBuilder {
 	private static final String GD_COLUMNS = " gd.id as gd_id, gd.property_id as gd_property_id,"
 			+ " gd.bank_name as gd_bank_name, gd.mortgage_amount as gd_mortgage_amount,"
 			+ " gd.sanction_letter_number as gd_sanLetterNum, gd.sanction_date as gd_sanDate, gd.mortgage_end_date as gd_mortgageEndDate,"
-			+ " gd.created_by as gd_createdBy, gd.modified_by as gd_modifiedBy, gd.created_time as gd_createdTime, gd.modified_time as gd_modifiedTime ";
+			+ " gd.created_by as gd_createdBy, gd.modified_time as gd_modifiedTime ";
 
 	private static final String PT_TABLE = " FROM cs_pt_property_v1 pt " + INNER_JOIN
 			+ " cs_pt_propertydetails_v1 ptdl ON pt.id =ptdl.property_id " + LEFT_JOIN

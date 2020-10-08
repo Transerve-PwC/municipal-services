@@ -33,18 +33,18 @@ public class OwnershipTransferQueryBuilder {
 			+ " ownership.tenantid as otenantid, ownership.allotmen_number as oallotmen_number,"
 			+ " ownership.active_state as oactive_state, ownership.is_primary_owner as ois_primary_owner,"
 			+ " ownership.application_state as oapplication_state, ownership.application_action as oapplication_action,"
-			+ " ownership.modified_by as omodified_by, ownership.modified_date as omodified_date,"
+			+ " ownership.created_by as ocreated_by, ownership.modified_date as omodified_date,"
 
-			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id as odowner_id, od.tenantid as odtenantid,"
+			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id as odowner_id,"
 			+ " od.name as odname, od.email as odemail, od.phone as odphone," + " od.aadhaar_number as odaadhaar_number,"
 			+ " od.allotment_startdate as odallotment_startdate,"
 			+ " od.monthly_rent as odmonthly_rent,"
 			+ " od.father_or_husband as odfather_or_husband,"
 			+ " od.relation as odrelation,"
 			+ " od.relation_with_deceased_allottee as odrelation_with_deceased_allottee, od.date_of_death_allottee as oddate_of_death_allottee, od.application_number as odapplication_number, od.application_type as odapplication_type,"
-			+ "od.due_amount as oddue_amount, od.apro_charge as odapro_charge,"
+			+ " od.due_amount as oddue_amount, od.apro_charge as odapro_charge,"
 
-			+ " doc.id as docid, doc.reference_id as doc_referenceId, doc.tenantid as doctenantid,"
+			+ " doc.id as docid, doc.reference_id as doc_referenceId,"
 			+ " doc.is_active as docis_active, doc.document_type, doc.fileStore_id,doc.property_id as doc_propertyId"
 
 			+ " FROM cs_pt_property_v1 pt " + INNER_JOIN + " cs_pt_address_v1 address ON pt.id=address.property_id "

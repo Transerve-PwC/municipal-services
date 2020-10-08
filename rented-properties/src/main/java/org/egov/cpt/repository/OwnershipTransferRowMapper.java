@@ -32,12 +32,12 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 
 				AuditDetails auditdetails = AuditDetails.builder()
 						
-						  .lastModifiedBy(rs.getString("omodified_by"))
+						  .createdBy(rs.getString("ocreated_by"))
 						 						.lastModifiedTime(rs.getLong("omodified_date")).build();
 
 				OwnerDetails ownerDetails = OwnerDetails.builder().id(rs.getString("odid"))
 						.propertyId(rs.getString("oproperty_id")).ownerId(rs.getString("odowner_id"))
-						.tenantId(rs.getString("otenantid")).name(rs.getString("odname")).email(rs.getString("odemail"))
+						.name(rs.getString("odname")).email(rs.getString("odemail"))
 						.phone(rs.getString("odphone"))
 						.aadhaarNumber(rs.getString("odaadhaar_number"))
 						.allotmentStartdate(rs.getLong("odallotment_startdate"))
@@ -77,7 +77,7 @@ public class OwnershipTransferRowMapper implements ResultSetExtractor<List<Owner
 		if (rs.getString("docid") != null && rs.getBoolean("docis_active")) {
 			
 			Document ownershipTransferDocument = Document.builder().id(rs.getString("docid"))
-					.referenceId(rs.getString("doc_referenceId")).tenantId(rs.getString("doctenantid"))
+					.referenceId(rs.getString("doc_referenceId"))
 					.active(rs.getBoolean("docis_active")).documentType(rs.getString("document_type"))
 					.fileStoreId(rs.getString("fileStore_id"))
 					.propertyId(rs.getString("doc_propertyId")).build();
