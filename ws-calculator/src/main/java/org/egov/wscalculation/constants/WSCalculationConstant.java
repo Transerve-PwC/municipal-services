@@ -328,5 +328,9 @@ public class WSCalculationConstant {
 	public static final String WS_CONVERSION = "CONNECTION_CONVERSION";
 
 	public static final String WS_APPLY_FOR_REGULAR_CON = "APPLY_FOR_REGULAR_INFO";
+
+	public static final String WS_ADDON_PENDING_STATUS = "PENDING_FOR_ADDON_PAYMENT";
+	
+	public static final String WS_STATUS_PENDING_FOR_CMR = "PENDING_METER_READING_CAPTURE";
 	
 }

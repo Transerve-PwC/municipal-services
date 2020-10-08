@@ -25,6 +25,23 @@ public class OpeningBalanceRequest {
 	@JsonProperty("materialReceipt")
 	private List<MaterialReceipt> materialReceipt = new ArrayList<MaterialReceipt>();
 
+	@JsonProperty("workFlowDetails")
+	private WorkFlowDetails workFlowDetails;
+
+	public OpeningBalanceRequest workFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+		return this;
+	}
+
+	public WorkFlowDetails getWorkFlowDetails() {
+		return workFlowDetails;
+	}
+
+	public void setWorkFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+	}
+
+	
 	public OpeningBalanceRequest requestInfo(RequestInfo requestInfo) {
 		this.requestInfo = requestInfo;
 		return this;

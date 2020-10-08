@@ -9,6 +9,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.assets.model.IndentRequest;
+import org.egov.assets.model.IndentResponse;
 import org.egov.assets.model.MaterialReceipt;
 import org.egov.assets.model.MaterialReceiptSearch;
 import org.egov.assets.model.OpeningBalanceRequest;
@@ -95,6 +97,15 @@ public class OpeningbalanceApiController {
 				pdfRequest.getRequestInfo());
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/_updateStatus", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<OpeningBalanceResponse> openingBalanceUpdateStatusPost(
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@Valid @RequestBody OpeningBalanceRequest openingBalance) {
+		OpeningBalanceResponse response = openingBalanceService.updateStatus(openingBalance);
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
+
 
 	private OpeningBalanceResponse buildOpenBalanceResponse(List<MaterialReceipt> material, RequestInfo requestInfo) {
 		return OpeningBalanceResponse.builder().responseInfo(getResponseInfo(requestInfo)).materialReceipt(material)
