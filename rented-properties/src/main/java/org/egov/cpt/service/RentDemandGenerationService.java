@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -24,6 +25,7 @@ import org.egov.cpt.models.RentPayment;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.notification.DemandNotificationService;
+import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +63,7 @@ public class RentDemandGenerationService {
 
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
 		propertyCriteria.setRelations(Collections.singletonList("owner"));
+		propertyCriteria.setState(Arrays.asList(PTConstants.PM_STATUS_APPROVED));
 		List<Property> propertyList = propertyRepository.getProperties(propertyCriteria);
 
 		propertyList.forEach(property -> {
