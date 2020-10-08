@@ -130,6 +130,9 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_ULB_NAME = "<ulb>";
 	public static final String SMS_NOTIFICATION_SLA_NAME = "<sla>";
 	public static final String SMS_NOTIFICATION_RATING_KEY = "<rating>";
+	public static final String SMS_NOTIFICATION_COMPLAINANT_NAME_KEY = "<complainant_name>";
+	public static final String SMS_NOTIFICATION_COMPLAINANT_CONTACT_KEY = "<complainant_contact>";
+	public static final String SMS_NOTIFICATION_LOCALITY_KEY = "<locality>";
 	
 	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
 	public static final String  USREVENTS_EVENT_NAME = "Public Grievance Redressal";

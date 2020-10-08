@@ -78,6 +78,20 @@ public class Owner {
 	@JsonProperty("calculation")
 	Calculation calculation;
 
+	@JsonProperty("billingBusinessService")
+	private String billingBusinessService;
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getBillingBusinessService() {
+		if (this.property == null) {
+			return "";
+		}
+		return String.format("RENTED_PROPERTIES_%s.OWNERSHIP_TRANSFER", this.property.getColony());
+	}
+
 	@Valid
 	@JsonProperty("wfDocuments")
 	private List<Document> wfdocuments;

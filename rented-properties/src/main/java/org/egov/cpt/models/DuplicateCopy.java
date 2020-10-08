@@ -58,10 +58,10 @@ public class DuplicateCopy {
 	private String allotmentNumber;
 	
 	@JsonProperty("allotmentStartDate")
-	private String allotmentStartDate;
+	private Long allotmentStartDate;
 	
 	@JsonProperty("allotmentEndDate")
-	private String allotmentEndDate;
+	private Long allotmentEndDate;
 
 	@JsonProperty("assignee")
 	@Builder.Default

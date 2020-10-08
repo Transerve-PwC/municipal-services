@@ -30,14 +30,14 @@ public class Department {
 	@JsonProperty("deductionPercentage")
 	private BigDecimal deductionPercentage;
 
+	@JsonProperty("deptCategory")
+	private String deptCategory;
+	
 	@JsonProperty("active")
 	private Boolean active = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
-	
-	@JsonProperty("deptCategory")
-	private String deptCategory = null;
 
 	public Department id(String id) {
 		this.id = id;
@@ -115,6 +115,25 @@ public class Department {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Department deptCategory(String deptCategory) {
+		this.deptCategory = deptCategory;
+		return this;
+	}
+
+	/**
+	 * name of the Department
+	 * 
+	 * @return name
+	 **/
+
+	public String getDeptCategory() {
+		return deptCategory;
+	}
+
+	public void setDeptCategory(String deptCategory) {
+		this.deptCategory = deptCategory;
+	}
 
 	public BigDecimal getDeductionPercentage() {
 		return deductionPercentage;
@@ -123,20 +142,6 @@ public class Department {
 	public void setDeductionPercentage(BigDecimal deductionPercentage) {
 		this.deductionPercentage = deductionPercentage;
 	}
-	
-	public String getDeptCategory() {
-		return deptCategory;
-	}
-
-	public void setDeptCategory(String deptCategory) {
-		this.deptCategory = deptCategory;
-	}
-	
-	public Department deptCategory(String deptCategory) {
-		this.deptCategory = deptCategory;
-		return this;
-	}
-
 
 	public Department active(Boolean active) {
 		this.active = active;
