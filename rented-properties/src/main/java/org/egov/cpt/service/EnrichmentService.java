@@ -298,17 +298,17 @@ public class EnrichmentService {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-		String businessServiceCode = PTConstants.BILLING_BUSINESS_SERVICE_OT.replace("<colony>", owner.getProperty().getColony());
+		
 		estimateDue.setEstimateAmount(new BigDecimal(0.0));
 		estimateDue.setCategory(Category.FEE);
-		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(owner.getBillingBusinessService(),
 				PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateDue);
 
 		TaxHeadEstimate estimateCharges = new TaxHeadEstimate();
 		estimateCharges.setEstimateAmount(new BigDecimal(0.0));
 		estimateCharges.setCategory(Category.FEE);
-		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(owner.getBillingBusinessService(),
 				PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateCharges);
 
@@ -332,17 +332,16 @@ public class EnrichmentService {
 		 */
 		if (owner.getApplicationState().equalsIgnoreCase(PTConstants.OT_STATE_PENDING_APRO)) {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
-			String businessServiceCode = PTConstants.BILLING_BUSINESS_SERVICE_OT.replace("<colony>", owner.getProperty().getColony());
 			estimate1.setEstimateAmount(owner.getOwnerDetails().getDueAmount());
 			estimate1.setCategory(Category.FEE);
-			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(owner.getBillingBusinessService(),
 					PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
 
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(owner.getOwnerDetails().getAproCharge());
 			estimate2.setCategory(Category.FEE);
-			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(owner.getBillingBusinessService(),
 					PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate2);
 		}
@@ -476,18 +475,17 @@ public class EnrichmentService {
 
 	private void enrichDuplicateCopyGenerateDemand(DuplicateCopy application) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
-		String businessServiceCode = PTConstants.BILLING_BUSINESS_SERVICE_DC.replace("<colony>", application.getProperty().getColony());
 		TaxHeadEstimate estimateFee = new TaxHeadEstimate();
 		estimateFee.setEstimateAmount(new BigDecimal(0.0));
 		estimateFee.setCategory(Category.FEE);
-		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 				PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateFee);
 
 		TaxHeadEstimate estimateCharges = new TaxHeadEstimate();
 		estimateCharges.setEstimateAmount(new BigDecimal(0.0));
 		estimateCharges.setCategory(Category.FEE);
-		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+		estimateCharges.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 				PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 		estimates.add(estimateCharges);
 
@@ -510,17 +508,16 @@ public class EnrichmentService {
 		 */
 		if (application.getState().equalsIgnoreCase(PTConstants.DC_STATE_PENDING_APRO)) {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
-			String businessServiceCode = PTConstants.BILLING_BUSINESS_SERVICE_DC.replace("<colony>", application.getProperty().getColony());
 			estimate1.setEstimateAmount(application.getApplicant().get(0).getFeeAmount());
 			estimate1.setCategory(Category.FEE);
-			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
 
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(application.getApplicant().get(0).getAproCharge());
 			estimate2.setCategory(Category.FEE);
-			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(businessServiceCode,
+			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate2);
 		}
@@ -887,7 +884,6 @@ public class EnrichmentService {
 		if (rentSummary == null)
 			return;
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
-		String businessserviceCode= PTConstants.BILLING_BUSINESS_SERVICE_RENT.replace("<colony>", property.getColony());
 		double amount = property.getPaymentAmount();
 		double balPrincipal = rentSummary.getBalancePrincipal();
 		double balInterest = rentSummary.getBalanceInterest();
@@ -896,20 +892,20 @@ public class EnrichmentService {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(new BigDecimal(balInterest));
 			estimate1.setCategory(Category.INTEREST);
-			estimate1.setTaxHeadCode(getTaxHeadCode(businessserviceCode, Category.INTEREST));
+			estimate1.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.INTEREST));
 			estimates.add(estimate1);
 			double remainingAmmount = amount - balInterest;
 			if (remainingAmmount >= balPrincipal) {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(balPrincipal));
 				estimate2.setCategory(Category.PRINCIPAL);
-				estimate2.setTaxHeadCode(getTaxHeadCode(businessserviceCode, Category.PRINCIPAL));
+				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
 				estimates.add(estimate2);
 			} else {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate2.setCategory(Category.PRINCIPAL);
-				estimate2.setTaxHeadCode(getTaxHeadCode(businessserviceCode, Category.PRINCIPAL));
+				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
 				estimates.add(estimate2);
 			}
 			remainingAmmount = amount - balInterest - balPrincipal;
@@ -918,7 +914,7 @@ public class EnrichmentService {
 				estimate3.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate3.setCategory(Category.ADVANCE_COLLECTION);
 				estimate3.setTaxHeadCode(
-						getTaxHeadCode(businessserviceCode, Category.ADVANCE_COLLECTION));
+						getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
 				estimates.add(estimate3);
 			}
 		} else {
@@ -926,7 +922,7 @@ public class EnrichmentService {
 			estimate2.setEstimateAmount(new BigDecimal(amount));
 			estimate2.setCategory(Category.ADVANCE_COLLECTION);
 			estimate2.setTaxHeadCode(
-					getTaxHeadCode(businessserviceCode, Category.ADVANCE_COLLECTION));
+					getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
 			estimates.add(estimate2);
 		}
 

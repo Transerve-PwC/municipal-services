@@ -60,15 +60,9 @@ public class PTConstants {
 
 	public static final String BUSINESS_SERVICE_OT = "OwnershipTransferRP";
 
-	public static final String BILLING_BUSINESS_SERVICE_OT = "RENTED_PROPERTIES_<colony>.OWNERSHIP_TRANSFER";
-
-	public static final String BILLING_BUSINESS_SERVICE_DC = "RENTED_PROPERTIES_<colony>.DUPLICATE_ALLOTMENT_LETTER";
-
 	public static final String TAX_HEAD_CODE_APPLICATION_CHARGE = "APPLICATION";
 
 	public static final String TAX_HEAD_CODE_PUBLICATION_CHARGE = "PUBLICATION";
-
-	public static final String BILLING_BUSINESS_SERVICE_RENT = "RENTED_PROPERTIES_<colony>.RENT";
 
 	public static final String BUSINESS_SERVICE_DC = "DuplicateCopyOfAllotmentLetterRP";
 
