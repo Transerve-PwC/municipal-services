@@ -60,15 +60,9 @@ public class PTConstants {
 
 	public static final String BUSINESS_SERVICE_OT = "OwnershipTransferRP";
 
-	public static final String BILLING_BUSINESS_SERVICE_OT = "RentedProperties.OwnershipTransfer";
-
-	public static final String BILLING_BUSINESS_SERVICE_DC = "RentedProperties.DuplicateAllotmentLetter";
-
 	public static final String TAX_HEAD_CODE_APPLICATION_CHARGE = "APPLICATION";
 
 	public static final String TAX_HEAD_CODE_PUBLICATION_CHARGE = "PUBLICATION";
-
-	public static final String BILLING_BUSINESS_SERVICE_RENT = "RentedProperties.Rent";
 
 	public static final String BUSINESS_SERVICE_DC = "DuplicateCopyOfAllotmentLetterRP";
 
@@ -266,7 +260,25 @@ public class PTConstants {
 
 	//Demand Generation Notifications
 	public static final String NOTIFICATION_DEMAND_GENERATION = "rp.en.counter.demand";
+	
+	//Email Signature
+	public static final String EMAIL_SIGNATURE = "rp.email.signature";
 
 	//Current Owner Payment Notification
 	public static final String  NOTIFICATION_PAYMENT_RECIEVED = "rp.en.counter.rent.payment";
+	
+	public static final String BUSINESS_SERVICE_CM_OT="RENTED_PROPERTIES_COLONY_MILK.OWNERSHIP_TRANSFER";
+	public static final String BUSINESS_SERVICE_CK_OT="RENTED_PROPERTIES_COLONY_KUMHAR.OWNERSHIP_TRANSFER";
+	public static final String BUSINESS_SERVICE_CS_OT="RENTED_PROPERTIES_COLONY_SECTOR_52_53.OWNERSHIP_TRANSFER";
+	public static final String BUSINESS_SERVICE_VN_OT="RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.OWNERSHIP_TRANSFER";
+	
+	public static final String BUSINESS_SERVICE_CM_DC="RENTED_PROPERTIES_COLONY_MILK.DUPLICATE_ALLOTMENT_LETTER";
+	public static final String BUSINESS_SERVICE_CK_DC="RENTED_PROPERTIES_COLONY_KUMHAR.DUPLICATE_ALLOTMENT_LETTER";
+	public static final String BUSINESS_SERVICE_CS_DC="RENTED_PROPERTIES_COLONY_SECTOR_52_53.DUPLICATE_ALLOTMENT_LETTER";
+	public static final String BUSINESS_SERVICE_VN_DC="RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.DUPLICATE_ALLOTMENT_LETTER";
+	
+	public static final String BUSINESS_SERVICE_CM_RENT="RENTED_PROPERTIES_COLONY_MILK.RENT";
+	public static final String BUSINESS_SERVICE_CK_RENT="RENTED_PROPERTIES_COLONY_KUMHAR.RENT";
+	public static final String BUSINESS_SERVICE_CS_RENT="RENTED_PROPERTIES_COLONY_SECTOR_52_53.RENT";
+	public static final String BUSINESS_SERVICE_VN_RENT="RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.RENT";
 }

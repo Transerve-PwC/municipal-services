@@ -41,9 +41,13 @@ public class CalculationService {
 	 * 
 	 */
 	public void calculateFeeAndGenerateDemand(WaterConnectionRequest request, Property property) {
-		if(WCConstants.APPROVE_CONNECTION_CONST.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
-				|| WCConstants.APPLY_SECURITY_DEPOSIT.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
-				|| WCConstants.APPROVE_FOR_CONNECTION_CONVERSION.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())) {
+		if(WCConstants.ACTION_APPROVE_CONNECTION_CONST.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_APPLY_SECURITY_DEPOSIT.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_APPROVE_FOR_CONNECTION_CONVERSION.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_APPROVE_FOR_CONNECTION_RENAME.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_APPROVE_FOR_CONNECTION_DISCONNECTION.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_SEND_BACK_FOR_ADDON_PAYMENT.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_APPROVE_ACTIVATE_CONNECTION.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())){
 			CalculationCriteria criteria = CalculationCriteria.builder()
 					.applicationNo(request.getWaterConnection().getApplicationNo())
 					.waterConnection(request.getWaterConnection())
@@ -51,9 +55,10 @@ public class CalculationService {
 			CalculationReq calRequest = CalculationReq.builder().calculationCriteria(Arrays.asList(criteria))
 					.requestInfo(request.getRequestInfo()).isconnectionCalculation(false).build();
 			try {
+				log.info("Call to generate demand for application no {}: {}",criteria.getApplicationNo(),mapper.writeValueAsString(calRequest));
 				Object response = serviceRequestRepository.fetchResult(waterServiceUtil.getCalculatorURL(), calRequest);
 				CalculationRes calResponse = mapper.convertValue(response, CalculationRes.class);
-				log.info(mapper.writeValueAsString(calResponse));
+				log.info("Demand response for application no {}: {}",criteria.getApplicationNo(),mapper.writeValueAsString(calResponse));
 			} catch (Exception ex) {
 				log.error("Calculation response error!!", ex);
 				throw new CustomException("WATER_CALCULATION_EXCEPTION", "Calculation response can not parsed!!!");

@@ -1,28 +1,19 @@
--- Table: public.nulm_organization
-
--- DROP TABLE public.nulm_organization;
-
-CREATE TABLE public.nulm_organization
-(
-  organization_uuid character varying(64) NOT NULL,
-  user_id bigint NOT NULL,
-  organization_name character varying(64),
-  address character varying(64),
-  email_id character varying(64),
-  representative_name character varying(64),
-  mobile_no character varying(64),
-  registration_no character varying(64),
-  tenant_id character varying(256) NOT NULL,
-  is_active boolean,
-  created_by character varying(64),
-  created_time bigint,
-  last_modified_by character varying(64),
-  last_modified_time bigint,
-  CONSTRAINT nulm_organization_pkey PRIMARY KEY (organization_uuid, tenant_id),
-  CONSTRAINT nulm_organization_name_tenant UNIQUE (organization_name, tenant_id)
-)
-WITH (
-  OIDS=FALSE
+CREATE TABLE nulm_organization (
+	organization_uuid varchar(64) NOT NULL,
+	user_id int8 NOT NULL,
+	organization_name varchar(64) NULL,
+	address varchar(64) NULL,
+	email_id varchar(64) NULL,
+	representative_name varchar(64) NULL,
+	mobile_no varchar(64) NULL,
+	registration_no varchar(64) NULL,
+	tenant_id varchar(256) NOT NULL,
+	is_active bool NULL,
+	created_by varchar(64) NULL,
+	created_time int8 NULL,
+	last_modified_by varchar(64) NULL,
+	last_modified_time int8 NULL,
+	CONSTRAINT nulm_organization_name_tenant UNIQUE (organization_name, tenant_id),
+	CONSTRAINT nulm_organization_pkey PRIMARY KEY (organization_uuid, tenant_id),
+	CONSTRAINT nulm_organization_uuidt UNIQUE (organization_uuid)
 );
-ALTER TABLE public.nulm_organization
-  OWNER TO postgres;

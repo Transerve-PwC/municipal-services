@@ -15,6 +15,8 @@ public class RentDetailQueryBuilder {
 	private PropertyConfiguration config;
 
 	private static final String SELECT = "SELECT ";
+	private static final String INNER_JOIN = "INNER JOIN";
+	private static final String LEFT_JOIN = "LEFT OUTER JOIN";
 
 	private static final String DEMAND_SEARCH_QUERY = SELECT
 			+ " demand.id as demand_id,demand.property_id as demand_pid,demand.initialGracePeriod as demand_IniGracePeriod, demand.generationDate as demand_genDate,"
@@ -39,6 +41,25 @@ public class RentDetailQueryBuilder {
 			+ " payment.modified_by as payment_modified_by,payment.modified_date as payment_modified_date "
 
 			+ " FROM cs_pt_payment payment ";
+	
+	private static final String PROPERTY_ACTIVE_OWNER_QUERY = SELECT 
+			+ " pt.id as pid, pt.transit_number as transit_no, pt.tenantid as pttenantid, pt.colony as colony,"
+
+			+ " ptdl.interest_rate as pd_int_rate,"
+			
+			+ " ownership.id as oid, ownership.property_id as oproperty_id,"
+			
+			+ " od.id as odid, od.property_id as odproperty_id," + " od.owner_id odowner_id,"
+			+ " od.name as ownerName, od.phone as ownerPhone "
+			
+			+ " FROM cs_pt_property_v1 pt " + INNER_JOIN
+			+ " cs_pt_propertydetails_v1 ptdl ON pt.id =ptdl.property_id " + LEFT_JOIN
+			
+			+" cs_pt_ownership_v1 ownership ON pt.id=ownership.property_id AND ownership.active_state = true "
+			+ INNER_JOIN + " cs_pt_ownershipdetails_v1 od ON ownership.id = od.owner_id ";
+
+	
+	private static final String PROPERTYID_SEARCH_QUERY = SELECT + " pt.id as pid FROM cs_pt_property_v1 pt ";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria, String paginationWrapper) {
 
@@ -122,5 +143,32 @@ public class RentDetailQueryBuilder {
 		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria, paginationWrapper);
+	}
+
+	public String getPropertyWithActiveOwnerQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
+		StringBuilder builder = new StringBuilder(PROPERTY_ACTIVE_OWNER_QUERY);
+
+		if (!ObjectUtils.isEmpty(criteria.getState())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.master_data_state IN (:states)");
+			preparedStmtList.put("states", criteria.getState());
+		}
+		if (null != criteria.getPropertyId()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.id = :id");
+			preparedStmtList.put("id", criteria.getPropertyId());
+		}
+		return builder.toString();
+	}
+
+	public String getPropertyIdQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
+		StringBuilder builder = new StringBuilder(PROPERTYID_SEARCH_QUERY);
+
+		if (!ObjectUtils.isEmpty(criteria.getState())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.master_data_state IN (:states)");
+			preparedStmtList.put("states", criteria.getState());
+		}
+		return builder.toString();
 	}
 }

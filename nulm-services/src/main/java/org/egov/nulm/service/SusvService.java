@@ -4,7 +4,6 @@ package org.egov.nulm.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +17,6 @@ import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.idgen.model.IdGenerationResponse;
 import org.egov.nulm.model.NulmSusvRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
-import org.egov.nulm.model.SmidApplication;
 import org.egov.nulm.model.SusvApplication;
 import org.egov.nulm.model.SusvApplicationDocument;
 import org.egov.nulm.repository.SusvRepository;
@@ -148,7 +146,6 @@ public class SusvService {
 			processInstances.setBusinessService(config.getBusinessservice());
 			processInstances.setDocuments(susvApplication.getWfDocuments());
 			processInstances.setComment(susvApplication.getRemark());
-			List<Map<String, String>> uuidmaps = new LinkedList<>();
 
 			if(!CollectionUtils.isEmpty(susvApplication.getAssignee())){
 				// Adding assignes to processInstance

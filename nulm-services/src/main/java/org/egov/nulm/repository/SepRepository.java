@@ -2,10 +2,7 @@
 package org.egov.nulm.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.egov.common.contract.request.Role;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
@@ -17,13 +14,9 @@ import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.SEPRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Repository
 public class SepRepository {
 
@@ -51,37 +44,30 @@ public class SepRepository {
 
 	public List<SepApplication> getSEPApplication(SepApplication sepApplication, List<Role> role, Long userId) {
 		List<SepApplication> sep = new ArrayList<>();
+		boolean isEmployee=false;
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-
-					return sep = jdbcTemplate.query(NULMQueryBuilder.GET_SEP_APPLICATION_QUERY,
-							new Object[] { sepApplication.getApplicationId(), sepApplication.getApplicationId(), "", "",
-									sepApplication.getTenantId(),
-									sepApplication.getApplicationStatus() == null ? ""
-											: sepApplication.getApplicationStatus().toString(),
-									sepApplication.getApplicationStatus() == null ? ""
-											: sepApplication.getApplicationStatus().toString(),
-									sepApplication.getFromDate(), sepApplication.getFromDate(),
-									sepApplication.getToDate(), sepApplication.getToDate() ,
-									sepApplication.getName(),sepApplication.getName(),
-									sepApplication.getApplicationStatus() == null ? SepApplication.StatusEnum.DRAFTED.toString()
-											: ""},
-							seprowMapper);
-
+					isEmployee=true;
 				}
 			}
-
 			return sep = jdbcTemplate.query(NULMQueryBuilder.GET_SEP_APPLICATION_QUERY,
-					new Object[] { sepApplication.getApplicationId(), sepApplication.getApplicationId(),
-							userId.toString(), userId.toString(), sepApplication.getTenantId(),
-							sepApplication.getApplicationStatus() == null ? ""
-									: sepApplication.getApplicationStatus().toString(),
-							sepApplication.getApplicationStatus() == null ? ""
-									: sepApplication.getApplicationStatus().toString(),
-							sepApplication.getFromDate(), sepApplication.getFromDate(), sepApplication.getToDate(),
-							sepApplication.getToDate(),sepApplication.getName(),sepApplication.getName(),""},
-					seprowMapper);
+					new Object[] {  sepApplication.getApplicationId(), 
+									sepApplication.getApplicationId(), 
+									isEmployee ? "" : userId.toString(), 
+									isEmployee ? "" : userId.toString(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getFromDate(), 
+									sepApplication.getFromDate(),
+									sepApplication.getToDate(),
+									sepApplication.getToDate(),
+									sepApplication.getName(),
+									sepApplication.getName(),
+									isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : ""
+								 }, seprowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());

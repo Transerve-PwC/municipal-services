@@ -15,6 +15,7 @@ import org.egov.cpt.models.RentAccountStatement;
 import org.egov.cpt.models.RentAccountStatement.Type;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.util.FileStoreUtils;
+import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
 import org.egov.tracer.model.CustomException;
 import org.junit.Before;
@@ -40,6 +41,9 @@ public class AccountStatementExcelGenerationServiceTest {
 	@Mock
 	private FileStoreUtils fileStoreUtils;
 
+	@Mock
+	private NotificationUtil notificationUtil;
+
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
@@ -47,7 +51,7 @@ public class AccountStatementExcelGenerationServiceTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		accountStatementExcelGenerationService = new AccountStatementExcelGenerationService(propertyRepository,
-				propertyService, fileStoreUtils);
+				propertyService, fileStoreUtils, notificationUtil);
 	}
 
 	@Test

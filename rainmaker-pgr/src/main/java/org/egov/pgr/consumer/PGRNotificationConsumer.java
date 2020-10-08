@@ -275,7 +275,8 @@ public class PGRNotificationConsumer {
             }
         }
         for (String role : pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
-            String phoneNumberRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+            log.info("SMS Role: {}",role);
+        	String phoneNumberRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
             phoneNumberRetrived = phoneNumberRetrived.split("[|]")[0];
             String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
             String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);

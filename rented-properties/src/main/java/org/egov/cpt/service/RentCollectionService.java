@@ -318,7 +318,13 @@ public class RentCollectionService implements IRentCollectionService {
 				break;
 			}
 		}
-		return accountStatementItems;
+		if (fromDateTimestamp == null) {
+			return accountStatementItems;
+		} else {
+			return accountStatementItems.stream()
+					.filter(statementItem -> statementItem.getDate() >= fromDateTimestamp.longValue())
+					.collect(Collectors.toList());
+		}
 	}
 
 	private RentDemand cloneDemand(RentDemand rentDemand) {

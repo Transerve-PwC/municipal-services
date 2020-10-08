@@ -188,4 +188,7 @@ public class WSConfiguration {
 	
 	@Value("${create.ws.conversion.workflow.name}")
 	private String businessServiceConversionValue;
+	
+	@Value("${create.ws.tubewell.workflow.name}")
+	private String businessServiceTubewellValue;
 }

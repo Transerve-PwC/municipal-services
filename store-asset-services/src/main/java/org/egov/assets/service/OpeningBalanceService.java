@@ -17,6 +17,7 @@ import org.egov.assets.common.exception.CustomBindException;
 import org.egov.assets.common.exception.ErrorCode;
 import org.egov.assets.common.exception.InvalidDataException;
 import org.egov.assets.model.FinancialYear;
+import org.egov.assets.model.IndentResponse;
 import org.egov.assets.model.Material;
 import org.egov.assets.model.MaterialReceipt;
 import org.egov.assets.model.MaterialReceipt.ReceiptTypeEnum;
@@ -30,9 +31,11 @@ import org.egov.assets.model.Store;
 import org.egov.assets.model.StoreGetRequest;
 import org.egov.assets.model.Tenant;
 import org.egov.assets.model.Uom;
+import org.egov.assets.model.WorkFlowDetails;
 import org.egov.assets.repository.MaterialReceiptJdbcRepository;
 import org.egov.assets.repository.PDFServiceReposistory;
 import org.egov.assets.repository.StoreJdbcRepository;
+import org.egov.assets.wf.WorkflowIntegrator;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -82,12 +85,18 @@ public class OpeningBalanceService extends DomainService {
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
 
+	@Autowired
+	WorkflowIntegrator workflowIntegrator;
+
+	@Value("${inv.openbalance.updatestatus.topic}")
+	private String updatestatusTopic;
+	
 	public List<MaterialReceipt> create(OpeningBalanceRequest openBalReq, String tenantId) {
 		try {
 			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE, tenantId, openBalReq.getRequestInfo());
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
 				materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
-				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
+				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
 				if (isEmpty(materialReceipt.getTenantId())) {
 					materialReceipt.setTenantId(tenantId);
 				}
@@ -123,6 +132,10 @@ public class OpeningBalanceService extends DomainService {
 						}
 					});
 				}
+				WorkFlowDetails workFlowDetails = openBalReq.getWorkFlowDetails();
+				workFlowDetails.setBusinessId(materialReceipt.getMrnNumber());
+				workflowIntegrator.callWorkFlow(openBalReq.getRequestInfo(), workFlowDetails, materialReceipt.getTenantId());
+				
 			});
 
 			for (MaterialReceipt material : openBalReq.getMaterialReceipt()) {
@@ -341,12 +354,12 @@ public class OpeningBalanceService extends DomainService {
 						if (null != detail.getReceiptDetailsAddnInfo()) {
 							for (MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo()) {
 
-								if (null != material && material.getLotControl() == true
+/*								if (null != material && material.getLotControl() == true
 										&& isEmpty(addInfo.getLotNo())) {
 									errors.addDataError(ErrorCode.LOT_NO_NOT_EXIST.getCode(),
 											addInfo.getLotNo() + " at serial no." + detailIndex);
 								}
-
+*/
 								if (null != material && material.getShelfLifeControl() == true
 										&& isEmpty(addInfo.getExpiryDate())
 										|| (!isEmpty(addInfo.getExpiryDate())
@@ -512,5 +525,21 @@ public class OpeningBalanceService extends DomainService {
 
 		return PDFResponse.builder()
 				.responseInfo(ResponseInfo.builder().status("Failed").resMsgId("No data found").build()).build();
+	}
+
+	public OpeningBalanceResponse updateStatus(OpeningBalanceRequest openingBalance) {
+
+		try {
+			WorkFlowDetails workFlowDetails = workflowIntegrator.callWorkFlow(openingBalance.getRequestInfo(), openingBalance.getWorkFlowDetails(),
+					openingBalance.getWorkFlowDetails().getTenantId());
+			openingBalance.setWorkFlowDetails(workFlowDetails);
+			kafkaQue.send(updatestatusTopic, openingBalance);
+			OpeningBalanceResponse response = new OpeningBalanceResponse();
+			response.setMaterialReceipt(openingBalance.getMaterialReceipt());
+			response.setResponseInfo(getResponseInfo(openingBalance.getRequestInfo()));
+			return response;
+		} catch (CustomBindException e) {
+			throw e;
+		}
 	}
 }

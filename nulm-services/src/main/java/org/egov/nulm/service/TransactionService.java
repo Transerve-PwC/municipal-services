@@ -8,10 +8,8 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
-import org.egov.nulm.model.NulmSusvRequest;
 import org.egov.nulm.model.NulmSusvTransactionRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
-import org.egov.nulm.model.SusvApplication;
 import org.egov.nulm.model.Transaction;
 import org.egov.nulm.repository.TransactionRepository;
 import org.egov.nulm.util.AuditDetailsUtil;
@@ -30,14 +28,8 @@ public class TransactionService {
 
 	private final ObjectMapper objectMapper;
 
-	private NULMConfiguration config;
-
 	private TransactionRepository repository;
 
-	private IdGenRepository idgenrepository;
-	
-	private WorkFlowRepository workFlowRepository;
-	
 	private AuditDetailsUtil auditDetailsUtil;
 	
 	@Autowired
@@ -45,10 +37,7 @@ public class TransactionService {
 			NULMConfiguration config,AuditDetailsUtil auditDetailsUtil,WorkFlowRepository workFlowRepository) {
 		this.objectMapper = objectMapper;
 		this.repository = repository;
-		this.idgenrepository = idgenrepository;
-		this.config = config;
 		this.auditDetailsUtil=auditDetailsUtil;
-		this.workFlowRepository=workFlowRepository;
 
 	}
 

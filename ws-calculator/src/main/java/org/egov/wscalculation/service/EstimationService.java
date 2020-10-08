@@ -379,7 +379,7 @@ public class EstimationService {
 		billingSlabIds.add("");
 		List<TaxHeadEstimate> taxHeadEstimates = new ArrayList<TaxHeadEstimate>();
 		String activityType = criteria.getWaterConnection().getActivityType();
-		if(activityType.equalsIgnoreCase(WSCalculationConstant.WS_PERMANENT_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE)){
+		if(activityType.equalsIgnoreCase(WSCalculationConstant.WS_PERMANENT_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_CHANGE_OWNER_INFO) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_CONVERSION)){
 			 taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData,
 						requestInfo);
 		}else {
@@ -407,19 +407,36 @@ public class EstimationService {
 
 		if (regularSlab != null) {
 			masterSlab.put("waterActivity", regularSlab);
-			JSONArray filteredMasters = JsonPath.read(masterSlab, "$.waterActivity[?(@.code=='" + criteria.getWaterConnection().getActivityType() + "')]");
+			JSONArray filteredMasters = JsonPath.read(masterSlab,
+					"$.waterActivity[?(@.code=='" + criteria.getWaterConnection().getActivityType() + "')]");
 			JSONObject charge = mapper.convertValue(filteredMasters.get(0), JSONObject.class);
 			BigDecimal unitCost = BigDecimal.ZERO;
 			unitCost = new BigDecimal(charge.getAsNumber(WSCalculationConstant.UNIT_COST_CONST).toString());
-			
-			if (!(unitCost.compareTo(BigDecimal.ZERO) == 0))
+
+			if (criteria.getWaterConnection().getAdditionalDetails() != null) {
+				HashMap<String, Object> additionalDetails = mapper
+						.convertValue(criteria.getWaterConnection().getAdditionalDetails(), HashMap.class);
+				if ((additionalDetails.getOrDefault(WSCalculationConstant.ADHOC_PENALTY, null) != null
+						|| additionalDetails.getOrDefault(WSCalculationConstant.ADHOC_REBATE, null) != null)
+						&& WSCalculationConstant.WS_ADDON_PENDING_STATUS
+								.equalsIgnoreCase(criteria.getWaterConnection().getApplicationStatus())
+						|| WSCalculationConstant.WS_STATUS_PENDING_FOR_CMR
+								.equalsIgnoreCase(criteria.getWaterConnection().getApplicationStatus())) {
+					addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
+				} else {
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FORM_FEE)
+							.estimateAmount(unitCost.setScale(2, 2)).build());
+
+				}
+			} else if (!(unitCost.compareTo(BigDecimal.ZERO) == 0)) {
 				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FORM_FEE)
 						.estimateAmount(unitCost.setScale(2, 2)).build());
-			
-			
-			return estimates;
+				addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
+
+			}
 
 		}
+
 		return estimates;}
 
 	private List<TaxHeadEstimate> getTaxHeadForFeeEstimationForTempAppCon(CalculationCriteria criteria,
@@ -525,13 +542,14 @@ public class EstimationService {
 			}
 			BigDecimal roadCuttingCharge = BigDecimal.ZERO;
 			if (criteria.getWaterConnection().getSecurityCharge() != null
-					|| criteria.getWaterConnection().getSecurityCharge() != 0) {
+					&& criteria.getWaterConnection().getSecurityCharge() != 0) {
 				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
 						.estimateAmount(securityFee.setScale(2, 2)).build());
 				return estimates;
 			} else {
 				if (criteria.getWaterConnection().getRoadType() != null
 						&& !WSCalculationConstant.WS_APPLY_FOR_REGULAR_CON
+								.equalsIgnoreCase(criteria.getWaterConnection().getActivityType()) && !WSCalculationConstant.WS_APPLY_FOR_REGULAR_CON
 								.equalsIgnoreCase(criteria.getWaterConnection().getActivityType()))
 					roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getWaterConnection().getRoadType(),
 							criteria.getWaterConnection().getRoadCuttingArea());

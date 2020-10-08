@@ -37,8 +37,6 @@ public class SuhLogService {
 
 	private SuhLogRepository repository;
 
-	private IdGenRepository idgenrepository;
-	
 	private AuditDetailsUtil auditDetailsUtil;
 	
 	@Autowired
@@ -46,7 +44,6 @@ public class SuhLogService {
 			NULMConfiguration config,AuditDetailsUtil auditDetailsUtil) {
 		this.objectMapper = objectMapper;
 		this.repository = repository;
-		this.idgenrepository = idgenrepository;
 		this.config = config;
 		this.auditDetailsUtil=auditDetailsUtil;
 
@@ -105,18 +102,16 @@ public class SuhLogService {
 		long cuurentDateTime=new Date().getTime();
 		List<Role> role=request.getRequestInfo().getUserInfo().getRoles();
 		List<SuhLogMaintenance> suhLogResult = repository.getSuhLog(suhLog,role,request.getRequestInfo().getUserInfo().getId());
-		if(suhLogResult!=null || !suhLogResult.isEmpty() || suhLogResult.size()!=0)
-		{
-		long createdTime=suhLogResult.get(0).getAuditDetails().getCreatedTime();
-		long diff = cuurentDateTime - createdTime;
-		int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-		log.info("nulm-services logs :: Executing checkDate() = {}",diffDays);
-		System.err.println("dif................"+diffDays);
-		if(diffDays>Integer.parseInt(config.getSuhDeleteDatePeriod()))
-		{
-			errorMap.put(CommonConstants.INVALID_SUH_LOG_REQUEST, CommonConstants.INVALID_SUH_LOG_REQUEST_MESSAGE);
-			throw new CustomException(errorMap);
-		}
+		if(suhLogResult!=null && !suhLogResult.isEmpty()){
+			long createdTime=suhLogResult.get(0).getAuditDetails().getCreatedTime();
+			long diff = cuurentDateTime - createdTime;
+			int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+			log.info("nulm-services logs :: Executing checkDate() = {}",diffDays);
+			System.err.println("dif................"+diffDays);
+			if(diffDays>Integer.parseInt(config.getSuhDeleteDatePeriod())){
+				errorMap.put(CommonConstants.INVALID_SUH_LOG_REQUEST, CommonConstants.INVALID_SUH_LOG_REQUEST_MESSAGE);
+				throw new CustomException(errorMap);
+			}
 		}
 		else {
 			errorMap.put(CommonConstants.INVALID_SUH_LOG_REQUEST, CommonConstants.INVALID_SUH_LOG_UUID_REQUEST_MESSAGE);

@@ -198,13 +198,13 @@ public class Indent {
 	public enum IndentStatusEnum {
 		CREATED("CREATED"),
 
-		REVIEWOFSDO("Review Of SDO"), REVIEWOFEE("Review Of EE"), REVIEWOFSE("Review Of SE"), REVIEWOFCE(
-				"Review Of CE"), SENDTOCREATOR("Send To Creator"), COMMISSIONERAPPROVAL("Commissioner Approval"), APPROVED(
+		REVIEWOFSDO("Review Of SDO"), REVIEWOFEE("Review/Approval Of EE"), REVIEWOFSE("Review/Approval Of SE"), REVIEWOFCE(
+				"Review/Approval Of CE"), SENDTOCREATOR("Send To Creator"), COMMISSIONERAPPROVAL("Commissioner Approval"), APPROVED(
 						"Approved"), REASSIGNTOJE(
-								"REASSIGNTOJE"), REVIEWOFCAO("Review Of CAO"), REVIEWOFACMC("Review Of ACMC"),
+								"REASSIGNTOJE"), REVIEWOFCAO("Review/Approval Of CAO"), REVIEWOFACMC("Review/Approval Of ACMC"),
 
 		REVIEWOFSO("Review Of SO"), REVIEWOFSA("Review Of SA"), REVIEWOFSP("Review Of SP"), REVIEWOFJC(
-				"Review Of JC"), REVIEWOFMOH("Review Of MOH"),
+				"Review/Approval Of Jt Comm"), REVIEWOFMOH("Review/Approval Of MOH"),
 
 		REJECTED("Rejected"),
 

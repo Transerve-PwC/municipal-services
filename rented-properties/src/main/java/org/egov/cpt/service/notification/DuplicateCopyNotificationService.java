@@ -10,6 +10,7 @@ import org.egov.cpt.models.DuplicateCopy;
 import org.egov.cpt.models.EmailRequest;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.util.NotificationUtil;
+import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.web.contracts.DuplicateCopyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,8 @@ public class DuplicateCopyNotificationService {
 					message = util.getCustomizedDcMsg(request.getRequestInfo(), duplicateCopy, localizationMessages);
             if(message==null) continue;
 
-			message = message.replace("\\n", "\n");
+            String emailSignature = util.getMessageTemplate(PTConstants.EMAIL_SIGNATURE, localizationMessages);
+			message=message.concat(emailSignature);
 			emailRequest.addAll(util.createEMAILRequest(message,emailIdToApplicant));
         }
 	
@@ -88,7 +90,8 @@ public class DuplicateCopyNotificationService {
 
 			if (message == null)
 				continue;
-
+			
+			message = message.replaceAll("<br/>", "");
 			Map<String, String> mobileNumberToOwner = new HashMap<>();
 
 			if (copy.getApplicant().get(0).getPhone() != null) {

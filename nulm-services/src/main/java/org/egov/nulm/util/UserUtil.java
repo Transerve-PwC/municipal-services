@@ -3,10 +3,7 @@ package org.egov.nulm.util;
 import static java.util.Objects.isNull;
 
 import java.io.IOException;
-import java.util.Collections;
-
 import org.egov.common.contract.request.Role;
-import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.model.Errors;
@@ -34,8 +31,6 @@ public class UserUtil {
 
 	private NULMConfiguration config;
 
-	private AuditDetailsUtil auditDetailsUtil;
-
 	private final ObjectMapper objectMapper;
 
 	@Autowired
@@ -43,7 +38,6 @@ public class UserUtil {
 			ObjectMapper objectMapper) {
 		this.restTemplate = restTemplate;
 		this.config = config;
-		this.auditDetailsUtil = auditDetailsUtil;
 		this.objectMapper = objectMapper;
 
 	}
@@ -51,17 +45,16 @@ public class UserUtil {
 	
 	public UserDetailResponse createUser(OrganizationRequest request) throws IOException {
 		String url = config.getUserHost() + config.getUserPath();
-		ResponseInfo responseInfo = null;
 		UserDetailResponse userresponse=null;
 		try {
 			Organization organization = objectMapper.convertValue(request.getOrganizationRequest(), Organization.class);
 			String tenantId = organization.getTenantId();
-			CreateUserRequest req = new CreateUserRequest();
+			new CreateUserRequest();
 			UserRequest user = new UserRequest();
 			user.setUserName(organization.getMobileNo());
 			user.setMobileNumber(organization.getMobileNo());
 			user.setTenantId(tenantId.split("\\.")[0]);
-			user.setPermanentCity(tenantId.split("\\.")[0]);
+			user.setPermanentCity(tenantId);
 			user.setName(organization.getRepresentativeName());
 			user.setCorrespondenceAddress(organization.getAddress());
 			user.setEmailId(organization.getEmailId());
@@ -69,10 +62,8 @@ public class UserUtil {
 			user.setLastModifiedBy(request.getRequestInfo().getUserInfo()!=null?request.getRequestInfo().getUserInfo().getId().toString():"");			
 			user.setActive(true);
 			user.setType("CITIZEN");
-			Role role = getCitizenRole(organization.getTenantId());
-			user.setRoles(Collections.singletonList(role));
-			Role ngoNGO = getNGORole(organization.getTenantId());
-			user.setRoles(Collections.singletonList(ngoNGO));
+			user.addRolesItem(getCitizenRole(organization.getTenantId()));
+			user.addRolesItem(getNGORole(organization.getTenantId()));
 			JsonNode response = restTemplate.postForObject(url, new CreateUserRequest(request.getRequestInfo(), user), JsonNode.class);
 
 			if (!isNull(response)) {

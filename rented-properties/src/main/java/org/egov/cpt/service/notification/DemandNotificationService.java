@@ -13,6 +13,7 @@ import org.egov.cpt.models.Property;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.util.NotificationUtil;
+import org.egov.cpt.util.PTConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -72,7 +73,7 @@ public class DemandNotificationService {
 			if (owner.getOwnerDetails().getPhone() != null && owner.getActiveState()) {
 				mobileNumberToOwner.put(owner.getOwnerDetails().getPhone(), owner.getOwnerDetails().getName());
 			}
-			message = message.replace("\\n", "\n");
+			message = message.replaceAll("<br/>", "");
 			smsRequests.addAll(util.createSMSRequest(message, mobileNumberToOwner));
 		}
 
@@ -96,7 +97,8 @@ public class DemandNotificationService {
 			if (message == null)
 				continue;
 
-			message = message.replace("\\n", "\n");
+			String emailSignature = util.getMessageTemplate(PTConstants.EMAIL_SIGNATURE, localizationMessages);
+			message=message.concat(emailSignature);
 			emailRequest.addAll(util.createEMAILRequest(message, emailIdToApplicant));
 		}
 

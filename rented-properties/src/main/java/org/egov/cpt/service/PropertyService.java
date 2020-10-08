@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
@@ -12,6 +11,7 @@ import org.egov.cpt.models.BillV2;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
+import org.egov.cpt.models.PropertyDueAmount;
 import org.egov.cpt.models.RentAccount;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.RentPayment;
@@ -22,10 +22,12 @@ import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.calculation.DemandRepository;
 import org.egov.cpt.service.calculation.DemandService;
+import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
+import org.egov.cpt.web.contracts.PropertyDueRequest;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
 import org.egov.cpt.workflow.WorkflowService;
@@ -78,6 +80,10 @@ public class PropertyService {
 
 	@Autowired
 	private DemandRepository demandRepository;
+	
+	@Autowired
+	private NotificationUtil notificationUtil;
+
 
 	public List<Property> createProperty(PropertyRequest request) {
 
@@ -269,7 +275,7 @@ public class PropertyService {
 		 * Get the bill generated.
 		 */
 		List<BillV2> bills = demandRepository.fetchBill(propertyRequest.getRequestInfo(), property.getTenantId(),
-				property.getRentPaymentConsumerCode());
+				property.getRentPaymentConsumerCode(),property.getBillingBusinessService());
 		if (CollectionUtils.isEmpty(bills)) {
 			throw new CustomException("BILL_NOT_GENERATED",
 					"No bills were found for the consumer code " + property.getRentPaymentConsumerCode());
@@ -280,7 +286,7 @@ public class PropertyService {
 			 * if offline, create a payment.
 			 */
 			demandService.createCashPayment(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
-					bills.get(0).getId(), owner);
+					bills.get(0).getId(), owner,property.getBillingBusinessService());
 		} else {
 			/**
 			 * We return the property along with the consumerCode that we set earlier. Also
@@ -292,4 +298,42 @@ public class PropertyService {
 		return Collections.singletonList(property);
 	}
 
+	public void getDueAmount( RequestInfo requestInfo) {
+		PropertyCriteria criteria = PropertyCriteria.builder()
+				.state(Arrays.asList(PTConstants.PM_STATUS_APPROVED))
+				.relations(Arrays.asList(PTConstants.RELATION_OWNER))
+				.build();
+		List<String> propertyIds = repository.getPropertyIds(criteria);
+		if (CollectionUtils.isEmpty(propertyIds))
+			throw new CustomException("NO_PROPERTY_FOUND","No approved property found");
+			
+		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
+		String localizationMessages = notificationUtil.getLocalizationMessages("ch.chandigarh", requestInfo);
+		
+		propertyIds.stream().forEach(property -> {
+				criteria.setPropertyId(property); 
+				criteria.setLimit(1L);
+				List<Property> singleProperty = repository.getPropertyOwner(criteria);
+				PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(singleProperty.get(0).getId())
+						.transitNumber(singleProperty.get(0).getTransitNumber())
+						.tenantId(singleProperty.get(0).getTenantId())
+						.colony(notificationUtil.getMessageTemplate(singleProperty.get(0).getColony(), localizationMessages))
+						.ownerName(singleProperty.get(0).getOwners().get(0).getOwnerDetails().getName())
+						.mobileNumber(singleProperty.get(0).getOwners().get(0).getOwnerDetails().getPhone())
+						.build();
+				List<RentDemand> demands = repository
+						.getPropertyRentDemandDetails(PropertyCriteria.builder().propertyId(property).build());
+				RentAccount rentAccount = repository
+						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property).build());
+				if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+					propertyDueAmount.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
+							singleProperty.get(0).getPropertyDetails().getInterestRate()));
+				}
+				PropertyDueAmounts.add(propertyDueAmount);
+			});
+			
+			PropertyDueRequest propertyDueRequest =  PropertyDueRequest.builder().requestInfo(requestInfo)
+					.propertyDueAmounts(PropertyDueAmounts).build();
+			producer.push(config.getDueAmountTopic(), propertyDueRequest);	
+	}
 }

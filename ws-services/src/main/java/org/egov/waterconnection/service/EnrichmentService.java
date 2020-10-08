@@ -101,8 +101,13 @@ public class EnrichmentService {
 		additionalDetail.put(WCConstants.APP_CREATED_DATE, BigDecimal.valueOf(System.currentTimeMillis()));
 		waterConnectionRequest.getWaterConnection().setAdditionalDetails(additionalDetail);
 		//Setting ApplicationType
-		waterConnectionRequest.getWaterConnection()
-				.setApplicationType(WCConstants.NEW_WATER_CONNECTION);
+		
+		if(WCConstants.WS_NEW_TUBEWELL_CONNECTION.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
+			waterConnectionRequest.getWaterConnection().setApplicationType(WCConstants.WS_NEW_TUBEWELL_CONNECTION);
+		}else {
+			waterConnectionRequest.getWaterConnection().setApplicationType(WCConstants.NEW_WATER_CONNECTION);
+			waterConnectionRequest.getWaterConnection().setConnectionType(WCConstants.METERED_CONNECTION);
+		}
 		setApplicationIdgenIds(waterConnectionRequest);
 		setStatusForCreate(waterConnectionRequest);
 	}
@@ -128,7 +133,7 @@ public class EnrichmentService {
 				}
 			}
 			if (waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()
-					.equalsIgnoreCase(WCConstants.APPROVE_CONNECTION_CONST)) {
+					.equalsIgnoreCase(WCConstants.ACTION_APPROVE_CONNECTION_CONST)) {
 				additionalDetail.put(WCConstants.ESTIMATION_DATE_CONST, System.currentTimeMillis());
 			}
 		}
@@ -225,7 +230,7 @@ public class EnrichmentService {
 	 */
 	public void postStatusEnrichment(WaterConnectionRequest waterConnectionrequest) {
 		if (WCConstants.ACTIVATE_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())
-				|| WCConstants.ACTION_APPROVE_TEMP_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())) {
+				|| WCConstants.ACTION_ACTIVATE_TEMP_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())) {
 			setConnectionNO(waterConnectionrequest);
 		}
 	}
@@ -264,7 +269,7 @@ public class EnrichmentService {
 	public void enrichFileStoreIds(WaterConnectionRequest waterConnectionRequest) {
 		try {
 			if (waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()
-					.equalsIgnoreCase(WCConstants.APPROVE_CONNECTION_CONST)
+					.equalsIgnoreCase(WCConstants.ACTION_APPROVE_CONNECTION_CONST)
 					|| waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()
 							.equalsIgnoreCase(WCConstants.ACTION_PAY)
 					|| waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()
@@ -274,7 +279,7 @@ public class EnrichmentService {
 				waterDao.enrichFileStoreIds(waterConnectionRequest);
 			}
 		} catch (Exception ex) {
-			log.debug(ex.toString());
+			log.error(ex.toString());
 		}
 	}
 	

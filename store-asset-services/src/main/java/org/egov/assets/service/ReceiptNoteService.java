@@ -186,7 +186,7 @@ public class ReceiptNoteService extends DomainService {
 						getAuditDetails(materialReceiptRequest.getRequestInfo(), Constants.ACTION_CREATE));
 			});
 
-				backUpdatePo(tenantId, materialReceipt);
+			backUpdatePo(tenantId, materialReceipt);
 
 			WorkFlowDetails workFlowDetails = materialReceiptRequest.getWorkFlowDetails();
 			workFlowDetails.setBusinessId(materialReceipt.getMrnNumber());
@@ -266,7 +266,7 @@ public class ReceiptNoteService extends DomainService {
 				}
 			}
 
-				backUpdatePo(tenantId, materialReceipt);
+			backUpdatePo(tenantId, materialReceipt);
 		});
 
 		logAwareKafkaTemplate.send(updateTopic, updateTopicKey, materialReceiptRequest);
@@ -894,12 +894,11 @@ public class ReceiptNoteService extends DomainService {
 				materialReceiptSearch.setTenantId(materialReceiptRequest.getWorkFlowDetails().getTenantId());
 				MaterialReceiptResponse receiptResponse = search(materialReceiptSearch);
 				for (MaterialReceipt materialReceipt : receiptResponse.getMaterialReceipt()) {
-						// generate PO
+					// generate PO
 					if (materialReceipt.getReceiptType() != null && materialReceipt.getReceiptType().toString()
 							.equals(ReceiptTypeEnum.NON_PURCHASE_RECEIPT.toString())) {
 						CreateNonPurchaseOrder(materialReceipt);
 					}
-					
 				}
 			}
 

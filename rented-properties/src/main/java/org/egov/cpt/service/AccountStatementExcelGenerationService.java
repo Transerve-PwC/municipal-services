@@ -1,8 +1,8 @@
 package org.egov.cpt.service;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import org.egov.cpt.models.RentAccountStatement;
 import org.egov.cpt.models.RentAccountStatement.Type;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.util.FileStoreUtils;
+import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,30 +42,30 @@ public class AccountStatementExcelGenerationService {
 	private PropertyRepository propertyRepository;
 	private PropertyService propertyService;
 	private FileStoreUtils fileStoreUtils;
+	private NotificationUtil notificationUtil;
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	private static String[] columns = { "Date", "Amount", "Type (payment)", "Type (Rent)", "Remaining Principal", "Total Due", "Account Balance",
-			"Remaining Interest", "Receipt Number" };
-	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Transit Site No.", "Area",
-			"Rent", "Security Advance Taken By o/o BDPO U.T.Interest",
+	private static String[] columns = { "Date", "Amount(in Rs)", "Type(Payment)", "Type(Rent)", "Principal Due",
+			"Interest Due", "Total Due", "Account Balance", "Receipt Number" };
+	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Transit Site No.",
+			"Area", "Rent", "Security Advance Taken By o/o BDPO U.T.Interest",
 			"Yr. Rent (increase as per Clause 4 of Lease Deed)", "Montly Rent", "Interest" };
 	private static final String PAYMENT = "Payment";
 	private static final String RENT = "Rent";
+	private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 	@Autowired
 	public AccountStatementExcelGenerationService(PropertyRepository propertyRepository,
-			PropertyService propertyService, FileStoreUtils fileStoreUtils) {
+			PropertyService propertyService, FileStoreUtils fileStoreUtils, NotificationUtil notificationUtil) {
 		this.propertyRepository = propertyRepository;
 		this.propertyService = propertyService;
 		this.fileStoreUtils = fileStoreUtils;
+		this.notificationUtil = notificationUtil;
 	}
 
 	public List<HashMap<String, String>> generateAccountStatementExcel(
 			AccountStatementCriteria accountStatementCriteria, RequestInfo requestInfo) {
-
-		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
-				requestInfo);
 
 		List<Property> properties = propertyRepository
 				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
@@ -73,16 +74,15 @@ public class AccountStatementExcelGenerationService {
 		Property property = properties.get(0);
 		List<String> propertyList = new ArrayList<>();
 		propertyList.add(property.getOwners().get(0).getOwnerDetails().getName());
-		propertyList.add(Instant.ofEpochMilli(property.getOwners().get(0).getOwnerDetails().getAllotmentStartdate())
-				.atZone(ZoneId.systemDefault()).toLocalDate().format(FORMATTER).toString());
+		propertyList.add(getFormattedDate(property.getOwners().get(0).getOwnerDetails().getAllotmentStartdate()));
 		propertyList.add(property.getTransitNumber());
-		propertyList.add(property.getPropertyDetails().getArea());
+		propertyList.add(property.getPropertyDetails().getArea() + " sqyd");
 		propertyList.add(property.getPropertyDetails().getRentPerSqyd());
 		propertyList.add("");
-		propertyList.add(property.getPropertyDetails().getRentIncrementPercentage().toString());
+		propertyList.add(property.getPropertyDetails().getRentIncrementPercentage().intValue() + "%");
 		propertyList.add(property.getOwners().get(0).getOwnerDetails().getMonthlyRent());
 		propertyList.add(
-				property.getPropertyDetails().getInterestRate().toString() + "% P.A as per clause 15 of Lease Deed");
+				property.getPropertyDetails().getInterestRate().intValue() + "% P.A as per clause 15 of Lease Deed");
 		try {
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("AccountStatement");
@@ -113,7 +113,9 @@ public class AccountStatementExcelGenerationService {
 			cell.setCellStyle(headerCellStyle);
 
 			cell = headerRow2.createCell(1);
-			cell.setCellValue("Vikas Nagar, Mauli Jagaran, UT Chandigarh");
+			String localizationMessages = notificationUtil.getLocalizationMessages(property.getTenantId(), requestInfo);
+			String colony = notificationUtil.getMessageTemplate(property.getColony(), localizationMessages);
+			cell.setCellValue(colony);
 			cell.setCellStyle(headerCellStyle);
 			int j = 0;
 			for (int i = 3; i < 12; i++) {
@@ -138,36 +140,36 @@ public class AccountStatementExcelGenerationService {
 			}
 
 			int rowNum = 14;
-			int sumRemainingPrincipal=0;
-			int sumTotalDue=0;
-			int sumRemainingInterest=0;
-			for (RentAccountStatement rentAccountStmt : accountStatementResponse.getRentAccountStatements()) {
+			AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
+					requestInfo);
+			int statementsSize = accountStatementResponse.getRentAccountStatements().size();
+			for (int i = 0; i < statementsSize; i++) {
+				RentAccountStatement rentAccountStmt = accountStatementResponse.getRentAccountStatements().get(i);
 				Row row = sheet.createRow(rowNum++);
-				sumRemainingPrincipal+=rentAccountStmt.getRemainingPrincipal();
-				sumTotalDue+=rentAccountStmt.getDueAmount();
-				sumRemainingInterest+=rentAccountStmt.getRemainingInterest();
-				row.createCell(0).setCellValue(Instant.ofEpochMilli(rentAccountStmt.getDate())
-						.atZone(ZoneId.systemDefault()).toLocalDate().format(FORMATTER));
-				row.createCell(1).setCellValue(rentAccountStmt.getAmount());
+				if (i < statementsSize - 1) {
+					row.createCell(0).setCellValue(getFormattedDate(rentAccountStmt.getDate()));
+					row.createCell(1).setCellValue(decimalFormat.format(rentAccountStmt.getAmount()));
+					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
+							.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
+					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.D.name()))
+							.ifPresent(o -> row.createCell(3).setCellValue(RENT));
+				} else {
+					row.createCell(0).setCellValue("Balance as on " + getFormattedDate(rentAccountStmt.getDate()));
+				}
 
-				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
-						.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
-				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.D.name()))
-						.ifPresent(o -> row.createCell(3).setCellValue(RENT));
-
-				row.createCell(4).setCellValue(rentAccountStmt.getRemainingPrincipal());
-				row.createCell(5).setCellValue(rentAccountStmt.getDueAmount());
-				row.createCell(6).setCellValue(rentAccountStmt.getRemainingBalance());
-				row.createCell(7).setCellValue(rentAccountStmt.getRemainingInterest());
-				Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
-						.ifPresent(o -> row.createCell(8).setCellValue(o.getReceiptNo()));
+				row.createCell(4).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingPrincipal()));
+				row.createCell(5).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingInterest()));
+				row.createCell(6).setCellValue(decimalFormat.format(rentAccountStmt.getDueAmount()));
+				row.createCell(7).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingBalance()));
+				if (i < statementsSize - 1) {
+					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
+							.ifPresent(o -> row.createCell(8).setCellValue(o.getReceiptNo()));
+				}
 			}
 
-			Row row = sheet.createRow(rowNum);
-			row.createCell(0).setCellValue("Total as on "+ LocalDate.now().format(FORMATTER));
-			row.createCell(4).setCellValue(sumRemainingPrincipal);
-			row.createCell(5).setCellValue(sumTotalDue);
-			row.createCell(7).setCellValue(sumRemainingInterest);
+			/**
+			 * Write workbook to byte array
+			 */
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 			workbook.write(baos);
@@ -184,5 +186,9 @@ public class AccountStatementExcelGenerationService {
 			log.error(e.getMessage());
 		}
 		throw new CustomException("XLS_NOT_GENERATED", "Could not generate account statement");
+	}
+
+	private String getFormattedDate(long date) {
+		return Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate().format(FORMATTER);
 	}
 }

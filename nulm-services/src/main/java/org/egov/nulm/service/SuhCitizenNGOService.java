@@ -4,14 +4,11 @@ package org.egov.nulm.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.model.NulmSuhCitizenNGORequest;
-import org.egov.nulm.model.NulmSuhRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
-import org.egov.nulm.model.SuhApplication;
 import org.egov.nulm.model.SuhCitizenNGOApplication;
 import org.egov.nulm.repository.SuhCitizenNGORepository;
 import org.egov.nulm.util.AuditDetailsUtil;
@@ -29,11 +26,7 @@ public class SuhCitizenNGOService {
 
 	private final ObjectMapper objectMapper;
 
-	private NULMConfiguration config;
-
 	private SuhCitizenNGORepository repository;
-
-	private IdGenRepository idgenrepository;
 
 	private AuditDetailsUtil auditDetailsUtil;
 
@@ -42,8 +35,6 @@ public class SuhCitizenNGOService {
 			IdGenRepository idgenrepository, NULMConfiguration config, AuditDetailsUtil auditDetailsUtil) {
 		this.objectMapper = objectMapper;
 		this.repository = repository;
-		this.idgenrepository = idgenrepository;
-		this.config = config;
 		this.auditDetailsUtil = auditDetailsUtil;
 
 	}
@@ -89,7 +80,7 @@ public class SuhCitizenNGOService {
 
 			SuhCitizenNGOApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),
 					SuhCitizenNGOApplication.class);
-			List<Role> role = request.getRequestInfo().getUserInfo().getRoles();
+			request.getRequestInfo().getUserInfo().getRoles();
 			List<SuhCitizenNGOApplication> SuhApplicationresult = repository.getSuhApplication(suhapplication);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())

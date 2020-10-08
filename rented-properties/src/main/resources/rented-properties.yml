@@ -1638,4 +1638,41 @@ serviceMaps:
       
       - jsonPath: $.PropertyImagesApplications.*.auditDetails.lastModifiedTime 
           
+ 
+ - version: 1.0
+   description: Rent Due amount details
+   fromTopic: save-rp-dueamount
+   isTransaction: true
+   queryMaps:
     
+    - query: INSERT INTO cs_pt_dueamount (property_id,transit_number, tenantid, colony, owner_name, mobile_number, remaining_principal, balance_interest, balance_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (property_id) DO UPDATE SET owner_name=?, mobile_number=?, remaining_principal=?, balance_interest=?, balance_amount=?;
+      basePath: PropertyDueAmounts.*
+      jsonMaps:
+
+      - jsonPath: $.PropertyDueAmounts.*.propertyId
+      
+      - jsonPath: $.PropertyDueAmounts.*.transitNumber
+      
+      - jsonPath: $.PropertyDueAmounts.*.tenantId 
+
+      - jsonPath: $.PropertyDueAmounts.*.colony
+      
+      - jsonPath: $.PropertyDueAmounts.*.ownerName
+
+      - jsonPath: $.PropertyDueAmounts.*.mobileNumber
+      
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balancePrincipal
+      
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceInterest
+
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceAmount
+      
+      - jsonPath: $.PropertyDueAmounts.*.ownerName
+
+      - jsonPath: $.PropertyDueAmounts.*.mobileNumber
+      
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balancePrincipal
+      
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceInterest
+
+      - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceAmount

@@ -178,7 +178,7 @@ public class PdfFileStoreService {
 		HashMap<String, Object> addDetail = mapper
 				.convertValue(waterConnectionRequest.getWaterConnection().getAdditionalDetails(), HashMap.class);
 		if (waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()
-				.equalsIgnoreCase(WCConstants.APPROVE_CONNECTION_CONST)
+				.equalsIgnoreCase(WCConstants.ACTION_APPROVE_CONNECTION_CONST)
 				&& addDetail.getOrDefault(WCConstants.ESTIMATION_FILESTORE_ID, null) == null) {
 			addDetail.put(WCConstants.ESTIMATION_DATE_CONST, System.currentTimeMillis());
 			addDetail.put(WCConstants.ESTIMATION_FILESTORE_ID,

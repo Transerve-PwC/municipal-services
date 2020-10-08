@@ -89,6 +89,9 @@ public class PropertyConfiguration {
 
 	@Value("${persister.cancel.property.assessment.topic}")
 	private String cancelPropertyAssessmentTopic;
+	
+	@Value("${persister.save.dueamount.topic}")
+	private String dueAmountTopic;
 
 	// USER
 	@Value("${egov.user.host}")

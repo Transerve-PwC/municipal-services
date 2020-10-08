@@ -10,6 +10,7 @@ import org.egov.cpt.models.EmailRequest;
 import org.egov.cpt.models.Mortgage;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.util.NotificationUtil;
+import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.web.contracts.MortgageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,8 @@ public class MortgageNotificationService {
 						message = util.getCustomizedMGMsg(request.getRequestInfo(), mortgage, localizationMessages);
 	            if(message==null) continue;
 
-				message = message.replace("\\n", "\n");
+	            String emailSignature = util.getMessageTemplate(PTConstants.EMAIL_SIGNATURE, localizationMessages);
+				message=message.concat(emailSignature);
 				emailRequest.addAll(util.createEMAILRequest(message,emailIdToApplicant));
 	        }
 
@@ -86,7 +88,8 @@ public class MortgageNotificationService {
 
 			if (message == null)
 				continue;
-
+			
+			message = message.replaceAll("<br/>", "");
 			Map<String, String> mobileNumberToOwner = new HashMap<>();
 
 			if (mortgage.getApplicant().get(0).getPhone() != null) {

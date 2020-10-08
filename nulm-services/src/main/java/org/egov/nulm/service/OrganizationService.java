@@ -1,7 +1,6 @@
 
 package org.egov.nulm.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,13 +8,10 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
-import org.egov.nulm.model.NulmShgRequest;
 import org.egov.nulm.model.Organization;
 import org.egov.nulm.model.OrganizationRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
-import org.egov.nulm.model.SmidShgGroup;
 import org.egov.nulm.repository.OrganizationRepository;
-import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.user.model.UserDetailResponse;
 import org.egov.nulm.util.AuditDetailsUtil;
 import org.egov.nulm.util.UserUtil;
@@ -29,13 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class OrganizationService {
-
 	private final ObjectMapper objectMapper;
-
-	private NULMConfiguration config;
-	private UserUtil userUtil;
+	private UserUtil userUtil;	
 	private OrganizationRepository repository;
-
 	private AuditDetailsUtil auditDetailsUtil;
 	
 	@Autowired
@@ -43,7 +35,6 @@ public class OrganizationService {
 			NULMConfiguration config,AuditDetailsUtil auditDetailsUtil, UserUtil userUtil) {
 		this.objectMapper = objectMapper;
 		this.repository = repository;
-		this.config = config;
 		this.auditDetailsUtil=auditDetailsUtil;
 		this.userUtil=userUtil;
 
