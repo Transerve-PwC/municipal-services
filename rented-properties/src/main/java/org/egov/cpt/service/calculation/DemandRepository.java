@@ -15,7 +15,6 @@ import org.egov.cpt.models.calculation.Demand;
 import org.egov.cpt.models.calculation.DemandRequest;
 import org.egov.cpt.models.calculation.DemandResponse;
 import org.egov.cpt.repository.ServiceRequestRepository;
-import org.egov.cpt.util.PTConstants;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -75,11 +74,11 @@ public class DemandRepository {
 
 	}
 
-	public List<BillV2> fetchBill(RequestInfo requestInfo, String tenantId, String consumerCode,String businessService) {
+	public List<BillV2> fetchBill(RequestInfo requestInfo, String tenantId, String consumerCode,
+			String businessService) {
 		StringBuilder url = new StringBuilder(config.getBillingHost());
 		String uri = config.getBillGenearateEndpoint().replace("$tenantId", tenantId)
-				.replace("$consumerCode", consumerCode)
-				.replace("$businessService", businessService);
+				.replace("$consumerCode", consumerCode).replace("$businessService", businessService);
 		url.append(uri);
 		Object result = serviceRequestRepository.fetchResult(url, Collections.singletonMap("requestInfo", requestInfo));
 		BillResponseV2 response = null;

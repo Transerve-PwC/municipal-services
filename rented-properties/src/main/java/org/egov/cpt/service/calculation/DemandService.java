@@ -29,12 +29,11 @@ import org.egov.cpt.models.UserResponse;
 import org.egov.cpt.models.UserSearchRequestCore;
 import org.egov.cpt.models.calculation.Demand;
 import org.egov.cpt.models.calculation.Demand.StatusEnum;
-import org.egov.cpt.models.enums.CollectionPaymentModeEnum;
 import org.egov.cpt.models.calculation.DemandDetail;
 import org.egov.cpt.models.calculation.DemandResponse;
 import org.egov.cpt.models.calculation.TaxHeadEstimate;
+import org.egov.cpt.models.enums.CollectionPaymentModeEnum;
 import org.egov.cpt.repository.ServiceRequestRepository;
-import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -508,7 +507,8 @@ public class DemandService {
 	 *                      bill.
 	 * @return
 	 */
-	public Object createCashPayment(RequestInfo requestInfo, Double paymentAmount, String billId, Owner owner,String billingBusinessService) {
+	public Object createCashPayment(RequestInfo requestInfo, Double paymentAmount, String billId, Owner owner,
+			String billingBusinessService) {
 		String tenantId = owner.getTenantId();
 		OwnerDetails ownerDetails = owner.getOwnerDetails();
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)

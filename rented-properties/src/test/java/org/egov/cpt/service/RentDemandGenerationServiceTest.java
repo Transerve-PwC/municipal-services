@@ -1,8 +1,15 @@
 package org.egov.cpt.service;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.egov.cpt.config.PropertyConfiguration;
@@ -141,6 +148,35 @@ public class RentDemandGenerationServiceTest {
 				.thenReturn(buildRentPaymentList());
 		Mockito.when(propertyRepository.getPropertyRentAccountDetails(Mockito.any())).thenReturn(buildRentAccount());
 		rentDemandGenerationService.createDemand(buildDemandCriteria());
+	}
+
+	Long[] generationDates = new Long[] { new GregorianCalendar(2020, Calendar.JANUARY, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.FEBRUARY, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.MARCH, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.APRIL, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.MAY, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.JUNE, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.JULY, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.AUGUST, 1).getTimeInMillis(),
+			new GregorianCalendar(2020, Calendar.SEPTEMBER, 1).getTimeInMillis(), };
+
+	@Test
+	public void testGeneratedDate() {
+		assertFalse("Oct 9th Should not be included", isMonthIncluded(Arrays.asList(generationDates),
+				new GregorianCalendar(2020, Calendar.OCTOBER, 9, 10, 25).getTime()));
+		assertTrue("May 15th should be included", isMonthIncluded(Arrays.asList(generationDates),
+				new GregorianCalendar(2020, Calendar.MAY, 15, 15, 15).getTime()));
+	}
+
+	private boolean isMonthIncluded(List<Long> dates, Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
+		long firstDaysDate = cal.getTimeInMillis();
+		return dates.contains(new Long(firstDaysDate));
 	}
 
 	private RentDemandCriteria buildDemandCriteria() {

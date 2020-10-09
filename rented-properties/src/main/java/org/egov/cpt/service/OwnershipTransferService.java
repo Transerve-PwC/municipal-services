@@ -69,7 +69,6 @@ public class OwnershipTransferService {
 	private IRentCollectionService rentCollectionService;
 
 	public List<Owner> createOwnershipTransfer(OwnershipTransferRequest request) {
-		// TODO add validations as per requirement
 		// propertyValidator.validateCreateRequest(request);
 		List<Property> propertyFromSearch = propertyValidator.getPropertyForOT(request);
 		enrichmentService.enrichCreateOwnershipTransfer(request, propertyFromSearch);

@@ -1,11 +1,10 @@
 package org.egov.cpt.service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AuditDetails;
+import org.egov.cpt.models.ModeEnum;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.RentAccount;
@@ -47,11 +47,12 @@ public class RentDemandGenerationService {
 
 	private DemandNotificationService demandNotificationService;
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d/MM/yyyy");
+	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("d/MM/yyyy");
 
 	@Autowired
 	public RentDemandGenerationService(PropertyRepository propertyRepository, Producer producer,
-			PropertyConfiguration config, RentCollectionService rentCollectionService, DemandNotificationService demandNotificationService) {
+			PropertyConfiguration config, RentCollectionService rentCollectionService,
+			DemandNotificationService demandNotificationService) {
 		this.propertyRepository = propertyRepository;
 		this.producer = producer;
 		this.config = config;
@@ -71,35 +72,26 @@ public class RentDemandGenerationService {
 				propertyCriteria.setPropertyId(property.getId());
 
 				List<RentDemand> rentDemandList = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
-				List<RentPayment> rentPaymentList = propertyRepository.getPropertyRentPaymentDetails(propertyCriteria);
-				RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
 
 				if (!CollectionUtils.isEmpty(rentDemandList)) {
+					List<RentPayment> rentPaymentList = propertyRepository
+							.getPropertyRentPaymentDetails(propertyCriteria);
+					RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
 					Comparator<RentDemand> compare = Comparator.comparing(RentDemand::getGenerationDate);
-					Optional<RentDemand> collectionDemand = rentDemandList.stream().min(compare);
+					Optional<RentDemand> firstDemand = rentDemandList.stream().min(compare);
 
-					List<String> dateList = rentDemandList.stream().map(r -> r.getGenerationDate()).map(
-							date -> new Date(date).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString())
+					List<Long> dateList = rentDemandList.stream().map(r -> r.getGenerationDate())
 							.collect(Collectors.toList());
 
-					if (demandCriteria.isEmpty()) {
-						LocalDate currentDate = LocalDate.now();
-						if (!dateList.contains(currentDate.toString())) {
-							// generate demand
-							generateRentDemand(property, collectionDemand.get(), currentDate, rentDemandList,
-									rentPaymentList, rentAccount);
-						}
-					} else {
-						LocalDate date = LocalDate.parse(demandCriteria.getDate(), FORMATTER);
-						if (!dateList.contains(date.toString())) {
-							// generate demand
-							generateRentDemand(property, collectionDemand.get(), date, rentDemandList, rentPaymentList,
-									rentAccount);
-						}
+					Date date = demandCriteria.isEmpty() ? new Date() : FORMATTER.parse(demandCriteria.getDate());
+					if (!isMonthIncluded(dateList, date)) {
+						// generate demand
+						generateRentDemand(property, firstDemand.get(), getFirstDaysDate(date), rentDemandList,
+								rentPaymentList, rentAccount);
 					}
 				} else {
-					log.debug("We are skipping generating rent demands for this property id: " + property.getId()
-							+ " as there is no rent history");
+					log.debug("We are skipping generating rent demands for this property id: "
+							+ property.getTransitNumber() + " as there is no rent history");
 				}
 			} catch (Exception e) {
 				log.error("exception occured for property id: " + property.getId());
@@ -108,23 +100,18 @@ public class RentDemandGenerationService {
 
 	}
 
-	private void generateRentDemand(Property property, RentDemand collectionDemand, LocalDate date,
+	private void generateRentDemand(Property property, RentDemand firstDemand, Date date,
 			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount) {
 
-		int oldYear = new Date(collectionDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
-				.toLocalDate().getYear();
-		int oldMonth = new Date(collectionDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
+		int oldYear = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+				.getYear();
+		int oldMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDate().getMonthValue();
-		int currentYear = date.getYear();
-		int currentMonth = date.getMonthValue();
-		RentDemand rentDemand = new RentDemand();
-		String rendDemandId = UUID.randomUUID().toString();
-		rentDemand.setId(rendDemandId);
-		rentDemand.setPropertyId(property.getId());
-		Long creationTime = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-		rentDemand.setGenerationDate(creationTime);
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		int currentYear = localDate.getYear();
+		int currentMonth = localDate.getMonthValue();
 
-		Double collectionPrincipal = collectionDemand.getCollectionPrincipal();
+		Double collectionPrincipal = firstDemand.getCollectionPrincipal();
 		oldYear = oldYear + property.getPropertyDetails().getRentIncrementPeriod();
 		while (oldYear <= currentYear) {
 			if (oldYear == currentYear && currentMonth >= oldMonth) {
@@ -137,23 +124,17 @@ public class RentDemandGenerationService {
 			oldYear = oldYear + property.getPropertyDetails().getRentIncrementPeriod();
 		}
 
-		rentDemand.setCollectionPrincipal(collectionPrincipal);
-		rentDemand.setRemainingPrincipal(rentDemand.getCollectionPrincipal());
-		rentDemand.setInterestSince(rentDemand.getGenerationDate());
+		AuditDetails auditDetails = AuditDetails.builder().createdBy("System").createdTime(new Date().getTime())
+				.lastModifiedBy("System").lastModifiedTime(new Date().getTime()).build();
 
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("System");
-		auditDetails.setCreatedTime(creationTime);
-		auditDetails.setLastModifiedBy("System");
-		auditDetails.setLastModifiedTime(creationTime);
-		rentDemand.setAuditDetails(auditDetails);
-		
-		List<RentDemand> newRentDemandList = new ArrayList<>(rentDemandList);
-		newRentDemandList.add(rentDemand);
+		RentDemand rentDemand = RentDemand.builder().id(UUID.randomUUID().toString()).propertyId(property.getId())
+				.mode(ModeEnum.GENERATED).generationDate(date.getTime()).collectionPrincipal(collectionPrincipal)
+				.auditDetails(auditDetails).remainingPrincipal(collectionPrincipal).interestSince(date.getTime())
+				.build();
 
-		log.info("rend demand id: " + rendDemandId);
-		log.info("collection principal: " + collectionPrincipal);
-		property.setDemands(newRentDemandList);
+		log.info("Generating Rend demand id '{}' of principal '{}' for property with transit no {}", rentDemand.getId(),
+				collectionPrincipal, property.getTransitNumber());
+		property.setDemands(Collections.singletonList(rentDemand));
 		property.setRentAccount(rentAccount);
 		property.setPayments(rentPaymentList);
 
@@ -178,6 +159,21 @@ public class RentDemandGenerationService {
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 		log.info(">>>>>Rent demand generated>>>>>");
 		demandNotificationService.process(rentDemand, property);
+	}
+
+	private boolean isMonthIncluded(List<Long> dates, Date date) {
+		long firstDaysDate = getFirstDaysDate(date).getTime();
+		return dates.contains(new Long(firstDaysDate));
+	}
+
+	private Date getFirstDaysDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
+		return cal.getTime();
 	}
 
 }
