@@ -203,12 +203,15 @@ public class PropertyService {
 						.getPropertyRentPaymentDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
 				RentAccount rentAccount = repository
 						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
-				if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				List<OfflinePaymentDetails> offlinePaymentDetails = repository.getPropertyOfflinePaymentDetails(
+						PropertyCriteria.builder().propertyId(property.getId()).build());
+				if (!CollectionUtils.isEmpty(demands) && null != rentAccount && !CollectionUtils.isEmpty(offlinePaymentDetails)) {
 					property.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 							property.getPropertyDetails().getInterestRate()));
 					property.setDemands(demands);
 					property.setPayments(payments);
 					property.setRentAccount(rentAccount);
+					property.setOfflinePaymentDetails(offlinePaymentDetails);
 				}
 			});
 		}
