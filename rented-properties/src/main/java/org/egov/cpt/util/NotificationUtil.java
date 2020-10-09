@@ -23,6 +23,7 @@ import org.egov.cpt.models.Property;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.models.calculation.PaymentDetail;
+import org.egov.cpt.models.calculation.PaymentRequest;
 import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.ServiceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ public class NotificationUtil {
 	private Producer producer;
 
 	private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
+	private final static String CASH = "cash";
 
 	@Autowired
 	public NotificationUtil(PropertyConfiguration config, ServiceRequestRepository serviceRequestRepository,
@@ -382,12 +385,16 @@ public class NotificationUtil {
 	}
 
 	public String getRPOwnerPaymentMsg(Owner owner, PaymentDetail paymentDetail, String localizationMessages,
-			String transitNumber, String transactionNumber) {
+			String transitNumber, PaymentRequest paymentRequest) {
 		String messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_PAYMENT_RECIEVED, localizationMessages);
-		messageTemplate = messageTemplate.replace("<1>", owner.getOwnerDetails().getName());
+		if (paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) {
+			messageTemplate = messageTemplate.replace("<1>", owner.getOwnerDetails().getName());
+		} else {
+			messageTemplate = messageTemplate.replace("<1>", paymentDetail.getBill().getPayerName());
+		}
 		messageTemplate = messageTemplate.replace("<2>", paymentDetail.getTotalAmountPaid().toString());
 		messageTemplate = messageTemplate.replace("<3>", transitNumber);
-		messageTemplate = messageTemplate.replace("<4>", transactionNumber);
+		messageTemplate = messageTemplate.replace("<4>", paymentRequest.getPayment().getTransactionNumber());
 		messageTemplate = messageTemplate.replace("<5>", paymentDetail.getReceiptNumber());
 		return messageTemplate;
 	}
