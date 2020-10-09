@@ -120,8 +120,6 @@ public class PropertyRepository {
 	public List<RentDemand> getPropertyRentDemandDetails(PropertyCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = rentQueryBuilder.getPropertyRentDemandSearchQuery(criteria, preparedStmtList);
-		log.info("query:" + query);
-		log.info("preparedStmtList:" + preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentDemandrowMapper);
 
 	}
@@ -129,8 +127,6 @@ public class PropertyRepository {
 	public List<RentPayment> getPropertyRentPaymentDetails(PropertyCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = rentQueryBuilder.getPropertyRentPaymentSearchQuery(criteria, preparedStmtList);
-		log.info("query:" + query);
-		log.info("preparedStmtList:" + preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentPaymentrowMapper);
 
 	}
@@ -138,8 +134,6 @@ public class PropertyRepository {
 	public RentAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = rentQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
-		log.info("query:" + query);
-		log.info("preparedStmtList:" + preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountrowMapper);
 	}
 

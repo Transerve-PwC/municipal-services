@@ -176,6 +176,7 @@ public class RentDemandGenerationService {
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+		log.info(">>>>>Rent demand generated>>>>>");
 		demandNotificationService.process(rentDemand, property);
 	}
 
