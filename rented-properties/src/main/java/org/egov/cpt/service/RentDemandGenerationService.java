@@ -162,8 +162,11 @@ public class RentDemandGenerationService {
 	}
 
 	private boolean isMonthIncluded(List<Long> dates, Date date) {
-		long firstDaysDate = getFirstDaysDate(date).getTime();
-		return dates.contains(new Long(firstDaysDate));
+		for(Long dateInList : dates){
+			Date generatedDate = new Date(dateInList);
+			return (date.getYear()==generatedDate.getYear() && date.getMonth()==generatedDate.getMonth());
+		}
+		return false;
 	}
 
 	private Date getFirstDaysDate(Date date) {
