@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
 import org.egov.cpt.models.BillV2;
+import org.egov.cpt.models.OfflinePaymentDetails;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
@@ -27,6 +30,7 @@ import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
+import org.egov.cpt.web.contracts.OfflinePaymentRequest;
 import org.egov.cpt.web.contracts.PropertyDueRequest;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
@@ -287,6 +291,17 @@ public class PropertyService {
 			 */
 			demandService.createCashPayment(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
 					bills.get(0).getId(), owner,property.getBillingBusinessService());
+
+			OfflinePaymentDetails offlinePaymentDetails = OfflinePaymentDetails.builder()
+					.id(UUID.randomUUID().toString()).propertyId(property.getId())
+					.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
+					.amount(property.getPaymentAmount())
+					.bankName(property.getBankName()).transactionNumber(property.getTransactionId()).build();
+			OfflinePaymentRequest offlinePaymentRequest = OfflinePaymentRequest.builder().requestInfo(propertyRequest.getRequestInfo())
+					.offlinePaymentDetails(Collections.singletonList(offlinePaymentDetails))
+					.build();
+			producer.push(config.getOfflinePaymentTopic(), offlinePaymentRequest);
+
 		} else {
 			/**
 			 * We return the property along with the consumerCode that we set earlier. Also
