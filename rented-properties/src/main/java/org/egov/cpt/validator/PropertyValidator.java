@@ -426,7 +426,7 @@ public class PropertyValidator {
 
 		if (email == "" || email == null)
 			return true;
-		else if (email.length() < 2 || email.length() > 25)
+		else if (email.length() < 2)
 			return false;
 		else if (!email.matches(regex))
 			return false;
