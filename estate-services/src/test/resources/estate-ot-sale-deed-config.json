@@ -1,46 +1,46 @@
 {
-    "fields": [
+    "fields" : [
         {
-            "path": "modeOfTransfer",
-            "required": true,
-            "validations": [
+            "path" : "modeOfTransfer",
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "mdms",
-                    "params": {
-                        "moduleName": "EstateServices",
-                        "masterName": "modeOfTransfer",
-                        "filter": "modeOfTransfer..code"
+                    "type" : "mdms",
+                    "params" : {
+                        "moduleName" : "EstateServices",
+                        "masterName" : "modeOfTransfer",
+                        "filter" : "modeOfTransfer..code"
                     }
                 }
             ]
         },
         {
-            "path": "registrationNumber",
-            "required": false,
-            "validations": [
+            "path" : "registrationNumber",
+            "required" : false,
+            "validations" : [
                 {
-                    "type": "length",
-                    "params": {
-                        "min": 0,
-                        "max": 100
+                    "type" : "length",
+                    "params" : {
+                        "min" : 0,
+                        "max" : 100
                     }
                 }
             ]
         },
         {
-            "path": "dateOfRegistration",
-            "required": false,
-            "validations": [
+            "path" : "dateOfRegistration",
+            "required" : false,
+            "validations" : [
                 {
-                    "type": "date-range",
-                    "params": {
-                        "start": {
-                            "unit": "year",
-                            "value": -40
+                    "type" : "date-range",
+                    "params" : {
+                        "start" : {
+                            "unit" : "year",
+                            "value" : -40
                         },
-                        "end": {
-                            "unit": "second",
-                            "value": 0
+                        "end" : {
+                            "unit" : "second",
+                            "value" : 0
                         }
                     }
                 }
@@ -48,106 +48,103 @@
         },
         {
             "path": "owner",
-            "required": true,
-            "validations": [
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "object"
+                    "type" : "object"
                 }
             ]
         },
         {
             "path": "owner.id",
-            "required": true,
-            "validations": [
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "owner"
+                    "type" : "owner"
                 }
             ]
         },
         {
             "path": "purchaser",
-            "required": true,
-            "validations": [
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "object"
+                    "type" : "object"
                 }
             ]
         },
         {
-            "path": "purchaser.name",
-            "required": true,
-            "validations": [
+            "path" : "purchaser.name",
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "length",
-                    "params": {
-                        "min": 5,
-                        "max": 150
+                    "type" : "length",
+                    "params" : {
+                        "min" : 5,
+                        "max" : 150
                     }
                 }
             ]
         },
         {
-            "path": "purchaser.fatherOrHusbandName",
-            "required": true,
-            "validations": [
+            "path" : "purchaser.fatherOrHusbandName",
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "length",
-                    "params": {
-                        "min": 5,
-                        "max": 150
+                    "type" : "length",
+                    "params" : {
+                        "min" : 5,
+                        "max" : 150
                     }
                 }
             ]
         },
         {
-            "path": "purchaser.relation",
-            "required": true,
-            "validations": [
+            "path" : "purchaser.relation",
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "enum",
-                    "params": {
-                        "values": [
-                            "FATHER",
-                            "HUSBAND"
-                        ]
+                    "type" : "enum",
+                    "params" : {
+                        "values" : ["FATHER", "HUSBAND"]
                     }
                 }
             ]
         },
         {
-            "path": "purchaser.address",
-            "required": true,
-            "validations": [
+            "path" : "purchaser.address",
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "length",
-                    "params": {
-                        "min": 5,
-                        "max": 150
+                    "type" : "length",
+                    "params" : {
+                        "min" : 5,
+                        "max" : 150
                     }
                 }
             ]
         },
         {
-            "path": "purchaser.mobileNo",
-            "required": false,
-            "validations": [
+            "path" : "purchaser.mobileNo",
+            "required" : false,
+            "validations" : [
                 {
-                    "type": "phonenumber"
+                    "type" : "phonenumber"
                 }
             ]
         },
         {
-            "path": "purchaser.percentageOfShareTransferred",
-            "required": true,
-            "validations": [
+            "path" : "purchaser.percentageOfShareTransferred",
+            "required" : true,
+            "validations" : [
                 {
-                    "type": "numeric"
+                    "type" : "numeric"
                 },
                 {
-                    "type": "minmax",
-                    "params": {
-                        "min": 0,
-                        "max": 100
+                    "type" : "minmax",
+                    "params" : {
+                        "min" : 0,
+                        "max" : 100
                     }
                 }
             ]
