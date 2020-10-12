@@ -2,6 +2,7 @@ package org.egov.cpt.service;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +55,7 @@ public class AccountStatementExcelGenerationService {
 	private static final String PAYMENT = "Payment";
 	private static final String RENT = "Rent";
 	private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+	private static NumberFormat numberFormat = NumberFormat.getInstance();
 
 	@Autowired
 	public AccountStatementExcelGenerationService(PropertyRepository propertyRepository,
@@ -148,7 +150,7 @@ public class AccountStatementExcelGenerationService {
 				Row row = sheet.createRow(rowNum++);
 				if (i < statementsSize - 1) {
 					row.createCell(0).setCellValue(getFormattedDate(rentAccountStmt.getDate()));
-					row.createCell(1).setCellValue(decimalFormat.format(rentAccountStmt.getAmount()));
+					row.createCell(1).setCellValue(numberFormat.format(Double.valueOf(decimalFormat.format(rentAccountStmt.getAmount()))));
 					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
 							.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
 					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.D.name()))
@@ -157,10 +159,10 @@ public class AccountStatementExcelGenerationService {
 					row.createCell(0).setCellValue("Balance as on " + getFormattedDate(rentAccountStmt.getDate()));
 				}
 
-				row.createCell(4).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingPrincipal()));
-				row.createCell(5).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingInterest()));
-				row.createCell(6).setCellValue(decimalFormat.format(rentAccountStmt.getDueAmount()));
-				row.createCell(7).setCellValue(decimalFormat.format(rentAccountStmt.getRemainingBalance()));
+				row.createCell(4).setCellValue(numberFormat.format(Double.valueOf(decimalFormat.format(rentAccountStmt.getRemainingPrincipal()))));
+				row.createCell(5).setCellValue(numberFormat.format(Double.valueOf(decimalFormat.format(rentAccountStmt.getRemainingInterest()))));
+				row.createCell(6).setCellValue(numberFormat.format(Double.valueOf(decimalFormat.format(rentAccountStmt.getDueAmount()))));
+				row.createCell(7).setCellValue(numberFormat.format(Double.valueOf(decimalFormat.format(rentAccountStmt.getRemainingBalance()))));
 				if (i < statementsSize - 1) {
 					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(Type.C.name()))
 							.ifPresent(o -> row.createCell(8).setCellValue(o.getReceiptNo()));
