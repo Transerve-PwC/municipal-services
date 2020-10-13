@@ -8,8 +8,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.assets.model.PDFResponse;
 import org.egov.assets.model.PDFRequest;
+import org.egov.assets.model.PDFResponse;
 import org.egov.assets.model.PurchaseOrderRequest;
 import org.egov.assets.model.PurchaseOrderResponse;
 import org.egov.assets.model.PurchaseOrderSearch;
@@ -17,7 +17,6 @@ import org.egov.assets.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,12 +50,6 @@ public class PurchaseordersApiController {
 			@RequestParam(value = "supplierCode", required = false) String supplierCode,
 			@RequestParam(value = "searchPoAdvReq", required = false) Boolean searchPoAdvReq,
 			@RequestParam(value = "status", required = false) String status,
-			@RequestParam(value = "indentPurpose", required = false) String indentPurpose,
-			@RequestParam(value = "inventoryType", required = false) String inventoryType,
-			@RequestParam(value = "indentRaisedBy", required = false) String indentRaisedBy,
-			@RequestParam(value = "indentFromDate", required = false) Long indentFromDate,
-			@RequestParam(value = "indentToDate", required = false) Long indentToDate,
-			@RequestParam(value = "departmentId", required = false) String departmentId,
 			@Min(0) @Max(100) @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
@@ -71,12 +64,6 @@ public class PurchaseordersApiController {
 		purchaseOrderSearch.setSupplier(supplierCode);
 		purchaseOrderSearch.setSearchPoAdvReq(searchPoAdvReq);
 		purchaseOrderSearch.setStatus(status);
-		purchaseOrderSearch.setIndentPurpose(indentPurpose);
-		purchaseOrderSearch.setIndentRaisedBy(indentRaisedBy);
-		purchaseOrderSearch.setInventoryType(inventoryType);
-		purchaseOrderSearch.setIndentFromDate(indentFromDate);
-		purchaseOrderSearch.setIndentToDate(indentToDate);
-		purchaseOrderSearch.setDepartmentId(departmentId);
 		purchaseOrderSearch.setPageSize(pageSize);
 		purchaseOrderSearch.setPageNumber(pageNumber);
 

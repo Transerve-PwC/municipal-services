@@ -50,9 +50,7 @@ public class MaterialIssueSearchContract {
 	
 	private String searchPurpose;
 	
-	private Long indentFromDate;
-	private Long indentToDate;
-	private String indentingStore;
-	private String indentPurpose;
-	private String indentRaisedBy;
+	private Long issueFromDate;
+	private Long issueToDate;
+	
 }

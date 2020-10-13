@@ -254,6 +254,20 @@ public class IndentJdbcRepository extends org.egov.assets.common.JdbcRepository 
 			paramValues.put("indentStatus", IndentStatusEnum.ISSUED.name());
 
 		}
+		if (indentSearch.getIndentFromDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(indentDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(TO_CHAR(TO_TIMESTAMP(:fromDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("fromDate", indentSearch.getIndentFromDate());
+		}
+
+		if (indentSearch.getIndentToDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(indentDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(TO_CHAR(TO_TIMESTAMP(:toDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("toDate", indentSearch.getIndentToDate());
+		}
+
 		Pagination<Indent> page = new Pagination<>();
 		if (indentSearch.getPageNumber() != null) {
 			page.setOffset(indentSearch.getPageNumber() - 1);

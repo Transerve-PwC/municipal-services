@@ -159,6 +159,21 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
             params.append("scrapCreated = :scrapCreated");
             paramValues.put("scrapCreated", searchContract.getScrapCreated());
         }
+        
+		if (searchContract.getIssueFromDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(issuedate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(TO_CHAR(TO_TIMESTAMP(:fromDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("fromDate", searchContract.getIssueFromDate());
+		}
+
+		if (searchContract.getIssueToDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(issuedate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(TO_CHAR(TO_TIMESTAMP(:toDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("toDate", searchContract.getIssueToDate());
+		}
+
         Pagination<MaterialIssue> page = new Pagination<>();
         if (searchContract.getPageSize() != null)
             page.setPageSize(searchContract.getPageSize());
@@ -203,109 +218,5 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 		namedParameterJdbcTemplate.update(updateQuery,paramValues);
 		
 	}
-
-	
-    public Pagination<MaterialIssue> searchIndentData(final MaterialIssueSearchContract searchContract, String issueType) {
-        String searchQuery = "select * from indent inner join materialissue on indent.indentnumber=materialissue.indentnumber :condition :orderby";
-        StringBuffer params = new StringBuffer();
-        Map<String, Object> paramValues = new HashMap<>();
-        if (searchContract.getSortBy() != null && !searchContract.getSortBy().isEmpty()) {
-            validateSortByOrder(searchContract.getSortBy());
-            validateEntityFieldName(searchContract.getSortBy(), MaterialIssueSearchContract.class);
-        }
-        String orderBy = "order by materialissue.id";
-        if (searchContract.getSortBy() != null && !searchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + searchContract.getSortBy();
-        }
-
-        
-        if (issueType != null) {
-            if (params.length() > 0)
-                params.append(" and ");
-            params.append("issuetype = :issuetype");
-            paramValues.put("issuetype", issueType);
-        }
-        if (searchContract.getIndentingStore() != null) {
-            if (params.length() > 0)
-                params.append(" and ");
-            params.append("indent.indentstore = :indentstore");
-            paramValues.put("indentstore", searchContract.getIndentingStore());
-        }
-		if (searchContract.getIndentPurpose() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("indentpurpose =:indentpurpose");
-			paramValues.put("indentpurpose", searchContract.getIndentPurpose());
-		}
-
-		if (searchContract.getIndentRaisedBy() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("indentcreatedby =:indentcreatedby");
-			paramValues.put("indentcreatedby", searchContract.getIndentRaisedBy());
-		}
-
-		if (searchContract.getIndentFromDate() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(indent.createdtime / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(TO_CHAR(TO_TIMESTAMP(:fromDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
-			paramValues.put("fromDate", searchContract.getIndentFromDate());
-		}
-
-		if (searchContract.getIndentToDate() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(indent.createdtime / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(TO_CHAR(TO_TIMESTAMP(:toDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
-			paramValues.put("toDate", searchContract.getIndentToDate());
-		}
-        if (searchContract.getIssueNoteNumber() != null) {
-            if (params.length() > 0)
-                params.append(" and ");
-            params.append("materialissue.issuenumber = :issuenumber");
-            paramValues.put("issuenumber", searchContract.getIssueNoteNumber());
-        }
-        if (searchContract.getIssueDate() != null) {
-            if (params.length() > 0)
-                params.append(" and ");
-            params.append("materialissue.issuedate = :issuedate");
-            paramValues.put("issuedate", searchContract.getIssueDate());
-        }
-
-        
-        Pagination<MaterialIssue> page = new Pagination<>();
-        if (searchContract.getPageSize() != null)
-            page.setPageSize(searchContract.getPageSize());
-        if (searchContract.getPageNumber() != null)
-            page.setOffset(searchContract.getPageNumber());
-        if (params.length() > 0)
-            searchQuery = searchQuery.replace(":condition", " where deleted is not true and " + params.toString());
-        else
-            searchQuery = searchQuery.replace(":condition", "");
-
-        searchQuery = searchQuery.replace(":orderby", orderBy);
-        page = (Pagination<MaterialIssue>) getPagination(searchQuery, page, paramValues);
-
-        searchQuery = searchQuery + " :pagination";
-        searchQuery = searchQuery.replace(":pagination",
-                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialIssueEntity.class);
-
-        List<MaterialIssue> materialIssueList = new ArrayList<>();
-
-        List<MaterialIssueEntity> materialIssueEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
-                paramValues, row);
-
-        for (MaterialIssueEntity materialIssueEntity : materialIssueEntities) {
-
-            materialIssueList.add(materialIssueEntity.toDomain(issueType));
-        }
-
-        page.setTotalResults(materialIssueList.size());
-
-        page.setPagedData(materialIssueList);
-
-        return page;
-    }
-
 
 }

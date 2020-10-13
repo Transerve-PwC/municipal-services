@@ -2,6 +2,7 @@ package org.egov.cpt.web.controllers;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collections;
 
 import javax.validation.Valid;
 
@@ -54,6 +55,9 @@ public class ReadExcelController {
 			tempFile.delete();
 			log.info("End controller method readExcel Demand data:" + data.getDemand().size() + " & Payment data:"
 					+ data.getPayment().size());
+			if(data.getDemand().size()==0 || data.getPayment().size()==0)
+				throw new CustomException(Collections.singletonMap("FILE_NOT_VALID", "Rent history file format is invalid"));
+			
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("Error occurred during readExcel():" + e.getMessage(), e);

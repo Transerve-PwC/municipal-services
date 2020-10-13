@@ -57,12 +57,15 @@ public class IndentsApiController {
 			@RequestParam(value = "inventoryType", required = false) String inventoryType,
 			@Min(0) @Max(100) @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
-			@RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
+			@RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
+			@RequestParam(value = "indentRaisedBy", required = false) String indentRaisedBy,
+			@RequestParam(value = "indentFromDate", required = false) Long indentFromDate,
+			@RequestParam(value = "indentToDate", required = false) Long indentToDate) {
 
 		IndentSearch is = new IndentSearch().builder().tenantId(tenantId).ids(ids).indentDate(indentDate)
 				.indentStore(indentStore).indentNumber(indentNumber).indentPurpose(indentPurpose)
 				.indentStatus(indentStatus).inventoryType(inventoryType).issueStore(issueStore).indentType(indentType)
-				.searchPurpose(searchPurpose).build();
+				.indentRaisedBy(indentRaisedBy).indentFromDate(indentFromDate).indentToDate(indentToDate).searchPurpose(searchPurpose).build();
 		IndentResponse response = indentService.search(is, requestInfo);
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
@@ -94,11 +97,11 @@ public class IndentsApiController {
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
-	
 	@PostMapping(value = "/_creatorList", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<IndenUserListResponse> indentsCreatorList(
-			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,@RequestBody RequestInfo requestInfo) {
-		IndenUserListResponse response = indentService.getCreatorList(requestInfo,tenantId);
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestBody RequestInfo requestInfo) {
+		IndenUserListResponse response = indentService.getCreatorList(requestInfo, tenantId);
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 

@@ -618,13 +618,8 @@ public class PurchaseOrderService extends DomainService {
 		PurchaseOrderResponse response = new PurchaseOrderResponse();
 		Pagination<PurchaseOrder> search = null;
 
-		if (is.getInventoryType() != null || is.getIndentPurpose() != null || is.getIndentFromDate() != null
-				|| is.getIndentToDate() != null || is.getIndentRaisedBy() != null) {
-			search = purchaseOrderRepository.searchByIndentData(is, is.getSortBy(), is.getPageSize(),
-					is.getPageNumber());
-		} else {
-			search = purchaseOrderRepository.search(is);
-		}
+		search = purchaseOrderRepository.search(is);
+
 		if (!search.getPagedData().isEmpty()) {
 			for (PurchaseOrder purchaseOrder : search.getPagedData()) {
 
