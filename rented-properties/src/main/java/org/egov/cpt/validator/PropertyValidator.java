@@ -25,6 +25,7 @@ import org.egov.cpt.repository.OwnershipTransferRepository;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.MDMSService;
 import org.egov.cpt.util.DuplicateCopyConstants;
+import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.web.contracts.DuplicateCopyRequest;
 import org.egov.cpt.web.contracts.MortgageRequest;
@@ -56,6 +57,9 @@ public class PropertyValidator {
 
 	@Autowired
 	private MDMSService mdmsService;
+	
+	@Autowired
+	private NotificationUtil notificationUtil;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
@@ -954,11 +958,12 @@ public class PropertyValidator {
 							.filter(type -> type.equalsIgnoreCase(String.valueOf(documentCode))).count();
 					if (count == 0) {
 						errorMap.put("REQUIRED DOCUMENT NOT FOUND",
-								"The document type '" + documentCode + "' is required but it is not present");
+								String.format("The document '%s' is required but it is not present",
+										notificationUtil.getMessageTemplate("RP_"+documentCode, notificationUtil.getLocalizationMessages("ch.chandigarh", requestInfo))));
 					}
 					if (count >= 2) {
-						errorMap.put("DUPLICATE DOCUMENT",
-								"The document type '" + documentCode + "' is found more than once.");
+						errorMap.put("DUPLICATE DOCUMENT",String.format("The document '%s' is found more than once.",
+								notificationUtil.getMessageTemplate("RP_"+documentCode, notificationUtil.getLocalizationMessages("ch.chandigarh", requestInfo))));
 					}
 				});
 	}
