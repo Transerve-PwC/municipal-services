@@ -173,9 +173,9 @@ public class DateRangeValidator implements IApplicationValidator {
 		return null;
 	}
 
-	private Date diffDate(int month, int val) {
+	private Date diffDate(int unit, int val) {
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, val);
+		c.add(unit, val);
 
 		return c.getTime();
 	}

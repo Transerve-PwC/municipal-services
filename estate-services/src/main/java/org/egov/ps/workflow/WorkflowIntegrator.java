@@ -155,6 +155,7 @@ public class WorkflowIntegrator {
 			obj.put(ACTIONKEY, application.getAction());
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(AUDITDETAILSKEY, application.getAuditDetails());
+			obj.put(COMMENTKEY, application.getComments());
 
 			array.add(obj);
 		}

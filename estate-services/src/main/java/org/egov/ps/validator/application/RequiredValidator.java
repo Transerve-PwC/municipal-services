@@ -6,6 +6,7 @@ import java.util.List;
 import org.egov.ps.annotation.ApplicationValidator;
 import org.egov.ps.validator.IApplicationField;
 import org.egov.ps.validator.IValidation;
+import org.json.JSONArray;
 import org.egov.ps.validator.IApplicationValidator;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,7 @@ public class RequiredValidator implements IApplicationValidator {
 		if (value instanceof String) {
 			return ((String) value).trim().length() > 0;
 		}
-		if (value.getClass().isArray()) {
+		if (value instanceof JSONArray) {
 			return ((Object[]) value).length != 0;
 		}
 		return true;
