@@ -56,12 +56,12 @@ public class ReadExcelController {
 			log.info("End controller method readExcel Demand data:" + data.getDemand().size() + " & Payment data:"
 					+ data.getPayment().size());
 			if(data.getDemand().size()==0 || data.getPayment().size()==0)
-				throw new CustomException(Collections.singletonMap("FILE_NOT_VALID", "Rent history file format is invalid"));
+				throw new CustomException("FILE_NOT_VALID", "Please upload valid file format");
 			
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("Error occurred during readExcel():" + e.getMessage(), e);
-			throw new CustomException("RENT_HISTORY_UPLOAD_FAILED", e.getMessage());
+			throw new CustomException("FILE_NOT_VALID", "Please upload valid file format");
 		}
 	}
 }
