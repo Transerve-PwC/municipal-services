@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.assets.common.Constants;
 import org.egov.assets.common.DomainService;
@@ -49,7 +50,6 @@ import org.egov.assets.model.PurchaseOrderSearch;
 import org.egov.assets.model.Store;
 import org.egov.assets.model.StoreGetRequest;
 import org.egov.assets.model.Supplier;
-import org.egov.assets.model.SupplierGetRequest;
 import org.egov.assets.model.Uom;
 import org.egov.assets.model.WorkFlowDetails;
 import org.egov.assets.repository.IndentJdbcRepository;
@@ -115,6 +115,9 @@ public class PurchaseOrderService extends DomainService {
 
 	@Autowired
 	private UomService uomService;
+
+	@Autowired
+	private IndentJdbcRepository indentRepository;
 
 	@Autowired
 	SupplierRepository supplierRepository;
@@ -611,8 +614,11 @@ public class PurchaseOrderService extends DomainService {
 	}
 
 	public PurchaseOrderResponse search(PurchaseOrderSearch is) {
+
 		PurchaseOrderResponse response = new PurchaseOrderResponse();
-		Pagination<PurchaseOrder> search = purchaseOrderRepository.search(is);
+		Pagination<PurchaseOrder> search = null;
+
+		search = purchaseOrderRepository.search(is);
 
 		if (!search.getPagedData().isEmpty()) {
 			for (PurchaseOrder purchaseOrder : search.getPagedData()) {

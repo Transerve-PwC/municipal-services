@@ -182,6 +182,11 @@ public class EnrichmentService {
 		AuditDetails auditDetails = waterServicesUtil
 				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), false);
 		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
+		if (!WCConstants.ACTION_INITIATE.equalsIgnoreCase(
+				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			waterConnectionRequest.getWaterConnection().getWaterApplication().setAuditDetails(auditDetails);
+		}
+		
 		WaterConnection connection = waterConnectionRequest.getWaterConnection();
 		if (!CollectionUtils.isEmpty(connection.getDocuments())) {
 			connection.getDocuments().forEach(document -> {

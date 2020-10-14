@@ -50,5 +50,7 @@ public class MaterialIssueSearchContract {
 	
 	private String searchPurpose;
 	
-
+	private Long issueFromDate;
+	private Long issueToDate;
+	
 }

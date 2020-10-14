@@ -92,7 +92,12 @@ public class NotificationUtil {
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_SENDBACK, localizationMessage);
 				message = getInitiatedOtMsg(owner, messageTemplate);
 				break;
-
+			
+			case PTConstants.OT_ACTION_STATUS_CA_APPROVED:
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_CA_APPROVED, localizationMessage);
+				message = getInitiatedOtMsg(owner, messageTemplate);
+				break;
+				
 			case PTConstants.OT_ACTION_STATUS_APPROVED:
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_APPROVED, localizationMessage);
 				message = getInitiatedOtMsg(owner, messageTemplate);
@@ -235,6 +240,11 @@ public class NotificationUtil {
 
 			case PTConstants.DC_ACTION_STATUS_SENDBACK:
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_SENDBACK, localizationMessage);
+				message = getInitiatedDcMsg(copy, messageTemplate);
+				break;
+				
+			case PTConstants.DC_ACTION_STATUS_CA_APPROVED:
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_CA_APPROVED, localizationMessage);
 				message = getInitiatedDcMsg(copy, messageTemplate);
 				break;
 

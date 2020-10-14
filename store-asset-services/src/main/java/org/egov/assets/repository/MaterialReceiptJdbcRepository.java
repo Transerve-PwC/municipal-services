@@ -231,7 +231,7 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
 				+ "from materialreceipt left outer join materialreceiptdetail rctdtl on materialreceipt.mrnnumber = rctdtl.mrnnumber left outer join\n"
 				+ "materialreceiptdetailaddnlinfo  addinfo on rctdtl.id= addinfo.receiptdetailid\n"
 				+ "where  (isscrapitem IS NULL or isscrapitem=false) and (rctdtl.deleted=false or rctdtl.deleted is null ) and receivingstore= :store  and materialreceipt.tenantid= :tenantId\n"
-				+ ":materialcondition and mrnstatus in ('Approved') and receiptdate <= :date order by addinfo.expirydate,addinfo.receiveddate,receiptdate)as fifo where balance >0";
+				+ ":materialcondition and mrnstatus in ('Approved') and TO_DATE(TO_CHAR(TO_TIMESTAMP(receiptdate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(TO_CHAR(TO_TIMESTAMP(:date / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')  order by addinfo.expirydate,addinfo.receiveddate,receiptdate)as fifo where balance >0";
 
 		Map<String, Object> paramValues = new HashMap<>();
 

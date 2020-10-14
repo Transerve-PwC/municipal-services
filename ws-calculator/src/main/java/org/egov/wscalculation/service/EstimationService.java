@@ -418,14 +418,15 @@ public class EstimationService {
 						.convertValue(criteria.getWaterConnection().getAdditionalDetails(), HashMap.class);
 				if ((additionalDetails.getOrDefault(WSCalculationConstant.ADHOC_PENALTY, null) != null
 						|| additionalDetails.getOrDefault(WSCalculationConstant.ADHOC_REBATE, null) != null)
-						&& WSCalculationConstant.WS_ADDON_PENDING_STATUS
+						&& (WSCalculationConstant.WS_ADDON_PENDING_STATUS
 								.equalsIgnoreCase(criteria.getWaterConnection().getApplicationStatus())
 						|| WSCalculationConstant.WS_STATUS_PENDING_FOR_CMR
-								.equalsIgnoreCase(criteria.getWaterConnection().getApplicationStatus())) {
+								.equalsIgnoreCase(criteria.getWaterConnection().getApplicationStatus()))) {
 					addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
 				} else {
 					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_FORM_FEE)
 							.estimateAmount(unitCost.setScale(2, 2)).build());
+					addAdhocPenalityAndRebate(estimates, criteria.getWaterConnection());
 
 				}
 			} else if (!(unitCost.compareTo(BigDecimal.ZERO) == 0)) {

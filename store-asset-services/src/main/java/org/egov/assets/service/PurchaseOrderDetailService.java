@@ -1,13 +1,18 @@
 package org.egov.assets.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.egov.assets.common.DomainService;
 import org.egov.assets.common.MdmsRepository;
 import org.egov.assets.common.Pagination;
+import org.egov.assets.model.Indent;
 import org.egov.assets.model.IndentDetail;
+import org.egov.assets.model.IndentResponse;
+import org.egov.assets.model.IndentSearch;
 import org.egov.assets.model.Material;
 import org.egov.assets.model.PriceListResponse;
 import org.egov.assets.model.PriceListSearchRequest;
@@ -15,6 +20,7 @@ import org.egov.assets.model.PurchaseIndentDetail;
 import org.egov.assets.model.PurchaseOrderDetail;
 import org.egov.assets.model.PurchaseOrderDetailSearch;
 import org.egov.assets.repository.IndentDetailJdbcRepository;
+import org.egov.assets.repository.IndentJdbcRepository;
 import org.egov.assets.repository.PurchaseIndentDetailJdbcRepository;
 import org.egov.assets.repository.PurchaseOrderDetailJdbcRepository;
 import org.egov.assets.repository.entity.PurchaseIndentDetailEntity;
@@ -45,6 +51,7 @@ public class PurchaseOrderDetailService extends DomainService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+
 
 	@Autowired
 	private PriceListService priceListService;

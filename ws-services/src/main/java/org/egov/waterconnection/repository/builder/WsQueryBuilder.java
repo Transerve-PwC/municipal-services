@@ -72,7 +72,7 @@ public class WsQueryBuilder {
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";
 	
-	private static final String ORDER_BY_CLAUSE= " ORDER BY wc.appCreatedDate DESC";
+	private static final String ORDER_BY_CLAUSE= " ORDER BY application.createdTime DESC";
 	/**
 	 * 
 	 * @param criteria

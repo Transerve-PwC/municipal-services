@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.assets.common.Pagination;
+import org.egov.assets.model.IndentSearch;
 import org.egov.assets.model.PriceList;
 import org.egov.assets.model.PriceListDetails;
 import org.egov.assets.model.PriceListDetailsSearchRequest;
@@ -31,48 +32,48 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 	@Autowired
 	PriceListDetailJdbcRepository priceListDetailJdbcRepository;
-	
+
 	@Autowired
 	PriceListJdbcRepository priceListJdbcRepository;
-	
+
 	static {
 		LOG.debug("init purchase order");
 		init(PurchaseOrderEntity.class);
 		LOG.debug("end init purchase order");
 	}
-	
+
 	public static synchronized void init(Class T) {
-        String TABLE_NAME = "";
+		String TABLE_NAME = "";
 
-        List<String> insertFields = new ArrayList<>();
-        List<String> updateFields = new ArrayList<>();
-        List<String> uniqueFields = new ArrayList<>();
+		List<String> insertFields = new ArrayList<>();
+		List<String> updateFields = new ArrayList<>();
+		List<String> uniqueFields = new ArrayList<>();
 
-        String updateQuery = "";
+		String updateQuery = "";
 
-        try {
+		try {
 
-            TABLE_NAME = (String) T.getDeclaredField("TABLE_NAME").get(null);
-        } catch (Exception e) {
+			TABLE_NAME = (String) T.getDeclaredField("TABLE_NAME").get(null);
+		} catch (Exception e) {
 
-        }
-        insertFields.addAll(fetchFields(T));
-        uniqueFields.add("purchaseOrderNumber");
-        uniqueFields.add("tenantId");
-        insertFields.removeAll(uniqueFields);
-        allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
-        updateFields.addAll(insertFields);
-        updateFields.remove("createdBy");
-        updateQuery = updateQuery(updateFields, TABLE_NAME, uniqueFields);
-        System.out.println(T.getSimpleName() + "--------" + insertFields);
-        allInsertFields.put(T.getSimpleName(), insertFields);
-        allUpdateFields.put(T.getSimpleName(), updateFields);
-        allIdentitiferFields.put(T.getSimpleName(), uniqueFields);
-        // allInsertQuery.put(T.getSimpleName(), insertQuery);
-        allUpdateQuery.put(T.getSimpleName(), updateQuery);
-        getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
-        System.out.println(allInsertQuery);
-    }
+		}
+		insertFields.addAll(fetchFields(T));
+		uniqueFields.add("purchaseOrderNumber");
+		uniqueFields.add("tenantId");
+		insertFields.removeAll(uniqueFields);
+		allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
+		updateFields.addAll(insertFields);
+		updateFields.remove("createdBy");
+		updateQuery = updateQuery(updateFields, TABLE_NAME, uniqueFields);
+		System.out.println(T.getSimpleName() + "--------" + insertFields);
+		allInsertFields.put(T.getSimpleName(), insertFields);
+		allUpdateFields.put(T.getSimpleName(), updateFields);
+		allIdentitiferFields.put(T.getSimpleName(), uniqueFields);
+		// allInsertQuery.put(T.getSimpleName(), insertQuery);
+		allUpdateQuery.put(T.getSimpleName(), updateQuery);
+		getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
+		System.out.println(allInsertQuery);
+	}
 
 	public PurchaseOrderJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -115,97 +116,97 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 	}
 
-	public Long getUsedQty(String supplier, String material, String ratetype){
-	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = :material and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted is not true and ratetype=:ratetype and supplier = :supplier)";
-	    Map params=new HashMap<String,Object>();
-		params.put("material",material);
-		params.put("ratetype",ratetype);
-		params.put("supplier",supplier);
-	    Long usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, params, Long.class);
-	    if(usedQty == null)
-	    	return 0l;
-	    return usedQty;
+	public Long getUsedQty(String supplier, String material, String ratetype) {
+		String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = :material and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted is not true and ratetype=:ratetype and supplier = :supplier)";
+		Map params = new HashMap<String, Object>();
+		params.put("material", material);
+		params.put("ratetype", ratetype);
+		params.put("supplier", supplier);
+		Long usedQty = namedParameterJdbcTemplate.queryForObject(usedQtyQuery, params, Long.class);
+		if (usedQty == null)
+			return 0l;
+		return usedQty;
 	}
-	
-	//TODO : expose this api to web layer
+
+	// TODO : expose this api to web layer
 	// Consider status not in rejected,cancelled
 
-	public BigDecimal getTenderUsedQty(String material, String priceListId){
+	public BigDecimal getTenderUsedQty(String material, String priceListId) {
 
-	String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail pod, purchaseorder po where po.purchaseordernumber = pod.purchaseorder and po.status != 'rejected' and pod.pricelist = :pricelistid and pod.material=:material";
-	Map params=new HashMap<String,Object>();
-	params.put("material",material);
-	params.put("pricelistid",priceListId);
-	BigDecimal usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, params, BigDecimal.class);
-	if(usedQty == null)
-	return BigDecimal.ZERO;
-	return usedQty;
+		String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail pod, purchaseorder po where po.purchaseordernumber = pod.purchaseorder and po.status != 'rejected' and pod.pricelist = :pricelistid and pod.material=:material";
+		Map params = new HashMap<String, Object>();
+		params.put("material", material);
+		params.put("pricelistid", priceListId);
+		BigDecimal usedQty = namedParameterJdbcTemplate.queryForObject(usedQtyQuery, params, BigDecimal.class);
+		if (usedQty == null)
+			return BigDecimal.ZERO;
+		return usedQty;
 	}
-	
+
 	public boolean getIsIndentValidForPOCreate(String indentNumber, String code) {
 		String validityQuery = "select count(*) from indentdetail where indentquantity=poorderedquantity and material=:code and indentNumber=:indentNumber";
-		Map params=new HashMap<String,Object>();
-		params.put("indentNumber",indentNumber);
-		params.put("code",code);
+		Map params = new HashMap<String, Object>();
+		params.put("indentNumber", indentNumber);
+		params.put("code", code);
 		Long count = namedParameterJdbcTemplate.queryForObject(validityQuery, params, Long.class);
-		if(count > 0)
+		if (count > 0)
 			return false;
 		else
 			return true;
 	}
-	
+
 	public boolean getIsIndentPORaised(String indentnumber) {
 		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted is not true and indentnumber = :indentnumber";
-		Map params=new HashMap<String,Object>();
+		Map params = new HashMap<String, Object>();
 		params.put("indentnumber", indentnumber);
 		Long count = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, params, Long.class);
-		if(count > 0)
+		if (count > 0)
 			return true;
 		else
 			return false;
 	}
 
-	public boolean isRateContractsExists(String supplier, String ratetype, String material){
+	public boolean isRateContractsExists(String supplier, String ratetype, String material) {
 		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted is not true and pl.supplier=:supplier and pl.rateType=:ratetype and pld.material = :material and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate and pl.agreementenddate";
-	    Map params=new HashMap<String,Object>();
-		params.put("material",material);
-		params.put("ratetype",ratetype);
-		params.put("supplier",supplier);
+		Map params = new HashMap<String, Object>();
+		params.put("material", material);
+		params.put("ratetype", ratetype);
+		params.put("supplier", supplier);
 		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, params, Long.class);
-		if(count > 0)
+		if (count > 0)
 			return true;
 		else
 			return false;
 	}
-	
+
 	public String getRateContracts(String material, String supplier) {
-		
+
 		PriceListDetailsSearchRequest pldsr = PriceListDetailsSearchRequest.builder().material(material).build();
 		PriceListSearchRequest plsr = PriceListSearchRequest.builder().supplierName(supplier).build();
 		List<PriceListDetails> lplds = priceListDetailJdbcRepository.search(pldsr).getPagedData();
 		List<PriceList> lpl = priceListJdbcRepository.search(plsr).getPagedData();
-		
+
 		List<PriceList> commonpl = new ArrayList<>();
-		for(PriceList pl:lpl) {
-			for(PriceListDetails pld:lplds) {
-				if(pl.getId().equals(pld.getPriceList())) {
+		for (PriceList pl : lpl) {
+			for (PriceListDetails pld : lplds) {
+				if (pl.getId().equals(pld.getPriceList())) {
 					commonpl.add(pl);
 				}
 			}
 		}
-		
+
 		String rateContracts = "";
-		for(PriceList pl:commonpl) {
-			rateContracts+=pl.getRateContractNumber() + ",";
+		for (PriceList pl : commonpl) {
+			rateContracts += pl.getRateContractNumber() + ",";
 		}
 		return rateContracts.replaceAll(",$", "");
 	}
-	
+
 	public Pagination<PurchaseOrder> search(PurchaseOrderSearch purchaseOrderSearch) {
 
-		if(purchaseOrderSearch.getSearchPoAdvReq()!=null && purchaseOrderSearch.getSearchPoAdvReq())
+		if (purchaseOrderSearch.getSearchPoAdvReq() != null && purchaseOrderSearch.getSearchPoAdvReq())
 			return searchPOsForAdvanceRequisition(purchaseOrderSearch.getTenantId());
-		
+
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
@@ -325,7 +326,8 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 		return page;
 	}
-	
+
+
 	public Pagination<PurchaseOrder> searchPOsForAdvanceRequisition(String tenantId) {
 		Pagination<PurchaseOrder> page = new Pagination<>();
 
@@ -336,8 +338,10 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 		page = (Pagination<PurchaseOrder>) getPagination(searchQuery, page, params);
 		searchQuery = searchQuery + " :pagination";
-		searchQuery = searchQuery.replace(":pagination", "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
-		List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), params, row);
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+		List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				params, row);
 
 		page.setTotalResults(purchaseOrderEntities.size());
 
@@ -349,69 +353,71 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 		return page;
 	}
-	
-    public List<PurchaseOrder> searchPOForAdvanceRequisition(PurchaseOrderSearch purchaseOrderSearchRequest) {
-        Map<String, Object> paramValues = new HashMap<>();
-        StringBuffer params = new StringBuffer();
 
-        String searchQuery = "select * from purchaseorder :condition  :orderby ";
+	public List<PurchaseOrder> searchPOForAdvanceRequisition(PurchaseOrderSearch purchaseOrderSearchRequest) {
+		Map<String, Object> paramValues = new HashMap<>();
+		StringBuffer params = new StringBuffer();
 
-        if (purchaseOrderSearchRequest.getTenantId() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
-            params.append("tenantid =:tenantId");
-            paramValues.put("tenantId", purchaseOrderSearchRequest.getTenantId());
-        }
+		String searchQuery = "select * from purchaseorder :condition  :orderby ";
 
-        searchQuery = searchQuery.replace(":condition", " where totalAdvancePaidAmount>0 and isdeleted is not true and lower(status)='approved' and " + params.toString());
+		if (purchaseOrderSearchRequest.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantid =:tenantId");
+			paramValues.put("tenantId", purchaseOrderSearchRequest.getTenantId());
+		}
 
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(PurchaseOrderEntity.class);
+		searchQuery = searchQuery.replace(":condition",
+				" where totalAdvancePaidAmount>0 and isdeleted is not true and lower(status)='approved' and "
+						+ params.toString());
 
-        List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
-                row);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(PurchaseOrderEntity.class);
 
-        List<PurchaseOrder> purchaseOrderList = new ArrayList<>();
+		List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
-        PurchaseOrder pl;
+		List<PurchaseOrder> purchaseOrderList = new ArrayList<>();
 
-        for (PurchaseOrderEntity purchaseOrderEntity : purchaseOrderEntities) {
-            pl = purchaseOrderEntity.toDomain();
-            purchaseOrderList.add(pl);
-        }
+		PurchaseOrder pl;
 
-        return purchaseOrderList;
-    }
-    
-    public void markIndentUsedForPo(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
-    	for(PurchaseOrder purchaseOrder : purchaseOrderRequest.getPurchaseOrders()) {
-    		if(purchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Approved")))
-        	for(PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
-        		for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
-        			Map<String, Object> paramValues = new HashMap<>();
+		for (PurchaseOrderEntity purchaseOrderEntity : purchaseOrderEntities) {
+			pl = purchaseOrderEntity.toDomain();
+			purchaseOrderList.add(pl);
+		}
 
-        			String query = "update indentdetail set poorderedquantity = poorderedquantity + :indentquantity where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
-        	        paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
-        	        paramValues.put("tenantId", tenantId);
-        	        namedParameterJdbcTemplate.update(query.toString(), paramValues);
-        		}
-        	}
-    	}
-    }
-    
-    public void markIndentNotUsedForPo(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
-    	for(PurchaseOrder purchaseOrder : purchaseOrderRequest.getPurchaseOrders()) {
-    		if(purchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected")))
-        	for(PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
-        		for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
-        			Map<String, Object> paramValues = new HashMap<>();
-        			String query = "update indentdetail set poorderedquantity = 0 where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
-        	        paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
-        	        paramValues.put("tenantId", tenantId);
-        	        namedParameterJdbcTemplate.update(query.toString(), paramValues);
-        		}
-        	}
-    	}
-    }
+		return purchaseOrderList;
+	}
+
+	public void markIndentUsedForPo(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
+		for (PurchaseOrder purchaseOrder : purchaseOrderRequest.getPurchaseOrders()) {
+			if (purchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Approved")))
+				for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+					for (PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+						Map<String, Object> paramValues = new HashMap<>();
+
+						String query = "update indentdetail set poorderedquantity = poorderedquantity + :indentquantity where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
+						paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
+						paramValues.put("tenantId", tenantId);
+						namedParameterJdbcTemplate.update(query.toString(), paramValues);
+					}
+				}
+		}
+	}
+
+	public void markIndentNotUsedForPo(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
+		for (PurchaseOrder purchaseOrder : purchaseOrderRequest.getPurchaseOrders()) {
+			if (purchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected")))
+				for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+					for (PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+						Map<String, Object> paramValues = new HashMap<>();
+						String query = "update indentdetail set poorderedquantity = 0 where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
+						paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
+						paramValues.put("tenantId", tenantId);
+						namedParameterJdbcTemplate.update(query.toString(), paramValues);
+					}
+				}
+		}
+	}
 
 }

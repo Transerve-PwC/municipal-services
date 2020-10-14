@@ -74,10 +74,10 @@ public class RtiService {
 	
 	public ResponseEntity<ResponseInfoWrapper> getDepartment(RtiRequestInfoWrapper request) {
 		try {
-			List<MinistryMaster> SEPApplicationresult = repository.getDepartment(request);
+			List<MinistryMaster> result = repository.getDepartment(request);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.responseBody(SEPApplicationresult).build(), HttpStatus.OK);
+					.responseBody(result).build(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.RTI_EXCEPTION_CODE, e.getMessage());

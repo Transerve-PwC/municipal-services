@@ -19,7 +19,6 @@ import org.egov.assets.service.MaterialIssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +60,7 @@ public class MaterialIssueTransferOutwardApiController {
 			@RequestParam(value = "purpose", required = false) String purpose) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber, issuePurpose, issueDate, null, materialIssueStatus, description, totalIssueValue, null,
-				pageNumber, sortBy, pageSize, purpose);
+				pageNumber, sortBy, pageSize, purpose, null, null);
 		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract,
 				IssueTypeEnum.MATERIALOUTWARD.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
@@ -73,7 +72,7 @@ public class MaterialIssueTransferOutwardApiController {
 			@Valid @RequestBody PDFRequest pdfRequest,
 			@RequestParam(value = "issueNoteNumber", required = false) String issueNoteNumber) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, null, null, null,
-				issueNoteNumber, null, null, null, null, null, null, null, null, null, null, null);
+				issueNoteNumber, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PDFResponse materialIssueResponse = materialIssueService.printPdf(searchContract,
 				IssueTypeEnum.MATERIALOUTWARD.toString(), pdfRequest.getRequestInfo());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);

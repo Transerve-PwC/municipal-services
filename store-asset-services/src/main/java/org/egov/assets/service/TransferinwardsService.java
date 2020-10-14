@@ -409,7 +409,7 @@ public class TransferinwardsService extends DomainService {
 				JSONObject indent = new JSONObject();
 
 				MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, null, null, null,
-						in.getIssueNumber(), null, null, null, null, null, null, null, null, null, null, null);
+						in.getIssueNumber(), null, null, null, null, null, null, null, null, null, null, null, null, null);
 				MaterialIssueResponse materialIssueResponse = materialIssuesService.search(searchContract,
 						IssueTypeEnum.MATERIALOUTWARD.toString());
 				List<MaterialIssueDetail> materialIssueDetail = null;

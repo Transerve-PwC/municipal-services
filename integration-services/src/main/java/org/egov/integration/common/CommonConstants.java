@@ -19,5 +19,6 @@ public class CommonConstants {
 	public static final String RTI_APPELLATE_EXCEPTION_CODE = "RTI_APPELLATE_EXCEPTION_CODE";
 	public static final String RTI_CONFIM_TRANSACTION_EXCEPTION_CODE = "RTI_CONFIM_TRANSACTION_EXCEPTION_CODE";
 	public static final String PT_EXCEPTION_CODE= "PT_EXCEPTION_CODE";
+	public static final String PT_MAPPING_EXCEPTION_CODE= "PT_MAPPING_EXCEPTION_CODE";
 }
 

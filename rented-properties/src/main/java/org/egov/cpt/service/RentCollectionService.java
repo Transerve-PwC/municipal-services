@@ -321,8 +321,12 @@ public class RentCollectionService implements IRentCollectionService {
 		if (fromDateTimestamp == null) {
 			return accountStatementItems;
 		} else {
+			Long fromDate = accountStatementItems.stream().map(stmt -> stmt.getDate())
+					.filter(date -> Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate().equals(
+							Instant.ofEpochMilli(fromDateTimestamp).atZone(ZoneId.systemDefault()).toLocalDate()))
+					.findFirst().get();
 			return accountStatementItems.stream()
-					.filter(statementItem -> statementItem.getDate() >= fromDateTimestamp.longValue())
+					.filter(statementItem -> statementItem.getDate() >= fromDate.longValue())
 					.collect(Collectors.toList());
 		}
 	}

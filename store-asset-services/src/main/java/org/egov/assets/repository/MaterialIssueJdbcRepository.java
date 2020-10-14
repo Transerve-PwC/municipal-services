@@ -159,6 +159,21 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
             params.append("scrapCreated = :scrapCreated");
             paramValues.put("scrapCreated", searchContract.getScrapCreated());
         }
+        
+		if (searchContract.getIssueFromDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(issuedate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(TO_CHAR(TO_TIMESTAMP(:fromDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("fromDate", searchContract.getIssueFromDate());
+		}
+
+		if (searchContract.getIssueToDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(issuedate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(TO_CHAR(TO_TIMESTAMP(:toDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("toDate", searchContract.getIssueToDate());
+		}
+
         Pagination<MaterialIssue> page = new Pagination<>();
         if (searchContract.getPageSize() != null)
             page.setPageSize(searchContract.getPageSize());
@@ -203,8 +218,5 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 		namedParameterJdbcTemplate.update(updateQuery,paramValues);
 		
 	}
-
-	
-
 
 }

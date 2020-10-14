@@ -49,4 +49,7 @@ public class PtConfiguration {
 
 	@Value("${pt.service.path}")
 	private String ptPath;
+	
+	@Value("${persister.save.ptmapping.topic}")
+	private String ptMappingApplicationSaveTopic;
 }

@@ -49,8 +49,6 @@ import org.egov.assets.model.ScrapSearch;
 import org.egov.assets.model.Store;
 import org.egov.assets.model.StoreGetRequest;
 import org.egov.assets.model.Supplier;
-import org.egov.assets.model.SupplierGetRequest;
-import org.egov.assets.model.SupplierResponse;
 import org.egov.assets.model.Uom;
 import org.egov.assets.model.WorkFlowDetails;
 import org.egov.assets.repository.MaterialIssueDetailJdbcRepository;
@@ -179,8 +177,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 				materialIssue.setTotalIssueValue(totalIssueValue);
 				WorkFlowDetails workFlowDetails = nonIndentIssueRequest.getWorkFlowDetails();
 				workFlowDetails.setBusinessId(materialIssue.getIssueNumber());
-				workflowIntegrator.callWorkFlow(nonIndentIssueRequest.getRequestInfo(), workFlowDetails,
-						materialIssue.getTenantId());
+				workflowIntegrator.callWorkFlow(nonIndentIssueRequest.getRequestInfo(), workFlowDetails,materialIssue.getTenantId());
 			}
 
 			kafkaTemplate.send(createTopic, createKey, nonIndentIssueRequest);
@@ -1145,7 +1142,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 				MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(
 						indentIssueRequest.getWorkFlowDetails().getTenantId(), null, null, null,
 						indentIssueRequest.getWorkFlowDetails().getBusinessId(), null, null, null, null, null, null,
-						null, null, null, null, null);
+						null, null, null, null, null, null, null);
 				MaterialIssueResponse issueResponse = search(searchContract);
 				for (MaterialIssue materialIssues : issueResponse.getMaterialIssues()) {
 					for (MaterialIssueDetail issueDetail : materialIssues.getMaterialIssueDetails()) {

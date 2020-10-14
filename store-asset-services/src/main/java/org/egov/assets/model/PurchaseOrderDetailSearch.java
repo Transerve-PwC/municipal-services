@@ -26,4 +26,5 @@ public class PurchaseOrderDetailSearch {
     private Integer pageNumber;
 
     private String sortBy;
+    
 }

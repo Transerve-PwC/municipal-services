@@ -19,7 +19,6 @@ import org.egov.assets.service.MaterialIssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +50,8 @@ public class MaterialIssueApiController {
 			@RequestParam(value = "toStore", required = false) String toStore,
 			@RequestParam(value = "issueNoteNumber", required = false) String issueNoteNumber,
 			@RequestParam(value = "issueDate", required = false) Long issueDate,
+			@RequestParam(value = "issueFromDate", required = false) Long issueFromDate,
+			@RequestParam(value = "issueToDate", required = false) Long issueToDate,
 			@RequestParam(value = "materialIssueStatus", required = false) String materialIssueStatus,
 			@RequestParam(value = "description", required = false) String description,
 			@RequestParam(value = "issuePurpose", required = false) String issuePurpose,
@@ -62,7 +63,7 @@ public class MaterialIssueApiController {
 
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber, issuePurpose, issueDate, null, materialIssueStatus, description, totalIssueValue, null,
-				pageNumber, sortBy, pageSize, purpose);
+				pageNumber, sortBy, pageSize, purpose,issueFromDate,issueToDate);
 		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract,
 				IssueTypeEnum.INDENTISSUE.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
@@ -75,7 +76,7 @@ public class MaterialIssueApiController {
 			@RequestParam(value = "issueNoteNumber", required = false) String issueNoteNumber) {
 
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, null, null, null,
-				issueNoteNumber, null, null, null, null, null, null, null, null, null, null, null);
+				issueNoteNumber, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PDFResponse pdfResponse = materialIssueService.printPdf(searchContract, IssueTypeEnum.INDENTISSUE.toString(),
 				pdfRequest.getRequestInfo());
 		return new ResponseEntity(pdfResponse, HttpStatus.OK);

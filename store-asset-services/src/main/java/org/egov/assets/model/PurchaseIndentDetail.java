@@ -1,6 +1,7 @@
 package org.egov.assets.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ public class PurchaseIndentDetail {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
+	
 	public PurchaseIndentDetail id(String id) {
 		this.id = id;
 		return this;
@@ -67,11 +69,11 @@ public class PurchaseIndentDetail {
 		this.tenantId = tenantId;
 	}
 
+
 	public PurchaseIndentDetail indentDetail(IndentDetail indentDetail) {
 		this.indentDetail = indentDetail;
 		return this;
 	}
-
 	/**
 	 * Get indentDetail
 	 * 
@@ -79,9 +81,7 @@ public class PurchaseIndentDetail {
 	 **/
 
 	@NotNull
-
 	@Valid
-
 	public IndentDetail getIndentDetail() {
 		return indentDetail;
 	}

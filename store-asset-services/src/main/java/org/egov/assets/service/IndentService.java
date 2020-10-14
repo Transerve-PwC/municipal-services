@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.egov.assets.common.Constants;
 import org.egov.assets.common.DomainService;
@@ -23,6 +22,7 @@ import org.egov.assets.common.exception.CustomBindException;
 import org.egov.assets.common.exception.ErrorCode;
 import org.egov.assets.common.exception.InvalidDataException;
 import org.egov.assets.model.FinancialYear;
+import org.egov.assets.model.IndenUserListResponse;
 import org.egov.assets.model.Indent;
 import org.egov.assets.model.Indent.IndentStatusEnum;
 import org.egov.assets.model.Indent.IndentTypeEnum;
@@ -46,7 +46,6 @@ import org.egov.assets.repository.entity.IndentEntity;
 import org.egov.assets.util.InventoryUtilities;
 import org.egov.assets.web.controller.AssetRepository;
 import org.egov.assets.wf.WorkflowIntegrator;
-import org.egov.assets.wf.model.Action;
 import org.egov.assets.wf.model.ProcessInstance;
 import org.egov.assets.wf.model.ProcessInstanceResponse;
 import org.egov.common.contract.request.RequestInfo;
@@ -692,6 +691,21 @@ public class IndentService extends DomainService {
 			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
 			return response;
 		} catch (CustomBindException e) {
+			throw e;
+		}
+
+	}
+
+	@Transactional
+	public IndenUserListResponse getCreatorList(RequestInfo requestInfo,String tenantId) {
+
+		try {
+			IndenUserListResponse response = new IndenUserListResponse();
+			List<String> usernameList = indentRepository.searchcreatorlist(tenantId);
+			response.setUsers(usernameList);
+			response.setResponseInfo(getResponseInfo(requestInfo));
+			return response;
+		} catch (Exception e) {
 			throw e;
 		}
 

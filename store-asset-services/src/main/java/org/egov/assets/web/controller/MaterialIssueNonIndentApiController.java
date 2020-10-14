@@ -60,7 +60,7 @@ public class MaterialIssueNonIndentApiController {
 			@RequestParam(value = "purpose", required = false) String purpose) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber, issuePurpose, issueDate, null, materialIssueStatus, description, totalIssueValue, null,
-				pageNumber, sortBy, pageSize, purpose);
+				pageNumber, sortBy, pageSize, purpose,null,null);
 		MaterialIssueResponse materialIssueResponse = nonIndentMaterialIssueService.search(searchContract);
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
@@ -71,7 +71,7 @@ public class MaterialIssueNonIndentApiController {
 			@Valid @RequestBody PDFRequest pdfRequest,
 			@RequestParam(value = "issueNoteNumber", required = false) String issueNoteNumber) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, null, null, null,
-				issueNoteNumber, null, null, null, null, null, null, null, null, null, null, null);
+				issueNoteNumber, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PDFResponse materialIssueResponse = nonIndentMaterialIssueService.printPdf(searchContract,
 				pdfRequest.getRequestInfo());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);

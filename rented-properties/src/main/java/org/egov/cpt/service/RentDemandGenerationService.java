@@ -86,7 +86,7 @@ public class RentDemandGenerationService {
 					Date date = demandCriteria.isEmpty() ? new Date() : FORMATTER.parse(demandCriteria.getDate());
 					if (!isMonthIncluded(dateList, date)) {
 						// generate demand
-						generateRentDemand(property, firstDemand.get(), getFirstDaysDate(date), rentDemandList,
+						generateRentDemand(property, firstDemand.get(), getFirstDateOfMonth(date), rentDemandList,
 								rentPaymentList, rentAccount);
 					}
 				} else {
@@ -132,7 +132,7 @@ public class RentDemandGenerationService {
 				.auditDetails(auditDetails).remainingPrincipal(collectionPrincipal).interestSince(date.getTime())
 				.build();
 
-		log.info("Generating Rend demand id '{}' of principal '{}' for property with transit no {}", rentDemand.getId(),
+		log.info("Generating Rent demand id '{}' of principal '{}' for property with transit no {}", rentDemand.getId(),
 				collectionPrincipal, property.getTransitNumber());
 		property.setDemands(Collections.singletonList(rentDemand));
 		property.setRentAccount(rentAccount);
@@ -157,20 +157,21 @@ public class RentDemandGenerationService {
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
-		log.info(">>>>>Rent demand generated>>>>>");
 		demandNotificationService.process(rentDemand, property);
 	}
 
 	private boolean isMonthIncluded(List<Long> dates, Date date) {
-		long firstDaysDate = getFirstDaysDate(date).getTime();
-		return dates.contains(new Long(firstDaysDate));
+		final Date givenDate = getFirstDateOfMonth(date);
+		return dates.stream().map(d -> new Date(d))
+				.anyMatch(d -> getFirstDateOfMonth(d).getTime() == givenDate.getTime());
 	}
 
-	private Date getFirstDaysDate(Date date) {
+	private Date getFirstDateOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
 		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
 		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
 		return cal.getTime();

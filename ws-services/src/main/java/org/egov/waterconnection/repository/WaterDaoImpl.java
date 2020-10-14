@@ -126,10 +126,4 @@ public class WaterDaoImpl implements WaterDao {
 	public void saveFileStoreIds(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(wsConfiguration.getSaveFileStoreIdsTopic(), waterConnectionRequest);
 	}
-	
-	@Override
-	public void saveWaterSubActivity(WaterConnectionRequest waterConnectionRequest) {
-		waterConnectionProducer.push(createWaterSubActivity, waterConnectionRequest);
-	}
-
 }

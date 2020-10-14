@@ -22,8 +22,6 @@ import org.egov.assets.model.Store;
 import org.egov.assets.model.StoreGetRequest;
 import org.egov.assets.model.StoreResponse;
 import org.egov.assets.model.Supplier;
-import org.egov.assets.model.SupplierGetRequest;
-import org.egov.assets.model.SupplierResponse;
 import org.egov.assets.model.Uom;
 import org.egov.assets.repository.MaterialReceiptJdbcRepository;
 import org.egov.assets.repository.StoreJdbcRepository;
