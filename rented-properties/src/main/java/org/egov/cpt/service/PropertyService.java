@@ -202,19 +202,26 @@ public class PropertyService {
 						.getPropertyRentPaymentDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
 				RentAccount rentAccount = repository
 						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
-				List<OfflinePaymentDetails> offlinePaymentDetails = repository.getPropertyOfflinePaymentDetails(
-						PropertyCriteria.builder().propertyId(property.getId()).build());
-				if (!CollectionUtils.isEmpty(demands) && null != rentAccount && !CollectionUtils.isEmpty(offlinePaymentDetails)) {
+				if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
 					property.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 							property.getPropertyDetails().getInterestRate()));
 					property.setDemands(demands);
 					property.setPayments(payments);
 					property.setRentAccount(rentAccount);
-					property.setOfflinePaymentDetails(offlinePaymentDetails);
 				}
 			});
 		}
 
+		if (properties.size() <= 1 && !CollectionUtils.isEmpty(criteria.getRelations())
+				&& criteria.getRelations().contains(PTConstants.RELATION_OPD)) {
+			properties.stream().forEach(property -> {
+				List<OfflinePaymentDetails> offlinePaymentDetails = repository.getPropertyOfflinePaymentDetails(
+						PropertyCriteria.builder().propertyId(property.getId()).build());
+				if (!CollectionUtils.isEmpty(offlinePaymentDetails)) {
+					property.setOfflinePaymentDetails(offlinePaymentDetails);
+				}
+			});
+		}
 		return properties;
 	}
 
