@@ -280,6 +280,4 @@ public class PropertyConfiguration {
 	@Value("${egov.collectionservice.payment.create.path}")
 	private String collectionPaymentEndPoint;
 
-	@Value("${perisiter.save.offlinepayment.topic}")
-	private String offlinePaymentTopic;
 }

@@ -703,6 +703,22 @@ serviceMaps:
 
       - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
 
+    - query: INSERT INTO cs_pt_offline_payment_detail (id, property_id, demand_id, amount, bankname, transactionnumber) VALUES (?,?,?,?,?,?);
+      basePath: $.Properties.*.offlinePaymentDetails.*
+      jsonMaps:
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.id
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.propertyId
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.demandId
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.amount
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.bankName
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.transactionNumber
+
  - version: 1.0
    description: Persists Owners details in cs_pt_ownership_v1 table
    fromTopic: save-ownership-transfer
@@ -1676,26 +1692,3 @@ serviceMaps:
       - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceInterest
 
       - jsonPath: $.PropertyDueAmounts.*.rentSummary.balanceAmount
-
-
- - version: 1.0
-   description: Offline Payment details
-   fromTopic: save-rp-offline-payment-details
-   isTransaction: true
-   queryMaps:
-
-    - query: INSERT INTO cs_pt_offline_payment_detail (id, property_id, demand_id, amount, bankname, transactionnumber) VALUES (?,?,?,?,?,?);
-      basePath: OfflinePaymentDetails.*
-      jsonMaps:
-
-      - jsonPath: $.OfflinePaymentDetails.*.id
-
-      - jsonPath: $.OfflinePaymentDetails.*.propertyId
-
-      - jsonPath: $.OfflinePaymentDetails.*.demandId
-
-      - jsonPath: $.OfflinePaymentDetails.*.amount
-
-      - jsonPath: $.OfflinePaymentDetails.*.bankName
-
- 	  - jsonPath: $.OfflinePaymentDetails.*.transactionNumber

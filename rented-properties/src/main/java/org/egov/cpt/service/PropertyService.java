@@ -30,7 +30,6 @@ import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
-import org.egov.cpt.web.contracts.OfflinePaymentRequest;
 import org.egov.cpt.web.contracts.PropertyDueRequest;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
@@ -300,10 +299,9 @@ public class PropertyService {
 					.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
 					.amount(property.getPaymentAmount())
 					.bankName(property.getBankName()).transactionNumber(property.getTransactionId()).build();
-			OfflinePaymentRequest offlinePaymentRequest = OfflinePaymentRequest.builder().requestInfo(propertyRequest.getRequestInfo())
-					.offlinePaymentDetails(Collections.singletonList(offlinePaymentDetails))
-					.build();
-			producer.push(config.getOfflinePaymentTopic(), offlinePaymentRequest);
+			property.setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
+			propertyRequest.setProperties(Collections.singletonList(property));
+			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 
 		} else {
 			/**
