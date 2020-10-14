@@ -72,6 +72,10 @@ public class Application {
 	@JsonProperty("applicationType")
 	private String applicationType;
 
+	@JsonProperty("assignee")
+	@Builder.Default
+	private List<String> assignee = null;
+
 	/**
 	 * Latest comments entered by an employee during workflow.
 	 */

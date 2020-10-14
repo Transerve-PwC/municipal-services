@@ -98,15 +98,15 @@ public class WorkflowIntegrator {
 			List<Map<String, String>> uuidmaps = new LinkedList<>();
 			List<Map<String, String>> assigneeUuidmaps = new LinkedList<>();
 
-			// if (!CollectionUtils.isEmpty(property.getAssignee())) {
-			//
-			// // Adding assignees to processInstance
-			// property.getAssignee().forEach(assignee -> {
-			// Map<String, String> uuidMap = new HashMap<>();
-			// uuidMap.put(UUIDKEY, assignee);
-			// assigneeUuidmaps.add(uuidMap);
-			// });
-			// }
+			if (!CollectionUtils.isEmpty(property.getAssignee())) {
+
+				// Adding assignees to processInstance
+				property.getAssignee().forEach(assignee -> {
+					Map<String, String> uuidMap = new HashMap<>();
+					uuidMap.put(UUIDKEY, assignee);
+					assigneeUuidmaps.add(uuidMap);
+				});
+			}
 
 			if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
 				property.getPropertyDetails().getOwners().forEach(owners -> {
@@ -121,14 +121,14 @@ public class WorkflowIntegrator {
 			obj.put(ACTIONKEY, property.getAction());
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(AUDITDETAILSKEY, property.getAuditDetails());
-			// obj.put(COMMENTKEY, property.getComment());
-			// if (!CollectionUtils.isEmpty(property.getAssignee())) {
-			// if (uuidmaps.size() == 1) {
-			// obj.put(ASSIGNEEKEY, assigneeUuidmaps.get(0));
-			// } else {
-			// obj.put(ASSIGNEEKEY, assigneeUuidmaps);
-			// }
-			// }
+			obj.put(COMMENTKEY, property.getComments());
+			if (!CollectionUtils.isEmpty(property.getAssignee())) {
+				if (uuidmaps.size() == 1) {
+					obj.put(ASSIGNEEKEY, assigneeUuidmaps.get(0));
+				} else {
+					obj.put(ASSIGNEEKEY, assigneeUuidmaps.get(0));
+				}
+			}
 
 			array.add(obj);
 		}
@@ -148,6 +148,13 @@ public class WorkflowIntegrator {
 			JSONObject obj = new JSONObject();
 			List<Map<String, String>> uuidmaps = new LinkedList<>();
 			List<Map<String, String>> assigneeUuidmaps = new LinkedList<>();
+			if (!CollectionUtils.isEmpty(application.getAssignee())) {
+				application.getAssignee().forEach(assignee -> {
+					Map<String, String> uuidMap = new HashMap<>();
+					uuidMap.put(UUIDKEY, assignee);
+					assigneeUuidmaps.add(uuidMap);
+				});
+			}
 
 			obj.put(TENANTIDKEY, wfTenantId);
 			obj.put(BUSINESSSERVICEKEY, application.getWorkFlowBusinessService());
@@ -156,6 +163,14 @@ public class WorkflowIntegrator {
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(AUDITDETAILSKEY, application.getAuditDetails());
 			obj.put(COMMENTKEY, application.getComments());
+
+			if (!CollectionUtils.isEmpty(application.getAssignee())) {
+				if (uuidmaps.size() == 1) {
+					obj.put(ASSIGNEEKEY, assigneeUuidmaps.get(0));
+				} else {
+					obj.put(ASSIGNEEKEY, assigneeUuidmaps.get(0));
+				}
+			}
 
 			array.add(obj);
 		}

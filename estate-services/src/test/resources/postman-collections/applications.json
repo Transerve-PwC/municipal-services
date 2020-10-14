@@ -1,235 +1,144 @@
 {
-   "info": {
-      "_postman_id": "710f5b70-ce40-4843-b928-f098a8f12d14",
-      "name": "property-service-updated",
-      "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
-   },
-   "item": [
-      {
-         "name": "PS_create",
-         "_postman_id": "2efeb68e-85e3-4092-9cbc-411ffca95c53",
-         "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-               "mode": "raw",
-               "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"0e2c33de-8530-4d1b-bec1-a56fc5a24082\"\n  },\n  \"Properties\": [\n    {\n      \"tenantId\": \"ch\",\n      \"fileNumber\": \"File-002\",\n      \"category\": \"CAT.RESIDENTIAL\",\n      \"subCategory\": \"SUBCAT.HOUSE\",\n      \"siteNumber\": \"Site-002\",\n      \"sectorNumber\": \"Sector-002\",\n      \"state\": \"\",\n      \"action\": \"\",\n      \"propertyDetails\": {\n        \"propertyType\": \"FREEHOLD\",\n        \"typeOfAllocation\": \"AUCTION\",\n        \"emdAmount\": 500,\n        \"emdDate\": 1592979121518,\n        \"modeOfAuction\": \"OFFLINE\",\n        \"schemeName\": \"Scheme-002\",\n        \"dateOfAuction\": 1592979121518,\n        \"areaSqft\": 100,\n        \"ratePerSqft\": 100,\n        \"lastNocDate\": 1592979121518,\n        \"serviceCategory\": \"SERVICECAT.CAT\",\n        \"isPropertyActive\": true,\n        \"branchType\": \"BRANCH_ESTATE\",\n        \"tradeType\": \"GENERAL\",\n        \"companyName\": \"Company-002\",\n        \"companyAddress\": \"Hyderabad\",\n        \"companyRegistrationNumber\": \"Company Reg 002\",\n        \"companyType\": \"Service\",\n        \"decreeDate\": 1592979121518,\n        \"courtDetails\": \"The court details belongs here\",\n        \"civilTitledAs\": \"Transfer can be made as per family settelement\",\n        \"companyRegistrationDate\": 1592979121518,\n        \"companyOrFirm\": \"COMPANY\",\n        \"propertyRegisteredTo\": \" Company\",\n        \"entityType\": \"Entity-002\",\n        \"owners\": [\n          {\n            \"serialNumber\": \"1\",\n            \"share\": 25,\n            \"cpNumber\": \"cp-002\",\n            \"state\": \"\",\n            \"action\": \"\",\n            \"ownershipType\": \"PARTNER\",\n            \"ownerDetails\": {\n              \"ownerName\": \"Sriraj\",\n              \"guardianName\": \"Kumar\",\n              \"guardianRelation\": \"FATHER\",\n              \"mobileNumber\": \"8686574377\",\n              \"allotmentNumber\": \"Allot-002\",\n              \"dateOfAllotment\": 1592979121518,\n              \"possesionDate\": 1592979121518,\n              \"isApproved\": true,\n              \"isCurrentOwner\": true,\n              \"isMasterEntry\": true,\n              \"address\": \"Hyderabad\",\n              \"is_director\": true,\n              \"sellerName\": \"S-name\",\n              \"sellerGuardianName\": \"SG-Name\",\n              \"sellerRelation\": \"FATHER\",\n              \"modeOfTransfer\": \"SALEGIFT\",\n              \"ownerDocuments\": [\n                {\n                  \"documentType\": \"pdf\",\n                  \"fileStoreId\": \"file-1\",\n                  \"isActive\": true\n                },\n                {\n                  \"documentType\": \"image\",\n                  \"fileStoreId\": \"file-2\",\n                  \"isActive\": true\n                }\n              ]\n            }\n          }\n        ],\n        \"courtCases\": [\n          {\n            \"estateOfficerCourt\": \"Case-1\",\n            \"commissionersCourt\": \"Case-2\",\n            \"chiefAdministartorsCourt\": \"Case-3\",\n            \"advisorToAdminCourt\": \"Case-4\",\n            \"honorableDistrictCourt\": \"Case-5\",\n            \"honorableHighCourt\": \"Case-6\",\n            \"honorableSupremeCourt\": \"Case-7\"\n          }\n        ],\n        \"bidders\": [\n          {\n            \"auctionId\": \"bid123\",\n            \"bidderName\": \"vinil\",\n            \"depositedEMDAmount\": 50000,\n            \"depositDate\": 1602226631923,\n            \"emdValidityDate\": 1602226631923,\n            \"refundStatus\": \"owner\"\n          },\n          {\n            \"auctionId\": \"bid124\",\n            \"bidderName\": \"sriraj\",\n            \"depositedEMDAmount\": 50000,\n            \"depositDate\": 1602226631923,\n            \"emdValidityDate\": 1602226631923,\n            \"refundStatus\": \"owner\"\n          }\n        ],\n        \"paymentDetails\": [\n          {\n            \"paymentType\": \"pt1\",\n            \"dueDateOfPayment\": 1592979121518,\n            \"payable\": 500,\n            \"amount\": 500,\n            \"total\": 500,\n            \"dateOfDeposit\": 1592979121518,\n            \"delayInPayment\": 500,\n            \"interestForDelay\": 500,\n            \"totalAmountDueWithInterest\": 500,\n            \"amountDeposited\": 500,\n            \"amountDepositedIntt\": 500,\n            \"balance\": 500,\n            \"balanceIntt\": 500,\n            \"totalDue\": 500,\n            \"receiptNumber\": \"rn1\",\n            \"receiptDate\": 1592979121518,\n            \"stRateOfStGst\": 500,\n            \"stAmountOfGst\": 500,\n            \"stPaymentMadeBy\": \"stpmb1\",\n            \"bankName\": \"bn1\",\n            \"chequeNumber\": \"cn1\",\n            \"installmentOne\": 500,\n            \"installmentTwo\": 500,\n            \"installmentTwoDueDate\": 1592979121518,\n            \"installmentThree\": 500,\n            \"installmentThreeDueDate\": 1592979121518,\n            \"monthlyOrAnnually\": \"moa1\",\n            \"groundRentStartDate\": 1592979121518,\n            \"rentRevision\": 500,\n            \"leasePeriod\": 10,\n            \"licenseFeeOfYear\": 10,\n            \"licenseFee\": 25,\n            \"securityAmount\": 500,\n            \"securityDate\": 1592979121518\n          }\n        ]\n      }\n    }\n  ]\n}",
-               "options": {
-                  "raw": {
-                     "language": "json"
-                  }
-               }
-            },
-            "url": "http:\/\/localhost:8083\/est-services\/property-master\/_create"
-         },
-         "response": []
+  "info": {
+    "_postman_id": "710f5b70-ce40-4843-b928-f098a8f12d14",
+    "name": "property-service-updated",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PS_create",
+      "_postman_id": "2efeb68e-85e3-4092-9cbc-411ffca95c53",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"18ceb700-f6f0-4de6-bc9a-199ab1db494f\"\n  },\n  \"Properties\": [\n    {\n      \"tenantId\": \"ch\",\n      \"fileNumber\": \"File-006\",\n      \"category\": \"CAT.RESIDENTIAL\",\n      \"subCategory\": \"SUBCAT.HOUSE\",\n      \"siteNumber\": \"Site-005\",\n      \"sectorNumber\": \"Sector-005\",\n      \"state\": \"\",\n      \"action\": \"\",\n      \"propertyDetails\": {\n        \"propertyType\": \"FREEHOLD\",\n        \"typeOfAllocation\": \"AUCTION\",\n        \"emdAmount\": 500,\n        \"emdDate\": 1592979121518,\n        \"modeOfAuction\": \"OFFLINE\",\n        \"schemeName\": \"Scheme-005\",\n        \"dateOfAuction\": 1592979121518,\n        \"areaSqft\": 100,\n        \"ratePerSqft\": 100,\n        \"lastNocDate\": 1592979121518,\n        \"serviceCategory\": \"SERVICECAT.CAT\",\n        \"isPropertyActive\": true,\n        \"branchType\": \"BRANCH_ESTATE\",\n        \"tradeType\": \"GENERAL\",\n        \"companyName\": \"Company-005\",\n        \"companyAddress\": \"Hyderabad\",\n        \"companyRegistrationNumber\": \"Company Reg 005\",\n        \"companyType\": \"Service\",\n        \"decreeDate\": 1592979121518,\n        \"courtDetails\": \"The court details belongs here\",\n        \"civilTitledAs\": \"Transfer can be made as per family settelement\",\n        \"companyRegistrationDate\": 1592979121518,\n        \"companyOrFirm\": \"COMPANY\",\n        \"propertyRegisteredTo\": \" Company\",\n        \"entityType\": \"Entity-005\",\n        \"owners\": [\n          {\n            \"serialNumber\": \"1\",\n            \"share\": 25,\n            \"cpNumber\": \"cp-005\",\n            \"state\": \"\",\n            \"action\": \"\",\n            \"ownershipType\": \"PARTNER\",\n            \"ownerDetails\": {\n              \"ownerName\": \"Sriraj\",\n              \"guardianName\": \"Kumar\",\n              \"guardianRelation\": \"FATHER\",\n              \"mobileNumber\": \"8686574377\",\n              \"allotmentNumber\": \"Allot-005\",\n              \"dateOfAllotment\": 1592979121518,\n              \"possesionDate\": 1592979121518,\n              \"isApproved\": true,\n              \"isCurrentOwner\": true,\n              \"isMasterEntry\": true,\n              \"address\": \"Hyderabad\",\n              \"is_director\": true,\n              \"sellerName\": \"S-name\",\n              \"sellerGuardianName\": \"SG-Name\",\n              \"sellerRelation\": \"FATHER\",\n              \"modeOfTransfer\": \"SALEGIFT\",\n              \"dob\": 1592979121518,\n              \"ownerDocuments\": [\n                {\n                  \"documentType\": \"pdf\",\n                  \"fileStoreId\": \"file-1\",\n                  \"isActive\": true\n                },\n                {\n                  \"documentType\": \"image\",\n                  \"fileStoreId\": \"file-2\",\n                  \"isActive\": true\n                }\n              ]\n            }\n          }\n        ],\n        \"courtCases\": [\n          {\n            \"estateOfficerCourt\": \"Case-1\",\n            \"commissionersCourt\": \"Case-2\",\n            \"chiefAdministartorsCourt\": \"Case-3\",\n            \"advisorToAdminCourt\": \"Case-4\",\n            \"honorableDistrictCourt\": \"Case-5\",\n            \"honorableHighCourt\": \"Case-6\",\n            \"honorableSupremeCourt\": \"Case-7\"\n          }\n        ],\n        \"bidders\": [\n          {\n            \"auctionId\": \"bid123\",\n            \"bidderName\": \"vinil\",\n            \"depositedEMDAmount\": 50000,\n            \"depositDate\": 1602226631923,\n            \"emdValidityDate\": 1602226631923,\n            \"refundStatus\": \"owner\"\n          },\n          {\n            \"auctionId\": \"bid124\",\n            \"bidderName\": \"sriraj\",\n            \"depositedEMDAmount\": 50000,\n            \"depositDate\": 1602226631923,\n            \"emdValidityDate\": 1602226631923,\n            \"refundStatus\": \"owner\"\n          }\n        ],\n        \"paymentDetails\": [\n          {\n            \"paymentType\": \"pt1\",\n            \"dueDateOfPayment\": 1592979121518,\n            \"payable\": 500,\n            \"amount\": 500,\n            \"total\": 500,\n            \"dateOfDeposit\": 1592979121518,\n            \"delayInPayment\": 500,\n            \"interestForDelay\": 500,\n            \"totalAmountDueWithInterest\": 500,\n            \"amountDeposited\": 500,\n            \"amountDepositedIntt\": 500,\n            \"balance\": 500,\n            \"balanceIntt\": 500,\n            \"totalDue\": 500,\n            \"receiptNumber\": \"rn1\",\n            \"receiptDate\": 1592979121518,\n            \"stRateOfStGst\": 500,\n            \"stAmountOfGst\": 500,\n            \"stPaymentMadeBy\": \"stpmb1\",\n            \"bankName\": \"bn1\",\n            \"chequeNumber\": \"cn1\",\n            \"installmentOne\": 500,\n            \"installmentTwo\": 500,\n            \"installmentTwoDueDate\": 1592979121518,\n            \"installmentThree\": 500,\n            \"installmentThreeDueDate\": 1592979121518,\n            \"monthlyOrAnnually\": \"moa1\",\n            \"groundRentStartDate\": 1592979121518,\n            \"rentRevision\": 500,\n            \"leasePeriod\": 10,\n            \"licenseFeeOfYear\": 10,\n            \"licenseFee\": 25,\n            \"securityAmount\": 500,\n            \"securityDate\": 1592979121518\n          }\n        ]\n      }\n    }\n  ]\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "http://localhost:8083/est-services/property-master/_create"
       },
-      {
-         "name": "PS_search",
-         "_postman_id": "c8eb409b-1ecb-4194-83dd-205ba25ca6f9",
-         "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-               "mode": "raw",
-               "raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"0e2c33de-8530-4d1b-bec1-a56fc5a24082\"\n  }\n\t\n}",
-               "options": {
-                  "raw": {
-                     "language": "json"
-                  }
-               }
-            },
-            "url": {
-               "raw": "http:\/\/localhost:8083\/est-services\/property-master\/_search?fileNumber=File-002",
-               "protocol": "http",
-               "host": [
-                  "localhost"
-               ],
-               "port": "8083",
-               "path": [
-                  "est-services",
-                  "property-master",
-                  "_search"
-               ],
-               "query": [
-                  {
-                     "key": "category",
-                     "value": "cat",
-                     "disabled": true
-                  },
-                  {
-                     "key": "mobileNumber",
-                     "value": "8500123455",
-                     "disabled": true
-                  },
-                  {
-                     "key": "ownerName",
-                     "value": "sriraj 007",
-                     "disabled": true
-                  },
-                  {
-                     "key": "offset",
-                     "value": "0",
-                     "disabled": true
-                  },
-                  {
-                     "key": "limit",
-                     "value": "3",
-                     "disabled": true
-                  },
-                  {
-                     "key": "state",
-                     "value": "PS_PM_APPROVED",
-                     "disabled": true
-                  },
-                  {
-                     "key": "propertyId",
-                     "value": null,
-                     "disabled": true
-                  },
-                  {
-                     "key": "relations",
-                     "value": "property",
-                     "disabled": true
-                  },
-                  {
-                     "key": "ownerId",
-                     "value": null,
-                     "disabled": true
-                  },
-                  {
-                     "key": "fileNumber",
-                     "value": "File-002"
-                  }
-               ]
-            }
-         },
-         "response": []
+      "response": []
+    },
+    {
+      "name": "PS_search",
+      "_postman_id": "c8eb409b-1ecb-4194-83dd-205ba25ca6f9",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"0e2c33de-8530-4d1b-bec1-a56fc5a24082\"\n  }\n\t\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:8083/est-services/property-master/_search?fileNumber=File-006",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8083",
+          "path": ["est-services", "property-master", "_search"],
+          "query": [
+            { "key": "category", "value": "cat", "disabled": true },
+            { "key": "mobileNumber", "value": "8500123455", "disabled": true },
+            { "key": "ownerName", "value": "sriraj 007", "disabled": true },
+            { "key": "offset", "value": "0", "disabled": true },
+            { "key": "limit", "value": "3", "disabled": true },
+            { "key": "state", "value": "PS_PM_APPROVED", "disabled": true },
+            { "key": "propertyId", "value": null, "disabled": true },
+            { "key": "relations", "value": "bidder", "disabled": true },
+            { "key": "ownerId", "value": null, "disabled": true },
+            { "key": "fileNumber", "value": "File-006" }
+          ]
+        }
       },
-      {
-         "name": "PS_update",
-         "_postman_id": "d1a7579d-faf1-486d-b8c7-2c064e5490d6",
-         "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-               "mode": "raw",
-               "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"0e2c33de-8530-4d1b-bec1-a56fc5a24082\"\n  },\n  \"Properties\": [\n    {\n      \"id\": \"0bbf7c0f-b888-496b-b0e5-7067279abad6\",\n      \"tenantId\": \"ch\",\n      \"fileNumber\": \"FILE-002\",\n      \"category\": \"CAT.RESIDENTIAL\",\n      \"subCategory\": \"SUBCAT.HOUSE\",\n      \"siteNumber\": \"Site-002\",\n      \"sectorNumber\": \"Sector-002\",\n      \"propertyMasterOrAllotmentOfSite\": null,\n      \"isCancelationOfSite\": false,\n      \"state\": \"ES_PM_DRAFTED\",\n      \"action\": \"\",\n      \"propertyDetails\": {\n        \"inActiveBidders\": null,\n        \"id\": \"a8d8420a-8230-4f8d-bdbb-8dc5e9b81aae\",\n        \"tenantId\": \"ch\",\n        \"propertyId\": \"0bbf7c0f-b888-496b-b0e5-7067279abad6\",\n        \"branchType\": null,\n        \"propertyType\": \"FREEHOLD\",\n        \"typeOfAllocation\": \"AUCTION\",\n        \"emdAmount\": 500.00,\n        \"emdDate\": 1592979121518,\n        \"modeOfAuction\": \"OFFLINE\",\n        \"schemeName\": \"Scheme-002\",\n        \"dateOfAuction\": 1592979121518,\n        \"areaSqft\": 100,\n        \"ratePerSqft\": 100.00,\n        \"lastNocDate\": 1592979121518,\n        \"serviceCategory\": \"SERVICECAT.CAT\",\n        \"isPropertyActive\": true,\n        \"tradeType\": \"GENERAL\",\n        \"companyName\": \"Company-002\",\n        \"companyAddress\": \"Hyderabad\",\n        \"companyRegistrationNumber\": \"Company Reg 002\",\n        \"companyType\": \"Service\",\n        \"decreeDate\": 1592979121518,\n        \"courtDetails\": \"The court details belongs here\",\n        \"civilTitledAs\": \"Transfer can be made as per family settelement\",\n        \"auditDetails\": {\n          \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6501\",\n          \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6501\",\n          \"createdTime\": 1602242165410,\n          \"lastModifiedTime\": 1602243829475\n        },\n        \"companyRegistrationDate\": 1592979121518,\n        \"companyOrFirm\": \"COMPANY\",\n        \"propertyRegisteredTo\": \" Company\",\n        \"entityType\": \"Entity-002\",\n        \"owners\": [],\n        \"courtCases\": [],\n        \"paymentDetails\": [],\n        \"bidders\": [\n          {\n            \"auctionId\": \"bid123\",\n            \"bidderName\": \"vinil\",\n            \"depositedEMDAmount\": 50000,\n            \"depositDate\": 1602226631923,\n            \"emdValidityDate\": 1602226631923,\n            \"refundStatus\": \"owner\"\n          },\n          {\n            \"auctionId\": \"bid124\",\n            \"bidderName\": \"sriraj\",\n            \"depositedEMDAmount\": 50000,\n            \"depositDate\": 1602226631923,\n            \"emdValidityDate\": 1602226631923,\n            \"refundStatus\": \"owner\"\n          }\n        ]\n      },\n      \"auditDetails\": {\n        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6501\",\n        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6501\",\n        \"createdTime\": 1602242165410,\n        \"lastModifiedTime\": 1602243829475\n      }\n    }\n  ]\n}",
-               "options": {
-                  "raw": {
-                     "language": "json"
-                  }
-               }
-            },
-            "url": "http:\/\/localhost:8083\/est-services\/property-master\/_update"
-         },
-         "response": []
+      "response": []
+    },
+    {
+      "name": "PS_update",
+      "_postman_id": "d1a7579d-faf1-486d-b8c7-2c064e5490d6",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"18ceb700-f6f0-4de6-bc9a-199ab1db494f\"\n  },\n  \"Properties\": [\n    {\n      \"id\": \"ba395a7b-a36c-4e02-9e95-0481ca671171\",\n      \"tenantId\": \"ch\",\n      \"fileNumber\": \"FILE-006\",\n      \"category\": \"CAT.RESIDENTIAL\",\n      \"subCategory\": \"SUBCAT.HOUSE\",\n      \"siteNumber\": \"Site-005\",\n      \"sectorNumber\": \"Sector-005\",\n      \"propertyMasterOrAllotmentOfSite\": null,\n      \"isCancelationOfSite\": false,\n      \"state\": \"ES_PM_DRAFTED\",\n      \"action\": \"\",\n      \"assignee\": null,\n      \"comments\": null,\n      \"propertyDetails\": {\n        \"inActiveBidders\": null,\n        \"id\": \"9bd118af-216f-4fe8-9509-a99a08f5e797\",\n        \"tenantId\": \"ch\",\n        \"propertyId\": \"ba395a7b-a36c-4e02-9e95-0481ca671171\",\n        \"branchType\": null,\n        \"propertyType\": \"FREEHOLD\",\n        \"typeOfAllocation\": \"AUCTION\",\n        \"emdAmount\": 500.00,\n        \"emdDate\": 1592979121518,\n        \"modeOfAuction\": \"OFFLINE\",\n        \"schemeName\": \"Scheme-005\",\n        \"dateOfAuction\": 1592979121518,\n        \"areaSqft\": 100,\n        \"ratePerSqft\": 100.00,\n        \"lastNocDate\": 1592979121518,\n        \"serviceCategory\": \"SERVICECAT.CAT\",\n        \"isPropertyActive\": true,\n        \"tradeType\": \"GENERAL\",\n        \"companyName\": \"Company-005\",\n        \"companyAddress\": \"Hyderabad\",\n        \"companyRegistrationNumber\": \"Company Reg 005\",\n        \"companyType\": \"Service\",\n        \"decreeDate\": 1592979121518,\n        \"courtDetails\": \"The court details belongs here\",\n        \"civilTitledAs\": \"Transfer can be made as per family settelement\",\n        \"auditDetails\": {\n          \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6522\",\n          \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6522\",\n          \"createdTime\": 1602672385816,\n          \"lastModifiedTime\": 1602672385816\n        },\n        \"companyRegistrationDate\": 1592979121518,\n        \"companyOrFirm\": \"COMPANY\",\n        \"propertyRegisteredTo\": \" Company\",\n        \"entityType\": \"Entity-005\",\n        \"owners\": [\n          {\n            \"serialNumber\": \"1\",\n            \"share\": 25,\n            \"cpNumber\": \"cp-005\",\n            \"state\": \"\",\n            \"action\": \"\",\n            \"ownershipType\": \"PARTNER\",\n            \"ownerDetails\": {\n              \"ownerName\": \"Sriraj\",\n              \"guardianName\": \"Kumar\",\n              \"guardianRelation\": \"FATHER\",\n              \"mobileNumber\": \"8686574377\",\n              \"allotmentNumber\": \"Allot-005\",\n              \"dateOfAllotment\": 1592979121518,\n              \"possesionDate\": 1592979121518,\n              \"isApproved\": true,\n              \"isCurrentOwner\": true,\n              \"isMasterEntry\": true,\n              \"address\": \"Hyderabad\",\n              \"is_director\": true,\n              \"sellerName\": \"S-name\",\n              \"sellerGuardianName\": \"SG-Name\",\n              \"sellerRelation\": \"FATHER\",\n              \"modeOfTransfer\": \"SALEGIFT\",\n              \"dob\": 1592979121518\n            }\n          }\n        ],\n        \"courtCases\": [],\n        \"paymentDetails\": [],\n        \"bidders\": []\n      },\n      \"auditDetails\": {\n        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6522\",\n        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6522\",\n        \"createdTime\": 1602672385816,\n        \"lastModifiedTime\": 1602672385816\n      }\n    }\n  ]\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "http://localhost:8083/est-services/property-master/_update"
       },
-      {
-         "name": "application_create",
-         "_postman_id": "31603a43-6f72-4ab3-8208-0fe83cfa869d",
-         "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-               "mode": "raw",
-               "raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"d9e5c2e9-75e3-402c-b666-e8681e191b01\"\n    },\n    \"Applications\": [\n        {\n            \"tenantId\": \"ch.chandigarh\",\n            \"property\": {\n                \"id\": \"52792ee3-5dbf-43b7-bd17-b767ca94e2dc\"\n            },\n            \"branchType\": \"EstateBranch\",\n            \"moduleType\": \"OwnershipTransfer\",\n            \"applicationType\": \"SaleDeed\",\n            \"comments\": \" \",\n            \"hardcopyReceivedDate\": 0,\n            \"applicationDetails\": {\n                \"registrationNumber\": \"reg-1\",\n                \"dateOfRegistration\": 15678994,\n                \"dateOfExecution\": 15876549,\n                \"newspaperAdDate\": 159876540,\n                \"transferor\": {\n                    \"id\": \"72a05958-9032-4aaf-96c6-d4e99b7bfbfe\",\n                    \"name\": \"deceased name 2\",\n                    \"fatherOrHusbandName\": \"deceased father name 2\",\n                    \"address\": \"deceased address 2\",\n                    \"percentageOfShare\": 100,\n                    \"dateOfDeath\": 1567856\n                },\n                \"transferee\": {\n                    \"legalHeirOrbeneficiary\": \"LEGAL_HEIR\",\n                    \"name\": \"legalHeir name 2\",\n                    \"age\": 50,\n                    \"fatherOrHusbandName\": \"transferee father name 2\",\n                    \"relation\": \"FATHER\",\n                    \"address\": \"transferee address 2\",\n                    \"relationWithDeceased\": \"FATHER\",\n                    \"mobileNo\": \"9876954322\",\n                    \"percentageOfShareTransferred\": 50\n                },\n                \"witness\": [\n                    {\n                        \"name\": \"witness name 1\",\n                        \"age\": 50,\n                        \"address\": \"witness address 1\",\n                        \"mobileNo\": 9876543212\n                    },\n                    {\n                        \"name\": \"witness name 2\",\n                        \"age\": 50,\n                        \"address\": \"witness address 2\",\n                        \"mobileNo\": 9876543210\n                    }\n                ]\n            },\n            \"state\": \"\",\n            \"action\": \"\"\n        }\n    ]\n}",
-               "options": {
-                  "raw": {
-                     "language": "json"
-                  }
-               }
-            },
-            "url": "http:\/\/localhost:8083\/est-services\/application\/_create"
-         },
-         "response": []
+      "response": []
+    },
+    {
+      "name": "application_create",
+      "_postman_id": "31603a43-6f72-4ab3-8208-0fe83cfa869d",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"d9e5c2e9-75e3-402c-b666-e8681e191b01\"\n    },\n    \"Applications\": [\n        {\n            \"tenantId\": \"ch.chandigarh\",\n            \"property\": {\n                \"id\": \"52792ee3-5dbf-43b7-bd17-b767ca94e2dc\"\n            },\n            \"branchType\": \"EstateBranch\",\n            \"moduleType\": \"OwnershipTransfer\",\n            \"applicationType\": \"SaleDeed\",\n            \"comments\": \" \",\n            \"hardcopyReceivedDate\": 0,\n            \"applicationDetails\": {\n                \"registrationNumber\": \"reg-1\",\n                \"dateOfRegistration\": 15678994,\n                \"dateOfExecution\": 15876549,\n                \"newspaperAdDate\": 159876540,\n                \"transferor\": {\n                    \"id\": \"72a05958-9032-4aaf-96c6-d4e99b7bfbfe\",\n                    \"name\": \"deceased name 2\",\n                    \"fatherOrHusbandName\": \"deceased father name 2\",\n                    \"address\": \"deceased address 2\",\n                    \"percentageOfShare\": 100,\n                    \"dateOfDeath\": 1567856\n                },\n                \"transferee\": {\n                    \"legalHeirOrbeneficiary\": \"LEGAL_HEIR\",\n                    \"name\": \"legalHeir name 2\",\n                    \"age\": 50,\n                    \"fatherOrHusbandName\": \"transferee father name 2\",\n                    \"relation\": \"FATHER\",\n                    \"address\": \"transferee address 2\",\n                    \"relationWithDeceased\": \"FATHER\",\n                    \"mobileNo\": \"9876954322\",\n                    \"percentageOfShareTransferred\": 50\n                },\n                \"witness\": [\n                    {\n                        \"name\": \"witness name 1\",\n                        \"age\": 50,\n                        \"address\": \"witness address 1\",\n                        \"mobileNo\": 9876543212\n                    },\n                    {\n                        \"name\": \"witness name 2\",\n                        \"age\": 50,\n                        \"address\": \"witness address 2\",\n                        \"mobileNo\": 9876543210\n                    }\n                ]\n            },\n            \"state\": \"\",\n            \"action\": \"\"\n        }\n    ]\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "http://localhost:8083/est-services/application/_create"
       },
-      {
-         "name": "application_search",
-         "_postman_id": "4729842d-5a66-4752-9e6a-1cede6bc54f5",
-         "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-               "mode": "raw",
-               "raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"d9e5c2e9-75e3-402c-b666-e8681e191b01\"\n  }\n\t\n}",
-               "options": {
-                  "raw": {
-                     "language": "json"
-                  }
-               }
+      "response": []
+    },
+    {
+      "name": "application_search",
+      "_postman_id": "4729842d-5a66-4752-9e6a-1cede6bc54f5",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"d9e5c2e9-75e3-402c-b666-e8681e191b01\"\n  }\n\t\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:8083/est-services/application/_search?applicationNumber=CH-EP-APPL-2020-10-04-000146",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8083",
+          "path": ["est-services", "application", "_search"],
+          "query": [
+            {
+              "key": "propertyId",
+              "value": "8ae39497-7e8d-46ef-a71a-160978ec7bea",
+              "disabled": true
             },
-            "url": {
-               "raw": "http:\/\/localhost:8083\/est-services\/application\/_search?applicationNumber=CH-EP-APPL-2020-10-04-000146",
-               "protocol": "http",
-               "host": [
-                  "localhost"
-               ],
-               "port": "8083",
-               "path": [
-                  "est-services",
-                  "application",
-                  "_search"
-               ],
-               "query": [
-                  {
-                     "key": "propertyId",
-                     "value": "8ae39497-7e8d-46ef-a71a-160978ec7bea",
-                     "disabled": true
-                  },
-                  {
-                     "key": "applicationId",
-                     "value": "aa8973ee-9c0e-443b-b9ba-9e5de7987ec7",
-                     "disabled": true
-                  },
-                  {
-                     "key": "tenantId",
-                     "value": "ch.chandigarh",
-                     "disabled": true
-                  },
-                  {
-                     "key": "fileNumber",
-                     "value": "File-003",
-                     "disabled": true
-                  },
-                  {
-                     "key": "applicationNumber",
-                     "value": "CH-EP-APPL-2020-10-04-000146"
-                  },
-                  {
-                     "key": "state",
-                     "value": "PM_DRAFTED",
-                     "disabled": true
-                  },
-                  {
-                     "key": "",
-                     "value": "",
-                     "disabled": true
-                  }
-               ]
-            }
-         },
-         "response": []
+            {
+              "key": "applicationId",
+              "value": "aa8973ee-9c0e-443b-b9ba-9e5de7987ec7",
+              "disabled": true
+            },
+            { "key": "tenantId", "value": "ch.chandigarh", "disabled": true },
+            { "key": "fileNumber", "value": "File-003", "disabled": true },
+            {
+              "key": "applicationNumber",
+              "value": "CH-EP-APPL-2020-10-04-000146"
+            },
+            { "key": "state", "value": "PM_DRAFTED", "disabled": true },
+            { "key": "", "value": "", "disabled": true }
+          ]
+        }
       },
-      {
-         "name": "application_update",
-         "_postman_id": "d3db8073-cbb8-4957-9e5c-36804f453662",
-         "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-               "mode": "raw",
-               "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"7e180c8c-1948-41dd-9496-a55bb10afafa\"\n  },\n  \"Applications\": [\n    {\n      \"id\": \"6cae9975-f10f-4f53-9911-d5ea9e641456\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"property\": {\n        \"id\": \"82a67dd4-d632-479d-a165-2ddd8d238100\",\n        \"tenantId\": \"ch\",\n        \"fileNumber\": \"File-120\",\n        \"category\": \"c1\",\n        \"subCategory\": \"sc1\",\n        \"siteNumber\": \"sn1\",\n        \"sectorNumber\": \"sn1\",\n        \"state\": \"\",\n        \"action\": \"\",\n        \"propertyDetails\": {\n          \"id\": \"34a52a35-3ef8-4c46-91d4-852405137f29\",\n          \"tenantId\": \"ch\",\n          \"propertyId\": \"82a67dd4-d632-479d-a165-2ddd8d238100\",\n          \"branchType\": null,\n          \"propertyType\": \"pt1\",\n          \"typeOfAllocation\": \"toa1\",\n          \"emdAmount\": 500.00,\n          \"emdDate\": 1592979121518,\n          \"modeOfAuction\": \"moc1\",\n          \"schemeName\": \"sn1\",\n          \"dateOfAuction\": 1592979121518,\n          \"areaSqft\": 100,\n          \"ratePerSqft\": 500.00,\n          \"lastNocDate\": 1592979121518,\n          \"serviceCategory\": \"sc1\",\n          \"isPropertyActive\": true,\n          \"tradeType\": \"tt1\",\n          \"companyName\": \"cn1\",\n          \"companyAddress\": \"ad1\",\n          \"companyRegistrationNumber\": \"crn1\",\n          \"companyType\": \"ct1\",\n          \"decreeDate\": null,\n          \"courtDetails\": null,\n          \"civilTitledAs\": null,\n          \"auditDetails\": null,\n          \"owners\": null,\n          \"courtCases\": null,\n          \"paymentDetails\": null\n        },\n        \"auditDetails\": null\n      },\n      \"applicationNumber\": \"CH-EP-APPL-2020-09-25-000143\",\n      \"branchType\": \"EstateBranch\",\n      \"moduleType\": \"OwnershipTransfer\",\n      \"applicationType\": \"SaleDeed\",\n      \"comments\": \" \",\n      \"hardcopyReceivedDate\": 0,\n      \"applicationDetails\": {\n        \"witness\": [\n          {\n            \"age\": 50,\n            \"name\": \"witness name 1\",\n            \"address\": \"witness address 1\",\n            \"mobileNo\": 9876543212\n          },\n          {\n            \"age\": 50,\n            \"name\": \"witness name 2\",\n            \"address\": \"witness address 2\",\n            \"mobileNo\": 9876543210\n          }\n        ],\n        \"transferee\": {\n          \"age\": 50,\n          \"name\": \"legalHeir name 2\",\n          \"address\": \"transferee address 2\",\n          \"mobileNo\": \"9876954322\",\n          \"relation\": \"FATHER\",\n          \"fatherOrHusbandName\": \"transferee father name 2\",\n          \"relationWithDeceased\": \"FATHER\",\n          \"legalHeirOrbeneficiary\": \"LEGAL_HEIR\",\n          \"percentageOfShareTransferred\": 50\n        },\n        \"transferor\": {\n          \"id\": \"b989c334-c23c-477a-b440-fe2448240b97\",\n          \"name\": \"deceased name 2\",\n          \"share\": 25.0,\n          \"address\": \"deceased address 2\",\n          \"cpNumber\": \"cpn1\",\n          \"dateOfDeath\": 1567856,\n          \"serialNumber\": \"sn1\",\n          \"percentageOfShare\": 100,\n          \"transferorDetails\": {\n            \"address\": \"a1\",\n            \"ownerName\": \"on1\",\n            \"isApproved\": true,\n            \"guardianName\": \"gn1\",\n            \"mobileNumber\": \"8686571377\",\n            \"isMasterEntry\": true,\n            \"possesionDate\": 1592979121518,\n            \"isCurrentOwner\": true,\n            \"allotmentNumber\": \"an1\",\n            \"dateOfAllotment\": 1592979121518,\n            \"guardianRelation\": \"gr1\"\n          },\n          \"fatherOrHusbandName\": \"deceased father name 2\"\n        },\n        \"dateOfExecution\": 15876549,\n        \"newspaperAdDate\": 159876540,\n        \"dateOfRegistration\": 15678994,\n        \"registrationNumber\": \"reg-1\"\n      },\n      \"state\": \"\",\n      \"action\": \"\",\n      \"auditDetails\": {\n        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6435\",\n        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6435\",\n        \"createdTime\": 1601028578478,\n        \"lastModifiedTime\": 1601028578478\n      },\n      \"businessService\": \"EB-OT-SaleDeed\",\n      \"applicationDocuments\": null,\n      \"calculation\": null\n    }\n  ]\n}",
-               "options": {
-                  "raw": {
-                     "language": "json"
-                  }
-               }
-            },
-            "url": "http:\/\/localhost:8083\/est-services\/application\/_update"
-         },
-         "response": []
-      }
-   ],
-   "protocolProfileBehavior": {}
+      "response": []
+    },
+    {
+      "name": "application_update",
+      "_postman_id": "d3db8073-cbb8-4957-9e5c-36804f453662",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_create\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"7e180c8c-1948-41dd-9496-a55bb10afafa\"\n  },\n  \"Applications\": [\n    {\n      \"id\": \"6cae9975-f10f-4f53-9911-d5ea9e641456\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"property\": {\n        \"id\": \"82a67dd4-d632-479d-a165-2ddd8d238100\",\n        \"tenantId\": \"ch\",\n        \"fileNumber\": \"File-120\",\n        \"category\": \"c1\",\n        \"subCategory\": \"sc1\",\n        \"siteNumber\": \"sn1\",\n        \"sectorNumber\": \"sn1\",\n        \"state\": \"\",\n        \"action\": \"\",\n        \"propertyDetails\": {\n          \"id\": \"34a52a35-3ef8-4c46-91d4-852405137f29\",\n          \"tenantId\": \"ch\",\n          \"propertyId\": \"82a67dd4-d632-479d-a165-2ddd8d238100\",\n          \"branchType\": null,\n          \"propertyType\": \"pt1\",\n          \"typeOfAllocation\": \"toa1\",\n          \"emdAmount\": 500.00,\n          \"emdDate\": 1592979121518,\n          \"modeOfAuction\": \"moc1\",\n          \"schemeName\": \"sn1\",\n          \"dateOfAuction\": 1592979121518,\n          \"areaSqft\": 100,\n          \"ratePerSqft\": 500.00,\n          \"lastNocDate\": 1592979121518,\n          \"serviceCategory\": \"sc1\",\n          \"isPropertyActive\": true,\n          \"tradeType\": \"tt1\",\n          \"companyName\": \"cn1\",\n          \"companyAddress\": \"ad1\",\n          \"companyRegistrationNumber\": \"crn1\",\n          \"companyType\": \"ct1\",\n          \"decreeDate\": null,\n          \"courtDetails\": null,\n          \"civilTitledAs\": null,\n          \"auditDetails\": null,\n          \"owners\": null,\n          \"courtCases\": null,\n          \"paymentDetails\": null\n        },\n        \"auditDetails\": null\n      },\n      \"applicationNumber\": \"CH-EP-APPL-2020-09-25-000143\",\n      \"branchType\": \"EstateBranch\",\n      \"moduleType\": \"OwnershipTransfer\",\n      \"applicationType\": \"SaleDeed\",\n      \"comments\": \" \",\n      \"hardcopyReceivedDate\": 0,\n      \"applicationDetails\": {\n        \"witness\": [\n          {\n            \"age\": 50,\n            \"name\": \"witness name 1\",\n            \"address\": \"witness address 1\",\n            \"mobileNo\": 9876543212\n          },\n          {\n            \"age\": 50,\n            \"name\": \"witness name 2\",\n            \"address\": \"witness address 2\",\n            \"mobileNo\": 9876543210\n          }\n        ],\n        \"transferee\": {\n          \"age\": 50,\n          \"name\": \"legalHeir name 2\",\n          \"address\": \"transferee address 2\",\n          \"mobileNo\": \"9876954322\",\n          \"relation\": \"FATHER\",\n          \"fatherOrHusbandName\": \"transferee father name 2\",\n          \"relationWithDeceased\": \"FATHER\",\n          \"legalHeirOrbeneficiary\": \"LEGAL_HEIR\",\n          \"percentageOfShareTransferred\": 50\n        },\n        \"transferor\": {\n          \"id\": \"b989c334-c23c-477a-b440-fe2448240b97\",\n          \"name\": \"deceased name 2\",\n          \"share\": 25.0,\n          \"address\": \"deceased address 2\",\n          \"cpNumber\": \"cpn1\",\n          \"dateOfDeath\": 1567856,\n          \"serialNumber\": \"sn1\",\n          \"percentageOfShare\": 100,\n          \"transferorDetails\": {\n            \"address\": \"a1\",\n            \"ownerName\": \"on1\",\n            \"isApproved\": true,\n            \"guardianName\": \"gn1\",\n            \"mobileNumber\": \"8686571377\",\n            \"isMasterEntry\": true,\n            \"possesionDate\": 1592979121518,\n            \"isCurrentOwner\": true,\n            \"allotmentNumber\": \"an1\",\n            \"dateOfAllotment\": 1592979121518,\n            \"guardianRelation\": \"gr1\"\n          },\n          \"fatherOrHusbandName\": \"deceased father name 2\"\n        },\n        \"dateOfExecution\": 15876549,\n        \"newspaperAdDate\": 159876540,\n        \"dateOfRegistration\": 15678994,\n        \"registrationNumber\": \"reg-1\"\n      },\n      \"state\": \"\",\n      \"action\": \"\",\n      \"auditDetails\": {\n        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6435\",\n        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6435\",\n        \"createdTime\": 1601028578478,\n        \"lastModifiedTime\": 1601028578478\n      },\n      \"businessService\": \"EB-OT-SaleDeed\",\n      \"applicationDocuments\": null,\n      \"calculation\": null\n    }\n  ]\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "http://localhost:8083/est-services/application/_update"
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
 }

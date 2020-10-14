@@ -316,7 +316,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.id
 
-        - query: INSERT INTO cs_ep_owner_details_v1 (id, owner_id, tenantid, owner_name, guardian_name, guardian_relation, mobile_number, allotment_number, date_of_allotment, possesion_date, is_approved, is_current_owner, is_master_entry, address, is_director, seller_name, seller_guardian_name, seller_relation, mode_of_transfer, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET owner_name = ?, guardian_name = ?, guardian_relation = ?, mobile_number = ?, allotment_number = ?, date_of_allotment = ?, possesion_date = ?, is_approved = ?, is_current_owner = ?, is_master_entry = ?, address = ?, is_director = ?, seller_name = ?, seller_guardian_name = ?, seller_relation = ?, mode_of_transfer = ?, last_modified_by = ?, last_modified_time = ?;
+        - query: INSERT INTO cs_ep_owner_details_v1 (id, owner_id, tenantid, owner_name, guardian_name, guardian_relation, mobile_number, allotment_number, date_of_allotment, possesion_date, is_approved, is_current_owner, is_master_entry, address, is_director, seller_name, seller_guardian_name, seller_relation, mode_of_transfer, dob, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET owner_name = ?, guardian_name = ?, guardian_relation = ?, mobile_number = ?, allotment_number = ?, date_of_allotment = ?, possesion_date = ?, is_approved = ?, is_current_owner = ?, is_master_entry = ?, address = ?, is_director = ?, seller_name = ?, seller_guardian_name = ?, seller_relation = ?, mode_of_transfer = ?, dob = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.owners.*.ownerDetails
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.id
@@ -357,6 +357,8 @@ serviceMaps:
       
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
 
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.createdBy
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedBy
@@ -396,6 +398,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerRelation
       
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedBy
 
