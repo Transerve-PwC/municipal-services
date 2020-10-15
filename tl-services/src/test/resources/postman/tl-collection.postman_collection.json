@@ -1,0 +1,430 @@
+{
+	"info": {
+		"_postman_id": "3b995ca9-6df4-42d0-9920-f72b55bee02a",
+		"name": "tl-collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "tl-create-register-certificate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"tradeLicenseDetail\": {\r\n                \"address\": {\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"city\": \"ch.chandigarh\"\r\n                },\r\n                \"additionalDetail\": {\r\n                    \"licensePeriod\": \"5\",\r\n                    \"occupation\": \"occupation\"\r\n                },\r\n                \"owners\": [\r\n                    {\r\n                        \"name\": \"name\",\r\n                        \"age\": 30,\r\n                        \"dob\": 631218599000,\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"relationship\": \"FATHER\",\r\n                        \"permanentAddress\": \"full address\",\r\n                        \"mobileNumber\": \"9900289033\"\r\n                    }\r\n                ],\r\n                \"tradeUnits\": [],\r\n                \"applicationDocuments\": null,\r\n                \"subOwnershipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\"\r\n            },\r\n            \"myLicenseType\": \"CTL.REHRI\",\r\n            \"businessService\": \"CTL.REHRI_REGISTRATION\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"financialYear\": \"2020-21\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"workflowCode\": \"NewTL\",\r\n            \"action\": \"INITIATE\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_create",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-update-register-certificate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"comment\": null,\r\n            \"id\": \"98eb5944-d245-43df-8464-a98586879137\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"businessService\": \"CTL.REHRI_REGISTRATION\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseNumber\": null,\r\n            \"applicationNumber\": \"CH-TL-2020-10-15-000551\",\r\n            \"oldLicenseNumber\": null,\r\n            \"propertyId\": null,\r\n            \"oldPropertyId\": null,\r\n            \"accountId\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n            \"tradeName\": null,\r\n            \"applicationDate\": 1602737028359,\r\n            \"commencementDate\": null,\r\n            \"issuedDate\": null,\r\n            \"financialYear\": \"2020-21\",\r\n            \"validFrom\": 1602737229233,\r\n            \"validTo\": 1760417229000,\r\n            \"action\": \"SUBMIT\",\r\n            \"assignee\": null,\r\n            \"wfDocuments\": null,\r\n            \"status\": \"MODIFIED\",\r\n            \"tradeLicenseDetail\": {\r\n                \"id\": \"7915f44a-1454-4445-a547-dffeb65e8a35\",\r\n                \"surveyNo\": null,\r\n                \"subOwnerShipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\",\r\n                \"operationalArea\": null,\r\n                \"noOfEmployees\": null,\r\n                \"adhocExemption\": null,\r\n                \"adhocPenalty\": null,\r\n                \"adhocExemptionReason\": null,\r\n                \"adhocPenaltyReason\": null,\r\n                \"owners\": [\r\n                    {\r\n                        \"id\": 636,\r\n                        \"uuid\": \"8452841e-952f-4e9a-b55d-f62d963c38d3\",\r\n                        \"userName\": \"f2e49a74-ca6b-44d8-8c8e-f2835abdee70\",\r\n                        \"password\": null,\r\n                        \"salutation\": null,\r\n                        \"name\": \"name\",\r\n                        \"gender\": null,\r\n                        \"mobileNumber\": \"9900289033\",\r\n                        \"emailId\": null,\r\n                        \"altContactNumber\": null,\r\n                        \"pan\": null,\r\n                        \"aadhaarNumber\": null,\r\n                        \"permanentAddress\": \"full address\",\r\n                        \"permanentCity\": null,\r\n                        \"permanentPinCode\": null,\r\n                        \"correspondenceCity\": null,\r\n                        \"correspondencePinCode\": null,\r\n                        \"correspondenceAddress\": null,\r\n                        \"active\": true,\r\n                        \"dob\": 631218599000,\r\n                        \"pwdExpiryDate\": null,\r\n                        \"locale\": null,\r\n                        \"type\": \"CITIZEN\",\r\n                        \"signature\": null,\r\n                        \"accountLocked\": null,\r\n                        \"roles\": [\r\n                            {\r\n                                \"id\": null,\r\n                                \"name\": \"Citizen\",\r\n                                \"code\": \"CITIZEN\",\r\n                                \"tenantId\": \"ch\"\r\n                            }\r\n                        ],\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"bloodGroup\": null,\r\n                        \"identificationMark\": null,\r\n                        \"photo\": null,\r\n                        \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"createdDate\": 1602737229252,\r\n                        \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"lastModifiedDate\": 1602737229252,\r\n                        \"otpReference\": null,\r\n                        \"tenantId\": \"ch\",\r\n                        \"isPrimaryOwner\": null,\r\n                        \"ownerShipPercentage\": null,\r\n                        \"ownerType\": null,\r\n                        \"institutionId\": null,\r\n                        \"documents\": null,\r\n                        \"userActive\": true,\r\n                        \"relationship\": \"FATHER\",\r\n                        \"age\": \"31\"\r\n                    }\r\n                ],\r\n                \"channel\": null,\r\n                \"address\": {\r\n                    \"id\": \"7a40962a-d82d-496b-8518-e9b4effd7b3d\",\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"doorNo\": null,\r\n                    \"latitude\": null,\r\n                    \"longitude\": null,\r\n                    \"addressId\": null,\r\n                    \"addressNumber\": null,\r\n                    \"type\": null,\r\n                    \"addressLine1\": null,\r\n                    \"addressLine2\": null,\r\n                    \"landmark\": null,\r\n                    \"city\": \"ch.chandigarh\",\r\n                    \"pincode\": null,\r\n                    \"detail\": null,\r\n                    \"buildingName\": null,\r\n                    \"street\": null,\r\n                    \"locality\": null\r\n                },\r\n                \"tradeUnits\": [\r\n                    {\r\n                        \"id\": \"056cdc16-442f-4246-9e03-a325da1268f1\",\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"active\": true,\r\n                        \"tradeType\": \"CTL.REHRI_REGISTRATION\",\r\n                        \"uom\": \"year\",\r\n                        \"uomValue\": \"5\",\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"accessories\": null,\r\n                \"applicationDocuments\": [\r\n                    {\r\n                        \"id\": \"3fa7b85f-6ebb-4971-9af5-3daad367245f\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERADDRESSPROOF\",\r\n                        \"fileStoreId\": \"45be805e-abd8-4699-8593-745da39ee3c3\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"60af4cdd-58ae-40c3-90d1-729d5de0d0b9\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERAGEPROOF\",\r\n                        \"fileStoreId\": \"51579752-f42f-4386-8b9e-3d1ee480bff7\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"71638b89-7a7b-4d96-b4b0-6ea06289c0af\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERBILL\",\r\n                        \"fileStoreId\": \"eca1d5b7-6842-4c26-8ab7-c56a49abdd96\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"301a1eab-9f96-4626-b222-086ab8786a04\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERPHOTO\",\r\n                        \"fileStoreId\": \"045727c1-469c-4e41-9dbd-43034b10c78f\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"verificationDocuments\": null,\r\n                \"additionalDetail\": {\r\n                    \"licensePeriod\": \"5\",\r\n                    \"occupation\": \"occupation\"\r\n                },\r\n                \"institution\": null,\r\n                \"auditDetails\": {\r\n                    \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"createdTime\": 1602737028359,\r\n                    \"lastModifiedTime\": 1602737228735\r\n                }\r\n            },\r\n            \"calculation\": {\r\n                \"applicationNumber\": null,\r\n                \"tradeLicense\": null,\r\n                \"tenantId\": \"ch.chandigarh\",\r\n                \"taxHeadEstimates\": [\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_REGISTRATION_FEE\",\r\n                        \"estimateAmount\": 700,\r\n                        \"category\": \"FEE\"\r\n                    },\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_REGISTRATION_CHARGES\",\r\n                        \"estimateAmount\": 100,\r\n                        \"category\": \"PENALTY\"\r\n                    },\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_REGISTRATION_PENALTY\",\r\n                        \"estimateAmount\": 0,\r\n                        \"category\": \"PENALTY\"\r\n                    }\r\n                ],\r\n                \"tradeTypeBillingIds\": {\r\n                    \"id\": \"bda295fe-4950-41a8-8999-27327e275742\",\r\n                    \"fee\": 700,\r\n                    \"billingSlabIds\": [\r\n                        \"991fc13e-555d-47f1-91fc-40579a53d8ba|0|056cdc16-442f-4246-9e03-a325da1268f1\"\r\n                    ]\r\n                },\r\n                \"accessoryBillingIds\": null\r\n            },\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"createdTime\": 1602737028359,\r\n                \"lastModifiedTime\": 1602737228735\r\n            },\r\n            \"workflowCode\": \"NewTL\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_update?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_search",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-count",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_count?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_count"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-create-renew",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"tradeLicenseDetail\": {\r\n                \"address\": {\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"city\": \"ch.chandigarh\"\r\n                },\r\n                \"additionalDetail\": {\r\n                    \"licensePeriod\": \"15\",\r\n                    \"oldLicenseValidTo\": 1599157799000,\r\n                    \"occupation\": \"occupation\"\r\n                },\r\n                \"owners\": [\r\n                    {\r\n                        \"name\": \"Raksha\",\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"age\": 30,\r\n                        \"dob\": 631218599000,\r\n                        \"relationship\": \"FATHER\",\r\n                        \"permanentAddress\": \"Full address\",\r\n                        \"mobileNumber\": \"9900289033\"\r\n                    }\r\n                ],\r\n                \"tradeUnits\": [],\r\n                \"applicationDocuments\": null,\r\n                \"subOwnershipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\"\r\n            },\r\n            \"myLicenseType\": \"CTL.REHRI\",\r\n            \"businessService\": \"CTL.REHRI_DRIVING_LICENSE\",\r\n            \"applicationType\": \"Renew\",\r\n            \"oldLicenseNumber\": \"CH-TL-2020-07-20-000916\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"financialYear\": \"2020-21\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"workflowCode\": \"NewTL\",\r\n            \"action\": \"INITIATE\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_create?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-update-renew",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"comment\": null,\r\n            \"id\": \"fd276d30-86c2-42db-aaea-15f1646e0773\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"businessService\": \"CTL.REHRI_DRIVING_LICENSE\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"applicationType\": \"Renew\",\r\n            \"licenseNumber\": null,\r\n            \"applicationNumber\": \"CH-TL-2020-10-15-000552\",\r\n            \"oldLicenseNumber\": \"CH-TL-2020-07-20-000916\",\r\n            \"propertyId\": null,\r\n            \"oldPropertyId\": null,\r\n            \"accountId\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n            \"tradeName\": null,\r\n            \"applicationDate\": 1602739783667,\r\n            \"commencementDate\": null,\r\n            \"issuedDate\": null,\r\n            \"financialYear\": \"2020-21\",\r\n            \"validFrom\": 1602740343702,\r\n            \"validTo\": 2075953143000,\r\n            \"action\": \"SUBMIT\",\r\n            \"assignee\": null,\r\n            \"wfDocuments\": null,\r\n            \"status\": \"MODIFIED\",\r\n            \"tradeLicenseDetail\": {\r\n                \"id\": \"2035c761-e77b-44d9-8ffa-b07c5b5f0f4f\",\r\n                \"surveyNo\": null,\r\n                \"subOwnerShipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\",\r\n                \"operationalArea\": null,\r\n                \"noOfEmployees\": null,\r\n                \"adhocExemption\": null,\r\n                \"adhocPenalty\": null,\r\n                \"adhocExemptionReason\": null,\r\n                \"adhocPenaltyReason\": null,\r\n                \"owners\": [\r\n                    {\r\n                        \"id\": 637,\r\n                        \"uuid\": \"ea46dc2f-8c82-4151-ae0e-ba5d0215d4d2\",\r\n                        \"userName\": \"ac23cb2d-720a-4800-b2b2-70759f8bf38e\",\r\n                        \"password\": null,\r\n                        \"salutation\": null,\r\n                        \"name\": \"Raksha\",\r\n                        \"gender\": null,\r\n                        \"mobileNumber\": \"9900289033\",\r\n                        \"emailId\": null,\r\n                        \"altContactNumber\": null,\r\n                        \"pan\": null,\r\n                        \"aadhaarNumber\": null,\r\n                        \"permanentAddress\": \"Full address\",\r\n                        \"permanentCity\": null,\r\n                        \"permanentPinCode\": null,\r\n                        \"correspondenceCity\": null,\r\n                        \"correspondencePinCode\": null,\r\n                        \"correspondenceAddress\": null,\r\n                        \"active\": true,\r\n                        \"dob\": 631218599000,\r\n                        \"pwdExpiryDate\": null,\r\n                        \"locale\": null,\r\n                        \"type\": \"CITIZEN\",\r\n                        \"signature\": null,\r\n                        \"accountLocked\": null,\r\n                        \"roles\": [\r\n                            {\r\n                                \"id\": null,\r\n                                \"name\": \"Citizen\",\r\n                                \"code\": \"CITIZEN\",\r\n                                \"tenantId\": \"ch\"\r\n                            }\r\n                        ],\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"bloodGroup\": null,\r\n                        \"identificationMark\": null,\r\n                        \"photo\": null,\r\n                        \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"createdDate\": 1602740343724,\r\n                        \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"lastModifiedDate\": 1602740343724,\r\n                        \"otpReference\": null,\r\n                        \"tenantId\": \"ch\",\r\n                        \"isPrimaryOwner\": null,\r\n                        \"ownerShipPercentage\": null,\r\n                        \"ownerType\": null,\r\n                        \"institutionId\": null,\r\n                        \"documents\": null,\r\n                        \"userActive\": true,\r\n                        \"relationship\": \"FATHER\",\r\n                        \"age\": \"31\"\r\n                    }\r\n                ],\r\n                \"channel\": null,\r\n                \"address\": {\r\n                    \"id\": \"bc8dd10a-a58c-43e0-be28-e0e8ca76c6e1\",\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"doorNo\": null,\r\n                    \"latitude\": null,\r\n                    \"longitude\": null,\r\n                    \"addressId\": null,\r\n                    \"addressNumber\": null,\r\n                    \"type\": null,\r\n                    \"addressLine1\": null,\r\n                    \"addressLine2\": null,\r\n                    \"landmark\": null,\r\n                    \"city\": \"ch.chandigarh\",\r\n                    \"pincode\": null,\r\n                    \"detail\": null,\r\n                    \"buildingName\": null,\r\n                    \"street\": null,\r\n                    \"locality\": null\r\n                },\r\n                \"tradeUnits\": [\r\n                    {\r\n                        \"id\": \"358c075a-b403-43c1-a485-2a92cfaf31cf\",\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"active\": true,\r\n                        \"tradeType\": \"CTL.REHRI_DRIVING_LICENSE\",\r\n                        \"uom\": \"year\",\r\n                        \"uomValue\": \"15\",\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"accessories\": null,\r\n                \"applicationDocuments\": [\r\n                    {\r\n                        \"id\": \"a15b8429-bf1a-4a88-af76-6e69c2bd2348\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERADDRESSPROOF\",\r\n                        \"fileStoreId\": \"73ad21d5-122e-41d2-b08f-2eb36d36d1de\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"827ea685-34c5-416b-8eee-8abc082805f5\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERAGEPROOF\",\r\n                        \"fileStoreId\": \"73836fae-3b36-479c-be83-960460599adc\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"40e532a9-87b3-471c-a46d-3aa47a8a92e3\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERBILL\",\r\n                        \"fileStoreId\": \"06e5d94a-070a-4dbb-b522-8488736bc64c\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"5f8e2d21-7a9d-4aae-bc0d-e845d3ba4d76\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"PERFORMADRIVINGLICENSE\",\r\n                        \"fileStoreId\": \"76d50461-249b-4ffc-bdf7-5e19ba1ceb6e\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"4dbcc71a-cc76-47ae-bf42-ef5267dab6b0\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERPHOTO\",\r\n                        \"fileStoreId\": \"9cea80f0-454c-4ea0-bcbb-ee9588322b1a\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"verificationDocuments\": null,\r\n                \"additionalDetail\": {\r\n                    \"licensePeriod\": \"15\",\r\n                    \"oldLicenseValidTo\": 1599157799000,\r\n                    \"occupation\": \"occupation\"\r\n                },\r\n                \"institution\": null,\r\n                \"auditDetails\": {\r\n                    \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"createdTime\": 1602739783667,\r\n                    \"lastModifiedTime\": 1602740343652\r\n                }\r\n            },\r\n            \"calculation\": {\r\n                \"applicationNumber\": null,\r\n                \"tradeLicense\": null,\r\n                \"tenantId\": \"ch.chandigarh\",\r\n                \"taxHeadEstimates\": [\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_DRIVING_LICENSE_FEE\",\r\n                        \"estimateAmount\": 300,\r\n                        \"category\": \"FEE\"\r\n                    },\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_DRIVING_LICENSE_PENALTY\",\r\n                        \"estimateAmount\": 100,\r\n                        \"category\": \"PENALTY\"\r\n                    }\r\n                ],\r\n                \"tradeTypeBillingIds\": {\r\n                    \"id\": \"ceb042d8-a19b-49df-a77a-a5ab70233bbf\",\r\n                    \"fee\": 300,\r\n                    \"billingSlabIds\": [\r\n                        \"d58177a7-8fe2-4001-b6fb-0b5f0d20db87|0|358c075a-b403-43c1-a485-2a92cfaf31cf\"\r\n                    ]\r\n                },\r\n                \"accessoryBillingIds\": null\r\n            },\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"createdTime\": 1602739783667,\r\n                \"lastModifiedTime\": 1602740343652\r\n            },\r\n            \"workflowCode\": \"NewTL\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_update?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-create-driving-license",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"tradeLicenseDetail\": {\r\n                \"address\": {\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"city\": \"ch.chandigarh\"\r\n                },\r\n                \"additionalDetail\": {\r\n                    \"licensePeriod\": \"15\",\r\n                    \"occupation\": \"occupation\"\r\n                },\r\n                \"owners\": [\r\n                    {\r\n                        \"name\": \"name-dl\",\r\n                        \"age\": 30,\r\n                        \"dob\": 631218599000,\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"relationship\": \"FATHER\",\r\n                        \"permanentAddress\": \"FUll address\",\r\n                        \"mobileNumber\": \"9900289033\"\r\n                    }\r\n                ],\r\n                \"tradeUnits\": [],\r\n                \"applicationDocuments\": null,\r\n                \"subOwnershipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\"\r\n            },\r\n            \"myLicenseType\": \"CTL.REHRI\",\r\n            \"businessService\": \"CTL.REHRI_DRIVING_LICENSE\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"financialYear\": \"2020-21\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"workflowCode\": \"NewTL\",\r\n            \"action\": \"INITIATE\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_create?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-update-driving-license",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"comment\": null,\r\n            \"id\": \"cda0968f-09d7-434d-9a58-af9faffe7920\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"businessService\": \"CTL.REHRI_DRIVING_LICENSE\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseNumber\": null,\r\n            \"applicationNumber\": \"CH-TL-2020-10-15-000553\",\r\n            \"oldLicenseNumber\": null,\r\n            \"propertyId\": null,\r\n            \"oldPropertyId\": null,\r\n            \"accountId\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n            \"tradeName\": null,\r\n            \"applicationDate\": 1602740545221,\r\n            \"commencementDate\": null,\r\n            \"issuedDate\": null,\r\n            \"financialYear\": \"2020-21\",\r\n            \"validFrom\": 1602740672066,\r\n            \"validTo\": 2075953472000,\r\n            \"action\": \"SUBMIT\",\r\n            \"assignee\": null,\r\n            \"wfDocuments\": null,\r\n            \"status\": \"MODIFIED\",\r\n            \"tradeLicenseDetail\": {\r\n                \"id\": \"65b80ac1-5007-4655-836e-835ed19016af\",\r\n                \"surveyNo\": null,\r\n                \"subOwnerShipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\",\r\n                \"operationalArea\": null,\r\n                \"noOfEmployees\": null,\r\n                \"adhocExemption\": null,\r\n                \"adhocPenalty\": null,\r\n                \"adhocExemptionReason\": null,\r\n                \"adhocPenaltyReason\": null,\r\n                \"owners\": [\r\n                    {\r\n                        \"id\": 638,\r\n                        \"uuid\": \"25938a9d-01ca-4b70-b252-a793ddb22ab4\",\r\n                        \"userName\": \"04c48e41-d501-4fbd-ad7b-fe2b5009d1b9\",\r\n                        \"password\": null,\r\n                        \"salutation\": null,\r\n                        \"name\": \"name\",\r\n                        \"gender\": null,\r\n                        \"mobileNumber\": \"9900289033\",\r\n                        \"emailId\": null,\r\n                        \"altContactNumber\": null,\r\n                        \"pan\": null,\r\n                        \"aadhaarNumber\": null,\r\n                        \"permanentAddress\": \"FUll address\",\r\n                        \"permanentCity\": null,\r\n                        \"permanentPinCode\": null,\r\n                        \"correspondenceCity\": null,\r\n                        \"correspondencePinCode\": null,\r\n                        \"correspondenceAddress\": null,\r\n                        \"active\": true,\r\n                        \"dob\": 631218599000,\r\n                        \"pwdExpiryDate\": null,\r\n                        \"locale\": null,\r\n                        \"type\": \"CITIZEN\",\r\n                        \"signature\": null,\r\n                        \"accountLocked\": null,\r\n                        \"roles\": [\r\n                            {\r\n                                \"id\": null,\r\n                                \"name\": \"Citizen\",\r\n                                \"code\": \"CITIZEN\",\r\n                                \"tenantId\": \"ch\"\r\n                            }\r\n                        ],\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"bloodGroup\": null,\r\n                        \"identificationMark\": null,\r\n                        \"photo\": null,\r\n                        \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"createdDate\": 1602740672085,\r\n                        \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"lastModifiedDate\": 1602740672085,\r\n                        \"otpReference\": null,\r\n                        \"tenantId\": \"ch\",\r\n                        \"isPrimaryOwner\": null,\r\n                        \"ownerShipPercentage\": null,\r\n                        \"ownerType\": null,\r\n                        \"institutionId\": null,\r\n                        \"documents\": null,\r\n                        \"userActive\": true,\r\n                        \"relationship\": \"FATHER\",\r\n                        \"age\": \"31\"\r\n                    }\r\n                ],\r\n                \"channel\": null,\r\n                \"address\": {\r\n                    \"id\": \"22686180-f70b-4d0e-9d0a-4113f22844c0\",\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"doorNo\": null,\r\n                    \"latitude\": null,\r\n                    \"longitude\": null,\r\n                    \"addressId\": null,\r\n                    \"addressNumber\": null,\r\n                    \"type\": null,\r\n                    \"addressLine1\": null,\r\n                    \"addressLine2\": null,\r\n                    \"landmark\": null,\r\n                    \"city\": \"ch.chandigarh\",\r\n                    \"pincode\": null,\r\n                    \"detail\": null,\r\n                    \"buildingName\": null,\r\n                    \"street\": null,\r\n                    \"locality\": null\r\n                },\r\n                \"tradeUnits\": [\r\n                    {\r\n                        \"id\": \"4a141c6a-6f8a-4ec1-9b71-d3e58fef637f\",\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"active\": true,\r\n                        \"tradeType\": \"CTL.REHRI_DRIVING_LICENSE\",\r\n                        \"uom\": \"year\",\r\n                        \"uomValue\": \"15\",\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"accessories\": null,\r\n                \"applicationDocuments\": [\r\n                    {\r\n                        \"id\": \"256054df-4998-4f09-b561-e3e64e84c3bc\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERADDRESSPROOF\",\r\n                        \"fileStoreId\": \"13e45769-832f-4561-b3e4-89c41a0dad67\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"fe0ed633-c9c4-46ef-ace0-5e888b5bfcf9\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERAGEPROOF\",\r\n                        \"fileStoreId\": \"d2c50fa9-555e-4916-9aa6-2ba88b0d4315\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"6e6d427d-3480-4aa7-819b-164b9f0abb82\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERBILL\",\r\n                        \"fileStoreId\": \"806efa11-574d-4562-aa1c-dd78d8217a71\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"9ff50121-7024-40c8-955b-1f96a8cda982\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"PERFORMADRIVINGLICENSE\",\r\n                        \"fileStoreId\": \"04d15e71-7062-4ce7-b166-e7a34cd7bf1a\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"5929e01c-f786-4d48-b5ad-72dbddd48f6b\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERPHOTO\",\r\n                        \"fileStoreId\": \"f1e2eb44-be5e-4d29-ae72-6aea9f233cc3\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"verificationDocuments\": null,\r\n                \"additionalDetail\": {\r\n                    \"licensePeriod\": \"15\",\r\n                    \"occupation\": \"occupation\"\r\n                },\r\n                \"institution\": null,\r\n                \"auditDetails\": {\r\n                    \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"createdTime\": 1602740545221,\r\n                    \"lastModifiedTime\": 1602740672024\r\n                }\r\n            },\r\n            \"calculation\": {\r\n                \"applicationNumber\": null,\r\n                \"tradeLicense\": null,\r\n                \"tenantId\": \"ch.chandigarh\",\r\n                \"taxHeadEstimates\": [\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_DRIVING_LICENSE_FEE\",\r\n                        \"estimateAmount\": 400,\r\n                        \"category\": \"FEE\"\r\n                    },\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.REHRI_DRIVING_LICENSE_PENALTY\",\r\n                        \"estimateAmount\": 0,\r\n                        \"category\": \"PENALTY\"\r\n                    }\r\n                ],\r\n                \"tradeTypeBillingIds\": {\r\n                    \"id\": \"38c9be01-5b8a-40bd-b73b-dbb4b1d827a9\",\r\n                    \"fee\": 400,\r\n                    \"billingSlabIds\": [\r\n                        \"f01f0943-47fc-4b4d-a994-93a9bf36d173|0|4a141c6a-6f8a-4ec1-9b71-d3e58fef637f\"\r\n                    ]\r\n                },\r\n                \"accessoryBillingIds\": null\r\n            },\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"createdTime\": 1602740545221,\r\n                \"lastModifiedTime\": 1602740672024\r\n            },\r\n            \"workflowCode\": \"NewTL\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_update",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-create-dhobi-ghat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"tradeLicenseDetail\": {\r\n                \"address\": {\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"city\": \"ch.chandigarh\"\r\n                },\r\n                \"additionalDetail\": {\r\n                    \"tradeValue\": \"tradevalue\",\r\n                    \"particularsOfArea\": \"particulars of the area\"\r\n                },\r\n                \"owners\": [\r\n                    {\r\n                        \"name\": \"Name\",\r\n                        \"age\": 30,\r\n                        \"dob\": 631218599000,\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"relationship\": \"FATHER\",\r\n                        \"permanentAddress\": \"Full Address\",\r\n                        \"mobileNumber\": \"9900289033\"\r\n                    }\r\n                ],\r\n                \"tradeUnits\": [],\r\n                \"applicationDocuments\": null,\r\n                \"subOwnershipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\"\r\n            },\r\n            \"myLicenseType\": \"CTL.DHOBI_GHAT\",\r\n            \"businessService\": \"CTL.DHOBI_GHAT\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"financialYear\": \"2020-21\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"workflowCode\": \"NewTL\",\r\n            \"action\": \"INITIATE\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_create?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-update-dhobi-ghat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"comment\": null,\r\n            \"id\": \"db26c86c-b8fb-4c93-9a99-e28a080f6412\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"businessService\": \"CTL.DHOBI_GHAT\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseNumber\": null,\r\n            \"applicationNumber\": \"CH-TL-2020-10-15-000555\",\r\n            \"oldLicenseNumber\": null,\r\n            \"propertyId\": null,\r\n            \"oldPropertyId\": null,\r\n            \"accountId\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n            \"tradeName\": null,\r\n            \"applicationDate\": 1602740835584,\r\n            \"commencementDate\": null,\r\n            \"issuedDate\": null,\r\n            \"financialYear\": \"2020-21\",\r\n            \"validFrom\": 1602740950647,\r\n            \"validTo\": 1634190550000,\r\n            \"action\": \"SUBMIT\",\r\n            \"assignee\": null,\r\n            \"wfDocuments\": null,\r\n            \"status\": \"MODIFIED\",\r\n            \"tradeLicenseDetail\": {\r\n                \"id\": \"506b410e-eb11-4f80-8e68-86f248d3739b\",\r\n                \"surveyNo\": null,\r\n                \"subOwnerShipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\",\r\n                \"operationalArea\": null,\r\n                \"noOfEmployees\": null,\r\n                \"adhocExemption\": null,\r\n                \"adhocPenalty\": null,\r\n                \"adhocExemptionReason\": null,\r\n                \"adhocPenaltyReason\": null,\r\n                \"owners\": [\r\n                    {\r\n                        \"id\": 640,\r\n                        \"uuid\": \"018d1dd5-f675-49cf-bdb5-78282598804c\",\r\n                        \"userName\": \"3023ac45-9d57-4884-8940-74a5bf42b8fd\",\r\n                        \"password\": null,\r\n                        \"salutation\": null,\r\n                        \"name\": \"Name\",\r\n                        \"gender\": null,\r\n                        \"mobileNumber\": \"9900289033\",\r\n                        \"emailId\": null,\r\n                        \"altContactNumber\": null,\r\n                        \"pan\": null,\r\n                        \"aadhaarNumber\": null,\r\n                        \"permanentAddress\": \"Full Address\",\r\n                        \"permanentCity\": null,\r\n                        \"permanentPinCode\": null,\r\n                        \"correspondenceCity\": null,\r\n                        \"correspondencePinCode\": null,\r\n                        \"correspondenceAddress\": null,\r\n                        \"active\": true,\r\n                        \"dob\": 631218599000,\r\n                        \"pwdExpiryDate\": null,\r\n                        \"locale\": null,\r\n                        \"type\": \"CITIZEN\",\r\n                        \"signature\": null,\r\n                        \"accountLocked\": null,\r\n                        \"roles\": [\r\n                            {\r\n                                \"id\": null,\r\n                                \"name\": \"Citizen\",\r\n                                \"code\": \"CITIZEN\",\r\n                                \"tenantId\": \"ch\"\r\n                            }\r\n                        ],\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"bloodGroup\": null,\r\n                        \"identificationMark\": null,\r\n                        \"photo\": null,\r\n                        \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"createdDate\": 1602740950669,\r\n                        \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"lastModifiedDate\": 1602740950669,\r\n                        \"otpReference\": null,\r\n                        \"tenantId\": \"ch\",\r\n                        \"isPrimaryOwner\": null,\r\n                        \"ownerShipPercentage\": null,\r\n                        \"ownerType\": null,\r\n                        \"institutionId\": null,\r\n                        \"documents\": null,\r\n                        \"userActive\": true,\r\n                        \"relationship\": \"FATHER\",\r\n                        \"age\": \"31\"\r\n                    }\r\n                ],\r\n                \"channel\": null,\r\n                \"address\": {\r\n                    \"id\": \"c2865a63-5b7a-44ce-a1f2-f45e1346e3d6\",\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"doorNo\": null,\r\n                    \"latitude\": null,\r\n                    \"longitude\": null,\r\n                    \"addressId\": null,\r\n                    \"addressNumber\": null,\r\n                    \"type\": null,\r\n                    \"addressLine1\": null,\r\n                    \"addressLine2\": null,\r\n                    \"landmark\": null,\r\n                    \"city\": \"ch.chandigarh\",\r\n                    \"pincode\": null,\r\n                    \"detail\": null,\r\n                    \"buildingName\": null,\r\n                    \"street\": null,\r\n                    \"locality\": null\r\n                },\r\n                \"tradeUnits\": [\r\n                    {\r\n                        \"id\": \"c10eceed-006b-4144-a1a4-920177c16346\",\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"active\": true,\r\n                        \"tradeType\": \"CTL.DHOBI_GHAT\",\r\n                        \"uom\": \"year\",\r\n                        \"uomValue\": \"1\",\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"accessories\": null,\r\n                \"applicationDocuments\": [\r\n                    {\r\n                        \"id\": \"14162682-8e59-4c9d-b638-ba70959bed69\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERADDRESSPROOF\",\r\n                        \"fileStoreId\": \"f0d97130-14c7-4972-98bf-04b09dba846a\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"0f15dd00-9f30-4540-b6bb-fa9840c34868\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERAGEPROOF\",\r\n                        \"fileStoreId\": \"2bec2130-67a8-438f-a8aa-1846698bacc3\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"5f8b46f2-ffb2-47ea-ab90-cf46c7ed1e5e\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"PERFORMADHBOBIGHAT\",\r\n                        \"fileStoreId\": \"17bbba7f-5e78-4d6d-b25f-8b18670c8b7f\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"f3f3408e-57ba-4b5a-83a3-c45af2ca0b59\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"OWNERPHOTO\",\r\n                        \"fileStoreId\": \"969bbfa6-f830-4538-a006-981360d76097\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"verificationDocuments\": null,\r\n                \"additionalDetail\": {\r\n                    \"tradeValue\": \"tradevalue\",\r\n                    \"particularsOfArea\": \"particulars of the area\",\r\n                    \"licensePeriod\": \"1\"\r\n                },\r\n                \"institution\": null,\r\n                \"auditDetails\": {\r\n                    \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"createdTime\": 1602740835584,\r\n                    \"lastModifiedTime\": 1602740950596\r\n                }\r\n            },\r\n            \"calculation\": {\r\n                \"applicationNumber\": null,\r\n                \"tradeLicense\": null,\r\n                \"tenantId\": \"ch.chandigarh\",\r\n                \"taxHeadEstimates\": [\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.DHOBI_GHAT_FEE\",\r\n                        \"estimateAmount\": 100,\r\n                        \"category\": \"FEE\"\r\n                    }\r\n                ],\r\n                \"tradeTypeBillingIds\": {\r\n                    \"id\": \"40fe2b80-c4b0-4ab6-9b79-6fe69e0705b3\",\r\n                    \"fee\": 100,\r\n                    \"billingSlabIds\": [\r\n                        \"991fc13e-555d-47f1-91fc-40579a53d8ad|0|c10eceed-006b-4144-a1a4-920177c16346\"\r\n                    ]\r\n                },\r\n                \"accessoryBillingIds\": null\r\n            },\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"createdTime\": 1602740835584,\r\n                \"lastModifiedTime\": 1602740950596\r\n            },\r\n            \"workflowCode\": \"NewTL\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_update?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-create-old-book-shop",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"tradeLicenseDetail\": {\r\n                \"address\": {\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"city\": \"ch.chandigarh\",\r\n                    \"addressLine1\": \"complete address\"\r\n                },\r\n                \"additionalDetail\": {\r\n                    \"tradeValue\": \"trade\",\r\n                    \"platformNumber\": \"981\",\r\n                    \"placeOfWork\": \"place of work\",\r\n                    \"businessStartDate\": \"2019-09-01\",\r\n                    \"familyMonthlyIncome\": \"5332\"\r\n                },\r\n                \"owners\": [\r\n                    {\r\n                        \"name\": \"AppName\",\r\n                        \"age\": 30,\r\n                        \"dob\": 631218599000,\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"relationship\": \"FATHER\",\r\n                        \"permanentAddress\": \"permanent address\",\r\n                        \"mobileNumber\": \"9900289033\"\r\n                    }\r\n                ],\r\n                \"tradeUnits\": [],\r\n                \"applicationDocuments\": null,\r\n                \"subOwnershipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\"\r\n            },\r\n            \"myLicenseType\": \"CTL.OLD_BOOK_MARKET\",\r\n            \"businessService\": \"CTL.OLD_BOOK_MARKET\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"financialYear\": \"2020-21\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"workflowCode\": \"NewTL\",\r\n            \"action\": \"INITIATE\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_create?",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tl-update-old-book-shop",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RequestInfo\": {\r\n        \"apiId\": \"Rainmaker\",\r\n        \"ver\": \".01\",\r\n        \"action\": \"\",\r\n        \"did\": \"1\",\r\n        \"key\": \"\",\r\n        \"msgId\": \"20170310130900|en_IN\",\r\n        \"requesterId\": \"\",\r\n        \"authToken\": \"7f6acbbf-6205-4a81-af2f-a6304b0a58aa\"\r\n    },\r\n    \"Licenses\": [\r\n        {\r\n            \"comment\": null,\r\n            \"id\": \"a94745cc-20d4-48f8-97fa-0ff14174ea75\",\r\n            \"tenantId\": \"ch.chandigarh\",\r\n            \"businessService\": \"CTL.OLD_BOOK_MARKET\",\r\n            \"licenseType\": \"PERMANENT\",\r\n            \"applicationType\": \"New\",\r\n            \"licenseNumber\": null,\r\n            \"applicationNumber\": \"CH-TL-2020-10-15-000557\",\r\n            \"oldLicenseNumber\": null,\r\n            \"propertyId\": null,\r\n            \"oldPropertyId\": null,\r\n            \"accountId\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n            \"tradeName\": null,\r\n            \"applicationDate\": 1602741296273,\r\n            \"commencementDate\": null,\r\n            \"issuedDate\": null,\r\n            \"financialYear\": \"2020-21\",\r\n            \"validFrom\": 1602741383363,\r\n            \"validTo\": 1760421383000,\r\n            \"action\": \"SUBMIT\",\r\n            \"assignee\": null,\r\n            \"wfDocuments\": null,\r\n            \"status\": \"MODIFIED\",\r\n            \"tradeLicenseDetail\": {\r\n                \"id\": \"ee22c851-37a5-4116-878a-1bc35e1521e4\",\r\n                \"surveyNo\": null,\r\n                \"subOwnerShipCategory\": \"INDIVIDUAL.SINGLEOWNER\",\r\n                \"structureType\": \"IMMOVABLE.PUCCA\",\r\n                \"operationalArea\": null,\r\n                \"noOfEmployees\": null,\r\n                \"adhocExemption\": null,\r\n                \"adhocPenalty\": null,\r\n                \"adhocExemptionReason\": null,\r\n                \"adhocPenaltyReason\": null,\r\n                \"owners\": [\r\n                    {\r\n                        \"id\": 642,\r\n                        \"uuid\": \"dca84c75-68c7-4fea-a487-1f059175aa95\",\r\n                        \"userName\": \"5a6f979a-0a14-4c0a-a5d7-f74bbf2f4d80\",\r\n                        \"password\": null,\r\n                        \"salutation\": null,\r\n                        \"name\": \"AppName\",\r\n                        \"gender\": null,\r\n                        \"mobileNumber\": \"9900289033\",\r\n                        \"emailId\": null,\r\n                        \"altContactNumber\": null,\r\n                        \"pan\": null,\r\n                        \"aadhaarNumber\": null,\r\n                        \"permanentAddress\": \"permanent address\",\r\n                        \"permanentCity\": null,\r\n                        \"permanentPinCode\": null,\r\n                        \"correspondenceCity\": null,\r\n                        \"correspondencePinCode\": null,\r\n                        \"correspondenceAddress\": null,\r\n                        \"active\": true,\r\n                        \"dob\": 631218599000,\r\n                        \"pwdExpiryDate\": null,\r\n                        \"locale\": null,\r\n                        \"type\": \"CITIZEN\",\r\n                        \"signature\": null,\r\n                        \"accountLocked\": null,\r\n                        \"roles\": [\r\n                            {\r\n                                \"id\": null,\r\n                                \"name\": \"Citizen\",\r\n                                \"code\": \"CITIZEN\",\r\n                                \"tenantId\": \"ch\"\r\n                            }\r\n                        ],\r\n                        \"fatherOrHusbandName\": \"father\",\r\n                        \"bloodGroup\": null,\r\n                        \"identificationMark\": null,\r\n                        \"photo\": null,\r\n                        \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"createdDate\": 1602741383388,\r\n                        \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                        \"lastModifiedDate\": 1602741383388,\r\n                        \"otpReference\": null,\r\n                        \"tenantId\": \"ch\",\r\n                        \"isPrimaryOwner\": null,\r\n                        \"ownerShipPercentage\": null,\r\n                        \"ownerType\": null,\r\n                        \"institutionId\": null,\r\n                        \"documents\": null,\r\n                        \"userActive\": true,\r\n                        \"relationship\": \"FATHER\",\r\n                        \"age\": \"31\"\r\n                    }\r\n                ],\r\n                \"channel\": null,\r\n                \"address\": {\r\n                    \"id\": \"24f50a31-f2cb-4e4a-88fb-f5ff29828102\",\r\n                    \"tenantId\": \"ch.chandigarh\",\r\n                    \"doorNo\": null,\r\n                    \"latitude\": null,\r\n                    \"longitude\": null,\r\n                    \"addressId\": null,\r\n                    \"addressNumber\": null,\r\n                    \"type\": null,\r\n                    \"addressLine1\": \"complete address\",\r\n                    \"addressLine2\": null,\r\n                    \"landmark\": null,\r\n                    \"city\": \"ch.chandigarh\",\r\n                    \"pincode\": null,\r\n                    \"detail\": null,\r\n                    \"buildingName\": null,\r\n                    \"street\": null,\r\n                    \"locality\": null\r\n                },\r\n                \"tradeUnits\": [\r\n                    {\r\n                        \"id\": \"84581741-36ad-41be-929d-b1c4f0a69f86\",\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"active\": true,\r\n                        \"tradeType\": \"CTL.OLD_BOOK_MARKET\",\r\n                        \"uom\": \"year\",\r\n                        \"uomValue\": \"5\",\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"accessories\": null,\r\n                \"applicationDocuments\": [\r\n                    {\r\n                        \"id\": \"6a0812c0-48ba-4549-a7a4-5cbd302d5c12\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"FORMA\",\r\n                        \"fileStoreId\": \"76c3d477-a1e3-48a8-ad93-1877024fb392\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"10060ad2-915b-49bb-b2e3-0b84ea0e124a\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"FORMB\",\r\n                        \"fileStoreId\": \"6d4565f7-27a7-451b-943f-211659b157d5\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    },\r\n                    {\r\n                        \"id\": \"f397f009-2b55-4b8a-ac6e-65157163bc62\",\r\n                        \"active\": true,\r\n                        \"tenantId\": \"ch.chandigarh\",\r\n                        \"documentType\": \"FORMC\",\r\n                        \"fileStoreId\": \"ccdaad03-63ce-41b2-b9c2-2c7deb661fa3\",\r\n                        \"documentUid\": null,\r\n                        \"auditDetails\": null\r\n                    }\r\n                ],\r\n                \"verificationDocuments\": null,\r\n                \"additionalDetail\": {\r\n                    \"tradeValue\": \"trade\",\r\n                    \"platformNumber\": \"981\",\r\n                    \"placeOfWork\": \"place of work\",\r\n                    \"businessStartDate\": \"2019-09-01\",\r\n                    \"familyMonthlyIncome\": \"5332\",\r\n                    \"licensePeriod\": \"5\"\r\n                },\r\n                \"institution\": null,\r\n                \"auditDetails\": {\r\n                    \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                    \"createdTime\": 1602741296273,\r\n                    \"lastModifiedTime\": 1602741383311\r\n                }\r\n            },\r\n            \"calculation\": {\r\n                \"applicationNumber\": null,\r\n                \"tradeLicense\": null,\r\n                \"tenantId\": \"ch.chandigarh\",\r\n                \"taxHeadEstimates\": [\r\n                    {\r\n                        \"taxHeadCode\": \"CTL.OLD_BOOK_MARKET_FEE\",\r\n                        \"estimateAmount\": 4038,\r\n                        \"category\": \"FEE\"\r\n                    }\r\n                ],\r\n                \"tradeTypeBillingIds\": {\r\n                    \"id\": \"21419476-aa56-42b9-86d7-1d702702009d\",\r\n                    \"fee\": 4038,\r\n                    \"billingSlabIds\": [\r\n                        \"991fc13e-555d-47f3-91fc-40579a53d8ed|0|84581741-36ad-41be-929d-b1c4f0a69f86\"\r\n                    ]\r\n                },\r\n                \"accessoryBillingIds\": null\r\n            },\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"lastModifiedBy\": \"052526f4-65b2-41f9-a5b6-60590d7982c4\",\r\n                \"createdTime\": 1602741296273,\r\n                \"lastModifiedTime\": 1602741383311\r\n            },\r\n            \"workflowCode\": \"NewTL\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://egov.transerve.com/tl-services/v1/_update",
+					"protocol": "https",
+					"host": [
+						"egov",
+						"transerve",
+						"com"
+					],
+					"path": [
+						"tl-services",
+						"v1",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
