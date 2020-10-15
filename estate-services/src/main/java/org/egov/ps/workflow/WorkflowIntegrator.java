@@ -116,7 +116,7 @@ public class WorkflowIntegrator {
 				});
 			}
 			obj.put(TENANTIDKEY, wfTenantId);
-			obj.put(BUSINESSSERVICEKEY, config.getPsBusinessServiceValue());
+			obj.put(BUSINESSSERVICEKEY, config.getAosBusinessServiceValue());
 			obj.put(BUSINESSIDKEY, property.getFileNumber());
 			obj.put(ACTIONKEY, property.getAction());
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);

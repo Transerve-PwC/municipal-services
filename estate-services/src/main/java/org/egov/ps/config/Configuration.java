@@ -65,8 +65,8 @@ public class Configuration {
 	@Value("${is.workflow.enabled}")
 	private Boolean isWorkflowEnabled;
 
-	@Value("${create.ps.workflow.name}")
-	private String psBusinessServiceValue;
+	@Value("${create.es.eb.aos.workflow.name}")
+	private String aosBusinessServiceValue;
 
 	@Value("${workflow.context.path}")
 	private String wfHost;

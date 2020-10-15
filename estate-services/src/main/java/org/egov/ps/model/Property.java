@@ -5,8 +5,6 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
