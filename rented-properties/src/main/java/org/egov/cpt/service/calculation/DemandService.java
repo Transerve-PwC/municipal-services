@@ -34,6 +34,7 @@ import org.egov.cpt.models.calculation.DemandResponse;
 import org.egov.cpt.models.calculation.TaxHeadEstimate;
 import org.egov.cpt.models.enums.CollectionPaymentModeEnum;
 import org.egov.cpt.repository.ServiceRequestRepository;
+import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -282,7 +283,7 @@ public class DemandService {
 			String mobileNumber = requestUser.getMobileNumber() != null ? requestUser.getMobileNumber()
 					: requestUser.getUserName();
 			User user = User.builder().id(requestUser.getId()).userName(requestUser.getUserName())
-					.name(requestUser.getName()).type(requestInfo.getUserInfo().getType()).mobileNumber(mobileNumber)
+					.name(requestUser.getName()).type(requestUser.getType()).mobileNumber(mobileNumber)
 					.emailId(requestUser.getEmailId()).roles(requestUser.getRoles()).tenantId(requestUser.getTenantId())
 					.uuid(requestUser.getUuid()).build();
 
@@ -446,8 +447,12 @@ public class DemandService {
 	}
 
 	private List<Demand> createRentDemand(RequestInfo requestInfo, Property property) {
-		User user = getEgovUser(property, requestInfo);
-
+		User user=null;
+		if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_EMPLOYEE)){
+			 user = getEgovUser(property, requestInfo);
+		}else{
+			 user = requestInfo.getUserInfo();
+		}
 		List<DemandDetail> demandDetails = new LinkedList<>();
 		if (!CollectionUtils.isEmpty(property.getCalculation().getTaxHeadEstimates())) {
 			property.getCalculation().getTaxHeadEstimates().forEach(taxHeadEstimate -> {
