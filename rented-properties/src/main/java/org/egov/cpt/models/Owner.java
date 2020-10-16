@@ -26,18 +26,22 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Owner {
 
+	@Size(max = 256)
 	@JsonProperty("id")
 	private String id;
 
 	@JsonSerialize(using = PropertySerializer.class)
 	private Property property;
 
+	@Size(max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@Size(min = 3, max = 256)
 	@JsonProperty("allotmenNumber")
 	private String allotmenNumber;
 
+	@Valid
 	@JsonProperty("ownerDetails")
 	private OwnerDetails ownerDetails;
 
@@ -69,15 +73,19 @@ public class Owner {
 	/**
 	 * This will indicate the application status.
 	 */
+	@Size(max = 256)
 	@JsonProperty("applicationState")
 	private String applicationState;
 
+	@Size(max = 256)
 	@JsonProperty("applicationAction")
 	private String applicationAction;
 
+	@Valid
 	@JsonProperty("calculation")
 	Calculation calculation;
 
+	@Size(max = 256)
 	@JsonProperty("billingBusinessService")
 	private String billingBusinessService;
 

@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,6 +44,7 @@ public class PropertyDetails {
 	 * Vikas Nagar Mauli Jagran (Sites 1-2765) - 0 Sector 52-53 - 0 Milk Colony
 	 * Maloya - 24% Kumhar Colony Maloya - 24%
 	 */
+	@NotNull
 	@Builder.Default
 	@JsonProperty("interestRate")
 	private Double interestRate = 0.0;
@@ -48,6 +55,7 @@ public class PropertyDetails {
 	 * Vikas Nagar Mauli Jagran (Sites 1-2765) - 5% Sector 52-53 - 5% Milk Colony
 	 * Maloya - 25% Kumhar Colony Maloya - 25%
 	 */
+	@NotNull
 	@JsonProperty("rentIncrementPercentage")
 	@Builder.Default
 	private Double rentIncrementPercentage = 5D;
@@ -58,26 +66,37 @@ public class PropertyDetails {
 	 * Vikas Nagar Mauli Jagran (Sites 1-2765) - 1 Sector 52-53 - 1 Milk Colony
 	 * Maloya - 5 Kumhar Colony Maloya - 5
 	 */
+	@NotNull
 	@JsonProperty("rentIncrementPeriod")
 	@Builder.Default
+	@Max(value = 99, message = "rentIncrementPeriod can not be more than 99")
+	@Min(value = 0, message = "rentIncrementPeriod can not be less than zero")
 	private int rentIncrementPeriod = 1;
 
 	@JsonProperty("id")
+	@Size(max = 256)
 	private String id;
 
 	@JsonProperty("propertyId")
+	@Size(max = 256)
 	private String propertyId;
 
+	@NotNull
 	@JsonProperty("transitNumber")
+	@Size(max = 256)
 	private String transitNumber;
 
 	@JsonProperty("tenantId")
+	@Size(max = 256)
 	private String tenantId;
 
+	@NotNull
 	@JsonProperty("area")
+	@Size(max = 256)
 	private String area;
 
 	@JsonProperty("rentPerSqyd")
+	@Size(max = 256)
 	private String rentPerSqyd;
 
 	/**
@@ -85,14 +104,18 @@ public class PropertyDetails {
 	 * During ownership transfer, new value should be also set here.
 	 */
 	@JsonProperty("currentOwner")
+	@Size(max = 256)
 	private String currentOwner;
 
 	@JsonProperty("floors")
+	@Size(max = 256)
 	private String floors;
 
 	@JsonProperty("additionalDetails")
+	@Size(max = 256)
 	private String additionalDetails;
 
+	@Valid
 	@JsonProperty("address")
 	private Address address;
 

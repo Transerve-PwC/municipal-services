@@ -35,30 +35,38 @@ import lombok.ToString;
 @Builder
 public class Mortgage {
 
+	@Size(max = 256)
 	@JsonProperty("id")
 	private String id;
 
 	@JsonSerialize(using = PropertySerializer.class)
 	private Property property;
 
+	@Size(max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@Size(max = 256)
 	@JsonProperty("state")
 	private String state;
 
+	@Size(max = 256)
 	@JsonProperty("action")
 	private String action;
 
+	@Size(max = 64)
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 	
+	@Size(max = 256)
 	@JsonProperty("allotmentStartDate")
 	private Long allotmentStartDate;
 	
+	@Size(max = 256)
 	@JsonProperty("allotmentEndDate")
 	private Long allotmentEndDate;
 	
+	@Size(max = 256)
 	@JsonProperty("allotmentNumber")
 	private String allotmentNumber;
 

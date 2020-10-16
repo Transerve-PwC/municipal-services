@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.cpt.models.calculation.Calculation;
@@ -35,21 +36,28 @@ import lombok.ToString;
 public class Property {
 
 	@JsonProperty("id")
+	@Size(max = 256)
 	private String id;
 
+	@NotNull
 	@JsonProperty("transitNumber")
+	@Size(max = 256)
 	private String transitNumber;
 
 	@JsonProperty("tenantId")
+	@Size(max = 256)
 	private String tenantId;
 
 	@JsonProperty("colony")
+	@Size(max = 256)
 	private String colony;
 
 	@JsonProperty("masterDataState")
+	@Size(max = 256)
 	private String masterDataState;
 
 	@JsonProperty("masterDataAction")
+	@Size(max = 256)
 	private String masterDataAction;
 
 	@JsonProperty("assignee")
@@ -63,6 +71,7 @@ public class Property {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@Valid
 	@JsonProperty("propertyDetails")
 	private PropertyDetails propertyDetails;
 
@@ -223,9 +232,12 @@ public class Property {
 	}
 
 	@JsonProperty("pincode")
+	@Size(min = 6, max = 256)
 	private String pincode;
 
+	@NotNull
 	@JsonProperty("area")
+	@Size(max = 256)
 	private String area;
 
 	/**
@@ -239,15 +251,19 @@ public class Property {
 	 * payments.
 	 */
 	@JsonProperty("rentPaymentConsumerCode")
+	@Size(max = 256)
 	private String rentPaymentConsumerCode;
 
 	@JsonProperty("transactionId")
+	@Size(max = 256)
 	private String transactionId;
 
 	@JsonProperty("bankName")
+	@Size(max = 256)
 	private String bankName;
 
 	@JsonProperty("billingBusinessService")
+	@Size(max = 256)
 	private String billingBusinessService;
 
 	/**

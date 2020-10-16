@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,27 +29,38 @@ import lombok.ToString;
 @Builder
 public class OwnerDetails {
 
+	@Size(max = 256)
 	@JsonProperty("id")
 	private String id;
 
+	@Size(max = 256)
 	@JsonProperty("propertyId")
 	private String propertyId;
 
+	@Size(max = 256)
 	@JsonProperty("ownerId")
 	private String ownerId;
 
+	@Size(max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@NotNull
 	@JsonProperty("name")
+	@Size(max = 256)
 	private String name;
 
+	@NotNull
+	@Email(message = "email is not valid")
+	@Size(max = 256)
 	@JsonProperty("email")
 	private String email;
 
+	@Size(max = 10, min = 10)
 	@JsonProperty("phone")
 	private String phone;
 
+	@Size(min = 4, max = 6)
 	@JsonProperty("gender")
 	private String gender;
 
@@ -53,35 +68,47 @@ public class OwnerDetails {
 	private Long dateOfBirth;
 
 	@JsonProperty("aadhaarNumber")
+	@Size(max = 12, min = 12)
 	private String aadhaarNumber;
 
+	@Size(max = 256)
 	@JsonProperty("allotmentStartdate")
 	private Long allotmentStartdate;
 
+	@Size(max = 256)
 	@JsonProperty("allotmentEnddate")
 	private Long allotmentEnddate;
 
+	@Size(max = 256)
 	@JsonProperty("posessionStartdate")
 	private Long posessionStartdate;
 
+	@Size(max = 256)
 	@JsonProperty("posessionEnddate")
 	private Long posessionEnddate;
 
+	@Size(max = 256)
 	@JsonProperty("monthlyRent")
 	private String monthlyRent;
 
+	@Size(max = 256)
 	@JsonProperty("revisionPeriod")
 	private String revisionPeriod;
 
+	@Size(max = 256)
 	@JsonProperty("revisionPercentage")
 	private String revisionPercentage;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@NotNull
+	@Size(min = 4, max = 256)
 	@JsonProperty("fatherOrHusband")
 	private String fatherOrHusband;
 
+	@NotNull
+	@Size(max = 256)
 	@JsonProperty("relation")
 	private String relation;
 
@@ -129,12 +156,15 @@ public class OwnerDetails {
 	@JsonProperty("permanent")
 	private Boolean permanent = false;
 
+	@Size(max = 256)
 	@JsonProperty("relationWithDeceasedAllottee")
 	private String relationWithDeceasedAllottee;
 
+	@Size(max = 256)
 	@JsonProperty("dateOfDeathAllottee")
 	private Long dateOfDeathAllottee;
 
+	@Size(max = 256)
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 

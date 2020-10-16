@@ -28,6 +28,7 @@ import lombok.Setter;
 @Builder
 public class Calculation {
 
+	@Size(max = 256)
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 

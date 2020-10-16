@@ -33,6 +33,7 @@ public class Document {
 	@JsonProperty("id")
 	private String id;
 
+	@Size(max = 256)
 	@JsonProperty("referenceId")
 	private String referenceId;
 
