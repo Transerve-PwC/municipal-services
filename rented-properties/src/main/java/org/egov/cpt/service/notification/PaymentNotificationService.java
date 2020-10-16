@@ -19,6 +19,8 @@ import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.SMSRequest;
 import org.egov.cpt.models.calculation.PaymentDetail;
 import org.egov.cpt.models.calculation.PaymentRequest;
+import org.egov.cpt.models.web.Event;
+import org.egov.cpt.models.web.EventRequest;
 import org.egov.cpt.repository.OwnershipTransferRepository;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.DuplicateCopyService;
@@ -28,6 +30,8 @@ import org.egov.cpt.service.PropertyService;
 import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.util.PropertyUtil;
+import org.egov.cpt.web.contracts.DuplicateCopyRequest;
+import org.egov.cpt.web.contracts.OwnershipTransferRequest;
 import org.egov.cpt.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
@@ -58,7 +62,7 @@ public class PaymentNotificationService {
 	private PropertyUtil propertyUtil;
 
 	private PropertyService propertyService;
-
+	
 	private final static String CASH = "cash";
 
 	@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
@@ -141,6 +145,10 @@ public class PaymentNotificationService {
 
 							List<Owner> owners = ownershipTransferService.searchOwnershipTransfer(searchCriteria,
 									requestInfo);
+							if (CollectionUtils.isEmpty(owners))
+								throw new CustomException("INVALID RECEIPT",
+										"No Owner found for the comsumerCode " + searchCriteria.getApplicationNumber());
+							
 							owners.forEach(owner -> {
 								String localizationMessages = util.getLocalizationMessages(owner.getTenantId(),
 										requestInfo);
@@ -155,10 +163,16 @@ public class PaymentNotificationService {
 									}
 								}
 							});
-
-							if (CollectionUtils.isEmpty(owners))
-								throw new CustomException("INVALID RECEIPT",
-										"No Owner found for the comsumerCode " + searchCriteria.getApplicationNumber());
+							if(null != config.getIsUserEventsNotificationEnabledForRP()) {
+								if(config.getIsUserEventsNotificationEnabledForRP()) {
+									OwnershipTransferRequest otRequest = OwnershipTransferRequest.builder()
+											.owners(owners).requestInfo(requestInfo)
+											.build();
+									EventRequest eventRequest = getEventsForOTPayment(otRequest);
+									if(null != eventRequest)
+										util.sendEventNotification(eventRequest);
+								}
+							}
 
 							break;
 
@@ -187,6 +201,17 @@ public class PaymentNotificationService {
 									}
 								}
 							});
+							if(null != config.getIsUserEventsNotificationEnabledForRP()) {
+								if(config.getIsUserEventsNotificationEnabledForRP()) {
+									DuplicateCopyRequest dcRequest = DuplicateCopyRequest.builder()
+											.duplicateCopyApplications(dcApplications)
+											.requestInfo(requestInfo)
+											.build();
+									EventRequest eventRequest = getEventsForDCPayment(dcRequest);
+									if(null != eventRequest)
+										util.sendEventNotification(eventRequest);
+								}
+							}
 
 							if (CollectionUtils.isEmpty(dcApplications))
 								throw new CustomException("INVALID RECEIPT", "No Owner found for the comsumerCode "
@@ -209,21 +234,29 @@ public class PaymentNotificationService {
 								if (paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) {
 									owner = propertyUtil.getCurrentOwnerFromProperty(property);
 								}
-								String localizationMessages = util.getLocalizationMessages(owner.getTenantId(),
+								String localizationMessages = util.getLocalizationMessages(property.getTenantId(),
 										requestInfo);
 								List<SMSRequest> smsRequests = getRPSMSRequests(owner, paymentDetail,
 										localizationMessages, transitNumber, paymentRequest);
 								util.sendSMS(smsRequests, config.getIsSMSNotificationEnabled());
 
 								if (config.getIsEMAILNotificationEnabled()) {
-									if (owner.getOwnerDetails().getEmail() != null
-											|| paymentRequest.getRequestInfo().getUserInfo().getEmailId() != null) {
+									if (paymentRequest.getRequestInfo().getUserInfo().getEmailId() != null || owner.getOwnerDetails().getEmail() != null) {
 										List<EmailRequest> emailRequests = getRPEmailRequests(owner, paymentDetail,
 												localizationMessages, transitNumber, paymentRequest);
 										util.sendEMAIL(emailRequests, true);
 									}
 								}
+								
+								if(null != config.getIsUserEventsNotificationEnabledForRP()) {
+									if(config.getIsUserEventsNotificationEnabledForRP()) {
+										EventRequest eventRequest = util.getEventsForRent(owner, paymentDetail, transitNumber, paymentRequest);
+										if(null != eventRequest)
+											util.sendEventNotification(eventRequest);
+									}
+								}
 							});
+							
 
 							if (CollectionUtils.isEmpty(propertyList)) {
 								throw new CustomException("INVALID RECEIPT", "No Owner found for the comsumerCode "
@@ -250,6 +283,7 @@ public class PaymentNotificationService {
 	 * 
 	 * return totalSMS; }
 	 */
+
 
 	private List<EmailRequest> getDCEmailRequests(DuplicateCopy copy, Map<String, String> valMap2,
 			String localizationMessages) {
@@ -411,5 +445,59 @@ public class PaymentNotificationService {
 		}
 		return emailRequest;
 
+	}
+	
+	/**
+     * Creates and registers an event at the egov-user-event service at defined trigger points as that of sms notifs.
+     * 
+     * 
+     * @param request
+     * @return
+     */
+    public EventRequest getEventsForOTPayment(OwnershipTransferRequest request) {
+    	List<Event> events = new ArrayList<>();
+        String tenantId = request.getOwners().get(0).getTenantId();
+        String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
+        for(Owner owner : request.getOwners()){
+
+            String message = util.getOTOwnerPaymentMsg( owner, localizationMessages);
+            if(message == null) continue;
+            message = message.replaceAll("<br/>", "");
+            Map<String,String > mobileNumberToOwner = new HashMap<>();
+            if (owner.getOwnerDetails().getPhone() != null) {
+				mobileNumberToOwner.put(owner.getOwnerDetails().getPhone(), owner.getOwnerDetails().getName());
+			}
+            
+            events = util.createEvent(message,mobileNumberToOwner,request.getRequestInfo(),tenantId,null,null);
+        }
+        if(!CollectionUtils.isEmpty(events)) {
+    		return EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
+        }else {
+        	return null;
+        }
+		
+    }
+    private EventRequest getEventsForDCPayment(DuplicateCopyRequest request) {
+		List<Event> events = new ArrayList<>();
+        String tenantId = request.getDuplicateCopyApplications().get(0).getTenantId();
+        String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
+        for(DuplicateCopy application : request.getDuplicateCopyApplications()){
+
+            String message = util.getDCOwnerPaymentMsg(application, localizationMessages);
+            if(message == null) continue;
+            message = message.replaceAll("<br/>", "");
+            Map<String,String > mobileNumberToOwner = new HashMap<>();
+            if (application.getApplicant().get(0).getPhone() != null) {
+				mobileNumberToOwner.put(application.getApplicant().get(0).getPhone(), application.getApplicant().get(0).getName());
+			}
+            
+            events = util.createEvent(message,mobileNumberToOwner,request.getRequestInfo(),tenantId,null,null);
+        }
+        if(!CollectionUtils.isEmpty(events)) {
+    		return EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
+        }else {
+        	return null;
+        }
+		
 	}
 }

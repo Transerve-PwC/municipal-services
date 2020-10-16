@@ -139,8 +139,7 @@ public class OwnershipTransferService {
 		if (request.getOwners().get(0).getApplicationState().equalsIgnoreCase(PTConstants.OT_STATUS_APPROVED)) {
 			enrichmentService.postStatusEnrichment(request);
 		}
-
-		notificationService.process(request);
+//		notificationService.process(request);
 
 		/**
 		 * calling rent Summary
