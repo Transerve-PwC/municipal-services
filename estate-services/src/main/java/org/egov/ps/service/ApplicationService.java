@@ -13,7 +13,10 @@ import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.ApplicationValidatorService;
 import org.egov.ps.web.contracts.ApplicationRequest;
+import org.egov.ps.web.contracts.RequestInfoMapper;
+import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
+import org.egov.ps.workflow.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -32,15 +35,18 @@ public class ApplicationService {
 
 	@Autowired
 	ApplicationValidatorService validator;
-	
+
 	@Autowired
 	PropertyRepository repository;
-	
+
 	@Autowired
 	WorkflowIntegrator wfIntegrator;
-	
+
 	@Autowired
 	private DemandService demandService;
+
+	@Autowired
+	private WorkflowService wfService;
 
 	public List<Application> createApplication(ApplicationRequest request) {
 		validator.validateCreateRequest(request);
@@ -75,5 +81,12 @@ public class ApplicationService {
 		producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 
 		return applicationRequest.getApplications();
+	}
+
+	public List<State> getStates(RequestInfoMapper requestInfoWrapper) {
+
+		List<State> status = wfService.getApplicationStatus("ch", requestInfoWrapper);
+
+		return status;
 	}
 }
