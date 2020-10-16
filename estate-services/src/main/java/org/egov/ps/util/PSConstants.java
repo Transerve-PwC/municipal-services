@@ -4,7 +4,7 @@ public class PSConstants {
 
 	public static final String TENANT_ID = "ch.chandigarh";
 
-	public static final String PM_DRAFTED = "ES_PM_DRAFTED";
+	public static final String PM_DRAFTED = "ES_DRAFTED";
 
 	public static final String PM_APPROVED = "ES_PM_APPROVED";
 
