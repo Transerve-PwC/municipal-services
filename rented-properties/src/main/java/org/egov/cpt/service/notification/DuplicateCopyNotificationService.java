@@ -1,5 +1,6 @@
 package org.egov.cpt.service.notification;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,8 @@ import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.DuplicateCopy;
 import org.egov.cpt.models.EmailRequest;
 import org.egov.cpt.models.SMSRequest;
+import org.egov.cpt.models.web.Event;
+import org.egov.cpt.models.web.EventRequest;
 import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.web.contracts.DuplicateCopyRequest;
@@ -47,6 +50,13 @@ public class DuplicateCopyNotificationService {
 				enrichEMAILRequest(request,emailRequest);
 				if(!CollectionUtils.isEmpty(emailRequest))
 					util.sendEMAIL(emailRequest,true);
+			}
+		}
+		if(null != config.getIsUserEventsNotificationEnabledForRP()) {
+			if(config.getIsUserEventsNotificationEnabledForRP()) {
+				EventRequest eventRequest = getEventsForDC(request);
+				if(null != eventRequest)
+					util.sendEventNotification(eventRequest);
 			}
 		}
 
@@ -101,5 +111,34 @@ public class DuplicateCopyNotificationService {
 		}
 
 	}
+	
+	/**
+     * Creates and registers an event at the egov-user-event service at defined trigger points as that of sms notifs.
+     * @param request
+     * @return
+     */
+    public EventRequest getEventsForDC(DuplicateCopyRequest request) {
+    	List<Event> events = new ArrayList<>();
+        String tenantId = request.getDuplicateCopyApplications().get(0).getTenantId();
+        String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
+        for(DuplicateCopy application : request.getDuplicateCopyApplications()){
+
+            String message = util.getCustomizedDcMsg(request.getRequestInfo(), application, localizationMessages);
+            if(message == null) continue;
+            message = message.replaceAll("<br/>", "");
+            Map<String,String > mobileNumberToOwner = new HashMap<>();
+            if (application.getApplicant().get(0).getPhone() != null) {
+				mobileNumberToOwner.put(application.getApplicant().get(0).getPhone(), application.getApplicant().get(0).getName());
+			}
+            
+            events = util.createEvent(message,mobileNumberToOwner,request.getRequestInfo(),tenantId,application.getState(),application.getApplicationNumber());
+        }
+        if(!CollectionUtils.isEmpty(events)) {
+    		return EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
+        }else {
+        	return null;
+        }
+		
+    }
 
 }

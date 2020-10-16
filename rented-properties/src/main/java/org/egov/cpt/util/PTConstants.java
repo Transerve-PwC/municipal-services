@@ -122,10 +122,6 @@ public class PTConstants {
 
 	public static final String ACTION_PAY = "PAY";
 
-	public static final String USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
-	public static final String USREVENTS_EVENT_NAME = "Property Tax";
-	public static final String USREVENTS_EVENT_POSTEDBY = "SYSTEM-PT";
-
 	public static final String BUSINESS_SERVICE_MG_RP = "MortgageRP";
 
 	public static final String BUSINESS_SERVICE_DC_RP = "DuplicateCopyOfAllotmentLetterRP";
@@ -183,7 +179,7 @@ public class PTConstants {
 	public static final String NOTIFICATION_OT_PAYMENT_SUCCESS_PAYER = "rp.en.counter.paymentsuccesspayer";
 	public static final String NOTIFICATION_OT_CA_APPROVED = "rp.en.counter.caapproved";
 	public static final String NOTIFICATION_OT_APPROVED = "rp.en.counter.approved";
-	public static final String OWNERSHIP_TRANSFER_APPLICATION = "Ownership Transfer request";
+	public static final String OWNERSHIP_TRANSFER_APPLICATION = "Ownership transfer request";
 	public static final String DUPLICATE_COPY_APPLICATION = "Duplicate copy of allotment letter";
 	public static final String MORTGAGE_APPLICATION = "Mortgage request";
 	public static final String NOTIFICATION_NG_VIOLATION = "rp.en.counter.violationnoticegenerated";
@@ -219,7 +215,7 @@ public class PTConstants {
 	public static final String MG_ACTION_STATUS_SUBMIT = "SUBMIT_MG_PENDINGCLVERIFICATION";
 	public static final String MG_ACTION_STATUS_REJECTED = "REJECT_MG_REJECTED";
 	public static final String MG_ACTION_STATUS_SENDBACK = "SENDBACK_MG_PENDINGCLARIFICATION";
-	public static final String MG_ACTION_STATUS_MORTGAGE_APPROVED = "APPROVE_MG_APPROVED";
+	public static final String MG_ACTION_STATUS_MORTGAGE_APPROVED = "GRANTINFO_MG_APPROVED";
 
 	// demand generation
 	public static final String OT_STATE_PENDING_SA_VERIFICATION = "OT_PENDINGSAVERIFICATION";
@@ -284,4 +280,14 @@ public class PTConstants {
 	public static final String BUSINESS_SERVICE_CK_RENT="RENTED_PROPERTIES_COLONY_KUMHAR.RENT";
 	public static final String BUSINESS_SERVICE_CS_RENT="RENTED_PROPERTIES_COLONY_SECTOR_52_53.RENT";
 	public static final String BUSINESS_SERVICE_VN_RENT="RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.RENT";
+	
+	//User event
+	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String  USREVENTS_EVENT_NAME = "Rented Properties";
+	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-RP";
+	
+	//Paylink constant
+	public static final String OT_PENDINGPAYMENT ="OT_PENDINGPAYMENT";
+	public static final String DC_PENDINGPAYMENT ="DC_PENDINGPAYMENT";
+	public static final String PAYRENT ="PAYRENT";
 }
