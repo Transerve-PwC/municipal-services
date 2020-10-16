@@ -1,6 +1,8 @@
 package org.egov.cpt.models;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,21 +29,28 @@ import lombok.ToString;
 @ToString
 @Builder
 public class PropertyDueAmount {
+
+	@Size(max = 256)
 	@JsonProperty("propertyId")
 	private String propertyId;
-	
+
+	@Size(max = 256)
 	@JsonProperty("transitNumber")
 	private String transitNumber;
 
+	@Size(max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@Size(max = 256)
 	@JsonProperty("colony")
 	private String colony;
 	
+	@Size(max = 256)
 	@JsonProperty("ownerName")
 	private String ownerName;
 	
+	@Size(max = 10, min = 10)
 	@JsonProperty("mobileNumber")
 	private String mobileNumber;
 

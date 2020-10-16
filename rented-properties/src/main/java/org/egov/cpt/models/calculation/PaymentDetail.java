@@ -2,6 +2,7 @@ package org.egov.cpt.models.calculation;
 
 import java.math.BigDecimal;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -52,9 +53,11 @@ public class PaymentDetail {
 	@JsonProperty("receiptDate")
 	private Long receiptDate;
 
+	@Size(max = 256)
 	@JsonProperty("receiptType")
 	private String receiptType;
 
+	@Size(max = 256)
 	@JsonProperty("businessService")
 	private String businessService;
 
@@ -63,6 +66,7 @@ public class PaymentDetail {
 	@JsonProperty("billId")
 	private String billId;
 
+	@Valid
 	@JsonProperty("bill")
 	private Bill bill;
 

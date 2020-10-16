@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import org.egov.cpt.models.AuditDetails;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -31,33 +33,44 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Bill {
 
+	@Size(max = 64)
 	@JsonProperty("id")
 	private String id = null;
 
+	@Size(max = 10, min = 10)
 	@JsonProperty("mobileNumber")
 	private String mobileNumber = null;
 
+	@Size(max = 256)
 	@JsonProperty("paidBy")
 	private String paidBy = null;
 
+	@Size(max = 256)
 	@JsonProperty("payerName")
 	private String payerName = null;
 
+	@Size(max = 1024)
 	@JsonProperty("payerAddress")
 	private String payerAddress = null;
 
+	@Size(max = 256)
+	@Email
 	@JsonProperty("payerEmail")
 	private String payerEmail = null;
 
+	@Size(max = 256)
 	@JsonProperty("payerId")
 	private String payerId = null;
 
+	@Size(max = 64)
 	@JsonProperty("status")
 	private StatusEnum status = null;
 
+	@Size(max = 256)
 	@JsonProperty("reasonForCancellation")
 	private String reasonForCancellation = null;
 
+	@Size(max = 256)
 	@JsonProperty("isCancelled")
 	private Boolean isCancelled = null;
 
@@ -68,6 +81,7 @@ public class Bill {
 	@Valid
 	private List<BillDetail> billDetails = null;
 
+	@Size(max = 250)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
@@ -86,15 +100,18 @@ public class Bill {
 	@JsonProperty("minimumAmountToBePaid")
 	private BigDecimal minimumAmountToBePaid = null;
 
+	@Size(max = 250)
 	@JsonProperty("businessService")
 	private String businessService = null;
 
 	@JsonProperty("totalAmount")
 	private BigDecimal totalAmount = null;
 
+	@Size(max = 250)
 	@JsonProperty("consumerCode")
 	private String consumerCode = null;
 
+	@Size(max = 1024)
 	@JsonProperty("billNumber")
 	private String billNumber = null;
 
