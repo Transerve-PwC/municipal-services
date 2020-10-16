@@ -254,7 +254,7 @@ public class PTConstants {
 	public static final String RELATION_GD = "GrantDetail";
 	public static final String RELATION_NOTICE = "notice";
 	public static final String RELATION_FINANCE = "finance";
-
+	public static final String RELATION_OPD = "offlinepayment";
 	public static final String OT_STATUS_APPROVED = "OT_APPROVED";
 	public static final String PM_STATUS_APPROVED = "PM_APPROVED";
 

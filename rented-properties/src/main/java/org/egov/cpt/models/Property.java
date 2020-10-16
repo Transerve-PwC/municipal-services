@@ -272,4 +272,9 @@ public class Property {
 	public String getBillingBusinessService() {
 		return String.format("RENTED_PROPERTIES_%s.RENT", this.getColony());
 	}
+
+	@Valid
+	@JsonProperty
+	private List<OfflinePaymentDetails> offlinePaymentDetails;
+
 }

@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
 import org.egov.cpt.models.BillV2;
+import org.egov.cpt.models.OfflinePaymentDetails;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
@@ -209,6 +212,16 @@ public class PropertyService {
 			});
 		}
 
+		if (properties.size() <= 1 && !CollectionUtils.isEmpty(criteria.getRelations())
+				&& criteria.getRelations().contains(PTConstants.RELATION_OPD)) {
+			properties.stream().forEach(property -> {
+				List<OfflinePaymentDetails> offlinePaymentDetails = repository.getPropertyOfflinePaymentDetails(
+						PropertyCriteria.builder().propertyId(property.getId()).build());
+				if (!CollectionUtils.isEmpty(offlinePaymentDetails)) {
+					property.setOfflinePaymentDetails(offlinePaymentDetails);
+				}
+			});
+		}
 		return properties;
 	}
 
@@ -287,6 +300,16 @@ public class PropertyService {
 			 */
 			demandService.createCashPayment(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
 					bills.get(0).getId(), owner,property.getBillingBusinessService());
+
+			OfflinePaymentDetails offlinePaymentDetails = OfflinePaymentDetails.builder()
+					.id(UUID.randomUUID().toString()).propertyId(property.getId())
+					.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
+					.amount(property.getPaymentAmount())
+					.bankName(property.getBankName()).transactionNumber(property.getTransactionId()).build();
+			property.setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
+			propertyRequest.setProperties(Collections.singletonList(property));
+			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+
 		} else {
 			/**
 			 * We return the property along with the consumerCode that we set earlier. Also
