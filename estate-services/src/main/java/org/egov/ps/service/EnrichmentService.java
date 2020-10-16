@@ -1,14 +1,27 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jayway.jsonpath.JsonPath;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
@@ -16,6 +29,8 @@ import org.egov.ps.model.Application;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.MortgageDetails;
+import org.egov.ps.model.Notifications;
+import org.egov.ps.model.NotificationsEmail;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Payment;
@@ -40,11 +55,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EnrichmentService {
 
 	@Autowired
@@ -193,13 +207,13 @@ public class EnrichmentService {
 	}
 
 	private void enrichPaymentDetails(Property property, RequestInfo requestInfo) {
-		
+
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
 			property.getPropertyDetails().getOwners().forEach(owner -> {
-				
+
 				List<Payment> payments = property.getPropertyDetails().getPaymentDetails();
 				if (!CollectionUtils.isEmpty(payments)) {
-					
+
 					payments.forEach(payment -> {
 						if (payment.getId() == null || payment.getId().isEmpty()) {
 							AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
@@ -256,7 +270,7 @@ public class EnrichmentService {
 		}
 
 	}
-	
+
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
 
 		/**
@@ -265,7 +279,8 @@ public class EnrichmentService {
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())) {
 
 			boolean hasAnyNewEstateDemands = property.getPropertyDetails().getEstateDemands().stream()
-					.filter(estateDemand -> estateDemand.getId() == null || estateDemand.getId().isEmpty()).findAny().isPresent();
+					.filter(estateDemand -> estateDemand.getId() == null || estateDemand.getId().isEmpty()).findAny()
+					.isPresent();
 
 			if (hasAnyNewEstateDemands) {
 				List<EstateDemand> existingEstateDemands = propertyRepository.getDemandDetailsForPropertyDetailsIds(
@@ -291,9 +306,9 @@ public class EnrichmentService {
 
 			});
 		}
-		
+
 	}
-	
+
 	private void enrichEstatePayment(Property property, RequestInfo requestInfo) {
 
 		/**
@@ -302,7 +317,8 @@ public class EnrichmentService {
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())) {
 
 			boolean hasAnyNewEstatePayments = property.getPropertyDetails().getEstatePayments().stream()
-					.filter(estatePayment -> estatePayment.getId() == null || estatePayment.getId().isEmpty()).findAny().isPresent();
+					.filter(estatePayment -> estatePayment.getId() == null || estatePayment.getId().isEmpty()).findAny()
+					.isPresent();
 
 			if (hasAnyNewEstatePayments) {
 				List<EstatePayment> existingEstatePayments = propertyRepository.getEstatePaymentsForPropertyDetailsIds(
@@ -323,12 +339,13 @@ public class EnrichmentService {
 					estatePayment.setPropertyDetailsId(property.getPropertyDetails().getId());
 
 				}
-				AuditDetails estatePaymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+				AuditDetails estatePaymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+						true);
 				estatePayment.setAuditDetails(estatePaymentAuditDetails);
 
 			});
 		}
-		
+
 	}
 
 	/**
@@ -408,6 +425,83 @@ public class EnrichmentService {
 			}
 		}
 		return applicationDetails;
+	}
+
+	/**
+	 * Invoke process notification on each application in the request
+	 */
+	public void enrichProcessNotifications(ApplicationRequest request) {
+		request.getApplications().forEach(application -> {
+			/**
+			 * Get the notification config from mdms.
+			 */
+			List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
+					application.getApplicationType(), request.getRequestInfo(), application.getTenantId(), application);
+			/**
+			 * Process the notification config
+			 */
+			processNotification(notificationConfigs, application);
+		});
+	}
+
+	public void processNotification(List<Map<String, Object>> rawNotificationsList, Application enrichedApplication) {
+		if (CollectionUtils.isEmpty(rawNotificationsList)) {
+			log.debug("No notifications configured in MDMS for application no {} for state {}",
+					enrichedApplication.getApplicationNumber(), enrichedApplication.getState());
+			return;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		List<Notifications> notificationList = mapper.convertValue(rawNotificationsList,
+				new TypeReference<List<Notifications>>() {
+				});
+
+		/**
+		 * Filter notification object relevant to current state of application.
+		 */
+		Optional<Notifications> notificationOptional = notificationList.stream()
+				.filter(x -> x.getState().equalsIgnoreCase(enrichedApplication.getState())).findAny();
+		if (!notificationOptional.isPresent()) {
+			log.debug("No notification configured for application no {} for state {}",
+					enrichedApplication.getApplicationNumber(), enrichedApplication.getState());
+			return;
+		}
+		Notifications notification = notificationOptional.get();
+
+		try {
+			String applicationJsonString = mapper.writeValueAsString(enrichedApplication);
+			String contentWithPathsEnriched = enrichPathPatternsWithApplication(notification.getContent(),
+					applicationJsonString);
+			String enrichedContent = enrichLocalizationPatternsInString(contentWithPathsEnriched);
+
+			NotificationsEmail emailConfig = notification.getModes().getEmail();
+			if (emailConfig.isEnabled()) {
+				emailConfig.getTo();
+				System.out.println("Sending email to ");
+			}
+		} catch (JsonProcessingException e) {
+			log.error("Could not convert enrichedApplication to JSON", e);
+		}
+	}
+
+	private String enrichPathPatternsWithApplication(String sourceString, String applicationJsonString) {
+		Pattern p = Pattern.compile("\\{(.*?)\\}");
+		Matcher m = p.matcher(sourceString);
+		Set<String> allMatches = new HashSet<String>();
+		while (m.find()) {
+			allMatches.add(m.group());
+		}
+
+		String replacedString = allMatches.stream().reduce(sourceString, (result, match) -> {
+			String path = match.substring(1, match.length() - 1);
+			Object value = (JsonPath.read(applicationJsonString, path));
+			return result.replaceAll(String.format("\\{%s\\}", path), "" + value);
+		});
+		log.debug("Modified {} to {} ", sourceString, replacedString);
+		return replacedString;
+	}
+
+	private String enrichLocalizationPatternsInString(String sourceString) {
+		return sourceString;
 	}
 
 	private void enrichPropertyDetails(Application application) {
