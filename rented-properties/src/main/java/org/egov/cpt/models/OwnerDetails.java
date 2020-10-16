@@ -71,19 +71,15 @@ public class OwnerDetails {
 	@Size(max = 12, min = 12)
 	private String aadhaarNumber;
 
-	@Size(max = 256)
 	@JsonProperty("allotmentStartdate")
 	private Long allotmentStartdate;
 
-	@Size(max = 256)
 	@JsonProperty("allotmentEnddate")
 	private Long allotmentEnddate;
 
-	@Size(max = 256)
 	@JsonProperty("posessionStartdate")
 	private Long posessionStartdate;
 
-	@Size(max = 256)
 	@JsonProperty("posessionEnddate")
 	private Long posessionEnddate;
 
@@ -160,7 +156,6 @@ public class OwnerDetails {
 	@JsonProperty("relationWithDeceasedAllottee")
 	private String relationWithDeceasedAllottee;
 
-	@Size(max = 256)
 	@JsonProperty("dateOfDeathAllottee")
 	private Long dateOfDeathAllottee;
 

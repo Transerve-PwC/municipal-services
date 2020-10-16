@@ -39,7 +39,6 @@ public class Property {
 	@Size(max = 256)
 	private String id;
 
-	@NotNull
 	@JsonProperty("transitNumber")
 	@Size(max = 256)
 	private String transitNumber;
@@ -235,7 +234,6 @@ public class Property {
 	@Size(min = 6, max = 256)
 	private String pincode;
 
-	@NotNull
 	@JsonProperty("area")
 	@Size(max = 256)
 	private String area;

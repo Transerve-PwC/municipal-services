@@ -63,11 +63,9 @@ public class DuplicateCopy {
 	@JsonProperty("allotmentNumber")
 	private String allotmentNumber;
 	
-	@Size(max = 256)
 	@JsonProperty("allotmentStartDate")
 	private Long allotmentStartDate;
 
-	@Size(max = 256)
 	@JsonProperty("allotmentEndDate")
 	private Long allotmentEndDate;
 

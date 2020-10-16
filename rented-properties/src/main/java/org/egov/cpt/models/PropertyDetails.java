@@ -81,7 +81,6 @@ public class PropertyDetails {
 	@Size(max = 256)
 	private String propertyId;
 
-	@NotNull
 	@JsonProperty("transitNumber")
 	@Size(max = 256)
 	private String transitNumber;
