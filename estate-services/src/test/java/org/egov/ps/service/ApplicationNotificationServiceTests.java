@@ -1,13 +1,11 @@
 package org.egov.ps.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.model.Application;
 import org.egov.ps.util.TestUtils;
@@ -20,10 +18,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class EnrichmentServiceTest {
+public class ApplicationNotificationServiceTests {
 
 	@Autowired
-	EnrichmentService enrichmentService;
+	ApplicationsNotificationService applicationNotificationService;
 
 	@Test
 	public void postProcessNotifications() {
@@ -37,7 +35,7 @@ public class EnrichmentServiceTest {
 
 			ApplicationRequest request = ApplicationRequest.builder().requestInfo(requestInfo)
 					.applications(applications).build();
-			enrichmentService.enrichProcessNotifications(request);
+			applicationNotificationService.processNotifications(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

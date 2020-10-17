@@ -18,7 +18,7 @@ import lombok.Setter;
 public class NotificationsEvent {
 
 	@JsonProperty("enabled")
-	private String enabled;
+	private boolean enabled;
 
 	@JsonProperty("to")
 	private String to;

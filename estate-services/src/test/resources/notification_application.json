@@ -4,14 +4,14 @@
 		"branchType": "EstateBranch",
 		"applicationNumber": "CH-ES-APPL-2020-10-13-000047",
 		"moduleType": "OwnershipTransfer",
-		"applicationType": "EstateBranch_OwnershipTransfer_SaleDeed",
+		"applicationType": "SaleDeed",
 		"comments": " ",
 		"createdBy": {
 			"id": 243,
 			"uuid": "20c2834e-3921-4b5d-a568-cfb4bf07dba1",
 			"name": "Ramanujan",
-			"emailId": "somebody@example.org.co.in",
-			"mobileNumber": "9000000000"
+			"emailId": "rajiv.s@transerve.com",
+			"mobileNumber": "9550259567"
 		},
 		"auditDetails": {
 			"createdBy": "Minesh",

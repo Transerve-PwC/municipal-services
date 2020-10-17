@@ -1,13 +1,12 @@
 package org.egov.ps.web.contracts;
 
 import java.util.HashSet;
-import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.response.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.egov.common.contract.response.ResponseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -28,6 +28,9 @@ public class ApplicationService {
 	private EnrichmentService enrichmentService;
 
 	@Autowired
+	private ApplicationsNotificationService applicationNotificationService;
+
+	@Autowired
 	private Configuration config;
 
 	@Autowired
@@ -80,6 +83,7 @@ public class ApplicationService {
 		}
 		producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 
+		applicationNotificationService.processNotifications(applicationRequest);
 		return applicationRequest.getApplications();
 	}
 

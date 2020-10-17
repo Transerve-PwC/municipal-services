@@ -17,6 +17,7 @@ public class PSConstants {
 	public static final String MDMS_PS_CODE_FILTER = "$.*.code";
 
 	public static final String MDMS_PS_FIELD_FILTER = "[0].fields";
+	public static final String MDMS_PS_NOTIFICATIONS_FILTER = "[0].notifications";
 
 	public static final String MDMS_DOCUMENT_FIELD_FILTER = ".*.documentList.*";
 

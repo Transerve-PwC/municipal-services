@@ -3,9 +3,11 @@ package org.egov.ps.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.egov.common.contract.request.User;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
@@ -161,4 +163,9 @@ public class Application {
 
 	@JsonProperty("createdBy")
 	private User createdBy;
+
+	@JsonIgnore
+	public String getMDMSModuleName() {
+		return String.format("%s_%s_%s", this.getBranchType(), this.getModuleType(), this.getApplicationType());
+	}
 }

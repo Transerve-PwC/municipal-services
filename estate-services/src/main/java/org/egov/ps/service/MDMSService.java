@@ -122,20 +122,17 @@ public class MDMSService {
 	public List<Map<String, Object>> getNotificationConfig(String applicationType, RequestInfo requestInfo,
 			String tenantId, Application application) {
 		tenantId = tenantId.split("\\.")[0];
-		String filter = String.format("[?(@.state=='%s'&&@.applicationType=='%s'&&@.moduleType=='%s')]",
-				application.getState(), application.getApplicationType(), application.getModuleType());
 		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
 		mdmsCriteriaReq = util.prepareMdMsRequest(tenantId, PSConstants.MDMS_PS_MODULE_NAME,
-				Arrays.asList(applicationType), null, requestInfo);
+				Arrays.asList(applicationType), PSConstants.MDMS_PS_NOTIFICATIONS_FILTER, requestInfo);
 
 		StringBuilder url = getMdmsSearchUrl(tenantId, applicationType, PSConstants.MDMS_PS_MODULE_NAME);
 		Object response = serviceRequestRepository.fetchResult(url, mdmsCriteriaReq);
 
-		String MDMSResponsePath = "$.MdmsRes." + PSConstants.MDMS_PS_MODULE_NAME + "." + applicationType + "." + "."
-				+ "notifications";
+		String MDMSResponsePath = "$.MdmsRes." + PSConstants.MDMS_PS_MODULE_NAME + "." + applicationType;
 
-		List<List<Map<String, Object>>> fieldConfigurations = JsonPath.read(response, MDMSResponsePath);
-		return fieldConfigurations.get(0);
+		List<Map<String, Object>> fieldConfigurations = JsonPath.read(response, MDMSResponsePath);
+		return fieldConfigurations;
 	}
 
 }
