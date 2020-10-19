@@ -1,5 +1,6 @@
 package org.egov.ps.repository;
 
+import java.util.List;
 import java.util.Map;
 
 import org.egov.ps.config.Configuration;
@@ -68,6 +69,9 @@ public class ApplicationQueryBuilder {
 			+ " (SELECT *, DENSE_RANK() OVER (ORDER BY applast_modified_time desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
+	public static final String RELATION_OWNER = "owner";
+	public static final String RELATION_OWNER_DOCUMENTS = "ownerdocs";
+	
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList,
 			ApplicationCriteria criteria) {
 
@@ -102,8 +106,72 @@ public class ApplicationQueryBuilder {
 			queryString.append(" AND ");
 		}
 	}
+	
+	private static final String OWNER_DOCS_COLUMNS = " doc.id as docid, doc.reference_id as docreference_id, doc.tenantid as doctenantid,"
+			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
+			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
 
+	public String getOwnerDocsQuery(List<String> ownerDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(OWNER_DOCS_COLUMNS);
+		sb.append(" FROM cs_ep_documents_v1 doc ");
+		sb.append(" where doc.reference_id IN (:references)");
+		params.put("references", ownerDetailIds);
+		return sb.toString();
+	}
+	
+	public String getOwnersQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(OWNER_COLUMNS);
+		sb.append(" FROM " + OWNER_TABLE);
+		sb.append(" where ownership.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
+	
 	public String getApplicationSearchQuery(ApplicationCriteria criteria, Map<String, Object> preparedStmtList) {
+
+		StringBuilder builder = new StringBuilder(SELECT);
+
+		builder.append(APP_COLUMNS);
+
+		builder.append(APP_TABLE);
+		
+		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.property_id=:prId");
+			preparedStmtList.put("prId", criteria.getPropertyId());
+		}
+		if (!ObjectUtils.isEmpty(criteria.getApplicationId())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.id=:appId");
+			preparedStmtList.put("appId", criteria.getApplicationId());
+		}
+		if (null != criteria.getTenantId()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.tenantid=:tenantId");
+			preparedStmtList.put("tenantId", criteria.getTenantId());
+		}
+		if (null != criteria.getFileNumber()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.file_number=:fileNumber");
+			preparedStmtList.put("fileNumber", criteria.getFileNumber());
+		}
+		if (null != criteria.getApplicationNumber()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.application_number=:appNumber");
+			preparedStmtList.put("appNumber", criteria.getApplicationNumber());
+		}
+		if (null != criteria.getState()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.state IN (:state)");
+			preparedStmtList.put("state", criteria.getState());
+		}
+
+		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+	}
+
+	public String getApplicationSearchQueryOLD(ApplicationCriteria criteria, Map<String, Object> preparedStmtList) {
 
 		StringBuilder builder = null;
 

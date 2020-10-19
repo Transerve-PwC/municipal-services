@@ -210,7 +210,7 @@ public class PropertyRepository {
 		return properties.get(0);
 	}
 
-	public List<Application> getApplications(ApplicationCriteria criteria) {
+	public List<Application> getApplicationsOLD(ApplicationCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = applicationQueryBuilder.getApplicationSearchQuery(criteria, preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, applicationRowMapper);
