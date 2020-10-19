@@ -179,6 +179,8 @@ public class PTConstants {
 	public static final String NOTIFICATION_OT_PAYMENT_SUCCESS_PAYER = "rp.en.counter.paymentsuccesspayer";
 	public static final String NOTIFICATION_OT_CA_APPROVED = "rp.en.counter.caapproved";
 	public static final String NOTIFICATION_OT_APPROVED = "rp.en.counter.approved";
+	public static final String NOTIFICATION_MG_APPROVED = "rp.en.counter.mortgage.approved";
+	public static final String NOTIFICATION_MG_GRANTDETAIL = "rp.en.counter.mortgage.grantdetail";
 	public static final String OWNERSHIP_TRANSFER_APPLICATION = "Ownership transfer request";
 	public static final String DUPLICATE_COPY_APPLICATION = "Duplicate copy of allotment letter";
 	public static final String MORTGAGE_APPLICATION = "Mortgage request";
@@ -215,7 +217,8 @@ public class PTConstants {
 	public static final String MG_ACTION_STATUS_SUBMIT = "SUBMIT_MG_PENDINGCLVERIFICATION";
 	public static final String MG_ACTION_STATUS_REJECTED = "REJECT_MG_REJECTED";
 	public static final String MG_ACTION_STATUS_SENDBACK = "SENDBACK_MG_PENDINGCLARIFICATION";
-	public static final String MG_ACTION_STATUS_MORTGAGE_APPROVED = "GRANTINFO_MG_APPROVED";
+	public static final String MG_ACTION_STATUS_MORTGAGE_APPROVED = "APPROVE_MG_PENDINGGRANTDETAIL";
+	public static final String MG_ACTION_STATUS_MORTGAGE_ADDGRNATDETAIL = "GRANTINFO_MG_APPROVED";
 
 	// demand generation
 	public static final String OT_STATE_PENDING_SA_VERIFICATION = "OT_PENDINGSAVERIFICATION";
