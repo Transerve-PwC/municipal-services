@@ -32,6 +32,6 @@ public class RentDemandGenerationController {
 	public ResponseEntity<?> create(@Valid @ModelAttribute RentDemandCriteria demandCriteria) {
 		AtomicInteger count=demandGenerationService.createDemand(demandCriteria);
 		log.info(String.format("%s demands generated",count));
-		return new ResponseEntity<>(String.format("%s demands generated",count),HttpStatus.OK);
+		return new ResponseEntity<>(String.format("%s demands generated.",count),HttpStatus.OK);
 	}
 }
