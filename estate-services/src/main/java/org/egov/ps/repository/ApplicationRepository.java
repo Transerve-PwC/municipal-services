@@ -91,7 +91,7 @@ public class ApplicationRepository {
 	}
 	
 	private void addOwnerDocumentsToApplication(List<Application> applications) {
-		if (CollectionUtils.isEmpty(applications)) {
+		if (CollectionUtils.isEmpty(applications)) { 
 			return;
 		}
 		/**
