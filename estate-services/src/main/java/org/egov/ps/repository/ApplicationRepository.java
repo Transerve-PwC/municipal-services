@@ -40,7 +40,7 @@ public class ApplicationRepository {
 		String query = applicationQueryBuilder.getApplicationSearchQuery(criteria, preparedStmtList);
 		List<Application> application =  namedParameterJdbcTemplate.query(query, preparedStmtList, applicationRowMapper);
 		
-		if (CollectionUtils.isEmpty(application)) {
+		if (CollectionUtils.isEmpty(application)) { 
 			return application;
 		}
 		List<String> relations = criteria.getRelations();
