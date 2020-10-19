@@ -55,7 +55,7 @@ public class ApplicationsNotificationService {
                  */
                 this.processNotification(notificationConfigs, application, request.getRequestInfo());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Exception while fetching from mdms: ", e);
             }
 
         });
