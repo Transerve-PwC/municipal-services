@@ -43,15 +43,21 @@ public class ApplicationsNotificationService {
      */
     public void processNotifications(ApplicationRequest request) {
         request.getApplications().forEach(application -> {
-            /**
-             * Get the notification config from mdms.
-             */
-            List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
-                    application.getMDMSModuleName(), request.getRequestInfo(), application.getTenantId(), application);
-            /**
-             * Process the notification config
-             */
-            this.processNotification(notificationConfigs, application, request.getRequestInfo());
+            try {
+                /**
+                 * Get the notification config from mdms.
+                 */
+                List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
+                        application.getMDMSModuleName(), request.getRequestInfo(), application.getTenantId(),
+                        application);
+                /**
+                 * Process the notification config
+                 */
+                this.processNotification(notificationConfigs, application, request.getRequestInfo());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         });
     }
 
