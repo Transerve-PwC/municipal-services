@@ -51,6 +51,7 @@ public class EstateRentCollectionServiceTests {
     private static final String DEC_1_1999 = "01 12 1999";
     private static final String APR_1_2020 = "01 04 2020";
     private static final String DEC_1_2020 = "01 12 2020";
+    private static final String MAR_7_1999 = "07 03 1999";
 
     public static final double DEFAULT_INTEREST_RATE = 24D;
     private static final double ZERO_INTEREST_RATE = 0D;
@@ -75,8 +76,9 @@ public class EstateRentCollectionServiceTests {
     @Test
     public void testSimpleSettlement() throws ParseException {
         // Setup
-        List<EstateDemand> demands = Collections.emptyList();
-        List<EstatePayment> payments = Arrays.asList(getPayment(100D, JAN_1_2020), getPayment(200D, JAN_15_2020));
+      //  List<EstateDemand> demands = Collections.emptyList();
+        List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102"), getDemand(2678D, 482 ,MAR_1_1999,"103"));
+        List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
         EstateAccount account = getAccount(0D);
 
         // Test
@@ -90,6 +92,16 @@ public class EstateRentCollectionServiceTests {
     
     private EstatePayment getPayment(double amount, String date) throws ParseException {
         return EstatePayment.builder().rentReceived(amount).receiptNo("X-1212").receiptDate(getEpochFromDateString(date)).build();
+    }
+    private EstateDemand getDemand(double amount, Integer gst, String date, String demandId) throws ParseException {
+        return EstateDemand.builder()
+        		.rent(amount)
+        		.gst(gst)
+        		.penaltyInterest(268D)
+        		.gstInterest(6D)
+        		.demandDate(getEpochFromDateString(date))
+        		.id(demandId)
+               .build();
     }
 
    

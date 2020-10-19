@@ -1,5 +1,6 @@
 package org.egov.ps.service.calculation;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
 
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -19,10 +20,7 @@ import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 
 public class EstateRentCollectionService implements IEstateRentCollectionService{
-	public static void main(String[] args) {
-		System.out.println("hello");
-	}
-
+	
 	public void settle(List<EstateDemand> lstDemandProcess, EstatePayment payment) {
 		double rentReceived = payment.getRentReceived();
 		for (EstateDemand demandProcess : lstDemandProcess) {
@@ -32,7 +30,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			if (demandProcess.getRent() + demandProcess.getGst() <= rentReceived) {
 				paybleRent=demandProcess.getRent();
 				paybleGst=demandProcess.getGst();
-				rentReceived -= demandProcess.getRent() + demandProcess.getGst();
+				
 
 			} else {
 				// some calculation
@@ -43,6 +41,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 					paybleRent=paybleRent+(paybleGst-demandProcess.getGst());
 				
 			}
+			rentReceived -= paybleRent + paybleGst;
 			demandProcess.setCollectedRent(paybleRent);
 			demandProcess.setCollectedGST(paybleGst);
 			
@@ -111,11 +110,11 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 		 */
 		List<EstateRentCollection> interestCollections = extractRentAndGST(interestRate, payment.getReceiptDate(), demands,
 				effectiveAmount, isFixGST);
-		effectiveAmount -= interestCollections.stream().mapToDouble(EstateRentCollection::getRentCollected)		
-				.sum();
+		effectiveAmount = (effectiveAmount-interestCollections.stream().mapToDouble((EstateRentCollection::getRentWithGST))	.sum());
 		
-		effectiveAmount -= interestCollections.stream().mapToDouble(EstateRentCollection::getGstCollected)		
-				.sum();
+	//	effectiveAmount = ((effectiveAmount-interestCollections.stream().mapToDouble(EstateRentCollection::getGstCollected)		
+		//		.sum()));
+		
 
 		/**
 		 * Amount is left after deducting interest for all the demands. Extract
@@ -126,8 +125,22 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 				: Collections.emptyList();
 		effectiveAmount -= principalCollections.stream().mapToDouble(EstateRentCollection::getRentPenaltyCollected).sum();
 		effectiveAmount -= principalCollections.stream().mapToDouble(EstateRentCollection::getGstPenaltyCollected).sum();
+		
+		/**
+		 * Amount is left after deducting all the principal amounts. Put it back in the
+		 * account
+		 */
+		account.setRemainingAmount(effectiveAmount);
+		account.setRemainingSince(payment.getReceiptDate());
 
-		return principalCollections;
+		/**
+		 * Mark payment as processed.
+		 */
+		payment.setProcessed(true);
+		return Stream.of(interestCollections, principalCollections).flatMap(x -> x.stream())
+				.collect(Collectors.toList());
+
+		
 
 
 		
@@ -199,7 +212,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			} else {
 				// some calculation
 				
-				rentTobePaid = paymentAmount*100/(100+demand.getGstInterest());
+				rentTobePaid = paymentAmount*100/(100+18);
 				gstToBePaid= paymentAmount-rentTobePaid;
 				if(gstToBePaid>demand.getGst())
 					rentTobePaid+=(gstToBePaid-demand.getGst());
@@ -210,7 +223,9 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			collections.add(EstateRentCollection.builder().rentCollected(rentTobePaid)
 					.gstCollected(gstToBePaid)
 					.collectedAt(paymentTimeStamp)
-					.demandId(demand.getId()).build());
+					.demandId(demand.getId())
+					.rentWithGST(gstToBePaid+rentTobePaid)
+					.build());
 			
 			paymentAmount -= (rentTobePaid + gstToBePaid);
 			demand.setPaymentSince(paymentTimeStamp);

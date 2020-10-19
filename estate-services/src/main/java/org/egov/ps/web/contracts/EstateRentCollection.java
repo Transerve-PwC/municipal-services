@@ -71,6 +71,12 @@ public class EstateRentCollection {
 	private Double rentPenaltyCollected = 0D;
 
 
+	@Builder.Default
+	@ToString.Include
+	@JsonProperty("rentWithGST")
+	private Double rentWithGST = 0D;
+
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
