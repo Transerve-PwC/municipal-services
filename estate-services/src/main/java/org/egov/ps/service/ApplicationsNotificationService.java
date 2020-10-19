@@ -55,7 +55,7 @@ public class ApplicationsNotificationService {
                  */
                 this.processNotification(notificationConfigs, application, request.getRequestInfo());
             } catch (Exception e) {
-                log.error("Exception while fetching from mdms: ", e);
+                log.error("Exception while fetching notification config for application no '{}' ", application.getApplicationNumber());
             }
 
         });
