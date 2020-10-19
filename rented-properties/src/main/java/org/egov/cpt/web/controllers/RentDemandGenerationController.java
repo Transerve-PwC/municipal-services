@@ -1,5 +1,7 @@
 package org.egov.cpt.web.controllers;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.validation.Valid;
 
 import org.egov.cpt.models.RentDemandCriteria;
@@ -28,8 +30,8 @@ public class RentDemandGenerationController {
 
 	@PostMapping("/_create")
 	public ResponseEntity<?> create(@Valid @ModelAttribute RentDemandCriteria demandCriteria) {
-		demandGenerationService.createDemand(demandCriteria);
-		log.info("Rend Demand generation request for year: " + demandCriteria.getDate());
-		return new ResponseEntity<>(HttpStatus.OK);
+		AtomicInteger count=demandGenerationService.createDemand(demandCriteria);
+		log.info(String.format("%s demands generated",count));
+		return new ResponseEntity<>(String.format("%s demands generated",count),HttpStatus.OK);
 	}
 }
