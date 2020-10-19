@@ -6,7 +6,7 @@ public class PSConstants {
 
 	public static final String PM_DRAFTED = "ES_DRAFTED";
 
-	public static final String PM_APPROVED = "ES_PM_APPROVED";
+	public static final String PM_APPROVED = "ES_APPROVED";
 
 	public static final String JSONPATH_PROPERTY_SERVICE = "$.MdmsRes.OwnershipTransferSaleDeed";
 
