@@ -98,12 +98,10 @@ public class OwnerDetails {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
-	@NotNull
 	@Size(min = 4, max = 256, message = "father or husband must be between 4 and 256 characters in length")
 	@JsonProperty("fatherOrHusband")
 	private String fatherOrHusband;
 
-	@NotNull
 	@Size(max = 256)
 	@JsonProperty("relation")
 	private String relation;
