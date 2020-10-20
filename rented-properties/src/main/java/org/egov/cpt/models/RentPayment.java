@@ -31,7 +31,6 @@ public class RentPayment implements Comparable<RentPayment> {
 	/**
 	 * Amount payed by the renter
 	 */
-	@Size(max = 13)
 	@JsonProperty("amountPaid")
 	private Double amountPaid;
 

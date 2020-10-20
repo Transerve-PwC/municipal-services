@@ -31,7 +31,6 @@ public class OfflinePaymentDetails {
 	@JsonProperty("demandId")
 	private String demandId;
 
-	@Size(max = 13)
 	@JsonProperty("amount")
 	private Double amount;
 

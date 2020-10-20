@@ -51,14 +51,12 @@ public class RentDemand implements Comparable<RentDemand> {
   /**
    * The principal rent amount that is to be collected
    */
-  @Size(max = 13)
   @JsonProperty("collectionPrincipal")
   private Double collectionPrincipal;
 
   /**
    * The remaining principal that still has to be collected.
    */
-  @Size(max = 13)
   @Builder.Default
   @JsonProperty("remainingPrincipal")
   private Double remainingPrincipal = 0.0;

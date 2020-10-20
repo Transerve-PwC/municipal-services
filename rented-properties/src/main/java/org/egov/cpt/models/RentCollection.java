@@ -44,7 +44,6 @@ public class RentCollection {
 	/**
 	 * Interest collected.
 	 */
-	@Size(max = 13)
 	@Builder.Default
 	@ToString.Include
 	@JsonProperty("interestCollected")
@@ -53,7 +52,6 @@ public class RentCollection {
 	/**
 	 * Principal collected.
 	 */
-	@Size(max = 13)
 	@Builder.Default
 	@ToString.Include
 	@JsonProperty("principalCollected")

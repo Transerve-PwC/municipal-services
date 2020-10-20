@@ -87,7 +87,6 @@ public class NoticeGeneration {
 	@JsonProperty("recoveryType")
 	private String recoveryType;
 	
-	@Size(max = 12, message = "amount must be between 0 and 12 characters in length")
 	@JsonProperty("amount")
 	private Double amount;
 	

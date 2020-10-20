@@ -27,7 +27,6 @@ public class RentAccount {
 	@JsonProperty("propertyId")
 	private String propertyId;
 
-	@Size(max = 13)
 	@JsonProperty("remainingAmount")
 	@Builder.Default
 	private Double remainingAmount = 0D;
