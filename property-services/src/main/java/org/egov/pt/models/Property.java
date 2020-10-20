@@ -58,7 +58,28 @@ public class Property extends PropertyInfo {
 	
 	@JsonProperty("usageCategory")
 	private String usageCategory;
+	
+	@JsonProperty("propertyOtp")
+	private String propertyOtp;
 
+	@JsonProperty("propertyUID")
+	private String propertyUID;
+
+	@JsonProperty("propertyApiStatus")
+	private String propertyApiStatus;
+	
+	@JsonProperty("isVerify")
+	private boolean isVerify;
+	
+	@JsonProperty("propertyMobileNum")
+	private String propertyMobileNum;
+	
+	@JsonProperty("propertyTokenId")
+	private String propertyTokenId;
+	
+	@JsonProperty("propertyMessage")
+	private String propertyMessage;
+	
 	@Max(value = 500)
 	@JsonProperty("noOfFloors")
 	private Long noOfFloors;

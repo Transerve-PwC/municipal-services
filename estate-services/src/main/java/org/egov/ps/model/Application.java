@@ -3,13 +3,15 @@ package org.egov.ps.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import org.egov.common.contract.request.User;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -43,7 +45,7 @@ public class Application {
 	/**
 	 * Property for which we are trying to create this application for.
 	 */
-//	@JsonSerialize(using = PropertySerializer.class)
+	// @JsonSerialize(using = PropertySerializer.class)
 	@JsonProperty("property")
 	private Property property;
 
@@ -111,15 +113,16 @@ public class Application {
 	 */
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
-	
+
 	@JsonProperty("workFlowBusinessService")
-	private String workFlowBusinessService;	
-	
+	private String workFlowBusinessService;
+
 	@JsonProperty("billingBusinessService")
-	private String billingBusinessService;	
+	private String billingBusinessService;
 
 	public String getWorkFlowBusinessService() {
-		return String.format("ES-%s-%s-%s", extractPrefix(this.getBranchType()), extractPrefix(this.getModuleType()), this.getApplicationType());
+		return String.format("ES-%s-%s-%s", extractPrefix(this.getBranchType()), extractPrefix(this.getModuleType()),
+				this.getApplicationType());
 	}
 
 	public String getBillingBusinessService() {
@@ -127,20 +130,21 @@ public class Application {
 	}
 
 	private String extractPrefix(String inputString) {
-        String outputString = "";
+		String outputString = "";
 
-        for (int i = 0; i < inputString.length(); i++) {
-            char c = inputString.charAt(i);
-            outputString += Character.isUpperCase(c) ? c : "";
-        }
-        return outputString;
-    }
+		for (int i = 0; i < inputString.length(); i++) {
+			char c = inputString.charAt(i);
+			outputString += Character.isUpperCase(c) ? c : "";
+		}
+		return outputString;
+	}
+
 	/**
 	 * Documents uploaded for this application.
 	 */
 	@JsonProperty("applicationDocuments")
 	private List<Document> applicationDocuments;
-	
+
 	public Application addApplicationDocumentsItem(Document applicationDocumentItem) {
 		if (this.applicationDocuments == null) {
 			this.applicationDocuments = new ArrayList<>();
@@ -153,8 +157,15 @@ public class Application {
 		this.applicationDocuments.add(applicationDocumentItem);
 		return this;
 	}
-	
+
 	@JsonProperty("calculation")
 	Calculation calculation;
 
+	@JsonProperty("createdBy")
+	private User createdBy;
+
+	@JsonIgnore
+	public String getMDMSModuleName() {
+		return String.format("%s_%s_%s", this.getBranchType(), this.getModuleType(), this.getApplicationType());
+	}
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.EstateDemand;
+import org.egov.ps.web.contracts.EstatePayment;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -199,11 +201,52 @@ public class PropertyDetails {
 		}
 		this.bidders.add(newBidderItem);
 		return this;
-
 	}
 
 	@Valid
 	@JsonProperty
 	private List<AuctionBidder> inActiveBidders;
+	
+	@JsonProperty("estateDemands")
+	@Builder.Default
+	private List<EstateDemand> estateDemands = new ArrayList<EstateDemand>();
 
+	public PropertyDetails addEstatePaymentItem(EstateDemand estateDemandItem) {
+		if (this.estateDemands == null) {
+			this.estateDemands = new ArrayList<>();
+		}
+		for (EstateDemand estateDemand : estateDemands) {
+			if (estateDemand.getId().equalsIgnoreCase(estateDemandItem.getId())) {
+				return this;
+			}
+		}
+		this.estateDemands.add(estateDemandItem);
+		return this;
+	}
+	
+	@Valid
+	@JsonProperty
+	private List<EstateDemand> inActiveEstateDemands;
+
+	@JsonProperty("estatePayments")
+	@Builder.Default
+	private List<EstatePayment> estatePayments = new ArrayList<EstatePayment>();
+
+	public PropertyDetails addEstatePaymentItem(EstatePayment estatePaymentItem) {
+		if (this.estatePayments == null) {
+			this.estatePayments = new ArrayList<>();
+		}
+		for (EstatePayment estatePayment : estatePayments) {
+			if (estatePayment.getId().equalsIgnoreCase(estatePaymentItem.getId())) {
+				return this;
+			}
+		}
+		this.estatePayments.add(estatePaymentItem);
+		return this;
+	}
+	
+	@Valid
+	@JsonProperty
+	private List<EstatePayment> inActiveEstatePayments;
+	
 }

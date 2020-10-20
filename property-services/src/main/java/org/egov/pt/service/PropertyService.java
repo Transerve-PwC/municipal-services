@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.models.OwnerInfo;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 
@@ -328,5 +331,18 @@ public class PropertyService {
 		UserDetailResponse userDetailResponse = userService.getUser(userSearchRequest);
 		util.enrichOwner(userDetailResponse, properties, false);
 		return properties;
+	}
+
+	public Property getPropertyDetails( PropertyRequest propertyRequest) {
+
+		if (propertyRequest.getProperty().isVerify()) {
+
+			util.verifyOTP(propertyRequest);
+
+		} else {
+			util.sendOTP(propertyRequest);
+		}
+
+		return propertyRequest.getProperty();
 	}
 }

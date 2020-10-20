@@ -300,7 +300,40 @@ public class PTConstants {
 
     public static final String KEY_PDF_FILESTOREID = "filestoreids";
 
-    public static final String KEY_PDF_DOCUMENTTYPE = "documentType";
+	public static final String KEY_PDF_DOCUMENTTYPE = "documentType";
+	
+	//property Constants
+	
+	public static final String PARAM_MOBILE_NUMBER = "MobileNo";
 
+	public static final String PARAM_UID = "UID";
+
+	public static final String PARAM_OTP = "OTP";
+
+	public static final String PARAM_TOKENID = "TokenId";
+	
+
+	public static final String PARAM_STATUS = "Status";
+
+	public static final String MOBILE = "MOBILE";
+
+	public static final String SECTORNAME = "SECTORNAME";
+
+	public static final String HOUSENO = "HOUSENO";
+
+	public static final String DepositerName = "Depositer Name";
+
+	public static final String TotalCoveredareainsqft = "Total Covered area in sq. ft";
+
+	public static final String SectorId = "SectorId";
+
+	public static final String Message = "Msg";
+
+	public static final String PROPERTY_DETAILS = "PropertyDetail";
+	
+	public static final String CITY = "Chandigarh";
+	
+	public static final String FATHERNAME = "FatherName";
+	
+	public static final String DEFAULTOWNER = "INDIVIDUAL.SINGLEOWNER";
 }
-

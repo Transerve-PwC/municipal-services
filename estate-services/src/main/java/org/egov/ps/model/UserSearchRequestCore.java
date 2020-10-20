@@ -23,7 +23,7 @@ public class UserSearchRequestCore {
 
 	@JsonProperty("id")
 	private List<Long> id;
-	
+
 	private Set<String> uuid;
 
 	@JsonProperty("userName")
@@ -43,33 +43,15 @@ public class UserSearchRequestCore {
 
 	@JsonProperty("emailId")
 	private String emailId;
-	
+
 	@JsonProperty("tenantId")
 	private String tenantId;
 
 	@JsonProperty("pageSize")
-	private Integer pageSize=500;
-	
+	@Builder.Default
+	private Integer pageSize = 5;
+
 	@JsonProperty("userType")
 	private String userType;
-	
-/*	@JsonProperty("fuzzyLogic")
-	private boolean fuzzyLogic;
-
-	@JsonProperty("active")
-	private boolean active = true;*/
-
-
-	/*@JsonProperty("pageSize")
-	private int pageSize = 500;*/
-
-/*	@JsonProperty("pageNumber")
-	private int pageNumber = 0;
-
-	@JsonProperty("sort")
-	private List<String> sort = Collections.singletonList("name");
-
-	@JsonProperty("roleCodes")
-	private List<String> roleCodes;*/
 
 }
