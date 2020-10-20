@@ -30,6 +30,8 @@ public class PropertyCriteria {
 
 	private String propertyId;
 
+	private List<String> propertyIds;
+
 	private String branchType;
 
 	@Builder.Default

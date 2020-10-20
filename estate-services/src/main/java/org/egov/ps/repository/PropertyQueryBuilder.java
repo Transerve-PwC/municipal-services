@@ -8,6 +8,7 @@ import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.util.PSConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -192,6 +193,12 @@ public class PropertyQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.id = :id");
 			preparedStmtList.put("id", criteria.getPropertyId());
+		}
+
+		if (!CollectionUtils.isEmpty(criteria.getPropertyIds())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.id IN (:pids)");
+			preparedStmtList.put("pids", criteria.getPropertyIds());
 		}
 
 		if (null != criteria.getBranchType()) {

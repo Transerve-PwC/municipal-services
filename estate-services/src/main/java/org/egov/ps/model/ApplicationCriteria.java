@@ -34,7 +34,4 @@ public class ApplicationCriteria {
 	private Long limit;
 
 	private List<String> relations;
-	
-	private List<String> propertyRelations;
-
 }

@@ -1,6 +1,5 @@
 package org.egov.ps.util;
 
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
@@ -13,9 +12,9 @@ public class ResponseInfoFactory {
         final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
         final String ver = requestInfo != null ? requestInfo.getVer() : "";
         Long ts = null;
-        if(requestInfo!=null)
+        if (requestInfo != null)
             ts = requestInfo.getTs();
-        final String resMsgId = "uief87324"; // FIXME : Hard-coded
+        final String resMsgId = "uief87324";
         final String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
         final String responseStatus = success ? "successful" : "failed";
 
