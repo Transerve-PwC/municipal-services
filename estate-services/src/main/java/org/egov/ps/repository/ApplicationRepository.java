@@ -80,7 +80,6 @@ public class ApplicationRepository {
 			propertyRepository.addOwnerDocumentsToProperties(properties);
 		}
 		
-		
 		return application;
 	}
 	
