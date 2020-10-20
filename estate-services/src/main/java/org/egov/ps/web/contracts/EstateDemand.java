@@ -3,7 +3,9 @@ package org.egov.ps.web.contracts;
 
 
 
+
 import org.egov.ps.web.contracts.PaymentStatusEnum;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -28,12 +30,8 @@ public class EstateDemand implements Comparable<EstateDemand>{
   @JsonProperty("id")
   private String id;
   
-  /**
-   * Property that this rent is generated for.
-   */
-  @JsonProperty("propertyId")
-  private String propertyId;
   
+
   /**
    * No of days of grace period before interest starts getting applied.
    */
@@ -42,6 +40,12 @@ public class EstateDemand implements Comparable<EstateDemand>{
   private int initialGracePeriod = 10;
 
   
+
+   * Property details that this demand is generated for.
+   */
+  @JsonProperty("propertyDetailsId")
+  private String propertyDetailsId;
+
   
   /**
    * Date of demand.
@@ -112,6 +116,7 @@ public class EstateDemand implements Comparable<EstateDemand>{
    */
   @JsonProperty("paid")
   private Double paid;
+
   
   @JsonProperty("status")
   @Builder.Default
@@ -136,5 +141,11 @@ public class EstateDemand implements Comparable<EstateDemand>{
   public int compareTo(EstateDemand other) {
     return this.getDemandDate().compareTo(other.getDemandDate());
   }
+
+
+  @JsonProperty("auditDetails")
+  @Builder.Default
+  private AuditDetails auditDetails = null;
+
  
 }

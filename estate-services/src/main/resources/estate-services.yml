@@ -316,7 +316,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.id
 
-        - query: INSERT INTO cs_ep_owner_details_v1 (id, owner_id, tenantid, owner_name, guardian_name, guardian_relation, mobile_number, allotment_number, date_of_allotment, possesion_date, is_approved, is_current_owner, is_master_entry, address, is_director, seller_name, seller_guardian_name, seller_relation, mode_of_transfer, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET owner_name = ?, guardian_name = ?, guardian_relation = ?, mobile_number = ?, allotment_number = ?, date_of_allotment = ?, possesion_date = ?, is_approved = ?, is_current_owner = ?, is_master_entry = ?, address = ?, is_director = ?, seller_name = ?, seller_guardian_name = ?, seller_relation = ?, mode_of_transfer = ?, last_modified_by = ?, last_modified_time = ?;
+        - query: INSERT INTO cs_ep_owner_details_v1 (id, owner_id, tenantid, owner_name, guardian_name, guardian_relation, mobile_number, allotment_number, date_of_allotment, possesion_date, is_approved, is_current_owner, is_master_entry, address, is_director, seller_name, seller_guardian_name, seller_relation, mode_of_transfer, dob, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET owner_name = ?, guardian_name = ?, guardian_relation = ?, mobile_number = ?, allotment_number = ?, date_of_allotment = ?, possesion_date = ?, is_approved = ?, is_current_owner = ?, is_master_entry = ?, address = ?, is_director = ?, seller_name = ?, seller_guardian_name = ?, seller_relation = ?, mode_of_transfer = ?, dob = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.owners.*.ownerDetails
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.id
@@ -357,6 +357,8 @@ serviceMaps:
       
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
 
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.createdBy
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedBy
@@ -396,6 +398,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerRelation
       
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedBy
 
@@ -484,6 +488,114 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedTime
+            
+            
+        - query: DELETE FROM cs_ep_demand WHERE property_details_id=?;
+          basePath: $.Properties.*.propertyDetails.inActiveEstateDemands.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.inActiveEstateDemands.*.propertyDetailsId
+
+        - query: INSERT INTO cs_ep_demand_audit SELECT * FROM cs_ep_demand WHERE id = ?;
+          basePath: Properties.*.propertyDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.id
+
+        - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.estateDemands.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.demandDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isPrevious
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.rent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.penaltyInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gstInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gst
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGST
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.demandDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isPrevious
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.rent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.penaltyInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gstInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gst
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGST
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedTime  
+            
+            
+        - query: DELETE FROM cs_ep_payment WHERE property_details_id=?;
+          basePath: $.Properties.*.propertyDetails.inActiveEstatePayments.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.inActiveEstatePayments.*.propertyDetailsId
+
+        - query: INSERT INTO cs_ep_payment (id, property_details_id, receipt_date, rent_received, receipt_no, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET receipt_date = ?, rent_received = ?, receipt_no = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.estatePayments.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.rentReceived
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptNo
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.rentReceived
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptNo
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime             
+                     
 
     - version: 1.0
       description: Persists Application details in cs_ep_application_v1 table

@@ -86,9 +86,7 @@ public class ApplicationValidatorService {
 				String applicationDetailsString = this.objectMapper.writeValueAsString(applicationDetails);
 				Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
 				DocumentContext applicationObjectContext = JsonPath.using(conf).parse(applicationDetailsString);
-				String moduleNameString = application.getBranchType() + "_" + application.getModuleType() + "_"
-						+ application.getApplicationType();
-				Map<String, List<String>> errorMap = this.performValidationsFromMDMS(moduleNameString,
+				Map<String, List<String>> errorMap = this.performValidationsFromMDMS(application.getMDMSModuleName(),
 						applicationObjectContext, request.getRequestInfo(), application.getTenantId(), propertyId);
 
 				if (!errorMap.isEmpty()) {

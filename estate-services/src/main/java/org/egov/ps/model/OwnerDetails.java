@@ -88,6 +88,9 @@ public class OwnerDetails {
 	@JsonProperty("modeOfTransfer")
 	private String modeOfTransfer;
 
+	@JsonProperty("dob")
+	private Long dob;
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
