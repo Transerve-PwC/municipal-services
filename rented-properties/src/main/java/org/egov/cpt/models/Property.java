@@ -35,34 +35,41 @@ import lombok.ToString;
 public class Property {
 
 	@JsonProperty("id")
+	@Size(max = 256, message = "id must be between 0 and 256 characters in length")
 	private String id;
 
 	@JsonProperty("transitNumber")
+	@Size(max = 4, message = "transit number must be between 0 and 4 characters in length")
 	private String transitNumber;
 
 	@JsonProperty("tenantId")
+	@Size(max = 256, message = "tenant id must be between 0 and 256 characters in length")
 	private String tenantId;
 
 	@JsonProperty("colony")
+	@Size(max = 256, message = "colony must be between 0 and 256 characters in length")
 	private String colony;
 
 	@JsonProperty("masterDataState")
+	@Size(max = 256, message = "master data state must be between 0 and 256 characters in length")
 	private String masterDataState;
 
 	@JsonProperty("masterDataAction")
+	@Size(max = 256, message = "master data action must be between 0 and 256 characters in length")
 	private String masterDataAction;
 
 	@JsonProperty("assignee")
 	@Builder.Default
 	private List<String> assignee = null;
 
-	@Size(max = 128)
+	@Size(max = 128, message = "comment must be between 0 and 128 characters in length")
 	@JsonProperty("comment")
 	private String comment;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@Valid
 	@JsonProperty("propertyDetails")
 	private PropertyDetails propertyDetails;
 
@@ -223,9 +230,11 @@ public class Property {
 	}
 
 	@JsonProperty("pincode")
+	@Size(min = 6, max = 256, message = "pincode must be between 6 and 256 characters in length")
 	private String pincode;
 
 	@JsonProperty("area")
+	@Size(max = 256, message = "area must be between 0 and 256 characters in length")
 	private String area;
 
 	/**
@@ -239,15 +248,19 @@ public class Property {
 	 * payments.
 	 */
 	@JsonProperty("rentPaymentConsumerCode")
+	@Size(max = 256, message = "rent payment consumer code must be between 0 and 256 characters in length")
 	private String rentPaymentConsumerCode;
 
 	@JsonProperty("transactionId")
+	@Size(max = 256, message = "transaction id must be between 0 and 256 characters in length")
 	private String transactionId;
 
 	@JsonProperty("bankName")
+	@Size(max = 256, message = "bank name must be between 0 and 256 characters in length")
 	private String bankName;
 
 	@JsonProperty("billingBusinessService")
+	@Size(max = 256, message = "billing business service must be between 0 and 256 characters in length")
 	private String billingBusinessService;
 
 	/**
@@ -256,4 +269,9 @@ public class Property {
 	public String getBillingBusinessService() {
 		return String.format("RENTED_PROPERTIES_%s.RENT", this.getColony());
 	}
+
+	@Valid
+	@JsonProperty
+	private List<OfflinePaymentDetails> offlinePaymentDetails;
+
 }

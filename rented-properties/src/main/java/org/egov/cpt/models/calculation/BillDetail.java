@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.cpt.models.AuditDetails;
 import org.springframework.util.CollectionUtils;
@@ -68,15 +69,19 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "id" })
 public class BillDetail {
 
+	@Size(max = 64)
 	@JsonProperty("id")
 	private String id = null;
 
+	@Size(max = 250)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
+	@Size(max = 64)
 	@JsonProperty("demandId")
 	private String demandId = null;
 
+	@Size(max = 64)
 	@JsonProperty("billId")
 	private String billId = null;
 

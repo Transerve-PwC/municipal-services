@@ -703,6 +703,30 @@ serviceMaps:
 
       - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
 
+    - query: INSERT INTO cs_pt_offline_payment_detail (id, property_id, demand_id, amount, bankname, transactionnumber) VALUES (?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bankname=?, transactionnumber=?;
+      basePath: $.Properties.*.offlinePaymentDetails.*
+      jsonMaps:
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.id
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.propertyId
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.demandId
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.amount
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.bankName
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.transactionNumber
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.demandId
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.amount
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.bankName
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.transactionNumber
+
  - version: 1.0
    description: Persists Owners details in cs_pt_ownership_v1 table
    fromTopic: save-ownership-transfer

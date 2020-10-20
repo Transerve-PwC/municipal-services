@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class RentAccount {
+public class OfflinePaymentDetails {
 
 	@Size(max = 256)
 	@JsonProperty("id")
@@ -27,14 +27,19 @@ public class RentAccount {
 	@JsonProperty("propertyId")
 	private String propertyId;
 
+	@Size(max = 256)
+	@JsonProperty("demandId")
+	private String demandId;
+
 	@Size(max = 13)
-	@JsonProperty("remainingAmount")
-	@Builder.Default
-	private Double remainingAmount = 0D;
+	@JsonProperty("amount")
+	private Double amount;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
+	@Size(max = 100)
+	@JsonProperty("bankName")
+	private String bankName;
 
-	@Builder.Default
-	private Long remainingSince = 0L;
+	@Size(max = 100)
+	@JsonProperty("transactionNumber")
+	private String transactionNumber;
 }

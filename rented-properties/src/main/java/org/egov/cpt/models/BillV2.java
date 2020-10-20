@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,36 +24,45 @@ import lombok.NoArgsConstructor;
 public class BillV2 {
 
 	@JsonProperty("id")
+	@Size(max = 64)
 	private String id;
 
 	@JsonProperty("mobileNumber")
+	@Size(min = 10, max = 10)
 	private String mobileNumber;
 
 	@JsonProperty("payerName")
+	@Size(max = 256)
 	private String payerName;
 
 	@JsonProperty("payerAddress")
+	@Size(max = 1024)
 	private String payerAddress;
 
 	@JsonProperty("payerEmail")
+	@Size(max = 256)
 	private String payerEmail;
 
 	@JsonProperty("status")
+	@Size(max = 64)
 	private StatusEnum status;
 
 	@JsonProperty("totalAmount")
 	private BigDecimal totalAmount;
 
 	@JsonProperty("businessService")
+	@Size(max = 250)
 	private String businessService;
 
 	@JsonProperty("billNumber")
+	@Size(max = 1024)
 	private String billNumber;
 	
 	@JsonProperty("billDate")
 	private Long billDate;
 
 	@JsonProperty("consumerCode")
+	@Size(max = 250)
 	private String consumerCode;
 
 	@JsonProperty("additionalDetails")
@@ -62,9 +73,11 @@ public class BillV2 {
 	private List<BillDetailV2> billDetails;
 
 	@JsonProperty("tenantId")
+	@Size(max = 250)
 	private String tenantId;
 
 	@JsonProperty("fileStoreId")
+	@Size(max = 256)
 	private String fileStoreId;
 
 	@JsonProperty("auditDetails")

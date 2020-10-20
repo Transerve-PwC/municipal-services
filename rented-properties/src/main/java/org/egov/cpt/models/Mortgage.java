@@ -35,21 +35,26 @@ import lombok.ToString;
 @Builder
 public class Mortgage {
 
+	@Size(max = 256, message = "id must be between 0 and 256 characters in length")
 	@JsonProperty("id")
 	private String id;
 
 	@JsonSerialize(using = PropertySerializer.class)
 	private Property property;
 
+	@Size(max = 256, message = "tenant id must be between 0 and 256 characters in length")
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@Size(max = 256, message = "state must be between 0 and 256 characters in length")
 	@JsonProperty("state")
 	private String state;
 
+	@Size(max = 256, message = "action must be between 0 and 256 characters in length")
 	@JsonProperty("action")
 	private String action;
 
+	@Size(max = 64, message = "application number must be between 0 and 64 characters in length")
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 	
@@ -59,13 +64,14 @@ public class Mortgage {
 	@JsonProperty("allotmentEndDate")
 	private Long allotmentEndDate;
 	
+	@Size(max = 256, message = "allotment number must be between 0 and 256 characters in length")
 	@JsonProperty("allotmentNumber")
 	private String allotmentNumber;
 
 	@JsonProperty("assignee")
 	private List<String> assignee = null;
 
-	@Size(max = 128)
+	@Size(max = 128, message = "comment must be between 0 and 128 characters in length")
 	@JsonProperty("comment")
 	private String comment;
 

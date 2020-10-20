@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,15 +24,19 @@ import lombok.NoArgsConstructor;
 public class BillDetailV2 {
 
 	@JsonProperty("id")
+	@Size(max = 64)
 	private String id;
 
 	@JsonProperty("tenantId")
+	@Size(max = 250)
 	private String tenantId;
 
 	@JsonProperty("demandId")
+	@Size(max = 64)
 	private String demandId;
 
 	@JsonProperty("billId")
+	@Size(max = 64)
 	private String billId;
 
 	@JsonProperty("expiryDate")

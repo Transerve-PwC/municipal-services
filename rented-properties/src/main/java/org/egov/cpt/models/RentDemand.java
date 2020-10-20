@@ -3,6 +3,8 @@ package org.egov.cpt.models;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,12 +25,14 @@ public class RentDemand implements Comparable<RentDemand> {
   /**
    * Unique id of the demand
    */
+  @Size(max = 256)
   @JsonProperty("id")
   private String id;
 
   /**
    * Property that this rent is generated for.
    */
+  @Size(max = 256)
   @JsonProperty("propertyId")
   private String propertyId;
   /**
@@ -47,12 +51,14 @@ public class RentDemand implements Comparable<RentDemand> {
   /**
    * The principal rent amount that is to be collected
    */
+  @Size(max = 13)
   @JsonProperty("collectionPrincipal")
   private Double collectionPrincipal;
 
   /**
    * The remaining principal that still has to be collected.
    */
+  @Size(max = 13)
   @Builder.Default
   @JsonProperty("remainingPrincipal")
   private Double remainingPrincipal = 0.0;
@@ -63,10 +69,12 @@ public class RentDemand implements Comparable<RentDemand> {
   @JsonProperty("interestSince")
   private Long interestSince;
 
+  @Size(max = 64)
   @JsonProperty("mode")
   @Builder.Default
   private ModeEnum mode = ModeEnum.UPLOAD;
 
+  @Size(max = 64)
   @JsonProperty("status")
   @Builder.Default
   private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;

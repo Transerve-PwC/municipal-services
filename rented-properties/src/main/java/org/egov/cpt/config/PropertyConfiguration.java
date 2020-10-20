@@ -121,6 +121,9 @@ public class PropertyConfiguration {
 
 	@Value("${kafka.topics.notification.email}")
 	private String emailNotifTopic;
+	
+	@Value("${egov.user.event.notification.enabledForRP}")
+	private Boolean isUserEventsNotificationEnabledForRP;
 
 	// Property Search Params
 	@Value("${citizen.allowed.search.params}")
@@ -160,12 +163,22 @@ public class PropertyConfiguration {
 
 	@Value("${egov.usr.events.pay.link}")
 	private String payLink;
-
+	
+	@Value("${egov.usr.events.ot.pay.link}")
+	private String payLinkForOT;
+	
+	@Value("${egov.usr.events.dc.pay.link}")
+	private String payLinkForDC;
+	
+	@Value("${egov.usr.events.rent.pay.link}")
+	private String payLinkForRent;
+	
 	@Value("${egov.usr.events.pay.code}")
 	private String payCode;
-
-	@Value("${egov.user.event.notification.enabled}")
-	private Boolean isUserEventsNotificationEnabled;
+	
+	@Value("${egov.usr.events.pay.triggers}")
+	private String payTriggers;
+	
 
 	// Assessments V2
 	@Value("${egov.pt.assessment.create.topic}")

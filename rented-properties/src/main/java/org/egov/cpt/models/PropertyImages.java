@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import org.egov.cpt.util.PropertySerializer;
 import org.springframework.validation.annotation.Validated;
@@ -34,22 +35,26 @@ import lombok.ToString;
 @Builder
 public class PropertyImages {
 
+	@Size(max = 256, message = "id must be between 0 and 256 characters in length")
 	@JsonProperty("id")
 	private String id;
 
 	@JsonSerialize(using = PropertySerializer.class)
 	private Property property;
 
+	@Size(max = 256, message = "tenant id must be between 0 and 256 characters in length")
 	@JsonProperty("tenantId")
 	private String tenantId;
 	
-
+	@Size(max = 64, message = "application number must be between 0 and 64 characters in length")
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 	
+	@Size(max = 1000, message = "description must be between 0 and 1000 characters in length")
 	@JsonProperty("description")
 	private String description;
 	
+	@Size(max = 256, message = "captured by must be between 0 and 256 characters in length")
 	@JsonProperty("capturedBy")
 	private String capturedBy;
 	
