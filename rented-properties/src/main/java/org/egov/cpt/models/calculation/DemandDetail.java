@@ -36,11 +36,9 @@ public class DemandDetail {
 	@JsonProperty("taxHeadMasterCode")
 	private String taxHeadMasterCode;
 
-	@Size(max = 12)
 	@JsonProperty("taxAmount")
 	private BigDecimal taxAmount;
 
-	@Size(max = 12)
 	@Default
 	@JsonProperty("collectionAmount")
 	private BigDecimal collectionAmount = BigDecimal.ZERO;

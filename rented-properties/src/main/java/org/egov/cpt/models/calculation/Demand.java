@@ -71,7 +71,6 @@ public class Demand {
 	@JsonProperty("additionalDetails")
 	private Object additionalDetails;
 
-	@Size(max = 12)
 	@Builder.Default
 	@JsonProperty("minimumAmountPayable")
 	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;

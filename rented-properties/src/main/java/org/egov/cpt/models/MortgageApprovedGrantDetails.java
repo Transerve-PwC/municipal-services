@@ -41,7 +41,6 @@ public class MortgageApprovedGrantDetails {
 	@JsonProperty("bankName")
 	private String bankName;
 
-	@Size(max = 12, message = "mortgage amount must be 12 characters in length")
 	@JsonProperty("mortgageAmount")
 	private BigDecimal mortgageAmount;
 
