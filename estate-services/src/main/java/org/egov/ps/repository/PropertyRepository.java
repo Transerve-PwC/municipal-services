@@ -87,7 +87,7 @@ public class PropertyRepository {
 		return properties;
 	}
 
-	private void addOwnersToProperties(List<Property> properties) {
+	public void addOwnersToProperties(List<Property> properties) {
 		if (CollectionUtils.isEmpty(properties)) {
 			return;
 		}
@@ -114,7 +114,7 @@ public class PropertyRepository {
 		});
 	}
 
-	private void addOwnerDocumentsToProperties(List<Property> properties) {
+	public void addOwnerDocumentsToProperties(List<Property> properties) {
 		if (CollectionUtils.isEmpty(properties)) {
 			return;
 		}
@@ -146,7 +146,7 @@ public class PropertyRepository {
 		});
 	}
 
-	private void addCourtCasesToProperties(List<Property> properties) {
+	public void addCourtCasesToProperties(List<Property> properties) {
 		/**
 		 * Extract property detail ids.
 		 */
@@ -172,7 +172,7 @@ public class PropertyRepository {
 		});
 	}
 
-	private void addBiddersToProperties(List<Property> properties) {
+	public void addBiddersToProperties(List<Property> properties) {
 		/**
 		 * Extract property detail ids.
 		 */

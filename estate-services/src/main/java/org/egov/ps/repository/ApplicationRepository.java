@@ -35,31 +35,53 @@ public class ApplicationRepository {
 	@Autowired
 	private DocumentsRowMapper documentRowMapper;
 	
+	@Autowired
+	PropertyRepository propertyRepository;
+	
 	public List<Application> getApplications(ApplicationCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = applicationQueryBuilder.getApplicationSearchQuery(criteria, preparedStmtList);
-		List<Application> application =  namedParameterJdbcTemplate.query(query, preparedStmtList, applicationRowMapper);
 		
+		// application ....
+		List<Application> application = namedParameterJdbcTemplate.query(query, preparedStmtList, applicationRowMapper);
+
+		// property ....
+		List<Property> properties = application.stream().map(application_ -> application_.getProperty())
+				.collect(Collectors.toList());
+				
 		if (CollectionUtils.isEmpty(application)) {
 			return application;
 		}
-		List<String> relations = criteria.getRelations();
-		if (CollectionUtils.isEmpty(relations)) {
-			relations = new ArrayList<String>();
+		
+		List<String> relationsApplication = criteria.getRelations();
+		List<String> relationsProperty = criteria.getPropertyRelations();
+		
+		if (CollectionUtils.isEmpty(relationsApplication)) {
+			relationsApplication = new ArrayList<String>();
+			relationsProperty = new ArrayList<String>();
+			
 			if (application.size() == 1) {
-				relations.add(ApplicationQueryBuilder.RELATION_OWNER);
-				relations.add(ApplicationQueryBuilder.RELATION_OWNER_DOCUMENTS);
+				relationsApplication.add(ApplicationQueryBuilder.RELATION_OWNER);
+				relationsProperty.add(PropertyQueryBuilder.RELATION_OWNER);
+				
+				relationsApplication.add(ApplicationQueryBuilder.RELATION_OWNER_DOCUMENTS);
+				relationsProperty.add(PropertyQueryBuilder.RELATION_OWNER_DOCUMENTS);
 			}
+			
 		}
+		
 		if (application.contains(ApplicationQueryBuilder.RELATION_OWNER)) {
 			this.addOwnersToApplication(application);
+			propertyRepository.addOwnersToProperties(properties);
 		}
 		
-		if (relations.contains(PropertyQueryBuilder.RELATION_OWNER_DOCUMENTS)) {
+		if (application.contains(PropertyQueryBuilder.RELATION_OWNER_DOCUMENTS)) {
 			this.addOwnerDocumentsToApplication(application);
+			propertyRepository.addOwnerDocumentsToProperties(properties);
 		}
 		
-		return null;
+		
+		return application;
 	}
 	
 	private void addOwnersToApplication(List<Application> applications) {
@@ -121,4 +143,6 @@ public class ApplicationRepository {
 							.collect(Collectors.toList()));
 		});
 	}
+	
+	
 }
