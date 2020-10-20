@@ -50,7 +50,6 @@ public class OwnerDetails {
 	@Size(max = 256, message = "name must be between 0 and 256 characters in length")
 	private String name;
 
-	@NotNull
 	@Email(message = "email is not valid")
 	@Size(max = 256, message = "email must be between 0 and 256 characters in length")
 	@JsonProperty("email")
