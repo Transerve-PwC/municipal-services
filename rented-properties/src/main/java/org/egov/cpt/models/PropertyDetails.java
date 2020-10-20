@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -69,33 +67,33 @@ public class PropertyDetails {
 	@NotNull
 	@JsonProperty("rentIncrementPeriod")
 	@Builder.Default
-	@Max(value = 99, message = "rentIncrementPeriod can not be more than 99")
-	@Min(value = 0, message = "rentIncrementPeriod can not be less than zero")
+	@Max(value = 99, message = "rent increment period can not be more than 99")
+	@Min(value = 0, message = "rent increment period can not be less than zero")
 	private int rentIncrementPeriod = 1;
 
 	@JsonProperty("id")
-	@Size(max = 256)
+	@Size(max = 256, message = "id must be between 0 and 256 characters in length")
 	private String id;
 
 	@JsonProperty("propertyId")
-	@Size(max = 256)
+	@Size(max = 256, message = "property id must be between 0 and 256 characters in length")
 	private String propertyId;
 
 	@JsonProperty("transitNumber")
-	@Size(max = 256)
+	@Size(max = 4, message = "transit number must be between 0 and 4 characters in length")
 	private String transitNumber;
 
 	@JsonProperty("tenantId")
-	@Size(max = 256)
+	@Size(max = 256, message = "tenant id must be between 0 and 256 characters in length")
 	private String tenantId;
 
 	@NotNull
 	@JsonProperty("area")
-	@Size(max = 256)
+	@Size(max = 256, message = "area must be between 0 and 256 characters in length")
 	private String area;
 
 	@JsonProperty("rentPerSqyd")
-	@Size(max = 256)
+	@Size(max = 256, message = "rent per sqyd must be between 0 and 256 characters in length")
 	private String rentPerSqyd;
 
 	/**
@@ -103,15 +101,15 @@ public class PropertyDetails {
 	 * During ownership transfer, new value should be also set here.
 	 */
 	@JsonProperty("currentOwner")
-	@Size(max = 256)
+	@Size(max = 256, message = "current owner must be between 0 and 256 characters in length")
 	private String currentOwner;
 
 	@JsonProperty("floors")
-	@Size(max = 256)
+	@Size(max = 256, message = "floors must be between 0 and 256 characters in length")
 	private String floors;
 
 	@JsonProperty("additionalDetails")
-	@Size(max = 256)
+	@Size(max = 256, message = "additional details must be between 0 and 256 characters in length")
 	private String additionalDetails;
 
 	@Valid

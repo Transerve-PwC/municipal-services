@@ -35,45 +35,45 @@ import lombok.ToString;
 @Builder
 public class NoticeGeneration {
 
-	@Size(max = 256)
+	@Size(max = 256, message = "id must be between 0 and 256 characters in length")
 	@JsonProperty("id")
 	private String id;
 
 	@JsonSerialize(using = PropertySerializer.class)
 	private Property property;
 
-	@Size(max = 256)
+	@Size(max = 256, message = "tenant id must be between 0 and 256 characters in length")
 	@JsonProperty("tenantId")
 	private String tenantId;
 	
-	@Size(max = 64)
+	@Size(max = 64, message = "memo number must be between 0 and 64 characters in length")
 	@JsonProperty("memoNumber")
 	private String memoNumber;
 	
-	@Size(max = 256)
+	@Size(max = 256, message = "allotment number must be between 0 and 256 characters in length")
 	@JsonProperty("allotmentNumber")
 	private String allotmentNumber;
 	
 	@JsonProperty("memoDate")
 	private Long memoDate;
 	
-	@Size(max = 64)
+	@Size(max = 64, message = "notice type must be between 0 and 64 characters in length")
 	@JsonProperty("noticeType")
 	private String noticeType;
 	
-	@Size(max = 256)
+	@Size(max = 256, message = "guardian must be between 0 and 256 characters in length")
 	@JsonProperty("guardian")
 	private String guardian;
 	
-	@Size(max = 256)
+	@Size(max = 256, message = "relationship must be between 0 and 256 characters in length")
 	@JsonProperty("relationship")
 	private String relationship;
 	
-	@Size(max = 500)
+	@Size(max = 500, message = "violations must be between 0 and 500 characters in length")
 	@JsonProperty("violations")
 	private String violations;
 	
-	@Size(max = 256)
+	@Size(max = 256, message = "description must be between 0 and 256 characters in length")
 	@JsonProperty("description")
 	private String description;
 	
@@ -83,15 +83,15 @@ public class NoticeGeneration {
 	@JsonProperty("demandNoticeTo")
 	private Long demandNoticeTo;
 	
-	@Size(max = 256)
+	@Size(max = 256, message = "recovert type must be between 0 and 256 characters in length")
 	@JsonProperty("recoveryType")
 	private String recoveryType;
 	
-	@Size(max = 12)
+	@Size(max = 12, message = "amount must be between 0 and 12 characters in length")
 	@JsonProperty("amount")
 	private Double amount;
 	
-	@Size(max = 256)
+	@Size(max = 256, message = "property image id must be between 0 and 256 characters in length")
 	@JsonProperty("propertyImageId")
 	private String propertyImageId;
 	
