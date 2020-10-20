@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class PropertyService {
 
 	@Autowired
-	private EnrichmentService enrichmentService;
+	private PropertyEnrichmentService enrichmentService;
 
 	@Autowired
 	private Configuration config;

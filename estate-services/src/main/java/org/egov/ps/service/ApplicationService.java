@@ -25,7 +25,7 @@ import org.springframework.util.CollectionUtils;
 public class ApplicationService {
 
 	@Autowired
-	private EnrichmentService enrichmentService;
+	private ApplicationEnrichmentService applicationEnrichmentService;
 
 	@Autowired
 	private ApplicationsNotificationService applicationNotificationService;
@@ -53,7 +53,7 @@ public class ApplicationService {
 
 	public List<Application> createApplication(ApplicationRequest request) {
 		validator.validateCreateRequest(request);
-		enrichmentService.enrichCreateApplication(request);
+		applicationEnrichmentService.enrichCreateApplication(request);
 		producer.push(config.getSaveApplicationTopic(), request);
 		return request.getApplications();
 	}
@@ -71,7 +71,7 @@ public class ApplicationService {
 
 	public List<Application> updateApplication(ApplicationRequest applicationRequest) {
 		validator.getApplications(applicationRequest);
-		enrichmentService.enrichUpdateApplication(applicationRequest);
+		applicationEnrichmentService.enrichUpdateApplication(applicationRequest);
 		String action = applicationRequest.getApplications().get(0).getAction();
 		String state = applicationRequest.getApplications().get(0).getState();
 
