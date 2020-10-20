@@ -336,9 +336,14 @@ public class NotificationUtil {
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_SENDBACK, localizationMessage);
 				message = getInitiatedMGMsg(mortgage, messageTemplate);
 				break;
+			
+			case PTConstants.MG_ACTION_STATUS_MORTGAGE_ADDGRNATDETAIL:
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_MG_GRANTDETAIL, localizationMessage);
+				message = getInitiatedMGMsg(mortgage, messageTemplate);
+				break;
 
 			case PTConstants.MG_ACTION_STATUS_MORTGAGE_APPROVED:
-				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_APPROVED, localizationMessage);
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_MG_APPROVED, localizationMessage);
 				message = getInitiatedMGMsg(mortgage, messageTemplate);
 				break;
 
