@@ -1,0 +1,42 @@
+{
+    "RequestInfo": {
+        "apiId": "Rainmaker",
+        "ver": ".01",
+        "ts": "",
+        "action": "_create",
+        "did": "1",
+        "key": "",
+        "msgId": "20170310130900|en_IN",
+        "authToken": "54e82fae-14b4-4b97-9834-f99f323541cc"
+    },
+    "Applications": [
+        {
+            "tenantId": "ch.chandigarh",
+            "property": {
+                "id": "6a053b16-e453-4659-8366-d54f92202f31"
+            },
+            "branchType": "EstateBranch",
+            "moduleType": "OwnershipTransfer",
+            "applicationType": "SaleDeed",
+            "comments": " ",
+            "hardcopyReceivedDate": 0,
+            "applicationDetails": {
+                "modeOfTransfer": "MODE_OF_TRANSFER.SALEDEED",
+                "registrationNumber": "reg",
+                "owner": {
+                    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb"
+                },
+                "purchaser": {
+                    "name": "purchaser name 2",
+                    "fatherOrHusbandName": "purchaser father name 2",
+                    "relation": "FATHER",
+                    "address": "purchaser address 2",
+                    "mobileNo": "9876954322",
+                    "percentageOfShareTransferred": 100
+                }
+            },
+            "state": "",
+            "action": ""
+        }
+    ]
+}

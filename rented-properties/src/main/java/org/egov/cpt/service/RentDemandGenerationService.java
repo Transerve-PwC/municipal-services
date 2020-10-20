@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.egov.cpt.config.PropertyConfiguration;
@@ -60,8 +61,8 @@ public class RentDemandGenerationService {
 		this.demandNotificationService = demandNotificationService;
 	}
 
-	public void createDemand(RentDemandCriteria demandCriteria) {
-
+	public AtomicInteger createDemand(RentDemandCriteria demandCriteria) {
+		AtomicInteger counter = new AtomicInteger(0);
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
 		propertyCriteria.setRelations(Collections.singletonList("owner"));
 		propertyCriteria.setState(Arrays.asList(PTConstants.PM_STATUS_APPROVED));
@@ -72,7 +73,6 @@ public class RentDemandGenerationService {
 				propertyCriteria.setPropertyId(property.getId());
 
 				List<RentDemand> rentDemandList = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
-
 				if (!CollectionUtils.isEmpty(rentDemandList)) {
 					List<RentPayment> rentPaymentList = propertyRepository
 							.getPropertyRentPaymentDetails(propertyCriteria);
@@ -86,6 +86,7 @@ public class RentDemandGenerationService {
 					Date date = demandCriteria.isEmpty() ? new Date() : FORMATTER.parse(demandCriteria.getDate());
 					if (!isMonthIncluded(dateList, date)) {
 						// generate demand
+						counter.getAndIncrement();
 						generateRentDemand(property, firstDemand.get(), getFirstDateOfMonth(date), rentDemandList,
 								rentPaymentList, rentAccount);
 					}
@@ -97,7 +98,7 @@ public class RentDemandGenerationService {
 				log.error("exception occured for property id: " + property.getId());
 			}
 		});
-
+		return counter;
 	}
 
 	private void generateRentDemand(Property property, RentDemand firstDemand, Date date,

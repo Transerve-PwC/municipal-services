@@ -1,0 +1,7 @@
+{
+    "modeOfTransfer": "GIFT",
+    "purchaser": {
+        "name": "foo",
+        "email": "anything@example.org"
+    }
+}

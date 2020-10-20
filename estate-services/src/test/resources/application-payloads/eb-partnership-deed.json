@@ -1,0 +1,26 @@
+{
+  "bookNumber": "book-123",
+  "modeOfTransfer": "PARTNERSHIP_MODE_OF_TRANSFER.PARTNERSHIPDEED",
+  "registrationNumber": "reg-1",
+  "dateOfRegistration": 15678994,
+  "tradeType": "TRADE_OPTED_FOR_CHANGE.SPECIAL",
+  "transferor": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb"
+  },
+  "transferee": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ff3",
+    "name": "legalHeir name 2",
+    "age": 50,
+    "fatherOrHusbandName": "transferee father name 2",
+    "relation": "FATHER",
+    "address": "transferee address 2",
+    "mobileNo": "9876954322",
+    "percentageOfShareTransferred": 50
+  },
+  "company": {
+      "name": "Company name",
+      "address": "add",
+      "type": "TRADE_OPTED_FOR_CHANGE.SPECIAL",
+      "registrationNumber": "reg-123"
+  }
+}

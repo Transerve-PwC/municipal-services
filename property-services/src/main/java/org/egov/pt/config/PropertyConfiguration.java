@@ -298,5 +298,15 @@ public class PropertyConfiguration {
 
     @Value("${egov.url.shortner.endpoint}")
     private String urlShortnerEndpoint;
+    
+  //propertyTax
+	  @Value("${egov.property.host}")
+	    private String propertyTaxHost;
+
+	    @Value("${egov.property.sendotp.endpoint}")
+	    private String propertySendOTP;
+	    
+	    @Value("${egov.property.verifyotp.endpoint}")
+	    private String propertyVerifyOTP;
 
 }

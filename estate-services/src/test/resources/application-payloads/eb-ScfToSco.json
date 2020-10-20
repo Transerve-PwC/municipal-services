@@ -1,0 +1,11 @@
+{
+  "transferor": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb"
+  },
+  "company": {
+      "name": "Company name",
+      "address": "add",
+      "type": "TRADE_OPTED_FOR_CHANGE.SPECIAL",
+      "registrationNumber": "reg-123"
+  }
+}

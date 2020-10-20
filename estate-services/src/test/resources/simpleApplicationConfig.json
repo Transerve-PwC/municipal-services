@@ -1,0 +1,41 @@
+{
+    "fields": [
+        {
+            "path": "modeOfTransfer",
+            "required": true,
+            "validations": [
+                {
+                    "type": "enum",
+                    "params": {
+                        "values": [
+                            "SALE",
+                            "GIFT"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "path": "purchaser.name",
+            "required": true,
+            "validations": [
+                {
+                    "type": "length",
+                    "params": {
+                        "min": 5,
+                        "max": 50
+                    }
+                }
+            ]
+        },
+        {
+            "path": "purchaser.email",
+            "required": false,
+            "validations": [
+                {
+                    "type": "email"
+                }
+            ]
+        }
+    ]
+}

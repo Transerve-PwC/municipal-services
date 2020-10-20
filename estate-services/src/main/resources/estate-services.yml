@@ -1,0 +1,707 @@
+serviceMaps:
+  serviceName: property-service
+  mappings:
+    - version: 1.0
+      description: Persists Properties details in cs_ep_property_v1 table
+      fromTopic: save-property-master
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO cs_ep_property_v1 (id, file_number, tenantid, category, sub_category, site_number, sector_number, property_master_or_allotment_of_site, is_cancelation_of_site, state, action, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: Properties.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.id
+
+            - jsonPath: $.Properties.*.fileNumber
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.category
+
+            - jsonPath: $.Properties.*.subCategory
+
+            - jsonPath: $.Properties.*.siteNumber
+
+            - jsonPath: $.Properties.*.sectorNumber
+
+            - jsonPath: $.Properties.*.propertyMasterOrAllotmentOfSite
+
+            - jsonPath: $.Properties.*.isCancelationOfSite
+
+            - jsonPath: $.Properties.*.state
+
+            - jsonPath: $.Properties.*.action
+
+            - jsonPath: $.Properties.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.auditDetails.lastModifiedTime
+
+        - query: INSERT INTO cs_ep_property_details_v1 (id, property_id, property_type, tenantid, type_of_allocation, emd_amount, emd_date, mode_of_auction, scheme_name, date_of_auction, area_sqft, rate_per_sqft, last_noc_date, service_category, is_property_active, trade_type, company_name, company_address, company_registration_number, company_type, decree_date, court_details, civil_titled_as, company_registration_date, company_or_firm, property_registered_to, entity_type, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: Properties.*.propertyDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.id
+
+            - jsonPath: $.Properties.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.propertyType
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.propertyDetails.typeOfAllocation
+
+            - jsonPath: $.Properties.*.propertyDetails.emdAmount
+
+            - jsonPath: $.Properties.*.propertyDetails.emdDate
+
+            - jsonPath: $.Properties.*.propertyDetails.modeOfAuction
+
+            - jsonPath: $.Properties.*.propertyDetails.schemeName
+
+            - jsonPath: $.Properties.*.propertyDetails.dateOfAuction
+
+            - jsonPath: $.Properties.*.propertyDetails.areaSqft
+
+            - jsonPath: $.Properties.*.propertyDetails.ratePerSqft
+
+            - jsonPath: $.Properties.*.propertyDetails.lastNocDate
+
+            - jsonPath: $.Properties.*.propertyDetails.serviceCategory
+
+            - jsonPath: $.Properties.*.propertyDetails.isPropertyActive
+
+            - jsonPath: $.Properties.*.propertyDetails.tradeType
+
+            - jsonPath: $.Properties.*.propertyDetails.companyName
+
+            - jsonPath: $.Properties.*.propertyDetails.companyAddress
+
+            - jsonPath: $.Properties.*.propertyDetails.companyRegistrationNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.companyType
+
+            - jsonPath: $.Properties.*.propertyDetails.decreeDate
+
+            - jsonPath: $.Properties.*.propertyDetails.courtDetails
+
+            - jsonPath: $.Properties.*.propertyDetails.civilTitledAs
+
+            - jsonPath: $.Properties.*.propertyDetails.companyRegistrationDate
+
+            - jsonPath: $.Properties.*.propertyDetails.companyOrFirm
+
+            - jsonPath: $.Properties.*.propertyDetails.propertyRegisteredTo
+
+            - jsonPath: $.Properties.*.propertyDetails.entityType
+
+            - jsonPath: $.Properties.*.propertyDetails.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.auditDetails.lastModifiedTime
+
+    - version: 1.0
+      description: Persists Properties details in cs_ep_property_v1 table
+      fromTopic: update-property-master
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO cs_ep_property_audit_v1 SELECT * FROM cs_ep_property_v1 WHERE id = ?;
+          basePath: Properties.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.id
+
+        - query: UPDATE cs_ep_property_v1 SET tenantid = ?, category = ?, sub_category = ?, site_number = ?, sector_number = ?, property_master_or_allotment_of_site = ?, is_cancelation_of_site = ?, state = ?, action = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
+          basePath: Properties.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.category
+
+            - jsonPath: $.Properties.*.subCategory
+
+            - jsonPath: $.Properties.*.siteNumber
+
+            - jsonPath: $.Properties.*.sectorNumber
+
+            - jsonPath: $.Properties.*.propertyMasterOrAllotmentOfSite
+
+            - jsonPath: $.Properties.*.isCancelationOfSite
+
+            - jsonPath: $.Properties.*.state
+
+            - jsonPath: $.Properties.*.action
+
+            - jsonPath: $.Properties.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.id
+
+        - query: INSERT INTO cs_ep_property_details_audit_v1 SELECT * FROM cs_ep_property_details_v1 WHERE id = ?;
+          basePath: Properties.*.propertyDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.id
+
+        - query: UPDATE cs_ep_property_details_v1 SET property_type = ?, tenantid = ?, type_of_allocation = ?, emd_amount = ?,  emd_date = ?, mode_of_auction = ?, scheme_name = ?, date_of_auction = ?, area_sqft = ?, rate_per_sqft = ?, last_noc_date = ?, service_category = ?, is_property_active = ?, trade_type = ?, company_name = ?, company_address = ?, company_registration_number = ?, company_type = ?, decree_date = ?, court_details = ?, civil_titled_as = ?, company_registration_date = ?, company_or_firm = ?, property_registered_to = ?, entity_type = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
+          basePath: Properties.*.propertyDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.propertyType
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.propertyDetails.typeOfAllocation
+
+            - jsonPath: $.Properties.*.propertyDetails.emdAmount
+
+            - jsonPath: $.Properties.*.propertyDetails.emdDate
+
+            - jsonPath: $.Properties.*.propertyDetails.modeOfAuction
+
+            - jsonPath: $.Properties.*.propertyDetails.schemeName
+
+            - jsonPath: $.Properties.*.propertyDetails.dateOfAuction
+
+            - jsonPath: $.Properties.*.propertyDetails.areaSqft
+
+            - jsonPath: $.Properties.*.propertyDetails.ratePerSqft
+
+            - jsonPath: $.Properties.*.propertyDetails.lastNocDate
+
+            - jsonPath: $.Properties.*.propertyDetails.serviceCategory
+
+            - jsonPath: $.Properties.*.propertyDetails.isPropertyActive
+
+            - jsonPath: $.Properties.*.propertyDetails.tradeType
+
+            - jsonPath: $.Properties.*.propertyDetails.companyName
+
+            - jsonPath: $.Properties.*.propertyDetails.companyAddress
+
+            - jsonPath: $.Properties.*.propertyDetails.companyRegistrationNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.companyType
+
+            - jsonPath: $.Properties.*.propertyDetails.decreeDate
+
+            - jsonPath: $.Properties.*.propertyDetails.courtDetails
+
+            - jsonPath: $.Properties.*.propertyDetails.civilTitledAs
+
+            - jsonPath: $.Properties.*.propertyDetails.companyRegistrationDate
+
+            - jsonPath: $.Properties.*.propertyDetails.companyOrFirm
+
+            - jsonPath: $.Properties.*.propertyDetails.propertyRegisteredTo
+
+            - jsonPath: $.Properties.*.propertyDetails.entityType
+
+            - jsonPath: $.Properties.*.propertyDetails.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.id
+
+
+        - query: DELETE FROM cs_ep_auction WHERE property_details_id=?;
+          basePath: $.Properties.*.propertyDetails.inActiveBidders.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.inActiveBidders.*.propertyDetailsId
+
+
+        - query: INSERT INTO cs_ep_auction (id, property_details_id, auction_id, description, bidder_name, deposited_emd_amount, deposit_date, emd_validity_date, refund_status, state, action, comments, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET description = ?, refund_status = ?, state = ?, action = ?, comments = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.bidders.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auctionId
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.description
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.bidderName
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.depositedEMDAmount
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.depositDate
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.emdValidityDate
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.refundStatus
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.state
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.action
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.comments
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.description
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.refundStatus
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.state
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.action
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.comments
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.bidders.*.auditDetails.lastModifiedTime
+
+        - query: INSERT INTO cs_ep_owner_audit_v1 SELECT * FROM cs_ep_owner_v1 WHERE id = ?;
+          basePath: Properties.*.propertyDetails.owners.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.id
+
+        - query: INSERT INTO cs_ep_owner_v1 (id, tenantid, property_details_id, serial_number, share, cp_number, state, action, ownership_type, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET serial_number = ?, share = ?, cp_number = ?, state = ?, action = ?, ownership_type = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.owners.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.id
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.serialNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.share
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.cpNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.state
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.action
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownershipType
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.serialNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.share
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.cpNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.state
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.action
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownershipType
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.auditDetails.lastModifiedTime
+
+        - query: INSERT INTO cs_ep_owner_details_audit_v1 SELECT * FROM cs_ep_owner_details_v1 WHERE id = ?;
+          basePath: Properties.*.propertyDetails.owners.*.ownerDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.id
+
+        - query: INSERT INTO cs_ep_owner_details_v1 (id, owner_id, tenantid, owner_name, guardian_name, guardian_relation, mobile_number, allotment_number, date_of_allotment, possesion_date, is_approved, is_current_owner, is_master_entry, address, is_director, seller_name, seller_guardian_name, seller_relation, mode_of_transfer, dob, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET owner_name = ?, guardian_name = ?, guardian_relation = ?, mobile_number = ?, allotment_number = ?, date_of_allotment = ?, possesion_date = ?, is_approved = ?, is_current_owner = ?, is_master_entry = ?, address = ?, is_director = ?, seller_name = ?, seller_guardian_name = ?, seller_relation = ?, mode_of_transfer = ?, dob = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.owners.*.ownerDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.id
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.id
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerName
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.guardianName
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.guardianRelation
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.mobileNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.allotmentNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dateOfAllotment
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.possesionDate
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isApproved
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isCurrentOwner
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isMasterEntry
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.address
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isDirector
+            
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerName
+      
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerGuardianName
+      
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerRelation
+      
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerName
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.guardianName
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.guardianRelation
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.mobileNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.allotmentNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dateOfAllotment
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.possesionDate
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isApproved
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isCurrentOwner
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isMasterEntry
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.address
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isDirector
+            
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerName
+      
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerGuardianName
+      
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerRelation
+      
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.auditDetails.lastModifiedTime
+
+        - query: INSERT INTO cs_ep_documents_v1 (id, tenantid, reference_id, is_active, document_type, file_store_id, property_id, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET is_active = ?, document_type = ?, file_store_id = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.id
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.referenceId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.isActive
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.documentType
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.fileStoreId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.propertyId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.isActive
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.documentType
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.fileStoreId
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.lastModifiedTime
+
+        - query: INSERT INTO cs_ep_court_case_v1 (id, property_details_id, tenantid, estate_officer_court, commissioners_court, chief_administartors_court, advisor_to_admin_court, honorable_district_court, honorable_high_court, honorable_supreme_court, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET estate_officer_court = ?, commissioners_court = ?, chief_administartors_court = ?, advisor_to_admin_court = ?, honorable_district_court = ?, honorable_high_court = ?, honorable_supreme_court = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.courtCases.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.tenantId
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.estateOfficerCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.commissionersCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.chiefAdministartorsCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.advisorToAdminCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.honorableDistrictCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.honorableHighCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.honorableSupremeCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.estateOfficerCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.commissionersCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.chiefAdministartorsCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.advisorToAdminCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.honorableDistrictCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.honorableHighCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.honorableSupremeCourt
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedTime
+            
+            
+        - query: DELETE FROM cs_ep_demand WHERE property_details_id=?;
+          basePath: $.Properties.*.propertyDetails.inActiveEstateDemands.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.inActiveEstateDemands.*.propertyDetailsId
+
+        - query: INSERT INTO cs_ep_demand_audit SELECT * FROM cs_ep_demand WHERE id = ?;
+          basePath: Properties.*.propertyDetails
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.id
+
+        - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.estateDemands.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.demandDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isPrevious
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.rent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.penaltyInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gstInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gst
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGST
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.demandDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isPrevious
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.rent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.penaltyInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gstInterest
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.gst
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGST
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedTime  
+            
+            
+        - query: DELETE FROM cs_ep_payment WHERE property_details_id=?;
+          basePath: $.Properties.*.propertyDetails.inActiveEstatePayments.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.inActiveEstatePayments.*.propertyDetailsId
+
+        - query: INSERT INTO cs_ep_payment (id, property_details_id, receipt_date, rent_received, receipt_no, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET receipt_date = ?, rent_received = ?, receipt_no = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Properties.*.propertyDetails.estatePayments.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.rentReceived
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptNo
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptDate
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.rentReceived
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptNo
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime             
+                     
+
+    - version: 1.0
+      description: Persists Application details in cs_ep_application_v1 table
+      fromTopic: save-application-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO cs_ep_application_v1 (id, tenantid, property_id, application_number, branch_type, module_type, application_type, comments, hardcopy_received_date, application_details, state, action, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, ?, ?, ?, ?, ?, ?);
+          basePath: Applications.*
+          jsonMaps:
+            - jsonPath: $.Applications.*.id
+
+            - jsonPath: $.Applications.*.tenantId
+
+            - jsonPath: $.Applications.*.property.id
+
+            - jsonPath: $.Applications.*.applicationNumber
+
+            - jsonPath: $.Applications.*.branchType
+
+            - jsonPath: $.Applications.*.moduleType
+
+            - jsonPath: $.Applications.*.applicationType
+
+            - jsonPath: $.Applications.*.comments
+
+            - jsonPath: $.Applications.*.hardcopyReceivedDate
+
+            - jsonPath: $.Applications.*.applicationDetails
+              dbType: JSONB
+              type: JSON
+
+            - jsonPath: $.Applications.*.state
+
+            - jsonPath: $.Applications.*.action
+
+            - jsonPath: $.Applications.*.auditDetails.createdBy
+
+            - jsonPath: $.Applications.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Applications.*.auditDetails.createdTime
+
+            - jsonPath: $.Applications.*.auditDetails.lastModifiedTime
+
+    - version: 1.0
+      description: Persists Application details in cs_ep_application_v1 table
+      fromTopic: update-application-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE cs_ep_application_v1 SET branch_type = ?, module_type = ?, application_type = ?, comments = ?, hardcopy_received_date = ?, application_details = ?::jsonb, state = ?, action = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
+          basePath: Applications.*
+          jsonMaps:
+            - jsonPath: $.Applications.*.branchType
+
+            - jsonPath: $.Applications.*.moduleType
+
+            - jsonPath: $.Applications.*.applicationType
+
+            - jsonPath: $.Applications.*.comments
+
+            - jsonPath: $.Applications.*.hardcopyReceivedDate
+
+            - jsonPath: $.Applications.*.applicationDetails
+              dbType: JSONB
+              type: JSON
+
+            - jsonPath: $.Applications.*.state
+
+            - jsonPath: $.Applications.*.action
+
+            - jsonPath: $.Applications.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Applications.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Applications.*.id
+
+        - query: INSERT INTO cs_ep_documents_v1 (id, tenantid, reference_id, is_active, document_type, file_store_id, property_id, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET is_active = ?, document_type = ?, file_store_id = ?, last_modified_by = ?, last_modified_time = ?;
+          basePath: $.Applications.*.applicationDocuments.*
+          jsonMaps:
+            - jsonPath: $.Applications.*.applicationDocuments.*.id
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.tenantId
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.referenceId
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.isActive
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.documentType
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.fileStoreId
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.propertyId
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.createdBy
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.createdTime
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.isActive
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.documentType
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.fileStoreId
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedTime

@@ -1,0 +1,9 @@
+{
+  "mortgageType": "AgainstFreeholdPropertyByOwner",
+  "bankName": "Bank Name",
+  "reasonForMortgage": "",
+  "loanAmount": 2000000,
+  "owner": {
+    "id": "e6852350-7275-481d-b9d1-ae1c3127f921"
+  }
+}

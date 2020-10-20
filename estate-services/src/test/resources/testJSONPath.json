@@ -1,0 +1,15 @@
+{
+    "modeOfTransfer": "someValue",
+    "purchaser": {
+        "name": "foo",
+        "email": "something"
+    },
+    "owners": [
+        {
+            "name": "Ramu"
+        },
+        {
+            "name": "Shamu"
+        }
+    ]
+}

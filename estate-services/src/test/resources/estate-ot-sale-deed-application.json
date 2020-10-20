@@ -1,0 +1,16 @@
+{
+    "purchaser": {
+        "name": "p name",
+        "fatherOrHusbandName": "p Father",
+        "relation" : "father",
+        "address": "p Address",
+        "mobileNo": "9876543210",
+        "percentageOfShareTransferred": 50
+    },
+    "owner" : {
+        "id": "b184a5da-e510-43b6-9c0b-7d37ced3f7b4"
+    },
+    "modeOfTransfer": "GIFT",
+    "registrationNumber": "reg",
+    "dateOfRegistration": 1543298098
+}

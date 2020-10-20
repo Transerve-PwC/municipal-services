@@ -1,0 +1,13 @@
+{
+  "transferor": {
+    "id": "e6852350-7275-481d-b9d1-ae1c3127f921"
+  },
+  "transferee": {
+    "id": "",
+    "name": "purchaser name 2",
+    "fatherOrHusbandName": "purchaser father name 2",
+    "relation": "FATHER",
+    "address": "purchaser address 2",
+    "mobileNo": "9876954322"
+  }
+}

@@ -1,0 +1,309 @@
+{
+  "business": "EstateServices",
+  "businessService": "SaleGift",
+  "businessServiceSla": 86400000,
+  "states": [
+    {
+      "actions": [
+        {
+          "action": "SUBMIT",
+          "currentState": "",
+          "nextState": "PENDING_DS_VERIFICATION",
+          "roles": [
+            "CITIZEN"
+          ]
+        }
+      ],
+      "applicationStatus": "",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": ""
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DS_VERIFICATION",
+          "nextState": "PENDING_DA_VERIFICATION",
+          "roles": [
+            "ES_EB_DISPATCH_OFFICER"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DS_VERIFICATION",
+          "nextState": "PENDING_CLARIFICATION",
+          "roles": [
+            "ES_EB_DISPATCH_OFFICER"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_DS_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_DS_VERIFICATION"
+    },
+    {
+      "actions": [
+        {
+          "action": "SUBMIT",
+          "currentState": "PENDING_CLARIFICATION",
+          "nextState": "PENDING_DS_VERIFICATION",
+          "roles": [
+            "CITIZEN"
+          ]
+        },
+        {
+          "action": "MODIFY",
+          "currentState": "PENDING_CLARIFICATION",
+          "nextState": "PENDING_CLARIFICATION",
+          "roles": [
+            "CITIZEN"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_CLARIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 86400000,
+      "state": "PENDING_CLARIFICATION"
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_VERIFICATION",
+          "nextState": "PENDING_SRA_VERIFICATION",
+          "roles": [
+            "ES_EB_DEALING_ASSISTANT"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DA_VERIFICATION",
+          "nextState": "PENDING_DS_VERIFICATION",
+          "roles": [
+            "ES_EB_DEALING_ASSISTANT"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_DA_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_DA_VERIFICATION"
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_SRA_VERIFICATION",
+          "nextState": "PENDING_SO_VERIFICATION",
+          "roles": [
+            "ES_EB_SR_ASSISTANT"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SRA_VERIFICATION",
+          "nextState": "PENDING_DA_VERIFICATION",
+          "roles": [
+            "ES_EB_SR_ASSISTANT"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_SRA_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_SRA_VERIFICATION"
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_SO_VERIFICATION",
+          "nextState": "PENDING_AC_APPROVAL",
+          "roles": [
+            "ES_EB_SECTION_OFFICER"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SO_VERIFICATION",
+          "nextState": "PENDING_SRA_VERIFICATION",
+          "roles": [
+            "ES_EB_SECTION_OFFICER"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_SO_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_SO_VERIFICATION"
+    },
+    {
+      "actions": [
+        {
+          "action": "REJECT",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "REJECTED",
+          "roles": [
+            "ES_EB_ADDITIONAL_COMMISSIONER"
+          ]
+        },
+        {
+          "action": "APPROVE",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "PENDING_DA_FEE",
+          "roles": [
+            "ES_EB_ADDITIONAL_COMMISSIONER"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "PENDING_SO_VERIFICATION",
+          "roles": [
+            "ES_EB_ADDITIONAL_COMMISSIONER"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_AC_APPROVAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_AC_APPROVAL"
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_FEE",
+          "nextState": "PENDING_PAYMENT",
+          "roles": [
+            "ES_EB_DEALING_ASSISTANT"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DA_FEE",
+          "nextState": "PENDING_AC_APPROVAL",
+          "roles": [
+            "ES_EB_DEALING_ASSISTANT"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_DA_FEE",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_DA_FEE"
+    },
+    {
+      "actions": [
+        {
+          "action": "PAY",
+          "currentState": "PENDING_PAYMENT",
+          "nextState": "PENDING_DA_PREPARE_LETTER",
+          "roles": [
+            "CITIZEN"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_PAYMENT",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_PAYMENT"
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_PREPARE_LETTER",
+          "nextState": "PENDING_SO_APPROVAL",
+          "roles": [
+            "ES_EB_DEALING_ASSISTANT"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_DA_PREPARE_LETTER",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_DA_PREPARE_LETTER"
+    },
+    {
+      "actions": [
+        {
+          "action": "APPROVE",
+          "currentState": "PENDING_SO_APPROVAL",
+          "nextState": "APPROVED",
+          "roles": [
+            "ES_EB_SECTION_OFFICER"
+          ]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SO_APPROVAL",
+          "nextState": "PENDING_DA_PREPARE_LETTER",
+          "roles": [
+            "ES_EB_SECTION_OFFICER"
+          ]
+        }
+      ],
+      "applicationStatus": "ES_PENDING_SO_APPROVAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": true,
+      "isTerminateState": false,
+      "sla": 2,
+      "state": "PENDING_SO_APPROVAL"
+    },
+    {
+      "actions": null,
+      "applicationStatus": "ES_APPROVED",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": false,
+      "isTerminateState": true,
+      "sla": 2,
+      "state": "APPROVED"
+    },
+    {
+      "actions": null,
+      "applicationStatus": "ES_REJECTED",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isStateUpdatable": false,
+      "isTerminateState": true,
+      "sla": 2,
+      "state": "REJECTED"
+    }
+  ],
+  "tenantId": "ch"
+}

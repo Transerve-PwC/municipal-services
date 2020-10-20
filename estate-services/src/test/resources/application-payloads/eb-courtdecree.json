@@ -1,0 +1,26 @@
+{
+  "modeOfTransfer": "MODE_OF_TRANSFER.COURTDECREE",
+  "registrationNumber": "reg",
+  "dateOfRegistration": 15678994,
+  "transferor": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb",
+    "name": "transferor name",
+    "fatherOrHusbandName": "transferor father name",
+    "address": "transferor address",
+    "percentageOfShare": 100
+  },
+  "transferee": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ff3",
+    "name": "transferee name",
+    "fatherOrHusbandName": "transferee father name",
+    "relation": "FATHER",
+    "address": "transferee address",
+    "mobileNo": "9876954322",
+    "percentageOfShareTransferred": 50
+  },
+  "decreeDetails": {
+    "decreeDate": 1589876,
+    "court": "",
+    "civilSuitTitle": ""
+  }
+}

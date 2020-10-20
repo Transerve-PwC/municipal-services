@@ -1,0 +1,10 @@
+{
+    "typeOfNotice": "TRADE_OPTED_FOR_CHANGE.SPECIAL",
+    "violationDetails": "Details of violation",
+    "violationDate": 16534263,
+    "dateOfHearing": 16524368,
+    "timeOfHearing": 16523369,
+    "transferor": {
+        "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb"
+    }
+}

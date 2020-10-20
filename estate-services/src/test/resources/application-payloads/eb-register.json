@@ -1,0 +1,40 @@
+{
+  "registrationNumber": "reg-1",
+  "dateOfRegistration": 15678994,
+  "dateOfExecution": 15876549,
+  "newspaperAdDate": 159876540,
+  "transferor": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb",
+    "name": "deceased name 2",
+    "fatherOrHusbandName": "deceased father name 2",
+    "address": "deceased address 2",
+    "percentageOfShare": 100,
+    "dateOfDeath": 1567856
+  },
+  "transferee": {
+    "legalHeirOrbeneficiary": "LEGAL_HEIR",
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ff3",
+    "name": "legalHeir name 2",
+    "age": 50,
+    "fatherOrHusbandName": "transferee father name 2",
+    "relation": "FATHER",
+    "address": "transferee address 2",
+    "relationWithDeceased": "FATHER",
+    "mobileNo": "9876954322",
+    "percentageOfShareTransferred": 50
+  },
+  "witness": [
+    {
+      "name": "witness name 1",
+      "age": 50,
+      "address": "witness address 1",
+      "mobileNo": 9876543212
+    },
+    {
+      "name": "witness name 2",
+      "age": 50,
+      "address": "witness address 2",
+      "mobileNo": 9876543210
+    }
+  ]
+}

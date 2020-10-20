@@ -1,0 +1,17 @@
+{
+    "apiId": "Rainmaker",
+    "ver": "01",
+    "action": "_create",
+    "key": "",
+    "msgId": "20170310130900|en_IN",
+    "authToken": "833b0a57-bbc5-4194-a961-bdb3794fa284",
+    "userInfo": {
+        "tenantId": "ch",
+        "id": 2,
+        "type": "EMPLOYEE",
+        "userName": "admin",
+        "mobileNumber": "8866581197",
+        "emailId": "something@example.com",
+        "uuid": "2743bf22-6499-4029-bd26-79e5d0ce66e1"
+    }
+}

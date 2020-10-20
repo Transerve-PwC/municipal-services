@@ -1,0 +1,22 @@
+{
+  "transferor": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb",
+    "name": "deceased name 2",
+    "fatherOrHusbandName": "deceased father name 2",
+    "address": "deceased address 2",
+    "percentageOfShare": 100,
+    "dateOfDeath": 1567856
+  },
+  "transferee": {
+    "legalHeirOrbeneficiary": "LEGALHEIR",
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ff3",
+    "name": "legalHeir name 2",
+    "age": 50,
+    "fatherOrHusbandName": "transferee father name 2",
+    "relation": "FATHER",
+    "address": "transferee address 2",
+    "mobileNo": "9876954322",
+    "relationWithDeceased": "FATHER",
+    "percentageOfShareTransferred": 50
+  }
+}

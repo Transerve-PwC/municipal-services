@@ -1,0 +1,153 @@
+{
+    "fields" : [
+        {
+            "path" : "modeOfTransfer",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "mdms",
+                    "params" : {
+                        "moduleName" : "EstateServices",
+                        "masterName" : "modeOfTransfer",
+                        "filter" : "modeOfTransfer..code"
+                    }
+                }
+            ]
+        },
+        {
+            "path" : "registrationNumber",
+            "required" : false,
+            "validations" : [
+                {
+                    "type" : "length",
+                    "params" : {
+                        "min" : 0,
+                        "max" : 100
+                    }
+                }
+            ]
+        },
+        {
+            "path" : "dateOfRegistration",
+            "required" : false,
+            "validations" : [
+                {
+                    "type" : "date-range",
+                    "params" : {
+                        "start" : {
+                            "unit" : "year",
+                            "value" : -40
+                        },
+                        "end" : {
+                            "unit" : "second",
+                            "value" : 0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "path": "owner",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "object"
+                }
+            ]
+        },
+        {
+            "path": "owner.id",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "owner"
+                }
+            ]
+        },
+        {
+            "path": "purchaser",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "object"
+                }
+            ]
+        },
+        {
+            "path" : "purchaser.name",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "length",
+                    "params" : {
+                        "min" : 5,
+                        "max" : 150
+                    }
+                }
+            ]
+        },
+        {
+            "path" : "purchaser.fatherOrHusbandName",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "length",
+                    "params" : {
+                        "min" : 5,
+                        "max" : 150
+                    }
+                }
+            ]
+        },
+        {
+            "path" : "purchaser.relation",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "enum",
+                    "params" : {
+                        "values" : ["FATHER", "HUSBAND"]
+                    }
+                }
+            ]
+        },
+        {
+            "path" : "purchaser.address",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "length",
+                    "params" : {
+                        "min" : 5,
+                        "max" : 150
+                    }
+                }
+            ]
+        },
+        {
+            "path" : "purchaser.mobileNo",
+            "required" : false,
+            "validations" : [
+                {
+                    "type" : "phonenumber"
+                }
+            ]
+        },
+        {
+            "path" : "purchaser.percentageOfShareTransferred",
+            "required" : true,
+            "validations" : [
+                {
+                    "type" : "numeric"
+                },
+                {
+                    "type" : "minmax",
+                    "params" : {
+                        "min" : 0,
+                        "max" : 100
+                    }
+                }
+            ]
+        }
+    ]
+}
