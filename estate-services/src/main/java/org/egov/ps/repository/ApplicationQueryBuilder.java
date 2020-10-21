@@ -167,6 +167,11 @@ public class ApplicationQueryBuilder {
 			builder.append("app.state IN (:state)");
 			preparedStmtList.put("state", criteria.getState());
 		}
+		if (null != criteria.getApplicationType()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.application_type IN (:applicationType)");
+			preparedStmtList.put("applicationType", criteria.getApplicationType());
+		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}
@@ -216,6 +221,11 @@ public class ApplicationQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("app.state IN (:state)");
 			preparedStmtList.put("state", criteria.getState());
+		}
+		if (null != criteria.getApplicationType()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.application_type IN (:applicationType)");
+			preparedStmtList.put("applicationType", criteria.getApplicationType());
 		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
