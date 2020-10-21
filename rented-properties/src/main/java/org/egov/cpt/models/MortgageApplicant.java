@@ -42,7 +42,7 @@ public class MortgageApplicant {
 	@JsonProperty("email")
 	private String email;
 
-	@Size(max = 10, min = 10, message = "phone must be 10 characters in length")
+	@Size(max = 10, min = 10, message = "phone must be 10 digits in length")
 	@JsonProperty("phone")
 	private String phone;
 

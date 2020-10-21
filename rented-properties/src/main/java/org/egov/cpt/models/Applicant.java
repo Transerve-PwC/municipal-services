@@ -42,7 +42,7 @@ public class Applicant {
 	private String email;
 
 	@JsonProperty("phone")
-	@Size(max = 10, min = 10, message = "phone must be 10 characters in length")
+	@Size(max = 10, min = 10, message = "phone must be 10 digits in length")
 	private String phone;
 
 	@JsonProperty("guardian")
