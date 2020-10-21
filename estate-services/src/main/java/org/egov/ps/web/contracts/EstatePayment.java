@@ -1,5 +1,12 @@
 package org.egov.ps.web.contracts;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import javax.validation.constraints.Size;
+
+import org.egov.ps.model.ModeEnum;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -15,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class EstatePayment {
+public class EstatePayment implements Comparable<EstatePayment> {
 
 	/**
 	 * Unique id of the payment
@@ -50,4 +57,40 @@ public class EstatePayment {
 	@JsonProperty("auditDetails")
 	@Builder.Default
 	private AuditDetails auditDetails = null;
+
+	/**
+	 * Amount payed by the renter
+	 */
+	@Size(max = 13)
+	@JsonProperty("amountPaid")
+	private Double amountPaid;
+
+	/**
+	 * Date of payment
+	 */
+	@JsonProperty("dateOfPayment")
+	private Long dateOfPayment;
+
+	@Size(max = 64)
+	@JsonProperty("mode")
+	@Builder.Default
+	private ModeEnum mode = ModeEnum.UPLOAD;
+
+	/**
+	 * boolean indicates whether payment is processed or not
+	 */
+	@Builder.Default
+	private boolean processed = false;
+
+	@Override
+	public int compareTo(EstatePayment other) {
+		return this.getDateOfPayment().compareTo(other.getDateOfPayment());
+	}
+
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
+
+	public String toString() {
+		return String.format("Amount: %.2f, paidOn: %s", this.amountPaid, DATE_FORMAT.format(this.dateOfPayment));
+
+	}
 }

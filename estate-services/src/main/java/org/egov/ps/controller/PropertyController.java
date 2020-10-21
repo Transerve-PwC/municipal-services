@@ -1,14 +1,18 @@
 package org.egov.ps.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.ps.model.AccountStatementCriteria;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.service.PropertyService;
 import org.egov.ps.util.ResponseInfoFactory;
+import org.egov.ps.web.contracts.AccountStatementRequest;
+import org.egov.ps.web.contracts.AccountStatementResponse;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.PropertyResponse;
 import org.egov.ps.web.contracts.RequestInfoMapper;
@@ -59,6 +63,18 @@ public class PropertyController {
 				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PostMapping("/_accountstatement")
+	public ResponseEntity<AccountStatementResponse> searchDateWise(
+			@Valid @RequestBody AccountStatementRequest request) {
+		/* Set current date in a toDate if it is null */
+		request.getCriteria().setToDate(
+				request.getCriteria().getToDate() == null ? new Date().getTime() : request.getCriteria().getToDate());
+		AccountStatementCriteria accountStatementCriteria = request.getCriteria();
+		AccountStatementResponse resposne = propertyService.searchPayments(accountStatementCriteria,
+				request.getRequestInfo());
+		return new ResponseEntity<>(resposne, HttpStatus.OK);
 	}
 
 }
