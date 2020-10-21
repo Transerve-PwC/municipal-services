@@ -67,12 +67,10 @@ public class RentDemand implements Comparable<RentDemand> {
   @JsonProperty("interestSince")
   private Long interestSince;
 
-  @Size(max = 64)
   @JsonProperty("mode")
   @Builder.Default
   private ModeEnum mode = ModeEnum.UPLOAD;
 
-  @Size(max = 64)
   @JsonProperty("status")
   @Builder.Default
   private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;
