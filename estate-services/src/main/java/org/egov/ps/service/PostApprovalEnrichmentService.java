@@ -92,7 +92,7 @@ public class PostApprovalEnrichmentService {
 										currentOwnerDetails.setDateOfAllotment(System.currentTimeMillis());
 										currentOwnerDetails.setIsMasterEntry(false);
 									} else {
-										Owner newOwnerItem = getOwnerFromPurcheser(application, property,
+										Owner newOwnerItem = getOwnerFromPurchaser(application, property,
 												newOwnerAuditDetails);
 										property.getPropertyDetails().addOwnerItem(newOwnerItem);
 									}
@@ -114,7 +114,7 @@ public class PostApprovalEnrichmentService {
 		}
 	}
 
-	private Owner getOwnerFromPurcheser(Application application, Property property, AuditDetails newOwnerAuditDetails) {
+	private Owner getOwnerFromPurchaser(Application application, Property property, AuditDetails newOwnerAuditDetails) {
 
 		JsonNode transferee = application.getApplicationDetails().get("transferee");
 		String gen_new_owner_id = UUID.randomUUID().toString();
@@ -142,7 +142,7 @@ public class PostApprovalEnrichmentService {
 		return newOwner;
 	}
 
-	public void otherCitezenServicePostEnrichment(ApplicationRequest request) {
+	public void otherCitizenServicePostEnrichment(ApplicationRequest request) {
 		RequestInfo requestInfo = request.getRequestInfo();
 		Application requestApplication = request.getApplications().get(0);
 
@@ -172,7 +172,7 @@ public class PostApprovalEnrichmentService {
 								property.setSubCategory("SUBCAT.SCO");
 							} else if (string.contentEquals(PSConstants.EB_IS_AOS)) {
 								property.getPropertyDetails().setIsPropertyActive(true);
-								
+
 								if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
 									property.getPropertyDetails().getOwners().forEach(owner -> {
 										owner.getOwnerDetails().setIsApproved(true);

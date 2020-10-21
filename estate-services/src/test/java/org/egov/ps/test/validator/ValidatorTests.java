@@ -1,5 +1,6 @@
 package org.egov.ps.test.validator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.ps.model.Application;
 import org.egov.ps.validator.ApplicationField;
 import org.egov.ps.validator.ApplicationValidation;
 import org.egov.ps.validator.DateField;
@@ -513,5 +515,11 @@ public class ValidatorTests {
 
 		assertNull(arrayLengthValidator.validate(validation, field, null, null));
 		assertNull(arrayLengthValidator.validate(validation, field, "", null));
+	}
+	
+	@Test
+	public void testBusinessServiceName() {
+		Application application = Application.builder().branchType("EstateBranch").applicationType("RegisteredWill").build();
+		assertEquals("ESTATE_SERVICE_ESTATE_BRANCH.REGISTERED_WILL", application.getBillingBusinessService());
 	}
 }

@@ -11,6 +11,7 @@ import org.egov.ps.annotation.ApplicationValidator;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Property;
+import org.egov.ps.repository.ApplicationRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.MDMSService;
 import org.egov.ps.util.PSConstants;
@@ -54,6 +55,9 @@ public class ApplicationValidatorService {
 	@Autowired
 	OwnerValidator ownerValidator;
 
+	@Autowired
+	ApplicationRepository applicationRepository;
+	
 	@Autowired
 	ApplicationValidatorService(ApplicationContext context, MDMSService mdmsService,
 			PropertyRepository propertyRepository, ObjectMapper objectMapper, OwnerValidator ownerValidator) {
@@ -225,7 +229,7 @@ public class ApplicationValidatorService {
 
 	public List<Application> getApplications(ApplicationRequest applicationRequest) {
 		ApplicationCriteria criteria = getApplicationCriteria(applicationRequest);
-		List<Application> applications = propertyRepository.getApplications(criteria);
+		List<Application> applications = applicationRepository.getApplications(criteria);
 
 		boolean ifApplicationExists = ApplicationExists(applications);
 		if (!ifApplicationExists) {

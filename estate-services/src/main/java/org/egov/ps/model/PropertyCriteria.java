@@ -1,7 +1,11 @@
 package org.egov.ps.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +32,15 @@ public class PropertyCriteria {
 
 	private Long limit;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String propertyId;
+
+	public void setPropertyId(String propertyId) {
+		this.propertyIds.add(propertyId);
+	}
+
+	@Builder.Default
+	private Set<String> propertyIds = new HashSet<String>();
 
 	private String branchType;
 

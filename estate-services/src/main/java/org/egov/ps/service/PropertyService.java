@@ -29,7 +29,7 @@ import org.springframework.util.CollectionUtils;
 public class PropertyService {
 
 	@Autowired
-	private EnrichmentService enrichmentService;
+	private PropertyEnrichmentService enrichmentService;
 
 	@Autowired
 	private Configuration config;

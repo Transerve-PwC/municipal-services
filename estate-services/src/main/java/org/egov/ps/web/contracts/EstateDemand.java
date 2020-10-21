@@ -22,76 +22,153 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class EstateDemand implements Comparable<EstateDemand> {
 
-	/**
-	 * Unique id of the demand
-	 */
-	@JsonProperty("id")
-	private String id;
+public class EstateDemand implements Comparable<EstateDemand>{
 
-	/**
-	 * Property details that this demand is generated for.
-	 */
-	@JsonProperty("propertyDetailsId")
-	private String propertyDetailsId;
+  /**
+   * Unique id of the demand
+   */
+  @JsonProperty("id")
+  private String id;
 
-	/**
-	 * Date of demand.
-	 */
-	@JsonProperty("demandDate")
-	private Long demandDate;
+  /**
+   * Property that this rent is generated for.
+   */
+  @JsonProperty("propertyId")
+  private String propertyId;
 
-	@JsonProperty("isPrevious")
-	private Boolean isPrevious;
+  /**
+   * No of days of grace period before interest starts getting applied.
+   */
+  @Builder.Default
+  @JsonProperty("initialGracePeriod")
+  private int initialGracePeriod = 10;
 
-	/**
-	 * Rent of demand.
-	 */
-	@JsonProperty("rent")
-	private Double rent;
 
-	/**
-	 * Penalty Interest of demand.
-	 */
-	@JsonProperty("penaltyInterest")
-	private Double penaltyInterest;
 
-	/**
-	 * Gst Interest of demand.
-	 */
-	@JsonProperty("gstInterest")
-	private Double gstInterest;
+  /**
+   * Date of demand.
+   */
+  @JsonProperty("demandDate")
+  private Long demandDate;
 
-	/**
-	 * GST of demand.
-	 */
-	@JsonProperty("gst")
-	private Integer gst;
+  @JsonProperty("isPrevious")
+  private Boolean isPrevious;
 
-	/**
-	 * Collected Rent of demand.
-	 */
-	@JsonProperty("collectedRent")
-	private Double collectedRent;
+  /**
+   * Rent of demand.
+   */
+  @JsonProperty("rent")
+  private Double rent;
 
-	/**
-	 * Collected GST of demand.
-	 */
-	@JsonProperty("collectedGST")
-	private Double collectedGST;
+  /**
+   * Penalty Interest of demand.
+   */
+  @JsonProperty("penaltyInterest")
+  private Double penaltyInterest;
 
-	/**
-	 * No of days of demand.
-	 */
-	@JsonProperty("noOfDays")
-	private Double noOfDays;
+  /**
+   * Gst Interest of demand.
+   */
+  @JsonProperty("gstInterest")
+  private Double gstInterest;
 
-	/**
-	 * paid of demand.
-	 */
-	@JsonProperty("paid")
-	private Double paid;
+  /**
+   * GST of demand.
+   */
+  @JsonProperty("gst")
+  private Integer gst;
+
+  /**
+   * Collected Rent of demand.
+   */
+  @JsonProperty("collectedRent")
+  private Double collectedRent;
+
+  /**
+   * Collected GST of demand.
+   */
+  @JsonProperty("collectedGST")
+  private Double collectedGST;
+
+  /**
+   * Collected Rent Penalty of demand.
+   */
+  @JsonProperty("collectedRentPenalty")
+  private Double collectedRentPenalty;
+
+  /**
+   * Collected STt Penalty of demand.
+   */
+  @JsonProperty("collectedGSTPenalty")
+  private Double collectedGSTPenalty;
+
+
+  /**
+   * No of days of demand.
+   */
+  @JsonProperty("noOfDays")
+  private Double noOfDays;
+
+  /**
+   * paid of demand.
+   */
+  @JsonProperty("paid")
+  private Double paid;
+
+  @JsonProperty("status")
+  @Builder.Default
+  private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;
+
+
+  public boolean isPaid() {
+	    return this.status == PaymentStatusEnum.PAID;
+	  }
+
+  public boolean isUnPaid() {
+	    return !this.isPaid();
+	  }
+
+  /**
+   * Last date on which payment made
+   */
+  @JsonProperty("paymentSince")
+  private Long paymentSince;
+
+  /**
+   * The remaining rent that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingRent")
+  private Double remainingRent = 0.0;
+
+  /**
+   * The remaining GST that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingGST")
+  private Double remainingGST = 0.0;
+
+  /**
+   * The remaining Rent Penalty that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingRentPenalty")
+  private Double remainingRentPenalty = 0.0;
+
+  /**
+   * The remaining GSTPenalty that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingGSTPenalty")
+  private Double remainingGSTPenalty = 0.0;
+
+
+  @Override
+  public int compareTo(EstateDemand other) {
+    return this.getDemandDate().compareTo(other.getDemandDate());
+  }
+
 
 	@JsonProperty("auditDetails")
 	@Builder.Default
