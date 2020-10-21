@@ -36,4 +36,6 @@ public class ApplicationCriteria {
 	private List<String> relations;
 
 	private List<String> applicationType;
+
+	private List<String> moduleType;
 }

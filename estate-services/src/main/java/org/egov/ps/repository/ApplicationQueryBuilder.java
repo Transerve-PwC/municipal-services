@@ -172,6 +172,11 @@ public class ApplicationQueryBuilder {
 			builder.append("app.application_type IN (:applicationType)");
 			preparedStmtList.put("applicationType", criteria.getApplicationType());
 		}
+		if (null != criteria.getModuleType()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.module_type IN (:moduleType)");
+			preparedStmtList.put("moduleType", criteria.getModuleType());
+		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}
