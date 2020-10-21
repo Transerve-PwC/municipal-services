@@ -52,7 +52,9 @@ public class EstateRentCollectionServiceTests {
     private static final String APR_1_2020 = "01 04 2020";
     private static final String DEC_1_2020 = "01 12 2020";
     private static final String MAR_7_1999 = "07 03 1999";
+
     private static final String AUG_7_1999 = "07 08 1999";
+
 
     public static final double DEFAULT_INTEREST_RATE = 24D;
     private static final double ZERO_INTEREST_RATE = 0D;
@@ -78,7 +80,9 @@ public class EstateRentCollectionServiceTests {
     public void testSimpleSettlement() throws ParseException {
         // Setup
       //  List<EstateDemand> demands = Collections.emptyList();
+
         List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6));
+
         List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
         EstateAccount account = getAccount(0D);
 
@@ -87,6 +91,7 @@ public class EstateRentCollectionServiceTests {
                 ZERO_INTEREST_RATE,true);
 
         // Verify
+
         
         
         double collection = collections.stream().mapToDouble(EstateRentCollection::getRentCollected).sum();
@@ -140,6 +145,7 @@ public class EstateRentCollectionServiceTests {
         		.remainingGST(new Double(gst))
         		.remainingRentPenalty(penaltyInterest)
         		.remainingGSTPenalty(gstInterest)
+
                .build();
     }
 
@@ -168,12 +174,14 @@ public class EstateRentCollectionServiceTests {
     }
 
     private void reconcileDemands(List<EstateDemand> demands, List<EstateRentCollection> collections) {
+
       //  double collectionAccordingToDemands = demands.stream()
         //        .mapToDouble(demand -> demand.getCollectedRent() - demand.getCollectedRentPenalty()).sum();
         double collection = collections.stream().mapToDouble(EstateRentCollection::getRentCollected).sum();
         assertEquals(13617.12, collection, 0.1);
         double collectionGST = collections.stream().mapToDouble(EstateRentCollection::getGstCollected).sum();
         assertEquals(2450.80, collectionGST, 0.1);
+
     }
 
     

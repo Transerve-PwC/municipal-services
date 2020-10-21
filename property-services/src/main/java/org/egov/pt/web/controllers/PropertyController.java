@@ -103,6 +103,20 @@ public class PropertyController {
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	
+	@RequestMapping(value = "/_propertydetails", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<PropertyResponse> sendOTP(
+			 @RequestBody PropertyRequest propertyRequest) {
+		
+		Property property = propertyService.getPropertyDetails(propertyRequest);
+		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
+		PropertyResponse response = PropertyResponse.builder()
+				.properties(Arrays.asList(property))
+				.responseInfo(resInfo)
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 //	@RequestMapping(value = "/_cancel", method = RequestMethod.POST)
 //	public ResponseEntity<PropertyResponse> cancel(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 //												   @Valid @ModelAttribute PropertyCancelCriteria propertyCancelCriteria) {

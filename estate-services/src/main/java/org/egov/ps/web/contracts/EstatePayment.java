@@ -17,6 +17,20 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class EstatePayment implements Comparable<EstatePayment>{
 
+
+	/**
+	 * Unique id of the payment
+	 */
+	@JsonProperty("id")
+	private String id;
+
+	/**
+	 * Property details that this payment is generated for.
+	 */
+	@JsonProperty("propertyDetailsId")
+	private String propertyDetailsId;
+
+
 	/**
 	 * Receipt Date of demand.
 	 */
@@ -28,13 +42,15 @@ public class EstatePayment implements Comparable<EstatePayment>{
 	 */
 	@JsonProperty("rentReceived")
 	private Double rentReceived;
-	
+
 	/**
 	 * Rent Received of demand.
 	 */
 	@JsonProperty("receiptNo")
 	private String receiptNo;
-	
+
+
+
 	/**
 	 * boolean indicates whether payment is processed or not
 	 */
@@ -46,4 +62,11 @@ public class EstatePayment implements Comparable<EstatePayment>{
 	  public int compareTo(EstatePayment other) {
 	    return this.getReceiptDate().compareTo(other.getReceiptDate());
 	  }
+
+
+
+	@JsonProperty("auditDetails")
+	@Builder.Default
+	private AuditDetails auditDetails = null;
+
 }

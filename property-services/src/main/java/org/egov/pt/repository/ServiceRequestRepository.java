@@ -50,4 +50,21 @@ public class ServiceRequestRepository {
 		}
 		return Optional.ofNullable(response);
 	}
+	
+	public Object fetchGetResult(StringBuilder uri) {
+
+		Object response = null;
+		try {
+			response = restTemplate.getForObject(uri.toString(),Object.class);
+		} catch (HttpClientErrorException e) {
+			
+			log.error("External Service threw an Exception: ", e);
+			throw new ServiceCallException(e.getResponseBodyAsString());
+		} catch (Exception e) {
+			
+			log.error("Exception while fetching from external service: ", e);
+			throw new CustomException("REST_CALL_EXCEPTION : "+uri.toString(),e.getMessage());
+		}
+		return (response);
+	}
 }

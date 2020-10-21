@@ -3,6 +3,8 @@ package org.egov.ps.model;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
@@ -66,6 +68,13 @@ public class Property {
 
 	@JsonProperty("action")
 	private String action;
+	
+	@JsonProperty("assignee")
+	@Builder.Default
+	private List<String> assignee = null;
+
+	@JsonProperty("comments")
+	private String comments;
 
 	@JsonProperty("propertyDetails")
 	private PropertyDetails propertyDetails;

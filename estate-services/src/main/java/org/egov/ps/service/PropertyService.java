@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class PropertyService {
 
 	@Autowired
-	private EnrichmentService enrichmentService;
+	private PropertyEnrichmentService enrichmentService;
 
 	@Autowired
 	private Configuration config;
@@ -60,7 +60,7 @@ public class PropertyService {
 		propertyValidator.validateUpdateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
 		String action = request.getProperties().get(0).getAction();
-		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals("DRAFT")) {
+		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)) {
 			wfIntegrator.callWorkFlow(request);
 		}
 		producer.push(config.getUpdatePropertyTopic(), request);
@@ -82,7 +82,7 @@ public class PropertyService {
 			 * creator as current user.
 			 */
 			BusinessService businessService = workflowService.getBusinessService(PSConstants.TENANT_ID, requestInfo,
-					config.getPsBusinessServiceValue());
+					config.getAosBusinessServiceValue());
 			List<String> states = businessService.getStates().stream().map(State::getState)
 					.filter(s -> s != null && s.length() != 0).collect(Collectors.toList());
 			criteria.setState(states);

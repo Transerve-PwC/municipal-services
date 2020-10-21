@@ -7,7 +7,9 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
+
 import org.egov.ps.web.contracts.EstateRentSummary;
+
 
 public interface IEstateRentCollectionService {
 
@@ -26,8 +28,10 @@ public interface IEstateRentCollectionService {
 	 */
 	public List<EstateRentCollection> settle(final List<EstateDemand> demandsToBeSettled, final List<EstatePayment> payments,
 			final EstateAccount account, double interestRate,boolean isFixGST);
+
 	public EstateRentSummary calculateRentSummary(List<EstateDemand> demands, EstateAccount rentAccount, double interestRate);
 	EstateRentSummary calculateRentSummaryAt(List<EstateDemand> demands, EstateAccount rentAccount, double interestRate,
 			long atTimestamp) ;
+
 
 }

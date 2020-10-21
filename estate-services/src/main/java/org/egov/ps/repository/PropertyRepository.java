@@ -7,21 +7,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.egov.ps.model.Application;
-import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.CourtCase;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
+import org.egov.ps.web.contracts.EstateDemand;
+import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.workflow.WorkflowIntegrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class PropertyRepository {
 
 	@Autowired
@@ -29,12 +32,6 @@ public class PropertyRepository {
 
 	@Autowired
 	private PropertyRowMapper propertyRowMapper;
-
-	@Autowired
-	private ApplicationQueryBuilder applicationQueryBuilder;
-
-	@Autowired
-	private ApplicationRowMapper applicationRowMapper;
 
 	@Autowired
 	private DocumentsRowMapper documentRowMapper;
@@ -49,6 +46,12 @@ public class PropertyRepository {
 	private AuctionRowMapper biddersRowMapper;
 
 	@Autowired
+	private EstateDemandRowMapper estateDemandRowMapper;
+
+	@Autowired
+	private EstatePaymentRowMapper estatePaymentRowMapper;
+
+	@Autowired
 	WorkflowIntegrator workflowIntegrator;
 
 	@Autowired
@@ -56,9 +59,11 @@ public class PropertyRepository {
 
 	public List<Property> getProperties(PropertyCriteria criteria) {
 
-		Map<String, Object> preparedStmtList = new HashMap<>();
-		String query = propertyQueryBuilder.getPropertySearchQuery(criteria, preparedStmtList);
-		List<Property> properties = namedParameterJdbcTemplate.query(query, preparedStmtList, propertyRowMapper);
+		Map<String, Object> paramMap = new HashMap<>();
+		String query = propertyQueryBuilder.getPropertySearchQuery(criteria, paramMap);
+		log.debug("Property Query {}", query);
+		log.debug("ParamMap {}", paramMap);
+		List<Property> properties = namedParameterJdbcTemplate.query(query, paramMap, propertyRowMapper);
 		if (CollectionUtils.isEmpty(properties)) {
 			return properties;
 		}
@@ -70,6 +75,7 @@ public class PropertyRepository {
 				relations.add(PropertyQueryBuilder.RELATION_OWNER_DOCUMENTS);
 				relations.add(PropertyQueryBuilder.RELATION_COURT);
 				relations.add(PropertyQueryBuilder.RELATION_BIDDER);
+				relations.add(PropertyQueryBuilder.RELATION_ESTATE_FINANCE);
 			}
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_OWNER)) {
@@ -83,6 +89,10 @@ public class PropertyRepository {
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_BIDDER)) {
 			this.addBiddersToProperties(properties);
+		}
+		if (relations.contains(PropertyQueryBuilder.RELATION_ESTATE_FINANCE)) {
+			this.addEstateDemandToProperties(properties);
+			this.addEstatePaymentToProperties(properties);
 		}
 		return properties;
 	}
@@ -188,9 +198,56 @@ public class PropertyRepository {
 		 * Assign court cases to corresponding properties
 		 */
 		properties.stream().forEach(property -> {
+			property.getPropertyDetails().setBidders(bidders.stream().filter(
+					bidder -> bidder.getPropertyDetailsId().equalsIgnoreCase(property.getPropertyDetails().getId()))
+					.collect(Collectors.toList()));
+		});
+	}
+
+	private void addEstateDemandToProperties(List<Property> properties) {
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch demand from database
+		 */
+		List<EstateDemand> estateDemands = this.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
+
+		/**
+		 * Assign demands to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
 			property.getPropertyDetails()
-					.setBidders(bidders.stream().filter(
-							bidder -> bidder.getPropertyDetailsId().equalsIgnoreCase(property.getPropertyDetails().getId()))
+					.setEstateDemands(estateDemands.stream()
+							.filter(estateDemand -> estateDemand.getPropertyDetailsId()
+									.equalsIgnoreCase(property.getPropertyDetails().getId()))
+							.collect(Collectors.toList()));
+		});
+	}
+
+	private void addEstatePaymentToProperties(List<Property> properties) {
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch payments from database
+		 */
+		List<EstatePayment> estatePayments = this.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
+
+		/**
+		 * Assign payments to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
+			property.getPropertyDetails()
+					.setEstatePayments(estatePayments.stream()
+							.filter(estatePayment -> estatePayment.getPropertyDetailsId()
+									.equalsIgnoreCase(property.getPropertyDetails().getId()))
 							.collect(Collectors.toList()));
 		});
 	}
@@ -201,6 +258,18 @@ public class PropertyRepository {
 		return namedParameterJdbcTemplate.query(biddersQuery, params, biddersRowMapper);
 	}
 
+	public List<EstateDemand> getDemandDetailsForPropertyDetailsIds(List<String> propertyDetailsIds) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String estateDemandQuery = propertyQueryBuilder.getEstateDemandQuery(propertyDetailsIds, params);
+		return namedParameterJdbcTemplate.query(estateDemandQuery, params, estateDemandRowMapper);
+	}
+
+	public List<EstatePayment> getEstatePaymentsForPropertyDetailsIds(List<String> propertyDetailsIds) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String estatePaymentsQuery = propertyQueryBuilder.getEstatePaymentsQuery(propertyDetailsIds, params);
+		return namedParameterJdbcTemplate.query(estatePaymentsQuery, params, estatePaymentRowMapper);
+	}
+
 	public Property findPropertyById(String propertyId) {
 		PropertyCriteria propertySearchCriteria = PropertyCriteria.builder().propertyId(propertyId).build();
 		List<Property> properties = this.getProperties(propertySearchCriteria);
@@ -208,11 +277,5 @@ public class PropertyRepository {
 			return null;
 		}
 		return properties.get(0);
-	}
-
-	public List<Application> getApplications(ApplicationCriteria criteria) {
-		Map<String, Object> preparedStmtList = new HashMap<>();
-		String query = applicationQueryBuilder.getApplicationSearchQuery(criteria, preparedStmtList);
-		return namedParameterJdbcTemplate.query(query, preparedStmtList, applicationRowMapper);
 	}
 }

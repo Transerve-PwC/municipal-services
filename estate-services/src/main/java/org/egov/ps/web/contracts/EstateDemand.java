@@ -5,6 +5,7 @@ package org.egov.ps.web.contracts;
 
 import org.egov.ps.web.contracts.PaymentStatusEnum;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
+
 public class EstateDemand implements Comparable<EstateDemand>{
 
   /**
@@ -166,4 +168,10 @@ public class EstateDemand implements Comparable<EstateDemand>{
     return this.getDemandDate().compareTo(other.getDemandDate());
   }
  
+
+	@JsonProperty("auditDetails")
+	@Builder.Default
+	private AuditDetails auditDetails = null;
+
+
 }

@@ -7,21 +7,20 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.egov.ps.model.Application;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Property;
-import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class ApplicationRowMapper implements ResultSetExtractor<List<Application>> {
@@ -68,48 +67,9 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 					}
 					applicationMap.put(applicationId, currentApplication);
 
-					if (hasColumn(rs, "pid")) {
-						try {
-							if (rs.getString("pid") != null) {
-
-								final String PropertyDetailId = rs.getString("ptdlid");
-
-								PropertyDetails propertyDetails = PropertyDetails.builder().id(PropertyDetailId)
-										.propertyId(rs.getString("pdproperty_id"))
-										.propertyType(rs.getString("pdproperty_type"))
-										.tenantId(rs.getString("pttenantid"))
-										.typeOfAllocation(rs.getString("type_of_allocation"))
-										.modeOfAuction(rs.getString("mode_of_auction"))
-										.schemeName(rs.getString("scheme_name")).areaSqft(rs.getInt("area_sqft"))
-										.dateOfAuction(rs.getLong("date_of_auction"))
-										.ratePerSqft(rs.getBigDecimal("rate_per_sqft"))
-										.lastNocDate(rs.getLong("last_noc_date"))
-										.serviceCategory(rs.getString("service_category"))
-										.isPropertyActive(rs.getBoolean("is_property_active"))
-										.tradeType(rs.getString("trade_type")).companyName(rs.getString("company_name"))
-										.companyAddress(rs.getString("company_address"))
-										.companyRegistrationNumber(rs.getString("company_registration_number"))
-										.companyType(rs.getString("company_type"))
-										.emdAmount(rs.getBigDecimal("emd_amount")).emdDate(rs.getLong("emd_date"))
-										.build();
-
-								Property property = Property.builder().id(rs.getString("pid"))
-										.fileNumber(rs.getString("file_number")).tenantId(rs.getString("pttenantid"))
-										.category(rs.getString("category")).subCategory(rs.getString("sub_category"))
-										.sectorNumber(rs.getString("sector_number"))
-										.siteNumber(rs.getString("site_number"))
-										.propertyMasterOrAllotmentOfSite(
-												rs.getString("property_master_or_allotment_of_site"))
-										.isCancelationOfSite(rs.getBoolean("is_cancelation_of_site"))
-										.state(rs.getString("state"))
-										.action(rs.getString("action")).propertyDetails(propertyDetails).build();
-
-								currentApplication.setProperty(property);
-
-							}
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
+					if (hasColumn(rs, "appproperty_id")) {
+						Property property = Property.builder().id(rs.getString("appproperty_id")).build();
+						currentApplication.setProperty(property);
 					}
 				}
 			}

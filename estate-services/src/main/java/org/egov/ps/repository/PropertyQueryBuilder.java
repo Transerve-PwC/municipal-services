@@ -8,6 +8,7 @@ import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.util.PSConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class PropertyQueryBuilder {
 			+ " od.guardian_name, od.guardian_relation, od.mobile_number,"
 			+ " od.allotment_number, od.date_of_allotment, od.possesion_date, od.is_approved, "
 			+ " od.is_current_owner, od.is_master_entry, od.address, od.is_director, "
-			+ " od.seller_name, od.seller_guardian_name, od.seller_relation, od.mode_of_transfer ";
+			+ " od.seller_name, od.seller_guardian_name, od.seller_relation, od.mode_of_transfer, od.dob ";
 
 	// + " payment.id as payid, payment.tenantid as paytenantid,
 	// payment.property_details_id as payproperty_details_id, "
@@ -85,6 +86,19 @@ public class PropertyQueryBuilder {
 			+ " aut.created_by as aucreated_by, aut.last_modified_by as aulast_modified_by, aut.created_time as aucreated_time, "
 			+ " aut.last_modified_time as aulast_modified_time ";
 
+	private static final String ESTATE_DEMAND_COLUMNS = " estd.id as estdid, estd.property_details_id as estdproperty_details_id, "
+			+ " estd.demand_date as estddemand_date, estd.is_previous as estdis_previous, "
+			+ " estd.rent as estdrent, estd.penalty_interest as estdpenalty_interest, "
+			+ " estd.gst_interest as estdgst_interest, estd.gst as estdgst, estd.collected_rent as estdcollected_rent, "
+			+ " estd.collected_gst as estdcollected_gst, estd.no_of_days as estdno_of_days, estd.paid as estdpaid, "
+			+ " estd.created_by as estdcreated_by, estd.last_modified_by as estdlast_modified_by, "
+			+ " estd.created_time as estdcreated_time, estd.last_modified_time as estdlast_modified_time ";
+
+	private static final String ESTATE_PAYMENT_COLUMNS = " estp.id as estpid, estp.property_details_id as estpproperty_details_id, "
+			+ " estp.receipt_date as estpreceipt_date, estp.rent_received as estprent_received, estp.receipt_no as estpreceipt_no, "
+			+ " estp.created_by as estpcreated_by, estp.last_modified_by as estplast_modified_by, "
+			+ " estp.created_time as estpcreated_time, estp.last_modified_time as estplast_modified_time ";
+
 	private static final String PT_TABLE = " FROM cs_ep_property_v1 pt " + INNER_JOIN
 			+ " cs_ep_property_details_v1 ptdl  ON pt.id =ptdl.property_id ";
 
@@ -98,6 +112,10 @@ public class PropertyQueryBuilder {
 
 	private static final String BIDDER_TABLE = " cs_ep_auction aut ";
 
+	private static final String ESTATE_DEMAND_TABLE = " cs_ep_demand estd ";
+
+	private static final String ESTATE_PAYMENT_TABLE = " cs_ep_payment estp ";
+
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
@@ -106,6 +124,7 @@ public class PropertyQueryBuilder {
 	public static final String RELATION_OWNER_DOCUMENTS = "ownerdocs";
 	public static final String RELATION_COURT = "court";
 	public static final String RELATION_BIDDER = "bidder";
+	public static final String RELATION_ESTATE_FINANCE = "finance";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
 
@@ -145,17 +164,16 @@ public class PropertyQueryBuilder {
 		builder.append(PT_TABLE);
 
 		if (null != criteria.getState()) {
-			if (criteria.getState().contains(PSConstants.PM_DRAFTED)) {
-				addClauseIfRequired(preparedStmtList, builder);
-				builder.append("pt.created_by = '" + criteria.getUserId() + "' AND ");
-				builder.append("pt.state IN (:state)");
-				preparedStmtList.put("state", criteria.getState());
-			} else {
-				addClauseIfRequired(preparedStmtList, builder);
-				builder.append("pt.created_by = '" + criteria.getUserId() + "' OR ");
-				builder.append("pt.state IN (:state)");
-				preparedStmtList.put("state", criteria.getState());
+			addClauseIfRequired(preparedStmtList, builder);
+			if (criteria.getUserId() != null) {
+				if (criteria.getState().contains(PSConstants.PM_DRAFTED)) {
+					builder.append("pt.created_by = '" + criteria.getUserId() + "' AND ");
+				} else {
+					builder.append("pt.created_by = '" + criteria.getUserId() + "' OR ");
+				}
 			}
+			builder.append("pt.state IN (:state)");
+			preparedStmtList.put("state", criteria.getState());
 		}
 
 		if (!ObjectUtils.isEmpty(criteria.getFileNumber())) {
@@ -174,6 +192,12 @@ public class PropertyQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.id = :id");
 			preparedStmtList.put("id", criteria.getPropertyId());
+		}
+
+		if (!CollectionUtils.isEmpty(criteria.getPropertyIds())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.id IN (:pids)");
+			preparedStmtList.put("pids", criteria.getPropertyIds());
 		}
 
 		if (null != criteria.getBranchType()) {
@@ -229,6 +253,24 @@ public class PropertyQueryBuilder {
 		sb.append(BIDDER_COLUMNS);
 		sb.append(" FROM " + BIDDER_TABLE);
 		sb.append(" where aut.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
+
+	public String getEstateDemandQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(ESTATE_DEMAND_COLUMNS);
+		sb.append(" FROM " + ESTATE_DEMAND_TABLE);
+		sb.append(" where estd.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
+
+	public String getEstatePaymentsQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(ESTATE_PAYMENT_COLUMNS);
+		sb.append(" FROM " + ESTATE_PAYMENT_TABLE);
+		sb.append(" where estp.property_details_id IN (:propertyDetailIds)");
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
