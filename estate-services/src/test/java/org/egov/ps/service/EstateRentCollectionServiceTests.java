@@ -52,6 +52,7 @@ public class EstateRentCollectionServiceTests {
     private static final String APR_1_2020 = "01 04 2020";
     private static final String DEC_1_2020 = "01 12 2020";
     private static final String MAR_7_1999 = "07 03 1999";
+    private static final String AUG_7_1999 = "07 08 1999";
 
     public static final double DEFAULT_INTEREST_RATE = 24D;
     private static final double ZERO_INTEREST_RATE = 0D;
@@ -77,7 +78,7 @@ public class EstateRentCollectionServiceTests {
     public void testSimpleSettlement() throws ParseException {
         // Setup
       //  List<EstateDemand> demands = Collections.emptyList();
-        List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102"), getDemand(2678D, 482 ,MAR_1_1999,"103"));
+        List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6));
         List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
         EstateAccount account = getAccount(0D);
 
@@ -86,21 +87,59 @@ public class EstateRentCollectionServiceTests {
                 ZERO_INTEREST_RATE,true);
 
         // Verify
-        reconcileDemands(demands, collections);
-        verifyRemainingBalance(account, 300D);
+        
+        
+        double collection = collections.stream().mapToDouble(EstateRentCollection::getRentCollected).sum();
+        assertEquals(4539.02, collection, 0.1);
+        double collectionGST = collections.stream().mapToDouble(EstateRentCollection::getGstCollected).sum();
+        assertEquals(816.98, collectionGST, 0.1);
+       // reconcileDemands(demands, collections);
+        verifyRemainingBalance(account, 0D);
     }
+    
+    
+    @Test
+    public void testSimpleSettlement_Case2() throws ParseException {
+        // Setup
+      //  List<EstateDemand> demands = Collections.emptyList();
+        List<EstateDemand> demands = Arrays.asList( 
+        		getDemand(2678D,482 ,FEB_1_1999,"102",268,10), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6),
+        		getDemand(2678D, 482 ,APR_1_1999,"104",268,30),getDemand(2678D, 482 ,MAY_1_1999,"103",268,23),
+        		getDemand(2678D, 482 ,JUN_1_1999,"103",268,16),getDemand(2678D, 482 ,JUL_1_1999,"103",268,9),
+        		getDemand(2678D, 482 ,AUG_1_1999,"103",268,0)
+        		);
+        List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999),getPayment(10712D, AUG_7_1999));
+        EstateAccount account = getAccount(0D);
+
+        // Test
+        List<EstateRentCollection> collections = this.estateRentCollectionService.settle(demands, payments, account,
+                ZERO_INTEREST_RATE,true);
+
+        // Verify
+        double collection = collections.stream().mapToDouble(EstateRentCollection::getRentCollected).sum();
+        assertEquals(13617.12, collection, 0.1);
+        double collectionGST = collections.stream().mapToDouble(EstateRentCollection::getGstCollected).sum();
+        assertEquals(2450.80, collectionGST, 0.1);
+       // reconcileDemands(demands, collections);
+        verifyRemainingBalance(account, 0D);
+    }
+    
     
     private EstatePayment getPayment(double amount, String date) throws ParseException {
         return EstatePayment.builder().rentReceived(amount).receiptNo("X-1212").receiptDate(getEpochFromDateString(date)).build();
     }
-    private EstateDemand getDemand(double amount, Integer gst, String date, String demandId) throws ParseException {
+    private EstateDemand getDemand(double amount, Integer gst, String date, String demandId,double penaltyInterest,double gstInterest) throws ParseException {
         return EstateDemand.builder()
         		.rent(amount)
         		.gst(gst)
-        		.penaltyInterest(268D)
-        		.gstInterest(6D)
+        		.penaltyInterest(penaltyInterest)
+        		.gstInterest(gstInterest)
         		.demandDate(getEpochFromDateString(date))
         		.id(demandId)
+        		.remainingRent(amount)
+        		.remainingGST(new Double(gst))
+        		.remainingRentPenalty(penaltyInterest)
+        		.remainingGSTPenalty(gstInterest)
                .build();
     }
 
@@ -129,10 +168,12 @@ public class EstateRentCollectionServiceTests {
     }
 
     private void reconcileDemands(List<EstateDemand> demands, List<EstateRentCollection> collections) {
-        double collectionAccordingToDemands = demands.stream()
-                .mapToDouble(demand -> demand.getCollectedRent() - demand.getCollectedRentPenalty()).sum();
+      //  double collectionAccordingToDemands = demands.stream()
+        //        .mapToDouble(demand -> demand.getCollectedRent() - demand.getCollectedRentPenalty()).sum();
         double collection = collections.stream().mapToDouble(EstateRentCollection::getRentCollected).sum();
-        assertEquals(collectionAccordingToDemands, collection, 0.1);
+        assertEquals(13617.12, collection, 0.1);
+        double collectionGST = collections.stream().mapToDouble(EstateRentCollection::getGstCollected).sum();
+        assertEquals(2450.80, collectionGST, 0.1);
     }
 
     

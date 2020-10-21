@@ -131,6 +131,35 @@ public class EstateDemand implements Comparable<EstateDemand>{
    */
   @JsonProperty("paymentSince")
   private Long paymentSince;
+  
+  /**
+   * The remaining rent that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingRent")
+  private Double remainingRent = 0.0;
+
+  /**
+   * The remaining GST that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingGST")
+  private Double remainingGST = 0.0;
+  
+  /**
+   * The remaining Rent Penalty that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingRentPenalty")
+  private Double remainingRentPenalty = 0.0;
+
+  /**
+   * The remaining GSTPenalty that still has to be collected.
+   */
+  @Builder.Default
+  @JsonProperty("remainingGSTPenalty")
+  private Double remainingGSTPenalty = 0.0;
+
 
   @Override
   public int compareTo(EstateDemand other) {
