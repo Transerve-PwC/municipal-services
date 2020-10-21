@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -248,5 +249,10 @@ public class PropertyDetails {
 	@Valid
 	@JsonProperty
 	private List<EstatePayment> inActiveEstatePayments;
+	
+	@NotNull
+	@Builder.Default
+	@JsonProperty("interestRate")
+	private Double interestRate = 0.0;
 	
 }

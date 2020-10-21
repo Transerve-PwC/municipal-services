@@ -2,6 +2,8 @@ package org.egov.ps.web.contracts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.egov.ps.model.PaymentStatusEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

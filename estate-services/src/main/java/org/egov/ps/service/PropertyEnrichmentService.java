@@ -256,7 +256,7 @@ public class PropertyEnrichmentService {
 				if (estateDemand.getId() == null) {
 
 					estateDemand.setId(UUID.randomUUID().toString());
-					estateDemand.setPropertyDetailsId(property.getPropertyDetails().getId());
+					estateDemand.setPropertyId(property.getPropertyDetails().getId());
 
 				}
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);

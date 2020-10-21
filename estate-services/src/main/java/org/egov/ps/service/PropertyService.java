@@ -1,23 +1,29 @@
 package org.egov.ps.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
+import org.egov.ps.model.AccountStatementCriteria;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.PropertyValidator;
+import org.egov.ps.web.contracts.AccountStatementResponse;
 import org.egov.ps.web.contracts.BusinessService;
+import org.egov.ps.web.contracts.EstateDemand;
+import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
 import org.egov.ps.workflow.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class PropertyService {
@@ -42,6 +48,9 @@ public class PropertyService {
 
 	@Autowired
 	private WorkflowService workflowService;
+	
+	@Autowired
+	private IRentCollectionService rentCollectionService;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
@@ -96,6 +105,31 @@ public class PropertyService {
 		}
 
 		return repository.getProperties(criteria);
+	}
+	
+	
+	public AccountStatementResponse searchPayments(AccountStatementCriteria accountStatementCriteria,
+			RequestInfo requestInfo) {
+
+		List<Property> properties = repository
+				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
+						.relations(Collections.singletonList("finance")).build());
+		if (CollectionUtils.isEmpty(properties)) {
+			return AccountStatementResponse.builder().rentAccountStatements(Collections.emptyList()).build();
+		}
+
+		Property property = properties.get(0);
+		List<EstateDemand> demands = repository
+				.getDemandDetailsForPropertyDetailsIds(Collections.singletonList(property.getPropertyDetails().getId()));
+
+		List<EstatePayment> payments = repository
+				.getEstatePaymentsForPropertyDetailsIds(Collections.singletonList(property.getPropertyDetails().getId()));
+
+		return AccountStatementResponse.builder()
+				.rentAccountStatements(rentCollectionService.getAccountStatement(demands, payments,
+						18.00, // property.getPropertyDetails().getInterestRate(), // TODO: hard coded for now
+						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
+				.build();
 	}
 
 }
