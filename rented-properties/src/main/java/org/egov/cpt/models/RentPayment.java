@@ -54,7 +54,6 @@ public class RentPayment implements Comparable<RentPayment> {
 	@JsonProperty("dateOfPayment")
 	private Long dateOfPayment;
 
-	@Size(max = 64)
 	@JsonProperty("mode")
 	@Builder.Default
 	private ModeEnum mode = ModeEnum.UPLOAD;
