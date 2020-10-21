@@ -36,7 +36,6 @@ public class EstatePayment implements Comparable<EstatePayment> {
 	@JsonProperty("propertyDetailsId")
 	private String propertyDetailsId;
 
-
 	/**
 	 * Receipt Date of demand.
 	 */
@@ -54,22 +53,6 @@ public class EstatePayment implements Comparable<EstatePayment> {
 	 */
 	@JsonProperty("receiptNo")
 	private String receiptNo;
-
-
-
-	/**
-	 * boolean indicates whether payment is processed or not
-	 */
-	@Builder.Default
-	private boolean processed = false;
-
-
-	 @Override
-	  public int compareTo(EstatePayment other) {
-	    return this.getReceiptDate().compareTo(other.getReceiptDate());
-	  }
-
-
 
 	@JsonProperty("auditDetails")
 	@Builder.Default

@@ -222,7 +222,7 @@ public class PropertyRepository {
 		properties.stream().forEach(property -> {
 			property.getPropertyDetails()
 					.setEstateDemands(estateDemands.stream()
-							.filter(estateDemand -> estateDemand.getPropertyDetailsId()
+							.filter(estateDemand -> estateDemand.getPropertyId()
 									.equalsIgnoreCase(property.getPropertyDetails().getId()))
 							.collect(Collectors.toList()));
 		});

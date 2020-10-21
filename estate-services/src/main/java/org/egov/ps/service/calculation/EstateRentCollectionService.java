@@ -1,28 +1,24 @@
 package org.egov.ps.service.calculation;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.egov.ps.web.contracts.EstateAccount;
-
 import org.egov.ps.web.contracts.EstateAccountStatement;
+import org.egov.ps.web.contracts.EstateAccountStatement.Type;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
-import org.egov.ps.web.contracts.EstateAccountStatement.Type;
 public class EstateRentCollectionService implements IEstateRentCollectionService{
 	
 

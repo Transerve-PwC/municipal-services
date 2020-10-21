@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.egov.ps.model.PaymentStatusEnum;
 import org.egov.ps.model.RentAccount;
 import org.egov.ps.model.RentAccountStatement;
 import org.egov.ps.model.RentAccountStatement.Type;
@@ -20,6 +19,7 @@ import org.egov.ps.model.RentCollection;
 import org.egov.ps.model.RentSummary;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
+import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.springframework.stereotype.Service;
 
 @Service

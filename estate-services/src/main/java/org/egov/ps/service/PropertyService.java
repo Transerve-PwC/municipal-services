@@ -127,8 +127,8 @@ public class PropertyService {
 
 		return AccountStatementResponse.builder()
 				.rentAccountStatements(rentCollectionService.getAccountStatement(demands, payments,
-						5.5, accountStatementCriteria.getFromDate(),
-						accountStatementCriteria.getToDate()))
+						18.00, // property.getPropertyDetails().getInterestRate(), // TODO: hard coded for now
+						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
 				.build();
 	}
 
