@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.ps.config.Configuration;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
@@ -26,8 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class PropertyEnrichmentService {
 
@@ -38,16 +35,7 @@ public class PropertyEnrichmentService {
 	IdGenRepository idGenRepository;
 
 	@Autowired
-	private Configuration config;
-
-	@Autowired
-	private MDMSService mdmsservice;
-
-	@Autowired
 	private PropertyRepository propertyRepository;
-
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	public void enrichPropertyRequest(PropertyRequest request) {
 
@@ -268,7 +256,7 @@ public class PropertyEnrichmentService {
 				if (estateDemand.getId() == null) {
 
 					estateDemand.setId(UUID.randomUUID().toString());
-					estateDemand.setPropertyId(property.getPropertyDetails().getId());
+					estateDemand.setPropertyDetailsId(property.getPropertyDetails().getId());
 
 				}
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);

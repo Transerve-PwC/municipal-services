@@ -1,8 +1,5 @@
 package org.egov.ps.web.contracts;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,8 +29,42 @@ public class EstateDemand implements Comparable<EstateDemand> {
 	/**
 	 * Property that this rent is generated for.
 	 */
-	@JsonProperty("propertyId")
-	private String propertyId;
+	@JsonProperty("propertyDetailsId")
+	private String propertyDetailsId;
+
+	/**
+	 * No of days of grace period before interest starts getting applied.
+	 */
+	@Builder.Default
+	@JsonProperty("initialGracePeriod")
+	private int initialGracePeriod = 10;
+
+	/**
+	 * Date of generation of this demand.
+	 */
+	@JsonProperty("generationDate")
+	private Long generationDate;
+
+	/**
+	 * The principal rent amount that is to be collected
+	 */
+	@Size(max = 13)
+	@JsonProperty("collectionPrincipal")
+	private Double collectionPrincipal;
+
+	/**
+	 * The remaining principal that still has to be collected.
+	 */
+	@Size(max = 13)
+	@Builder.Default
+	@JsonProperty("remainingPrincipal")
+	private Double remainingPrincipal = 0.0;
+
+	/**
+	 * Last date on which interest was made as 0.
+	 */
+	@JsonProperty("interestSince")
+	private Long interestSince;
 
 	/**
 	 * Date of demand.
@@ -104,6 +135,27 @@ public class EstateDemand implements Comparable<EstateDemand> {
 	@JsonProperty("paid")
 	private Double paid;
 
+	@JsonProperty("status")
+	@Builder.Default
+	private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;
+
+	public boolean isPaid() {
+		return this.status == PaymentStatusEnum.PAID;
+	}
+
+	public boolean isUnPaid() {
+		return !this.isPaid();
+	}
+
+	public void setRemainingPrincipalAndUpdatePaymentStatus(Double d) {
+		this.setRemainingPrincipal(d);
+		if (this.remainingPrincipal == 0) {
+			this.status = PaymentStatusEnum.PAID;
+		} else {
+			this.status = PaymentStatusEnum.UNPAID;
+		}
+	}
+
 	/**
 	 * Last date on which payment made
 	 */
@@ -138,77 +190,13 @@ public class EstateDemand implements Comparable<EstateDemand> {
 	@JsonProperty("remainingGSTPenalty")
 	private Double remainingGSTPenalty = 0.0;
 
+	@Override
+	public int compareTo(EstateDemand other) {
+		return this.getDemandDate().compareTo(other.getDemandDate());
+	}
+
 	@JsonProperty("auditDetails")
 	@Builder.Default
 	private AuditDetails auditDetails = null;
-
-	/**
-	 * No of days of grace period before interest starts getting applied.
-	 */
-	@Builder.Default
-	@JsonProperty("initialGracePeriod")
-	private int initialGracePeriod = 10;
-
-	/**
-	 * Date of generation of this demand.
-	 */
-	@JsonProperty("generationDate")
-	private Long generationDate;
-
-	/**
-	 * The principal rent amount that is to be collected
-	 */
-	@Size(max = 13)
-	@JsonProperty("collectionPrincipal")
-	private Double collectionPrincipal;
-
-	/**
-	 * The remaining principal that still has to be collected.
-	 */
-	@Size(max = 13)
-	@Builder.Default
-	@JsonProperty("remainingPrincipal")
-	private Double remainingPrincipal = 0.0;
-
-	/**
-	 * Last date on which interest was made as 0.
-	 */
-	@JsonProperty("interestSince")
-	private Long interestSince;
-
-	@Size(max = 64)
-	@JsonProperty("status")
-	@Builder.Default
-	private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;
-
-	@Override
-	public int compareTo(EstateDemand other) {
-		return this.getGenerationDate().compareTo(other.getGenerationDate());
-	}
-
-	public boolean isPaid() {
-		return this.status == PaymentStatusEnum.PAID;
-	}
-
-	public boolean isUnPaid() {
-		return !this.isPaid();
-	}
-
-	public void setRemainingPrincipalAndUpdatePaymentStatus(Double d) {
-		this.setRemainingPrincipal(d);
-		if (this.remainingPrincipal == 0) {
-			this.status = PaymentStatusEnum.PAID;
-		} else {
-			this.status = PaymentStatusEnum.UNPAID;
-		}
-	}
-
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
-
-	public String toString() {
-		return String.format("Collection: %.2f, remaining: %.2f, remainingSince: %s, generatedOn: %s",
-				this.collectionPrincipal, this.remainingPrincipal, DATE_FORMAT.format(this.interestSince),
-				DATE_FORMAT.format(this.generationDate));
-	}
 
 }
