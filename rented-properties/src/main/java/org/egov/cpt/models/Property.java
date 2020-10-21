@@ -230,7 +230,7 @@ public class Property {
 	}
 
 	@JsonProperty("pincode")
-	@Size(min = 6, max = 256, message = "pincode must be between 6 and 256 characters in length")
+	@Size(min = 6, max = 6, message = "pincode must be 6 digit in length")
 	private String pincode;
 
 	@JsonProperty("area")

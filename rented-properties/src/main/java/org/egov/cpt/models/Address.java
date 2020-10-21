@@ -52,7 +52,7 @@ public class Address {
 
 	@NotNull
 	@JsonProperty("area")
-	@Size(max = 256, message = "area must be between 0 and 256 characters in length")
+	@Size(min = 3, max = 100, message = "locality must be between 3 and 100 characters in length")
 	private String area;
 
 	@JsonProperty("district")
@@ -69,7 +69,7 @@ public class Address {
 
 	@NotNull
 	@JsonProperty("pincode")
-	@Size(min = 6, max = 256, message = "pincode must be between 0 and 256 characters in length")
+	@Size(min = 6, max = 6, message = "pincode must be 6 digits in length")
 	private String pincode;
 
 	@JsonProperty("landmark")
