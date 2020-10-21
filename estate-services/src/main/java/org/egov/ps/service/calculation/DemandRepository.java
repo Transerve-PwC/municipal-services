@@ -38,13 +38,12 @@ public class DemandRepository {
 		url.append(config.getDemandCreateEndpoint());
 		DemandRequest request = new DemandRequest(requestInfo, demands);
 		Object result = serviceRequestRepository.fetchResult(url, request);
-		DemandResponse response = null;
 		try {
-			response = mapper.convertValue(result, DemandResponse.class);
+			DemandResponse response = mapper.convertValue(result, DemandResponse.class);
+			return response.getDemands();
 		} catch (IllegalArgumentException e) {
 			throw new CustomException("PARSING ERROR", "Failed to parse response of create demand");
 		}
-		return response.getDemands();
 	}
 
 	/**

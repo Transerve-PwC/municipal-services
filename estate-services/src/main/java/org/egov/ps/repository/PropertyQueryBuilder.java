@@ -8,6 +8,7 @@ import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.util.PSConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -163,17 +164,16 @@ public class PropertyQueryBuilder {
 		builder.append(PT_TABLE);
 
 		if (null != criteria.getState()) {
-			if (criteria.getState().contains(PSConstants.PM_DRAFTED)) {
-				addClauseIfRequired(preparedStmtList, builder);
-				builder.append("pt.created_by = '" + criteria.getUserId() + "' AND ");
-				builder.append("pt.state IN (:state)");
-				preparedStmtList.put("state", criteria.getState());
-			} else {
-				addClauseIfRequired(preparedStmtList, builder);
-				builder.append("pt.created_by = '" + criteria.getUserId() + "' OR ");
-				builder.append("pt.state IN (:state)");
-				preparedStmtList.put("state", criteria.getState());
+			addClauseIfRequired(preparedStmtList, builder);
+			if (criteria.getUserId() != null) {
+				if (criteria.getState().contains(PSConstants.PM_DRAFTED)) {
+					builder.append("pt.created_by = '" + criteria.getUserId() + "' AND ");
+				} else {
+					builder.append("pt.created_by = '" + criteria.getUserId() + "' OR ");
+				}
 			}
+			builder.append("pt.state IN (:state)");
+			preparedStmtList.put("state", criteria.getState());
 		}
 
 		if (!ObjectUtils.isEmpty(criteria.getFileNumber())) {
@@ -192,6 +192,12 @@ public class PropertyQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.id = :id");
 			preparedStmtList.put("id", criteria.getPropertyId());
+		}
+
+		if (!CollectionUtils.isEmpty(criteria.getPropertyIds())) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.id IN (:pids)");
+			preparedStmtList.put("pids", criteria.getPropertyIds());
 		}
 
 		if (null != criteria.getBranchType()) {
