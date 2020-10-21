@@ -39,7 +39,7 @@ public class PSConstants {
 
 	public static final String TAX_HEAD_CODE_APPLICATION_CHARGE = "APPLICATION";
 
-	public static final String ESTATE_SERVICE = "EstateService";
+	public static final String ESTATE_SERVICE = "ESTATE_SERVICE";
 
 	public static final String ES_DRAFT = "DRAFT";
 

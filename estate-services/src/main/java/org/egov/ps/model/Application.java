@@ -3,15 +3,15 @@ package org.egov.ps.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.egov.common.contract.request.User;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -126,8 +126,18 @@ public class Application {
 	}
 
 	public String getBillingBusinessService() {
-		return String.format("%s.%s.%s", PSConstants.ESTATE_SERVICE, this.getBranchType(), this.getApplicationType());
+		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE, camelToSnake(this.getBranchType()), camelToSnake(this.getApplicationType()));
 	}
+	
+	/**
+	 * Convert camel case string to snake case string and capitalise string.
+	 */
+	public static String camelToSnake(String str)  { 
+        String regex = "([a-z])([A-Z]+)"; 
+        String replacement = "$1_$2"; 
+        str = str .replaceAll(regex, replacement).toUpperCase(); 
+        return str; 
+    } 
 
 	private String extractPrefix(String inputString) {
 		String outputString = "";
