@@ -168,6 +168,9 @@ public class Application {
 		return this;
 	}
 
+	@JsonProperty("wfDocuments")
+	private List<Document> wfDocuments;
+
 	@JsonProperty("calculation")
 	Calculation calculation;
 
