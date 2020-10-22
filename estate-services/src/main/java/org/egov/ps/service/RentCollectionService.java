@@ -332,17 +332,17 @@ public class RentCollectionService implements IRentCollectionService {
 		}
 	}
 
-	private EstateDemand cloneDemand(EstateDemand EstateDemand) {
-		return EstateDemand.builder().collectionPrincipal(EstateDemand.getCollectionPrincipal())
-				.status(PaymentStatusEnum.UNPAID).generationDate(EstateDemand.getGenerationDate())
-				.interestSince(EstateDemand.getGenerationDate())
-				.initialGracePeriod(EstateDemand.getInitialGracePeriod())
-				.remainingPrincipal(EstateDemand.getCollectionPrincipal()).build();
+	private EstateDemand cloneDemand(EstateDemand estateDemand) {
+		return EstateDemand.builder().collectionPrincipal(estateDemand.getCollectionPrincipal())
+				.status(PaymentStatusEnum.UNPAID).generationDate(estateDemand.getGenerationDate())
+				.interestSince(estateDemand.getGenerationDate())
+				.initialGracePeriod(estateDemand.getInitialGracePeriod())
+				.remainingPrincipal(estateDemand.getCollectionPrincipal()).build();
 	}
 
-	private EstatePayment clonePayment(EstatePayment EstatePayment) {
-		return EstatePayment.builder().amountPaid(EstatePayment.getAmountPaid())
-				.dateOfPayment(EstatePayment.getDateOfPayment()).receiptNo(EstatePayment.getReceiptNo())
+	private EstatePayment clonePayment(EstatePayment estatePayment) {
+		return EstatePayment.builder().amountPaid(estatePayment.getAmountPaid())
+				.dateOfPayment(estatePayment.getDateOfPayment()).receiptNo(estatePayment.getReceiptNo())
 				.processed(false).build();
 	}
 
