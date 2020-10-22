@@ -325,6 +325,19 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			statement.setRemainingPrincipal(rentSummary.getBalanceRent());
 			statement.setRemainingInterest(rentSummary.getBalanceInterest());
 			statement.setRemainingBalance(rentSummary.getBalanceAmount());
+			statement.setRemainingGST(rentSummary.getBalanceGST());
+			statement.setRemainingRentPenalty(rentSummary.getBalanceRentPenalty());
+			statement.setRemainingGSTPenalty(rentSummary.getBalanceGSTPenalty());
+			statement.setReceiptNo(currentPayment!=null?currentPayment.getReceiptNo():"");
+			statement.setRent(rentSummary.getRent());
+			statement.setCollectedRent(rentSummary.getCollectedRent());
+			statement.setRentPanelty(rentSummary.getRentPanelty());
+			statement.setGst(rentSummary.getGst());
+			statement.setCollectedGST(rentSummary.getCollectedGST());
+			statement.setRentPanelty(rentSummary.getRentPanelty());
+			statement.setCollectedRentPanelty(rentSummary.getCollectedRentPanelty());
+			statement.setGSTPanelty(rentSummary.getGSTPanelty());
+			statement.setCollectedGSTPanelty(rentSummary.getCollectedGSTPanelty());
 			accountStatementItems.add(statement);
 			if (reachedLast) {
 				break;
@@ -388,9 +401,17 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 					 /** Summarize the result.
 					 */
 					return EstateRentSummary.builder()
+							.rent(demand.getRent())
+							.collectedRent(demand.getCollectedRent())
 							.balanceRent(summary.getBalanceRent() + demand.getRemainingRent())
+							.gst(demand.getGst())
+							.collectedGST(demand.getCollectedGST())
 							.balanceGST(summary.getBalanceGST() + demand.getRemainingGST())
+						     .GSTPanelty( demand.getGstInterest()) 				
+							.collectedGSTPanelty(demand.getCollectedGSTPenalty())
 							.balanceGSTPenalty(summary.getBalanceGSTPenalty() + demand.getRemainingGSTPenalty())
+							.balanceRentPenalty(demand.getPenaltyInterest())
+				            .collectedRentPanelty(  demand.getCollectedRentPenalty())
 							.balanceRentPenalty(summary.getBalanceRentPenalty() + demand.getRemainingRentPenalty())
 							.balanceAmount(rentAccount.getRemainingAmount()).build();
 							
@@ -409,6 +430,10 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 				.collectedGSTPenalty(rentDemand.getCollectedGSTPenalty())
 				.collectedRent(rentDemand.getCollectedRent())
 				.collectedRentPenalty(rentDemand.getCollectedRentPenalty())
+				.rent(rentDemand.getRent())
+				.gst(rentDemand.getGst())
+				.gstInterest(rentDemand.getGstInterest())
+				.penaltyInterest(rentDemand.getPenaltyInterest())
 				.build();
 	}
 }

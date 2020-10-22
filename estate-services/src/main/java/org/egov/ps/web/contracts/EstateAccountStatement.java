@@ -62,6 +62,31 @@ public class EstateAccountStatement {
 	 */
 	@JsonProperty("receiptNo")
 	private String receiptNo;
+	
+	@Builder.Default
+	private double rent = 0D;
+	
+	@Builder.Default
+	private double collectedRent = 0D;
+	
+	@Builder.Default
+	private double gst = 0D;
+	
+	@Builder.Default
+	private double collectedGST = 0D;
+	
+	@Builder.Default
+	private double rentPanelty = 0D;
+	
+	@Builder.Default
+	private double collectedRentPanelty = 0D;
+	
+	@Builder.Default
+	private double GSTPanelty = 0D;
+	
+	@Builder.Default
+	private double collectedGSTPanelty = 0D;
+
 
     public double getDueAmount() {
         return Math.max(0, this.remainingPrincipal + this.remainingInterest - this.remainingBalance);
