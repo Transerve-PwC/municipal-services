@@ -111,7 +111,7 @@ public class DuplicateCopyService {
 	private List<DuplicateCopy> getApplication(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
 		List<DuplicateCopy> applications = repository.getDuplicateCopyProperties(criteria);
 		if (applications.isEmpty()){
-			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN))
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)&& criteria.getApplicationNumber()!=null)
 				throw new CustomException("INVALID ACCESS", "You can not access this application.");
 			else
 				return Collections.emptyList();

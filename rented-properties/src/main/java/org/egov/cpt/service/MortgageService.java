@@ -90,7 +90,7 @@ public class MortgageService {
 	private List<Mortgage> getApplication(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
 		List<Mortgage> application = repository.getMortgageProperties(criteria);
 		if (application.isEmpty()){
-			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN))
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)&& criteria.getApplicationNumber()!=null)
 				throw new CustomException("INVALID ACCESS", "You can not access this application.");
 			else
 				return Collections.emptyList();

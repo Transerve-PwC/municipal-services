@@ -110,7 +110,7 @@ public class OwnershipTransferService {
 		List<Owner> owners = repository.searchOwnershipTransfer(criteria);
 
 		if (CollectionUtils.isEmpty(owners)){
-			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN))
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)&& criteria.getApplicationNumber()!=null)
 				throw new CustomException("INVALID ACCESS", "You can not access this application.");
 			else
 				return Collections.emptyList();
