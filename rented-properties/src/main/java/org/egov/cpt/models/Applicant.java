@@ -22,23 +22,23 @@ import lombok.ToString;
 public class Applicant {
 
 	@JsonProperty("id")
-	@Size(max = 256, message = "Id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Id must be between 0 to 256 characters in length")
 	private String id;
 
 	@JsonProperty("applicationId")
-	@Size(max = 256, message = "Application id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Application id must be between 0 to 256 characters in length")
 	private String applicationId;
 
 	@JsonProperty("tenantId")
-	@Size(max = 256, message = "Tenant id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Tenant id must be between 0 to 256 characters in length")
 	private String tenantId;
 
 	@JsonProperty("name")
-	@Size(max = 256, message = "Name must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Name must be between 0 to 256 characters in length")
 	private String name;
 
 	@JsonProperty("email")
-	@Size(max = 256, message = "Email must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Email must be between 0 to 256 characters in length")
 	private String email;
 
 	@JsonProperty("phone")
@@ -46,15 +46,15 @@ public class Applicant {
 	private String phone;
 
 	@JsonProperty("guardian")
-	@Size(max = 256, message = "Guardian must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Guardian must be between 0 to 256 characters in length")
 	private String guardian;
 
 	@JsonProperty("relationship")
-	@Size(max = 256, message = "Relationship must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Relationship must be between 0 to 256 characters in length")
 	private String relationship;
 
 	@JsonProperty("adhaarNumber")
-	@Size(min = 12, max = 12, message = "Aadhaar number must be between 12 characters in length")
+	@Size(min = 12, max = 12, message = "Aadhaar number must be 12 characters in length")
 	private String adhaarNumber;
 
 	@JsonProperty("auditDetails")

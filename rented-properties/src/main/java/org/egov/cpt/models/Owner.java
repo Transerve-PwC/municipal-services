@@ -26,18 +26,18 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Owner {
 
-	@Size(max = 256, message = "Id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Id must be between 0 to 256 characters in length")
 	@JsonProperty("id")
 	private String id;
 
 	@JsonSerialize(using = PropertySerializer.class)
 	private Property property;
 
-	@Size(max = 256, message = "Tenant id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Tenant id must be between 0 to 256 characters in length")
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-	@Size(min = 3, max = 256, message = "Allotment number must be between 3 and 256 characters in length")
+	@Size(min = 3, max = 256, message = "Allotment number must be between 3 to 256 characters in length")
 	@JsonProperty("allotmenNumber")
 	private String allotmenNumber;
 
@@ -49,7 +49,7 @@ public class Owner {
 	@JsonProperty("assignee")
 	private List<String> assignee = null;
 
-	@Size(max = 128, message = "Comment must be between 0 and 128 characters in length")
+	@Size(max = 128, message = "Comment must be between 0 to 128 characters in length")
 	@JsonProperty("comment")
 	private String comment;
 
@@ -73,11 +73,11 @@ public class Owner {
 	/**
 	 * This will indicate the application status.
 	 */
-	@Size(max = 256, message = "Application state must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Application state must be between 0 to 256 characters in length")
 	@JsonProperty("applicationState")
 	private String applicationState;
 
-	@Size(max = 256, message = "Application action must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Application action must be between 0 to 256 characters in length")
 	@JsonProperty("applicationAction")
 	private String applicationAction;
 
@@ -85,7 +85,7 @@ public class Owner {
 	@JsonProperty("calculation")
 	Calculation calculation;
 
-	@Size(max = 256, message = "Billing business service must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Billing business service must be between 0 to 256 characters in length")
 	@JsonProperty("billingBusinessService")
 	private String billingBusinessService;
 

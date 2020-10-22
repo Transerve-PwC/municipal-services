@@ -29,21 +29,21 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class DuplicateCopyDocument {
 
-	@Size(max = 64, message = "Id must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Id must be between 0 to 64 characters in length")
 	@JsonProperty("id")
 	private String id;
 
 	@JsonProperty("applicationId")
 	private String applicationId;
 
-	@Size(max = 64, message = "Tenant id must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Tenant id must be between 0 to 64 characters in length")
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
 	@JsonProperty("active")
 	private Boolean active;
 
-	@Size(max = 64, message = "Document type must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Document type must be between 0 to 64 characters in length")
 	@JsonProperty("documentType")
 	private String documentType = null;
 
