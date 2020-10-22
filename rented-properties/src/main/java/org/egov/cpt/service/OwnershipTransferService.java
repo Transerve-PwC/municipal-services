@@ -25,6 +25,7 @@ import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.OwnershipTransferRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
 import org.egov.cpt.workflow.WorkflowService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -87,7 +88,7 @@ public class OwnershipTransferService {
 	}
 
 	public List<Owner> searchOwnershipTransfer(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
-		if (criteria.isEmpty() && requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)) {
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)) {
 			criteria.setCreatedBy(requestInfo.getUserInfo().getUuid());
 		}
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_EMPLOYEE)
@@ -108,8 +109,12 @@ public class OwnershipTransferService {
 		}
 		List<Owner> owners = repository.searchOwnershipTransfer(criteria);
 
-		if (CollectionUtils.isEmpty(owners))
-			return Collections.emptyList();
+		if (CollectionUtils.isEmpty(owners)){
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)&& criteria.getApplicationNumber()!=null)
+				throw new CustomException("INVALID ACCESS", "You can not access this application.");
+			else
+				return Collections.emptyList();
+		}
 
 		/**
 		 * calling rent Summary

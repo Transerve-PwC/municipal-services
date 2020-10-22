@@ -809,7 +809,7 @@ public class EnrichmentService {
 	}
 
 	public void enrichDuplicateCopySearchCriteria(RequestInfo requestInfo, DuplicateCopySearchCriteria criteria) {
-		if (criteria.isEmpty() && requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)) {
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)) {
 			criteria.setCreatedBy(requestInfo.getUserInfo().getUuid());
 		}
 	}
