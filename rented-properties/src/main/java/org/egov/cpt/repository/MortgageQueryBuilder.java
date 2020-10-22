@@ -127,6 +127,11 @@ public class MortgageQueryBuilder {
 			builder.append("mg.state IN(:states)");
 			preparedStmtList.put("states", criteria.getStatus());
 		}
+		if (null != criteria.getCreatedBy()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("mg.created_by = :createdBy");
+			preparedStmtList.put("createdBy", criteria.getCreatedBy());
+		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}

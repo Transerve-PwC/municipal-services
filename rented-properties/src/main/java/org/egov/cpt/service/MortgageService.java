@@ -18,6 +18,7 @@ import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.MortgageRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
 import org.egov.cpt.workflow.WorkflowService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -88,8 +89,12 @@ public class MortgageService {
 
 	private List<Mortgage> getApplication(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
 		List<Mortgage> application = repository.getMortgageProperties(criteria);
-		if (application.isEmpty())
-			return Collections.emptyList();
+		if (application.isEmpty()){
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN))
+				throw new CustomException("INVALID ACCESS", "You can not access this application.");
+			else
+				return Collections.emptyList();
+		}
 		return application;
 	}
 
