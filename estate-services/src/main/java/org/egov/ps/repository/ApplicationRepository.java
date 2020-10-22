@@ -16,7 +16,6 @@ import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
-import org.egov.ps.util.PSConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -54,26 +53,6 @@ public class ApplicationRepository {
 		List<Application> applications = namedParameterJdbcTemplate.query(query, preparedStmtList,
 				applicationRowMapper);
 
-		List<Document> documents = new ArrayList<>();
-		List<Document> wfDocuments = new ArrayList<>();
-
-		applications.forEach(application -> {
-			try {
-				application.getApplicationDocuments().forEach(doc -> {
-
-					if (doc.getDocumentType().contains(PSConstants.ES_WF_DOCS)) {
-						wfDocuments.add(doc);
-					} else {
-						documents.add(doc);
-					}
-				});
-			} catch (Exception e) {
-				log.error("Unable to find Workflow related documents for given '{}' '{}'", application.getApplicationNumber(),
-						e);
-			}
-
-		});
-
 		if (CollectionUtils.isEmpty(applications)) {
 			return applications;
 		}
@@ -81,18 +60,6 @@ public class ApplicationRepository {
 		this.addPropertiesToApplications(applications);
 
 		List<String> relations = criteria.getRelations();
-
-		if (!CollectionUtils.isEmpty(wfDocuments)) {
-			applications.stream().forEach(application -> {
-				application.setWfDocuments(wfDocuments);
-			});
-		}
-
-		if (!CollectionUtils.isEmpty(documents)) {
-			applications.stream().forEach(application -> {
-				application.setApplicationDocuments(documents);
-			});
-		}
 
 		if (CollectionUtils.isEmpty(relations)) {
 			relations = new ArrayList<String>();
