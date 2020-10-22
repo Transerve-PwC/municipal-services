@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -48,7 +49,7 @@ public class AccountStatementExcelGenerationService {
 	private static String[] columns = { "Date", "Amount(in Rs)", "Type(Payment)", "Type(Rent)", "Principal Due",
 			"Interest Due", "Total Due", "Account Balance", "Receipt Number" };
 	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Transit Site No.",
-			"Area", "Rent", "Security Advance Taken By o/o BDPO U.T.Interest",
+			"Area", "Rent per sq yd", "Security Advance Taken By o/o BDPO U.T.Interest",
 			"Yr. Rent (increase as per Clause 4 of Lease Deed)", "Montly Rent", "Interest" };
 	private static final String PAYMENT = "Payment";
 	private static final String RENT = "Rent";
@@ -70,15 +71,34 @@ public class AccountStatementExcelGenerationService {
 						.relations(Collections.singletonList("owner")).build());
 
 		Property property = properties.get(0);
+		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
+				requestInfo);
+		List<Double> amounts = accountStatementResponse.getRentAccountStatements().stream()
+				.filter(rentAccountStmt -> rentAccountStmt.getType().name().equals(Type.D.name()))
+				.map(rent -> rent.getAmount()).collect(Collectors.toList());
 		List<String> propertyList = new ArrayList<>();
 		propertyList.add(property.getOwners().get(0).getOwnerDetails().getName());
 		propertyList.add(getFormattedDate(property.getOwners().get(0).getOwnerDetails().getAllotmentStartdate()));
 		propertyList.add(property.getTransitNumber());
-		propertyList.add(property.getPropertyDetails().getArea() + " sq.yd");
-		propertyList.add(property.getPropertyDetails().getRentPerSqyd());
+		Double rent = 0.00;
+		if (property.getPropertyDetails().getArea() != null) {
+			propertyList.add(property.getPropertyDetails().getArea() + " sq.yd");
+			Double area = Double.valueOf(property.getPropertyDetails().getArea());
+			if (amounts.size() >= 2) {
+				rent = amounts.get(amounts.size() - 2) / area;
+			}
+		} else {
+			propertyList.add("0.00 sq.yd");
+		}
+		propertyList.add(String.format("%,.2f", rent));
+
 		propertyList.add("");
 		propertyList.add(property.getPropertyDetails().getRentIncrementPercentage().intValue() + "%");
-		propertyList.add(String.format("%,.2f", Double.valueOf(property.getOwners().get(0).getOwnerDetails().getMonthlyRent())));
+		if (amounts.size() >= 2) {
+			propertyList.add(String.format("%,.2f", amounts.get(amounts.size() - 2)));
+		} else {
+			propertyList.add("0.00");
+		}
 		propertyList.add(
 				property.getPropertyDetails().getInterestRate().intValue() + "% P.A as per clause 15 of Lease Deed");
 		try {
@@ -138,9 +158,8 @@ public class AccountStatementExcelGenerationService {
 			}
 
 			int rowNum = 14;
-			AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
-					requestInfo);
 			int statementsSize = accountStatementResponse.getRentAccountStatements().size();
+ 
 			for (int i = 0; i < statementsSize; i++) {
 				RentAccountStatement rentAccountStmt = accountStatementResponse.getRentAccountStatements().get(i);
 				Row row = sheet.createRow(rowNum++);
