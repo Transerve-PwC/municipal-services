@@ -21,30 +21,30 @@ import lombok.ToString;
 @Builder
 public class MortgageApprovedGrantDetails {
 
-	@Size(max = 64, message = "id must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Id must be between 0 and 64 characters in length")
 	@JsonProperty("id")
 	private String id;
 
-	@Size(max = 64, message = "property detail id must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Property detail id must be between 0 and 64 characters in length")
 	@JsonProperty("propertyDetailId")
 	private String propertyDetailId;
 
-	@Size(max = 64, message = "owner id must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Owner id must be between 0 and 64 characters in length")
 	@JsonProperty("ownerId")
 	private String ownerId;
 
-	@Size(max = 64, message = "tenant id must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Tenant id must be between 0 and 64 characters in length")
 	@JsonProperty("tenentId")
 	private String tenentId;
 
-	@Size(max = 64, message = "bank name must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Bank name must be between 0 and 64 characters in length")
 	@JsonProperty("bankName")
 	private String bankName;
 
 	@JsonProperty("mortgageAmount")
 	private BigDecimal mortgageAmount;
 
-	@Size(max = 64, message = "sanction letter number must be between 0 and 64 characters in length")
+	@Size(max = 64, message = "Sanction letter number must be between 0 and 64 characters in length")
 	@JsonProperty("sanctionLetterNumber")
 	private String sanctionLetterNumber;
 

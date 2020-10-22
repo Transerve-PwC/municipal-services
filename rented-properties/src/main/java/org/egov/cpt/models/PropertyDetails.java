@@ -67,33 +67,33 @@ public class PropertyDetails {
 	@NotNull
 	@JsonProperty("rentIncrementPeriod")
 	@Builder.Default
-	@Max(value = 99, message = "rent increment period can not be more than 99")
-	@Min(value = 0, message = "rent increment period can not be less than zero")
+	@Max(value = 99, message = "Rent increment period can not be more than 99")
+	@Min(value = 0, message = "Rent increment period can not be less than zero")
 	private int rentIncrementPeriod = 1;
 
 	@JsonProperty("id")
-	@Size(max = 256, message = "id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Id must be between 0 and 256 characters in length")
 	private String id;
 
 	@JsonProperty("propertyId")
-	@Size(max = 256, message = "property id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Property id must be between 0 and 256 characters in length")
 	private String propertyId;
 
 	@JsonProperty("transitNumber")
-	@Size(max = 4, message = "transit number must be between 0 and 4 characters in length")
+	@Size(max = 4, message = "Transit number must be between 0 and 4 characters in length")
 	private String transitNumber;
 
 	@JsonProperty("tenantId")
-	@Size(max = 256, message = "tenant id must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Tenant id must be between 0 and 256 characters in length")
 	private String tenantId;
 
 	@NotNull
 	@JsonProperty("area")
-	@Size(max = 256, message = "area must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Area must be between 0 and 256 characters in length")
 	private String area;
 
 	@JsonProperty("rentPerSqyd")
-	@Size(max = 256, message = "rent per sqyd must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Rent per sqyd must be between 0 and 256 characters in length")
 	private String rentPerSqyd;
 
 	/**
@@ -101,15 +101,15 @@ public class PropertyDetails {
 	 * During ownership transfer, new value should be also set here.
 	 */
 	@JsonProperty("currentOwner")
-	@Size(max = 256, message = "current owner must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Current owner must be between 0 and 256 characters in length")
 	private String currentOwner;
 
 	@JsonProperty("floors")
-	@Size(max = 256, message = "floors must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Floors must be between 0 and 256 characters in length")
 	private String floors;
 
 	@JsonProperty("additionalDetails")
-	@Size(max = 256, message = "additional details must be between 0 and 256 characters in length")
+	@Size(max = 256, message = "Additional details must be between 0 and 256 characters in length")
 	private String additionalDetails;
 
 	@Valid
