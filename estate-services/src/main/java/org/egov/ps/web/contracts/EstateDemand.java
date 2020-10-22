@@ -113,13 +113,13 @@ public class EstateDemand implements Comparable<EstateDemand> {
    * Collected Rent Penalty of demand.
    */
   @JsonProperty("collectedRentPenalty")
-  private Double collectedRentPenalty;
+  private Double collectedRentPenalty= 0.0;
 
   /**
    * Collected STt Penalty of demand.
    */
   @JsonProperty("collectedGSTPenalty")
-  private Double collectedGSTPenalty;
+  private Double collectedGSTPenalty= 0.0;
 
   /**
    * No of days of demand.

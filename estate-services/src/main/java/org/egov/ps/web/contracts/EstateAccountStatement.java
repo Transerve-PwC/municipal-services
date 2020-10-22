@@ -46,6 +46,22 @@ public class EstateAccountStatement {
     public double getRemainingBalance() {
         return Math.max(0, this.remainingBalance - this.remainingPrincipal - this.remainingInterest);
     }
+   
+    
+    @JsonProperty("remainingGST")
+    private double remainingGST;
+    
+    @JsonProperty("remainingRentPenalty")
+    private double remainingRentPenalty;
+    
+    @JsonProperty("remainingGSTPenalty")
+    private double remainingGSTPenalty;
+    
+    /**
+	 * Receipt no of the payment
+	 */
+	@JsonProperty("receiptNo")
+	private String receiptNo;
 
     public double getDueAmount() {
         return Math.max(0, this.remainingPrincipal + this.remainingInterest - this.remainingBalance);
