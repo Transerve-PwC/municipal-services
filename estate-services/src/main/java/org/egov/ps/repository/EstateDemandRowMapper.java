@@ -25,7 +25,7 @@ public class EstateDemandRowMapper implements ResultSetExtractor<List<EstateDema
 
 			EstateDemand auction = EstateDemand.builder().id(rs.getString("estdid"))
 					.propertyDetailsId(rs.getString("estdproperty_details_id"))
-					.demandDate(rs.getLong("estddemand_date")).isPrevious(rs.getBoolean("estdis_previous"))
+					.generationDate(rs.getLong("estddemand_date")).isPrevious(rs.getBoolean("estdis_previous"))
 					.rent(rs.getDouble("estdrent")).penaltyInterest(rs.getDouble("estdpenalty_interest"))
 					.gstInterest(rs.getDouble("estdgst_interest")).gst(rs.getInt("estdgst"))
 					.collectedRent(rs.getDouble("estdcollected_rent")).collectedGST(rs.getDouble("estdcollected_gst"))

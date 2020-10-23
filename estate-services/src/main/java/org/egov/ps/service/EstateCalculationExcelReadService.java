@@ -103,7 +103,7 @@ public class EstateCalculationExcelReadService {
 			}
 			estateCalculations.forEach(estateCalculationMap -> {
 				estateDemands.add(EstateDemand.builder().isPrevious(checkPreviousTab(estateCalculationMap.get("month")))
-						.demandDate(checkModifyValueLong(estateCalculationMap.get("dueDateOfRent")))
+						.generationDate(checkModifyValueLong(estateCalculationMap.get("dueDateOfRent")))
 						.rent(checkModifyValue(estateCalculationMap.get("rentDue")))
 						.penaltyInterest(checkModifyValue(estateCalculationMap.get("penaltyInterest")))
 						.gstInterest(calculateDelayedPayment(estateCalculationMap))
