@@ -284,6 +284,7 @@ public class EstateRentCollectionServiceTests {
         		.collectedGSTPenalty(collectedGSTPenaty)
         		.collectedRentPenalty(collectedRentPenalty)
         		.collectedRent(collectedRent)
+        		.interestSince(getEpochFromDateString(date))
                .build();
     }
 
@@ -338,4 +339,43 @@ public class EstateRentCollectionServiceTests {
         utils.printStatement(accountStatementItems);
         utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
     }
+    
+    
+    
+    
+    @Test
+
+    public void testSimpleInterestSettlementStatement_case2() throws ParseException {
+    	
+    	List<EstateDemand> demands = Arrays.asList( 
+        		getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0),
+        		getDemand(2678D, 482 ,APR_1_1999,"104",268,30,0,0,0,0),getDemand(2678D, 482 ,MAY_1_1999,"105",268,23,0,0,0,0),
+        		getDemand(2678D, 482 ,JUN_1_1999,"106",268,16),getDemand(2678D, 482 ,JUL_1_1999,"107",268,9),
+        		getDemand(2678D, 482 ,AUG_1_1999,"108",268,0,0,0,0,0),
+        		getDemand(2678D, 482 ,AUG_1_1999,"109",268,0,0,0,0,0),
+        		getDemand(2813D, 506 ,SEP_1_1999,"110",281,0,0,0,0,0),
+        		getDemand(2813D, 506 ,OCT_1_1999,"111",281,0,0,0,0,0),
+        		getDemand(2813D, 506 ,NOV_1_1999,"112",281,0,0,0,0,0),
+        		getDemand(2813D, 506 ,DEC_1_1999,"113",281,0,0,0,0,0),
+        		getDemand(2813D, 506 ,JAN_1_2000,"114",281,0,0,0,0,0),
+        		getDemand(2813D, 506 ,FEB_1_2020,"115",281,0,0,0,0,0),
+        		getDemand(2813D, 506 ,MAR_1_2020,"116",281,0,0,0,0,0),
+        		getDemand(3094D, 557 ,APR_1_2020,"117",309,0,0,0,0,0),
+        		getDemand(3094D, 557 ,MAY_1_2020,"118",309,0,0,0,0,0),
+        		getDemand(3094D, 557 ,JUN_1_2020,"119",309,0,0,0,0,0),
+        		getDemand(3094D, 557 ,JUL_1_2020,"120",309,0,0,0,0,0),
+        		getDemand(3094D, 557 ,AUG_1_2020,"121",309,0,0,0,0,0),
+        		getDemand(3094D, 557 ,SEP_1_2020,"122",309,0,0,0,0,0));
+        		
+    	 List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999),getPayment(10712D, AUG_7_1999),getPayment(12956D, FEB_17_2000),
+         		getPayment(8034D,JUl_7_2000));
+
+          utils=new EstateRentCollectionUtils();
+        List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
+                payments, DEFAULT_INTEREST_RATE, null, null);
+        utils.printStatement(accountStatementItems);
+        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
+    }
+    
+    
 }

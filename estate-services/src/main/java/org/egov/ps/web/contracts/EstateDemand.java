@@ -39,12 +39,7 @@ public class EstateDemand implements Comparable<EstateDemand> {
   @JsonProperty("initialGracePeriod")
   private int initialGracePeriod = 10;
 
-  /**
-   * Date of generation of this demand.
-   */
-  @JsonProperty("generationDate")
-  private Long generationDate;
-
+ 
   /**
    * The principal rent amount that is to be collected
    */
@@ -100,24 +95,28 @@ public class EstateDemand implements Comparable<EstateDemand> {
   /**
    * Collected Rent of demand.
    */
+  @Builder.Default
   @JsonProperty("collectedRent")
-  private Double collectedRent;
+  private Double collectedRent=0.0;
 
   /**
    * Collected GST of demand.
    */
+  @Builder.Default
   @JsonProperty("collectedGST")
-  private Double collectedGST;
+  private Double collectedGST=0.0;
 
   /**
    * Collected Rent Penalty of demand.
    */
+  @Builder.Default
   @JsonProperty("collectedRentPenalty")
   private Double collectedRentPenalty= 0.0;
 
   /**
    * Collected STt Penalty of demand.
    */
+  @Builder.Default
   @JsonProperty("collectedGSTPenalty")
   private Double collectedGSTPenalty= 0.0;
 
@@ -159,15 +158,10 @@ public class EstateDemand implements Comparable<EstateDemand> {
   public String toString() {
     return String.format("Collection: %.2f, remaining: %.2f, remainingSince: %s, generatedOn: %s",
         this.collectionPrincipal, this.remainingPrincipal, DATE_FORMAT.format(this.interestSince),
-        DATE_FORMAT.format(this.generationDate));
+        DATE_FORMAT.format(this.demandDate));
   }
 
-  /**
-   * Last date on which payment made
-   */
-  @JsonProperty("paymentSince")
-  private Long paymentSince;
-
+  
   /**
    * The remaining rent that still has to be collected.
    */
