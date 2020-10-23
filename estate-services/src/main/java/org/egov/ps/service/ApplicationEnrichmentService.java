@@ -241,19 +241,17 @@ public class ApplicationEnrichmentService {
 				modifyAuditDetails.setLastModifiedTime(auditDetails.getLastModifiedTime());
 				application.setAuditDetails(modifyAuditDetails);
 
-				List<Document> applicationDocuments = application.getApplicationDocuments();
-				if (!CollectionUtils.isEmpty(applicationDocuments)) {
-					AuditDetails docAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-					applicationDocuments.forEach(document -> {
-						if (document.getId() == null) {
-							document.setId(UUID.randomUUID().toString());
-						}
+				List<Document> applicationDocuments = application.getAllDocuments();
+				AuditDetails docAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+				applicationDocuments.forEach(document -> {
+					if (document.getId() == null) {
+						document.setId(UUID.randomUUID().toString());
 						document.setTenantId(application.getTenantId());
 						document.setReferenceId(application.getId());
 						document.setPropertyId(application.getProperty().getId());
 						document.setAuditDetails(docAuditDetails);
-					});
-				}
+					}
+				});
 				enrichGenerateDemand(application);
 			});
 		}

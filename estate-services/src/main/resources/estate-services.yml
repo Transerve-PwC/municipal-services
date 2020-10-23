@@ -205,12 +205,10 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.id
 
-
         - query: DELETE FROM cs_ep_auction WHERE property_details_id=?;
           basePath: $.Properties.*.propertyDetails.inActiveBidders.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.inActiveBidders.*.propertyDetailsId
-
 
         - query: INSERT INTO cs_ep_auction (id, property_details_id, auction_id, description, bidder_name, deposited_emd_amount, deposit_date, emd_validity_date, refund_status, state, action, comments, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET description = ?, refund_status = ?, state = ?, action = ?, comments = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.bidders.*
@@ -348,13 +346,13 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.address
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isDirector
-            
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerName
-      
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerGuardianName
-      
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerRelation
-      
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
@@ -390,13 +388,13 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.address
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.isDirector
-            
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerName
-      
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerGuardianName
-      
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.sellerRelation
-      
+
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.modeOfTransfer
 
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.dob
@@ -488,8 +486,7 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedTime
-            
-            
+
         - query: DELETE FROM cs_ep_demand WHERE property_details_id=?;
           basePath: $.Properties.*.propertyDetails.inActiveEstateDemands.*
           jsonMaps:
@@ -557,9 +554,8 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedTime  
-            
-            
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedTime
+
         - query: DELETE FROM cs_ep_payment WHERE property_details_id=?;
           basePath: $.Properties.*.propertyDetails.inActiveEstatePayments.*
           jsonMaps:
@@ -594,8 +590,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime             
-                     
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime
 
     - version: 1.0
       description: Persists Application details in cs_ep_application_v1 table
@@ -672,36 +667,36 @@ serviceMaps:
             - jsonPath: $.Applications.*.id
 
         - query: INSERT INTO cs_ep_documents_v1 (id, tenantid, reference_id, is_active, document_type, file_store_id, property_id, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET is_active = ?, document_type = ?, file_store_id = ?, last_modified_by = ?, last_modified_time = ?;
-          basePath: $.Applications.*.applicationDocuments.*
+          basePath: $.Applications.*.allDocuments.*
           jsonMaps:
-            - jsonPath: $.Applications.*.applicationDocuments.*.id
+            - jsonPath: $.Applications.*.allDocuments.*.id
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.tenantId
+            - jsonPath: $.Applications.*.allDocuments.*.tenantId
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.referenceId
+            - jsonPath: $.Applications.*.allDocuments.*.referenceId
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.isActive
+            - jsonPath: $.Applications.*.allDocuments.*.isActive
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.documentType
+            - jsonPath: $.Applications.*.allDocuments.*.documentType
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.fileStoreId
+            - jsonPath: $.Applications.*.allDocuments.*.fileStoreId
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.propertyId
+            - jsonPath: $.Applications.*.allDocuments.*.propertyId
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.createdBy
+            - jsonPath: $.Applications.*.allDocuments.*.auditDetails.createdBy
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedBy
+            - jsonPath: $.Applications.*.allDocuments.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.createdTime
+            - jsonPath: $.Applications.*.allDocuments.*.auditDetails.createdTime
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedTime
+            - jsonPath: $.Applications.*.allDocuments.*.auditDetails.lastModifiedTime
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.isActive
+            - jsonPath: $.Applications.*.allDocuments.*.isActive
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.documentType
+            - jsonPath: $.Applications.*.allDocuments.*.documentType
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.fileStoreId
+            - jsonPath: $.Applications.*.allDocuments.*.fileStoreId
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedBy
+            - jsonPath: $.Applications.*.allDocuments.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Applications.*.applicationDocuments.*.auditDetails.lastModifiedTime
+            - jsonPath: $.Applications.*.allDocuments.*.auditDetails.lastModifiedTime

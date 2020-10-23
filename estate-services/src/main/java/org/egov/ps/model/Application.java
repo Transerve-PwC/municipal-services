@@ -192,6 +192,11 @@ public class Application {
 				.filter(doc -> doc.getDocumentType().startsWith(PSConstants.ES_WF_DOCS)).collect(Collectors.toList());
 	}
 
+	public List<Document> getAllDocuments() {
+
+		return this.applicationDocuments;
+	}
+
 	@JsonProperty("calculation")
 	Calculation calculation;
 
