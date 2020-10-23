@@ -58,6 +58,8 @@ public class ApplicationEnrichmentService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	MDMSService mdmsService;
+
 	/**
 	 * Application Related Enrich
 	 */
@@ -252,7 +254,7 @@ public class ApplicationEnrichmentService {
 						document.setAuditDetails(docAuditDetails);
 					}
 				});
-				enrichGenerateDemand(application);
+				enrichGenerateDemand(application, request.getRequestInfo());
 			});
 		}
 	}
@@ -294,15 +296,21 @@ public class ApplicationEnrichmentService {
 		return mortgage;
 	}
 
-	private void enrichGenerateDemand(Application application) {
+	private void enrichGenerateDemand(Application application, RequestInfo requestInfo) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		if (application.getState().contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
-            //TODO : We have to fetch the data from MDMS
-			//Master name -> module name 
+			// TODO : We have to fetch the data from MDMS
+			// Master name -> module name
+
+			List<Map<String, Object>> fieldConfigurations = this.mdmsService
+					.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId(), application);
+
+
 			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-			//TODO : replace 500 from the MDMS data , get it dynamic based on application cat and sub cat provided by FE
-			
+			// TODO : replace 500 from the MDMS data , get it dynamic based on application
+			// cat and sub cat provided by FE
+
 			estimateDue.setEstimateAmount(new BigDecimal(500.00));
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),

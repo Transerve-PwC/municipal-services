@@ -60,6 +60,20 @@ public class MDMSService {
 		return fieldConfigurations;
 	}
 
+	public List<Map<String, Object>> getApplicationFees(String applicationType, RequestInfo requestInfo,
+			String tenantId, Application application) throws JSONException {
+		tenantId = tenantId.split("\\.")[0];
+		MdmsCriteriaReq mdmsCriteriaReq = util.prepareMdMsRequest(tenantId, PSConstants.MDMS_PS_MODULE_NAME,
+				Arrays.asList(applicationType), PSConstants.MDMS_PS_FEES_FILTER, requestInfo);
+		StringBuilder url = getMdmsSearchUrl(tenantId, applicationType, PSConstants.MDMS_PS_MODULE_NAME);
+		Object response = serviceRequestRepository.fetchResult(url, mdmsCriteriaReq);
+
+		String MDMSResponsePath = "$.MdmsRes." + PSConstants.MDMS_PS_MODULE_NAME + "." + applicationType;
+
+		List<Map<String, Object>> fieldConfigurations = JsonPath.read(response, MDMSResponsePath);
+		return fieldConfigurations;
+	}
+
 	/**
 	 * Creates and returns the url for mdms search endpoint
 	 *
