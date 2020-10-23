@@ -38,6 +38,11 @@ public class EstateDemand implements Comparable<EstateDemand> {
   @Builder.Default
   @JsonProperty("initialGracePeriod")
   private int initialGracePeriod = 10;
+  /**
+   * Date of generation of this demand.
+   */
+  @JsonProperty("generationDate")
+  private Long generationDate;
 
  
   /**
@@ -59,12 +64,7 @@ public class EstateDemand implements Comparable<EstateDemand> {
   @JsonProperty("interestSince")
   private Long interestSince;
 
-  /**
-   * Date of demand.
-   */
-  @JsonProperty("demandDate")
-  private Long demandDate;
-
+  
   @JsonProperty("isPrevious")
   private Boolean isPrevious;
 
@@ -158,7 +158,7 @@ public class EstateDemand implements Comparable<EstateDemand> {
   public String toString() {
     return String.format("Collection: %.2f, remaining: %.2f, remainingSince: %s, generatedOn: %s",
         this.collectionPrincipal, this.remainingPrincipal, DATE_FORMAT.format(this.interestSince),
-        DATE_FORMAT.format(this.demandDate));
+        DATE_FORMAT.format(this.generationDate));
   }
 
   
@@ -192,7 +192,7 @@ public class EstateDemand implements Comparable<EstateDemand> {
 
   @Override
   public int compareTo(EstateDemand other) {
-    return this.getDemandDate().compareTo(other.getDemandDate());
+    return this.getGenerationDate().compareTo(other.getGenerationDate());
   }
 
   @JsonProperty("auditDetails")
