@@ -298,8 +298,11 @@ public class ApplicationEnrichmentService {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		if (application.getState().contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
-
+            //TODO : We have to fetch the data from MDMS
+			//Master name -> module name 
 			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
+			//TODO : replace 500 from the MDMS data , get it dynamic based on application cat and sub cat provided by FE
+			
 			estimateDue.setEstimateAmount(new BigDecimal(500.00));
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
