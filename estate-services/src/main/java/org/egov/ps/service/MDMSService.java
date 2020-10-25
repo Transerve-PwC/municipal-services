@@ -61,7 +61,7 @@ public class MDMSService {
 	}
 
 	public List<Map<String, Object>> getApplicationFees(String applicationType, RequestInfo requestInfo,
-			String tenantId, Application application) throws JSONException {
+			String tenantId) throws JSONException {
 		tenantId = tenantId.split("\\.")[0];
 		MdmsCriteriaReq mdmsCriteriaReq = util.prepareMdMsRequest(tenantId, PSConstants.MDMS_PS_MODULE_NAME,
 				Arrays.asList(applicationType), PSConstants.MDMS_PS_FEES_FILTER, requestInfo);
@@ -70,8 +70,8 @@ public class MDMSService {
 
 		String MDMSResponsePath = "$.MdmsRes." + PSConstants.MDMS_PS_MODULE_NAME + "." + applicationType;
 
-		List<Map<String, Object>> fieldConfigurations = JsonPath.read(response, MDMSResponsePath);
-		return fieldConfigurations;
+		List<Map<String, Object>> feesConfigurations = JsonPath.read(response, MDMSResponsePath);
+		return feesConfigurations;
 	}
 
 	/**
