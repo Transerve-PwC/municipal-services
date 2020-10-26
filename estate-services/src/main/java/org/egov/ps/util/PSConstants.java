@@ -27,6 +27,8 @@ public class PSConstants {
 	public static final String MDMS_PS_FIELD_FILTER = "[0].fields";
 	
 	public static final String MDMS_PS_FEES_FILTER = "[0].fees";
+	
+	public static final String MDMS_PS_FEE_GST_FILTER = "[0].feePercentGST";
 
 	public static final String MDMS_PS_NOTIFICATIONS_FILTER = "[0].notifications";
 

@@ -298,7 +298,7 @@ public class ApplicationEnrichmentService {
 
 	private void enrichGenerateDemand(Application application, RequestInfo requestInfo) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
-
+		
 		if (application.getState().contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
 			
 			// TODO : We have to fetch the data from MDMS
@@ -311,7 +311,10 @@ public class ApplicationEnrichmentService {
 			
 			// TODO : replace 500 from the MDMS data , get it dynamic based on application
 			// cat and sub cat provided by FE
-			estimateDue.setEstimateAmount(fetchEstimateAmountFromMDMSJson(feesConfigurations,application));
+			BigDecimal estimateAmount = fetchEstimateAmountFromMDMSJson(feesConfigurations,application);
+			BigDecimal gstEstimateAmount = estimateAmount.multiply( 
+					feesGSTOfApplication(application,requestInfo)).divide(new BigDecimal(100.0));
+			estimateDue.setEstimateAmount(estimateAmount.add(gstEstimateAmount));
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
@@ -321,6 +324,17 @@ public class ApplicationEnrichmentService {
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
 				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
 		application.setCalculation(calculation);
+	}
+	
+	// Used for get feePercentGST 
+	public BigDecimal feesGSTOfApplication(Application application, RequestInfo requestInfo) {
+		BigDecimal responseGSTEstateAmount = new BigDecimal(0.0);
+		List<Map<String, Object>> feeGsts = mdmsservice.getApplicationGST(application.getMDMSModuleName(),
+				requestInfo, application.getTenantId());
+		if(!feeGsts.isEmpty()) {
+			responseGSTEstateAmount = new BigDecimal(feeGsts.get(0).get("gst").toString());
+		}
+		return responseGSTEstateAmount;
 	}
 	
 	// Used for filter fees by using category and sub-category  
