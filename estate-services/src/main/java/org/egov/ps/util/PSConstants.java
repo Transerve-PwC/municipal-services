@@ -48,4 +48,6 @@ public class PSConstants {
 
 	public static final String ES_APPROVE = "APPROVE";
 
+	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+
 }
