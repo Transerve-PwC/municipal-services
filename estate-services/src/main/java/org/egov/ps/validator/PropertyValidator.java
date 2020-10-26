@@ -184,18 +184,21 @@ public class PropertyValidator {
 						|| o.getOwnerDetails().getGuardianName().trim().isEmpty()) {
 					errorMap.put("INVALID_GUARDIAN_NAME", "Owner Father/Husband name can not be empty");
 				}
-				if (o.getOwnerDetails().getGuardianRelation() == null
-						|| o.getOwnerDetails().getGuardianRelation().trim().isEmpty()) {
-					errorMap.put("INVALID_GUARDIAN_RELATION", "Owner relation with guardian can not be empty");
-				}
 				if (o.getOwnerDetails().getAddress() == null || o.getOwnerDetails().getAddress().trim().isEmpty()) {
 					errorMap.put("INVALID_ADDRESS", "Address can not be empty");
 				}
-				if (o.getShare() < 1) {
-					errorMap.put("INVALID_SHARE", "Share can not be less than or equals to zero");
-				}
 				if (o.getOwnerDetails().getPossesionDate() == null) {
 					errorMap.put("INVALID_POSSESSION_DATE", "Possesion date can not be empty");
+				}
+				if (property_Optional.get().getPropertyDetails().getBranchType() == PSConstants.ESTATE_BRANCH) {
+
+					if (o.getShare() < 1) {
+						errorMap.put("INVALID_SHARE", "Share can not be less than or equals to zero");
+					}
+					if (o.getOwnerDetails().getGuardianRelation() == null
+							|| o.getOwnerDetails().getGuardianRelation().trim().isEmpty()) {
+						errorMap.put("INVALID_GUARDIAN_RELATION", "Owner relation with guardian can not be empty");
+					}
 				}
 
 				// Document Validation
