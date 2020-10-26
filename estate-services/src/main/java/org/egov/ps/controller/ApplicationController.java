@@ -92,7 +92,7 @@ public class ApplicationController {
 	@PostMapping("/_collect_payment")
 	public ResponseEntity<ApplicationResponse> offlinePayment(
 			@Valid @RequestBody ApplicationRequest applicationRequest) {
-		demandService.generateFinanceDemand(applicationRequest);
+		applicationService.collectPayment(applicationRequest);
 		ResponseInfo resInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(applicationRequest.getRequestInfo(), true);
 		ApplicationResponse response = ApplicationResponse.builder().applications(applicationRequest.getApplications()).responseInfo(resInfo)

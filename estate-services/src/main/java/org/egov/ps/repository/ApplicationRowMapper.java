@@ -54,7 +54,7 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 							.hardcopyReceivedDate(rs.getLong("apphardcopy_received_date"))
 							.state(rs.getString("appstate")).action(rs.getString("appaction"))
 							.bankName(rs.getString("appbank_name")).transactionId(rs.getString("apptransaction_number"))
-							.paymentAmount(rs.getDouble("appamount")).paymentType(rs.getString("apppayment_type")).auditDetails(auditdetails).build();
+							.paymentAmount(rs.getBigDecimal("appamount")).paymentType(rs.getString("apppayment_type")).auditDetails(auditdetails).build();
 
 					PGobject applicationDetailsPgObject = (PGobject) rs.getObject("appapplication_details");
 					if (applicationDetailsPgObject != null) {

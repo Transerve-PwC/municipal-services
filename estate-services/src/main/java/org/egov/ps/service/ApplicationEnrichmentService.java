@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
+import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.MortgageDetails;
 import org.egov.ps.model.Owner;
@@ -21,6 +22,7 @@ import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.model.calculation.Category;
 import org.egov.ps.model.calculation.TaxHeadEstimate;
 import org.egov.ps.model.idgen.IdResponse;
+import org.egov.ps.repository.ApplicationRepository;
 import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
@@ -59,6 +61,9 @@ public class ApplicationEnrichmentService {
 	private ObjectMapper objectMapper;
 
 	MDMSService mdmsService;
+
+	@Autowired
+	ApplicationRepository applicationRepository;
 
 	/**
 	 * Application Related Enrich
@@ -300,15 +305,14 @@ public class ApplicationEnrichmentService {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 		
 		if (application.getState().contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
-			
+
 			// TODO : We have to fetch the data from MDMS
 			// Master name -> module name
-			List<Map<String, Object>> feesConfigurations = mdmsservice.getApplicationFees(application.getMDMSModuleName(),
-					requestInfo, application.getTenantId());	
-		
+			List<Map<String, Object>> feesConfigurations = mdmsservice
+					.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
 
 			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-			
+
 			// TODO : replace 500 from the MDMS data , get it dynamic based on application
 			// cat and sub cat provided by FE
 			BigDecimal estimateAmount = fetchEstimateAmountFromMDMSJson(feesConfigurations,application);
@@ -320,7 +324,7 @@ public class ApplicationEnrichmentService {
 					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimateDue);
 		}
-				
+
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
 				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
 		application.setCalculation(calculation);
@@ -341,29 +345,35 @@ public class ApplicationEnrichmentService {
 	public BigDecimal fetchEstimateAmountFromMDMSJson(List<Map<String, Object>> feesConfigurations, Application application) {
 		BigDecimal responseEstimateAmount = new BigDecimal(0.0);
 		Integer compareVarForEstimateAmount = 0;
-		for(Map<String, Object> feesConfig : feesConfigurations) {
-			if(application.getProperty().getCategory().equalsIgnoreCase(feesConfig.get("category").toString())) {
+		for (Map<String, Object> feesConfig : feesConfigurations) {
+			if (application.getProperty().getCategory().equalsIgnoreCase(feesConfig.get("category").toString())) {
 				/* Category And Sub-category both meet than directly return a amount for that */
-				if(application.getProperty().getSubCategory().equalsIgnoreCase(feesConfig.get("subCategory").toString())) {
+				if (application.getProperty().getSubCategory()
+						.equalsIgnoreCase(feesConfig.get("subCategory").toString())) {
 					return new BigDecimal(feesConfig.get("amount").toString());
 				}
-				/* Main Category is available but no sub-category available than go with category default amount*/
-				if("*".equalsIgnoreCase(feesConfig.get("subCategory").toString())) {					
+				/*
+				 * Main Category is available but no sub-category available than go with
+				 * category default amount
+				 */
+				if ("*".equalsIgnoreCase(feesConfig.get("subCategory").toString())) {
 					responseEstimateAmount = new BigDecimal(feesConfig.get("amount").toString());
 					compareVarForEstimateAmount++;
-				}				
+				}
 			}
 		}
-		/* If there is not any equal category and sub-category than estate amount could be default amount 
-		 * Where Category is : * 
-		 * And Sub-Category is :* */
-		if(compareVarForEstimateAmount == 0) {		
+		/*
+		 * If there is not any equal category and sub-category than estate amount could
+		 * be default amount Where Category is : * And Sub-Category is :*
+		 */
+		if (compareVarForEstimateAmount == 0) {
 			List<Map<String, Object>> feesConfigurationsForCommonCatandSubCat = feesConfigurations.stream()
-					  .filter(feesConfig -> "*".equalsIgnoreCase(feesConfig.get("category").toString()))
-					  .filter(feesConfig -> "*".equalsIgnoreCase(feesConfig.get("subCategory").toString()))
-					  .collect(Collectors.toList());
-			responseEstimateAmount = !feesConfigurationsForCommonCatandSubCat.isEmpty() ? 
-					new BigDecimal(feesConfigurationsForCommonCatandSubCat.get(0).get("amount").toString()) : new BigDecimal("0") ;			
+					.filter(feesConfig -> "*".equalsIgnoreCase(feesConfig.get("category").toString()))
+					.filter(feesConfig -> "*".equalsIgnoreCase(feesConfig.get("subCategory").toString()))
+					.collect(Collectors.toList());
+			responseEstimateAmount = !feesConfigurationsForCommonCatandSubCat.isEmpty()
+					? new BigDecimal(feesConfigurationsForCommonCatandSubCat.get(0).get("amount").toString())
+					: new BigDecimal("0");
 		}
 		return responseEstimateAmount;
 	}
@@ -388,6 +398,51 @@ public class ApplicationEnrichmentService {
 
 	private String getTaxHeadCodeWithCharge(String billingBusService, String chargeFor, Category category) {
 		return String.format("%s_%s_%s", billingBusService, chargeFor, category.toString());
+	}
+
+	public void collectPayment(ApplicationRequest applicationRequest) {
+		List<Application> applicationsFromDB = applicationRepository
+				.getApplications(getApplicationCriteria(applicationRequest));
+
+		Application applicationFromDb = applicationsFromDB.get(0);
+
+		applicationRequest.getApplications().forEach(application -> {
+			application.setTenantId(applicationFromDb.getTenantId());
+			application.setBranchType(applicationFromDb.getBranchType());
+			application.setModuleType(applicationFromDb.getModuleType());
+			application.setApplicationType(applicationFromDb.getApplicationType());
+			application.setApplicationDetails(applicationFromDb.getApplicationDetails());
+			application.setAuditDetails(applicationFromDb.getAuditDetails());
+			
+			enrichCollectPaymentDemand(application, applicationRequest.getRequestInfo());
+		});
+	}
+
+	public ApplicationCriteria getApplicationCriteria(ApplicationRequest request) {
+		ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+		if (!CollectionUtils.isEmpty(request.getApplications())) {
+			request.getApplications().forEach(application -> {
+				if (application.getApplicationNumber() != null)
+					applicationCriteria.setApplicationNumber(application.getApplicationNumber());
+			});
+		}
+		return applicationCriteria;
+	}
+
+	private void enrichCollectPaymentDemand(Application application, RequestInfo requestInfo) {
+		List<TaxHeadEstimate> estimates = new LinkedList<>();
+
+		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
+
+		estimateDue.setEstimateAmount(application.getPaymentAmount());
+		estimateDue.setCategory(Category.FEE);
+		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
+				PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+		estimates.add(estimateDue);
+
+		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
+				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
+		application.setCalculation(calculation);
 	}
 
 }

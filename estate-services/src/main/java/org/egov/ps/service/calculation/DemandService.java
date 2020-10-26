@@ -265,6 +265,8 @@ public class DemandService {
 		generateFinanceApplicationDemand(applicationRequest.getRequestInfo(), applicationRequest.getApplications());
 
 		for (Application application : applicationRequest.getApplications()) {
+
+//		Application application = applicationRequest.getApplications().get(0);
 			/**
 			 * Get the bill generated.
 			 */
@@ -287,7 +289,8 @@ public class DemandService {
 				applicationRequest.setApplications(Collections.singletonList(application));
 				producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 			}
-		};
+		}
+		;
 		return null;
 	}
 
@@ -295,6 +298,8 @@ public class DemandService {
 		List<Demand> demands = new LinkedList<>();
 
 		for (Application application : applications) {
+
+//		Application application = applications.get(0);
 
 			List<Demand> searchResult = searchDemand(application.getTenantId(),
 					Collections.singleton(application.getApplicationNumber()), requestInfo,
@@ -310,7 +315,8 @@ public class DemandService {
 				log.info("Demand generated");
 				return demands;
 			}
-		};
+		}
+		;
 
 		// Generate a new demands.
 		return createDemand(requestInfo, applications);
@@ -325,7 +331,7 @@ public class DemandService {
 	 *                      bill.
 	 * @return
 	 */
-	public Object createCashPayment(RequestInfo requestInfo, Double paymentAmount, String billId,
+	public Object createCashPayment(RequestInfo requestInfo, BigDecimal paymentAmount, String billId,
 			Application application, String billingBusinessService) {
 
 		JsonNode applicationDetails = application.getApplicationDetails();
@@ -335,13 +341,12 @@ public class DemandService {
 //		OwnerDetails ownerDetails = application.getOwnerDetails();
 
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
-				.totalAmountPaid(BigDecimal.valueOf(paymentAmount)).receiptDate(System.currentTimeMillis())
+				.totalAmountPaid(paymentAmount).receiptDate(System.currentTimeMillis())
 				.businessService(billingBusinessService).billId(billId).build();
 
 		CollectionPayment payment = CollectionPayment.builder().paymentMode(CollectionPaymentModeEnum.CASH)
-				.tenantId(tenantId).totalAmountPaid(BigDecimal.valueOf(paymentAmount)).payerName(ownerName)
-				.paidBy("COUNTER").mobileNumber(ownerPhone).paymentDetails(Collections.singletonList(paymentDetail))
-				.build();
+				.tenantId(tenantId).totalAmountPaid(paymentAmount).payerName(ownerName).paidBy("COUNTER")
+				.mobileNumber(ownerPhone).paymentDetails(Collections.singletonList(paymentDetail)).build();
 
 		CollectionPaymentRequest paymentRequest = CollectionPaymentRequest.builder().requestInfo(requestInfo)
 				.payment(payment).build();

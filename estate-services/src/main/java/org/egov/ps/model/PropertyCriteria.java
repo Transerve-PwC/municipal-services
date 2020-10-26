@@ -57,6 +57,6 @@ public class PropertyCriteria {
 	public boolean isEmpty() {
 		return (this.fileNumber == null && this.category == null && this.state == null && this.offset == null
 				&& this.limit == null && this.propertyId == null && this.relations.size() == 0 && this.tenantId == null
-				&& this.userId == null);
+				&& this.userId == null && this.branchType == null);
 	}
 }

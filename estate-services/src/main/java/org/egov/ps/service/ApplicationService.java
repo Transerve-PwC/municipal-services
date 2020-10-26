@@ -98,5 +98,10 @@ public class ApplicationService {
 
 		return status;
 	}
-	
+
+	public void collectPayment(ApplicationRequest applicationRequest) {
+		applicationEnrichmentService.collectPayment(applicationRequest);
+		demandService.generateFinanceDemand(applicationRequest);
+	}
+
 }
