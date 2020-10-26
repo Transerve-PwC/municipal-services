@@ -90,20 +90,22 @@ public class PropertyValidator {
 		if (requestProperty.getSiteNumber() == null || requestProperty.getSiteNumber().trim().isEmpty()) {
 			errorMap.put("INVALID_SITE_NUMBER", "Site number can not be empty");
 		}
-		if (requestProperty.getPropertyDetails().getPropertyType() == null
-				|| requestProperty.getPropertyDetails().getPropertyType().trim().isEmpty()) {
-			errorMap.put("INVALID_PROPERTY_TYPE", "Property type can not be empty");
-		}
-		if (requestProperty.getPropertyDetails().getTypeOfAllocation() == null
-				|| requestProperty.getPropertyDetails().getTypeOfAllocation().trim().isEmpty()) {
-			errorMap.put("INVALID_TYPE_OF_ALLOCATION", "Type of allocation can not be empty");
-		}
-		if (requestProperty.getPropertyDetails().getAreaSqft() < 1) {
-			errorMap.put("INVALID_AREA_SQFT", "Area per sq.ft can not be empty");
-		}
-		if (requestProperty.getPropertyDetails().getRatePerSqft() == null
-				|| requestProperty.getPropertyDetails().getRatePerSqft().signum() < 1) {
-			errorMap.put("INVALID_RATE_PER_SQFT", "Rate per sq.ft can not be less than or equals to zero");
+		if (requestProperty.getPropertyDetails().getBranchType() == PSConstants.ESTATE_BRANCH) {
+			if (requestProperty.getPropertyDetails().getPropertyType() == null
+					|| requestProperty.getPropertyDetails().getPropertyType().trim().isEmpty()) {
+				errorMap.put("INVALID_PROPERTY_TYPE", "Property type can not be empty");
+			}
+			if (requestProperty.getPropertyDetails().getTypeOfAllocation() == null
+					|| requestProperty.getPropertyDetails().getTypeOfAllocation().trim().isEmpty()) {
+				errorMap.put("INVALID_TYPE_OF_ALLOCATION", "Type of allocation can not be empty");
+			}
+			if (requestProperty.getPropertyDetails().getAreaSqft() < 1) {
+				errorMap.put("INVALID_AREA_SQFT", "Area per sq.ft can not be empty");
+			}
+			if (requestProperty.getPropertyDetails().getRatePerSqft() == null
+					|| requestProperty.getPropertyDetails().getRatePerSqft().signum() < 1) {
+				errorMap.put("INVALID_RATE_PER_SQFT", "Rate per sq.ft can not be less than or equals to zero");
+			}
 		}
 
 		// Mandatory for allotment of site
