@@ -20,6 +20,9 @@ import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
+import org.springframework.stereotype.Service;
+
+@Service
 public class EstateRentCollectionService implements IEstateRentCollectionService{
 	
 	
