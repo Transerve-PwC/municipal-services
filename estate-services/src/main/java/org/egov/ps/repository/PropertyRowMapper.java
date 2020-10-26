@@ -48,6 +48,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 					final PropertyDetails propertyDetails = PropertyDetails.builder().id(propertyDetailId)
 							.propertyId(rs.getString("pdproperty_id")).propertyType(rs.getString("pdproperty_type"))
+							.branchType(rs.getString("branch_type"))
 							.tenantId(tenantId).typeOfAllocation(rs.getString("type_of_allocation"))
 							.modeOfAuction(rs.getString("mode_of_auction")).schemeName(rs.getString("scheme_name"))
 							.areaSqft(rs.getInt("area_sqft")).dateOfAuction(rs.getLong("date_of_auction"))

@@ -1,5 +1,6 @@
 package org.egov.ps.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -214,7 +215,7 @@ public class Application {
 	 * Amount to be paid
 	 */
 	@JsonProperty("paymentAmount")
-	private Double paymentAmount;
+	private BigDecimal paymentAmount;
 	
 
 	@JsonProperty("bankName")

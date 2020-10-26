@@ -15,6 +15,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
+import org.egov.ps.model.BillV2;
 import org.egov.ps.model.CollectionPayment;
 import org.egov.ps.model.CollectionPaymentDetail;
 import org.egov.ps.model.CollectionPaymentModeEnum;
@@ -26,9 +27,12 @@ import org.egov.ps.model.calculation.Demand.StatusEnum;
 import org.egov.ps.model.calculation.DemandDetail;
 import org.egov.ps.model.calculation.DemandResponse;
 import org.egov.ps.model.calculation.TaxHeadEstimate;
+import org.egov.ps.producer.Producer;
+import org.egov.ps.repository.ApplicationRepository;
 import org.egov.ps.repository.ServiceRequestRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
+import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.RequestInfoWrapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +62,12 @@ public class DemandService {
 
 	@Autowired
 	private Util utils;
+
+	@Autowired
+	ApplicationRepository applicationRepository;
+
+	@Autowired
+	private Producer producer;
 
 	/**
 	 * Creates demand for the given list of calculations
@@ -247,15 +257,81 @@ public class DemandService {
 		return combinedBillDetials;
 	}
 
+	public List<Application> generateFinanceDemand(ApplicationRequest applicationRequest) {
+
+		/**
+		 * Generate an actual finance demand
+		 */
+		generateFinanceApplicationDemand(applicationRequest.getRequestInfo(), applicationRequest.getApplications());
+
+		for (Application application : applicationRequest.getApplications()) {
+
+//		Application application = applicationRequest.getApplications().get(0);
+			/**
+			 * Get the bill generated.
+			 */
+			List<BillV2> bills = demandRepository.fetchBill(applicationRequest.getRequestInfo(),
+					application.getTenantId(), application.getApplicationNumber(),
+					application.getBillingBusinessService());
+			if (CollectionUtils.isEmpty(bills)) {
+				throw new CustomException("BILL_NOT_GENERATED",
+						"No bills were found for the consumer code " + application.getApplicationNumber());
+			}
+
+			if (applicationRequest.getRequestInfo().getUserInfo().getType()
+					.equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)) {
+				/**
+				 * create an offline payment.
+				 */
+				createCashPayment(applicationRequest.getRequestInfo(), application.getPaymentAmount(),
+						bills.get(0).getId(), application, application.getBillingBusinessService());
+
+				applicationRequest.setApplications(Collections.singletonList(application));
+				producer.push(config.getUpdateApplicationTopic(), applicationRequest);
+			}
+		}
+		;
+		return null;
+	}
+
+	public List<Demand> generateFinanceApplicationDemand(RequestInfo requestInfo, List<Application> applications) {
+		List<Demand> demands = new LinkedList<>();
+
+		for (Application application : applications) {
+
+//		Application application = applications.get(0);
+
+			List<Demand> searchResult = searchDemand(application.getTenantId(),
+					Collections.singleton(application.getApplicationNumber()), requestInfo,
+					application.getBillingBusinessService());
+
+			if (!CollectionUtils.isEmpty(searchResult)) {
+				Demand demand = searchResult.get(0);
+				List<DemandDetail> demandDetails = demand.getDemandDetails();
+				List<DemandDetail> updatedDemandDetails = getUpdatedDemandDetails(application, demandDetails);
+				demand.setDemandDetails(updatedDemandDetails);
+				demands.add(demand);
+				demands = demandRepository.updateDemand(requestInfo, demands);
+				log.info("Demand generated");
+				return demands;
+			}
+		}
+		;
+
+		// Generate a new demands.
+		return createDemand(requestInfo, applications);
+	}
+
 	/**
 	 * 
 	 * @param requestInfo   RequestInfo object from the original request.
 	 * @param paymentAmount Total amount paid.
 	 * @param billId        The bill that was generated for this payment.
-	 * @param tenantId      The tenantId to look up mdmsService businessService from bill.
+	 * @param tenantId      The tenantId to look up mdmsService businessService from
+	 *                      bill.
 	 * @return
 	 */
-	public Object createCashPayment(RequestInfo requestInfo, Double paymentAmount, String billId,
+	public Object createCashPayment(RequestInfo requestInfo, BigDecimal paymentAmount, String billId,
 			Application application, String billingBusinessService) {
 
 		JsonNode applicationDetails = application.getApplicationDetails();
@@ -265,13 +341,12 @@ public class DemandService {
 //		OwnerDetails ownerDetails = application.getOwnerDetails();
 
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
-				.totalAmountPaid(BigDecimal.valueOf(paymentAmount)).receiptDate(System.currentTimeMillis())
+				.totalAmountPaid(paymentAmount).receiptDate(System.currentTimeMillis())
 				.businessService(billingBusinessService).billId(billId).build();
-		
+
 		CollectionPayment payment = CollectionPayment.builder().paymentMode(CollectionPaymentModeEnum.CASH)
-				.tenantId(tenantId).totalAmountPaid(BigDecimal.valueOf(paymentAmount)).payerName(ownerName)
-				.paidBy("COUNTER").mobileNumber(ownerPhone).paymentDetails(Collections.singletonList(paymentDetail))
-				.build();
+				.tenantId(tenantId).totalAmountPaid(paymentAmount).payerName(ownerName).paidBy("COUNTER")
+				.mobileNumber(ownerPhone).paymentDetails(Collections.singletonList(paymentDetail)).build();
 
 		CollectionPaymentRequest paymentRequest = CollectionPaymentRequest.builder().requestInfo(requestInfo)
 				.payment(payment).build();
