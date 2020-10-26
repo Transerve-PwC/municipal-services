@@ -56,7 +56,16 @@ public class PropertyService {
 		propertyValidator.validateCreateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
 		producer.push(config.getSavePropertyTopic(), request);
+		processRentSummary(request);
 		return request.getProperties();
+	}
+	
+	private void processRentSummary(PropertyRequest request) {
+		request.getProperties().stream().filter(property -> property.getDemands() != null
+				&& property.getPayments() != null && property.getRentAccount() != null).forEach(property -> {
+					property.setRentSummary(rentCollectionService.calculateRentSummary(property.getDemands(),
+							property.getRentAccount(), property.getPropertyDetails().getInterestRate()));
+				});
 	}
 
 	/**

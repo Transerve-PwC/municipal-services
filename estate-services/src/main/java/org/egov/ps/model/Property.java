@@ -1,9 +1,13 @@
 package org.egov.ps.model;
 
-import org.egov.ps.web.contracts.AuditDetails;
-import org.springframework.validation.annotation.Validated;
-
 import java.util.List;
+
+import javax.validation.Valid;
+
+import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.EstateDemand;
+import org.egov.ps.web.contracts.EstatePayment;
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -81,5 +85,22 @@ public class Property {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
+	
+	@Valid
+	@JsonProperty
+	private List<EstateDemand> demands;
+	
+	@Valid
+	@JsonProperty
+	private List<EstatePayment> payments;
+	
+	@Valid
+	@JsonProperty
+	private RentAccount rentAccount;
+	
+	@Valid
+	@JsonProperty
+	private RentSummary rentSummary;
+	
 
 }
