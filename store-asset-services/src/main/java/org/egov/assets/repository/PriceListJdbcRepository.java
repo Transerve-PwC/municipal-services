@@ -468,7 +468,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
 	public boolean isDuplicateContract(List<PriceList> priceLists, String method) {
 		for (PriceList pl : priceLists) {
 
-			if (!pl.getRateType().equals(RateTypeEnum.GEM.toString())) {
+			if (!pl.getRateType().toString().equals(RateTypeEnum.GEM.toString())) {
 
 				for (PriceListDetails plds : pl.getPriceListDetails()) {
 

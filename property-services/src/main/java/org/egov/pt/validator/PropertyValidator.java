@@ -80,7 +80,7 @@ public class PropertyValidator {
 
 		validateMasterData(request, errorMap);
 		validateMobileNumber(request, errorMap);
-		validateFields(request, errorMap);
+	//	validateFields(request, errorMap);
 		if (!CollectionUtils.isEmpty(units))
 			validateUnits(request, errorMap);
 
@@ -219,52 +219,58 @@ public class PropertyValidator {
             throw new CustomException(errorMap);
     }
 
-    private void validateFields(PropertyRequest request, Map<String, String> errorMap) {
-
-    	Property property = request.getProperty();
-    	
-//    	if(configs.getIsWorkflowEnabled() && null == property.getWorkflow())
-//    		errorMap.put("EG_PR_WF_NOT_NULL", "Wokflow is enabled for create please provide the necessary info in workflow field in property");
-   	
-		if (property.getAddress().getGeoLocation() == null)
-			property.getAddress().setGeoLocation(new GeoLocation());
-
-		if (property.getSource() == null)
-			errorMap.put("EG_PT_ERROR_SOURCE", "The value given for Source field is either invalid or null");
-
-		if (property.getChannel() == null)
-			errorMap.put("EG_PT_ERROR_CHANNEL", "The value given for Channel field is either invalid or null");
-
-		if (!property.getPropertyType().contains(PTConstants.PT_TYPE_SHAREDPROPERTY)) {
-
-			if (property.getLandArea() == null) {
-
-				errorMap.put("EG_PT_ERROR_LAND_AREA",
-						"Land Area cannot be null for the property of type  : " + property.getPropertyType());
-
-			} else if (property.getLandArea().compareTo(configs.getMinumumLandArea()) < 0) {
-
-				errorMap.put("EG_PT_ERROR", "Land Area cannot be lesser than minimum value : "
-						+ configs.getMinumumLandArea() + " " + configs.getLandAreaUnit());
-			}
-		}
-		
-		if (property.getPropertyType().contains(PTConstants.PT_TYPE_BUILTUP)) {
-
-			Long floors = property.getNoOfFloors();
-
-			if (floors == null || (floors != null && floors < 1)) {
-				errorMap.put("EG_PT_ERROR_FLOOR_COUNT",
-						"No of floors cannot be null or lesser than value one in count for property of type : "
-								+ PTConstants.PT_TYPE_BUILTUP);
-			}
-			
-			if (property.getUsageCategory() == null)
-				errorMap.put("EG_PT_ERROR_USAGE",
-						"Usage Category is mandatory for for property of type : " + PTConstants.PT_TYPE_BUILTUP);
-		}
-    	
-	}
+	/*
+	 * private void validateFields(PropertyRequest request, Map<String, String>
+	 * errorMap) {
+	 * 
+	 * Property property = request.getProperty();
+	 * 
+	 * // if(configs.getIsWorkflowEnabled() && null == property.getWorkflow()) //
+	 * errorMap.put("EG_PR_WF_NOT_NULL",
+	 * "Wokflow is enabled for create please provide the necessary info in workflow field in property"
+	 * );
+	 * 
+	 * if (property.getAddress().getGeoLocation() == null)
+	 * property.getAddress().setGeoLocation(new GeoLocation());
+	 * 
+	 * if (property.getSource() == null) errorMap.put("EG_PT_ERROR_SOURCE",
+	 * "The value given for Source field is either invalid or null");
+	 * 
+	 * if (property.getChannel() == null) errorMap.put("EG_PT_ERROR_CHANNEL",
+	 * "The value given for Channel field is either invalid or null");
+	 * 
+	 * if (!property.getPropertyType().contains(PTConstants.PT_TYPE_SHAREDPROPERTY))
+	 * {
+	 * 
+	 * if (property.getLandArea() == null) {
+	 * 
+	 * errorMap.put("EG_PT_ERROR_LAND_AREA",
+	 * "Land Area cannot be null for the property of type  : " +
+	 * property.getPropertyType());
+	 * 
+	 * } else if (property.getLandArea().compareTo(configs.getMinumumLandArea()) <
+	 * 0) {
+	 * 
+	 * errorMap.put("EG_PT_ERROR",
+	 * "Land Area cannot be lesser than minimum value : " +
+	 * configs.getMinumumLandArea() + " " + configs.getLandAreaUnit()); } }
+	 * 
+	 * if (property.getPropertyType().contains(PTConstants.PT_TYPE_BUILTUP)) {
+	 * 
+	 * Long floors = property.getNoOfFloors();
+	 * 
+	 * if (floors == null || (floors != null && floors < 1)) {
+	 * errorMap.put("EG_PT_ERROR_FLOOR_COUNT",
+	 * "No of floors cannot be null or lesser than value one in count for property of type : "
+	 * + PTConstants.PT_TYPE_BUILTUP); }
+	 * 
+	 * if (property.getUsageCategory() == null) errorMap.put("EG_PT_ERROR_USAGE",
+	 * "Usage Category is mandatory for for property of type : " +
+	 * PTConstants.PT_TYPE_BUILTUP); }
+	 * 
+	 * }
+	 */
+    
 
     /**
      *Checks if the codes of all fields are in the list of codes obtain from master data
@@ -317,14 +323,15 @@ public class PropertyValidator {
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
 
-		for (OwnerInfo owner : property.getOwners()) {
-
-			if (owner.getOwnerType() != null
-					&& !codes.get(PTConstants.MDMS_PT_OWNERTYPE).contains(owner.getOwnerType())) {
-
-				errorMap.put("INVALID OWNERTYPE", "The OwnerType '" + owner.getOwnerType() + "' does not exists");
-			}
-		}
+		/*
+		 * for (OwnerInfo owner : property.getOwners()) {
+		 * 
+		 * if (owner.getOwnerType() != null &&
+		 * !codes.get(PTConstants.MDMS_PT_OWNERTYPE).contains(owner.getOwnerType())) {
+		 * 
+		 * errorMap.put("INVALID OWNERTYPE", "The OwnerType '" + owner.getOwnerType() +
+		 * "' does not exists"); } }
+		 */
 
 		if(!CollectionUtils.isEmpty(property.getDocuments()) && property.getDocuments().contains(null))
 			errorMap.put("INVALID ENTRY IN PROPERTY DOCS", " The proeprty documents cannot contain null values");

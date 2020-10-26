@@ -281,6 +281,7 @@ public class ScrapService extends DomainService {
 		List<ScrapDetail> scrapDetailList = new ArrayList<>();
 		for (Scrap scrap : request.getScraps()) {
 			for (ScrapDetail scrapDetails : scrap.getScrapDetails()) {
+				//search scrap by issue number
 				MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 						.id(Arrays.asList(scrapDetails.getIssueDetail().getId()))
 						.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())

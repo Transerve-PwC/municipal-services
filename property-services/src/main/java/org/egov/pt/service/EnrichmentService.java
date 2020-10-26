@@ -49,7 +49,7 @@ public class EnrichmentService {
 		property.setAccountId(requestInfo.getUserInfo().getUuid());
 		enrichUuidsForPropertyCreate(requestInfo, property);
 		setIdgenIds(request);
-		enrichBoundary(property, requestInfo);
+	//	enrichBoundary(property, requestInfo);
 	}
 
 	private void enrichUuidsForPropertyCreate(RequestInfo requestInfo, Property property) {
@@ -114,7 +114,6 @@ public class EnrichmentService {
 			property.getAddress().setId(propertyFromDb.getAddress().getId());
 
 		} else if (isWfEnabled && iswfStarting) {
-
 			enrichPropertyForNewWf(requestInfo, property, false);
 		}
 		
@@ -137,8 +136,6 @@ public class EnrichmentService {
 		property.setAdditionalDetails(
 				propertyutil.jsonMerge(propertyFromDb.getAdditionalDetails(), property.getAdditionalDetails()));
     }
-
-
 
     /**
 	 * Sets the acknowledgement and assessment Numbers for given PropertyRequest
