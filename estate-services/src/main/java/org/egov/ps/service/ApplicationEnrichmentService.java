@@ -58,6 +58,8 @@ public class ApplicationEnrichmentService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	MDMSService mdmsService;
+
 	/**
 	 * Application Related Enrich
 	 */
@@ -252,7 +254,7 @@ public class ApplicationEnrichmentService {
 						document.setAuditDetails(docAuditDetails);
 					}
 				});
-				enrichGenerateDemand(application);
+				enrichGenerateDemand(application, request.getRequestInfo());
 			});
 		}
 	}
@@ -294,21 +296,62 @@ public class ApplicationEnrichmentService {
 		return mortgage;
 	}
 
-	private void enrichGenerateDemand(Application application) {
+	private void enrichGenerateDemand(Application application, RequestInfo requestInfo) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		if (application.getState().contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
+			
+			// TODO : We have to fetch the data from MDMS
+			// Master name -> module name
+			List<Map<String, Object>> feesConfigurations = mdmsservice.getApplicationFees(application.getMDMSModuleName(),
+					requestInfo, application.getTenantId());	
+		
 
 			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-			estimateDue.setEstimateAmount(new BigDecimal(500.00));
+			
+			// TODO : replace 500 from the MDMS data , get it dynamic based on application
+			// cat and sub cat provided by FE
+			estimateDue.setEstimateAmount(fetchEstimateAmountFromMDMSJson(feesConfigurations,application));
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimateDue);
 		}
+				
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
 				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
 		application.setCalculation(calculation);
+	}
+	
+	// Used for filter fees by using category and sub-category  
+	public BigDecimal fetchEstimateAmountFromMDMSJson(List<Map<String, Object>> feesConfigurations, Application application) {
+		BigDecimal responseEstimateAmount = new BigDecimal(0.0);
+		Integer compareVarForEstimateAmount = 0;
+		for(Map<String, Object> feesConfig : feesConfigurations) {
+			if(application.getProperty().getCategory().equalsIgnoreCase(feesConfig.get("category").toString())) {
+				/* Category And Sub-category both meet than directly return a amount for that */
+				if(application.getProperty().getSubCategory().equalsIgnoreCase(feesConfig.get("subCategory").toString())) {
+					return new BigDecimal(feesConfig.get("amount").toString());
+				}
+				/* Main Category is available but no sub-category available than go with category default amount*/
+				if("*".equalsIgnoreCase(feesConfig.get("subCategory").toString())) {					
+					responseEstimateAmount = new BigDecimal(feesConfig.get("amount").toString());
+					compareVarForEstimateAmount++;
+				}				
+			}
+		}
+		/* If there is not any equal category and sub-category than estate amount could be default amount 
+		 * Where Category is : * 
+		 * And Sub-Category is :* */
+		if(compareVarForEstimateAmount == 0) {		
+			List<Map<String, Object>> feesConfigurationsForCommonCatandSubCat = feesConfigurations.stream()
+					  .filter(feesConfig -> "*".equalsIgnoreCase(feesConfig.get("category").toString()))
+					  .filter(feesConfig -> "*".equalsIgnoreCase(feesConfig.get("subCategory").toString()))
+					  .collect(Collectors.toList());
+			responseEstimateAmount = !feesConfigurationsForCommonCatandSubCat.isEmpty() ? 
+					new BigDecimal(feesConfigurationsForCommonCatandSubCat.get(0).get("amount").toString()) : new BigDecimal("0") ;			
+		}
+		return responseEstimateAmount;
 	}
 
 	// To be used in future

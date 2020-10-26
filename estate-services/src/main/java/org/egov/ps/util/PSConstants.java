@@ -10,6 +10,12 @@ public class PSConstants {
 
 	public static final String ES_WF_DOCS = "WF_DOCS";
 
+	public static final String ESTATE_BRANCH = "ESTATE_BRANCH";
+
+	public static final String BUILDING_BRANCH = "BUILDING_BRANCH";
+
+	public static final String MANIMAJRA_BRANCH = "MANIMAJRA_BRANCH";
+
 	public static final String JSONPATH_PROPERTY_SERVICE = "$.MdmsRes.OwnershipTransferSaleDeed";
 
 	public static final String MDMS_PS_MODULE_NAME = "EstateServices";
@@ -19,6 +25,8 @@ public class PSConstants {
 	public static final String MDMS_PS_CODE_FILTER = "$.*.code";
 
 	public static final String MDMS_PS_FIELD_FILTER = "[0].fields";
+	
+	public static final String MDMS_PS_FEES_FILTER = "[0].fees";
 
 	public static final String MDMS_PS_NOTIFICATIONS_FILTER = "[0].notifications";
 
