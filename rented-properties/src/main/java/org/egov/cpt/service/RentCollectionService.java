@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,6 @@ import org.egov.cpt.models.RentCollection;
 import org.egov.cpt.models.RentDemand;
 import org.egov.cpt.models.RentPayment;
 import org.egov.cpt.models.RentSummary;
-import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -324,33 +322,18 @@ public class RentCollectionService implements IRentCollectionService {
 		if (fromDateTimestamp == null) {
 			return accountStatementItems;
 		} else {
-			//LocalDate date = LocalDate 
-			//System.out.println(endTimestamp);
-			//System.out.println(Date.from(Instant.now()).getTime());
-			//System.out.println(Instant.ofEpochMilli(endTimestamp).atZone(ZoneId.systemDefault()).toLocalDate()
-				//	.equals(Instant.ofEpochMilli(Date.from(Instant.now()).getTime()).atZone(ZoneId.systemDefault()).toLocalDate()));
-			//System.out.println(endTimestamp==Date.from(Instant.now()).getTime());
-
 			List<LocalDate> dates = accountStatementItems.stream()
 					.map(stmt -> Instant.ofEpochMilli(stmt.getDate()).atZone(ZoneId.systemDefault()).toLocalDate())
 					.collect(Collectors.toList());
-			/*
-			 * if(!dates.contains(Instant.ofEpochMilli(fromDateTimestamp).atZone(ZoneId.
-			 * systemDefault()).toLocalDate()) &&
-			 * !dates.contains(Instant.ofEpochMilli(endTimestamp).atZone(ZoneId.
-			 * systemDefault()).toLocalDate())) { throw new
-			 * CustomException("NO_RECORDS_FOUND", "No records found"); }
-			 */
-			
+
 			if (!dates.contains(Instant.ofEpochMilli(fromDateTimestamp).atZone(ZoneId.systemDefault()).toLocalDate())) {
 				Optional<Long> afterDate = accountStatementItems.stream().map(stmt -> stmt.getDate())
 						.filter(stmt -> fromDateTimestamp < stmt).findFirst();
-				//System.out.println(afterDate);
 				return accountStatementItems.stream()
 						.filter(statementItem -> statementItem.getDate() >= afterDate.get().longValue())
 						.collect(Collectors.toList());
 			}
-			 
+
 			Long fromDate = accountStatementItems.stream().map(stmt -> stmt.getDate())
 					.filter(date -> Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate().equals(
 							Instant.ofEpochMilli(fromDateTimestamp).atZone(ZoneId.systemDefault()).toLocalDate()))
