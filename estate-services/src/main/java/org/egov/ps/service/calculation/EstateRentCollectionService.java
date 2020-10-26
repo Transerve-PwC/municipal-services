@@ -291,6 +291,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 	 * @return List<RentAccountStatement>
 	 */
 	
+	@Override
 	public List<EstateAccountStatement> getAccountStatement(List<EstateDemand> demands, List<EstatePayment> payments,
 			double interestRate, Long fromDateTimestamp, Long toDateTimestamp) {
 		
