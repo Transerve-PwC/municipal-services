@@ -290,6 +290,6 @@ public class PropertyQueryBuilder {
 			builder.append("account.property_id=:propId");
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
-		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return builder.toString();
 	}
 }
