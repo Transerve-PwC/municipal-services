@@ -11,6 +11,7 @@ import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
+import org.egov.ps.service.calculation.IEstateRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
@@ -51,6 +52,9 @@ public class PropertyService {
 	
 	@Autowired
 	private IRentCollectionService rentCollectionService;
+	
+	@Autowired
+	private IEstateRentCollectionService estateRentCollectionService;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
@@ -115,7 +119,8 @@ public class PropertyService {
 				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
 						.relations(Collections.singletonList("finance")).build());
 		if (CollectionUtils.isEmpty(properties)) {
-			return AccountStatementResponse.builder().rentAccountStatements(Collections.emptyList()).build();
+			return AccountStatementResponse.builder().estateAccountStatements(Collections.emptyList())
+					.build();
 		}
 
 		Property property = properties.get(0);

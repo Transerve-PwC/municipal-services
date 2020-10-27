@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.ps.model.RentAccountStatement;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -19,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AccountStatementResponse {
 
-	@JsonProperty("RentAccountStatements")
+	@JsonProperty("EstateAccountStatement")
 	@Valid
-	private List<RentAccountStatement> rentAccountStatements;
+	private List<EstateAccountStatement> estateAccountStatements;
 
 }

@@ -259,6 +259,10 @@ public class PropertyEnrichmentService {
 					estateDemand.setPropertyDetailsId(property.getPropertyDetails().getId());
 
 				}
+				estateDemand.setRemainingRentPenalty(estateDemand.getPenaltyInterest());
+				estateDemand.setRemainingGSTPenalty(estateDemand.getGstInterest());
+				estateDemand.setRemainingRent(estateDemand.getRent());
+				estateDemand.setInterestSince(estateDemand.getGenerationDate());
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				estateDemand.setAuditDetails(estateDemandAuditDetails);
 
