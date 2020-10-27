@@ -2,12 +2,11 @@ package org.egov.ps.service.calculation;
 
 import java.util.List;
 
-
 import org.egov.ps.web.contracts.EstateAccount;
+import org.egov.ps.web.contracts.EstateAccountStatement;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
-
 import org.egov.ps.web.contracts.EstateRentSummary;
 
 
@@ -30,8 +29,12 @@ public interface IEstateRentCollectionService {
 			final EstateAccount account, double interestRate,boolean isFixGST);
 
 	public EstateRentSummary calculateRentSummary(List<EstateDemand> demands, EstateAccount rentAccount, double interestRate);
+	
 	EstateRentSummary calculateRentSummaryAt(List<EstateDemand> demands, EstateAccount rentAccount, double interestRate,
 			long atTimestamp) ;
+	
+	public List<EstateAccountStatement> getAccountStatement(List<EstateDemand> demands, List<EstatePayment> payments,
+			double interestRate, Long fromDateTimestamp, Long toDateTimestamp);
 
 
 }
