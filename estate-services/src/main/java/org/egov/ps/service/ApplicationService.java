@@ -1,7 +1,9 @@
 package org.egov.ps.service;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
@@ -102,6 +104,25 @@ public class ApplicationService {
 	public void collectPayment(ApplicationRequest applicationRequest) {
 		applicationEnrichmentService.collectPayment(applicationRequest);
 		demandService.generateFinanceDemand(applicationRequest);
+	}
+
+	public void updatePostPayment(ApplicationRequest applicationRequest, Map<String, Boolean> idToIsStateUpdatableMap) {
+		RequestInfo requestInfo = applicationRequest.getRequestInfo();
+		List<Application> applications = applicationRequest.getApplications();
+
+		List<Application> applicationsForUpdate = new LinkedList<>();
+
+		for (Application application : applications) {
+			if (idToIsStateUpdatableMap.get(application.getId())) {
+				applicationsForUpdate.add(application);
+			}
+		}
+
+		if (!CollectionUtils.isEmpty(applicationsForUpdate)) {
+			wfIntegrator.callApplicationWorkFlow(new ApplicationRequest(requestInfo, applicationsForUpdate));
+			producer.push(config.getUpdateApplicationTopic(),
+					new ApplicationRequest(requestInfo, applicationsForUpdate));
+		}
 	}
 
 }
