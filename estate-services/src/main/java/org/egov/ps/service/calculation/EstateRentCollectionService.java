@@ -20,6 +20,9 @@ import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
+import org.springframework.stereotype.Service;
+
+@Service
 public class EstateRentCollectionService implements IEstateRentCollectionService{
 	
 	
@@ -55,7 +58,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 		 * Principal.
 		 */
 		List<EstateRentCollection> principalCollections = effectiveAmount > 0
-				? extractPenalty(demands, effectiveAmount, payment.getReceiptDate())
+				? extractPenalty(demands, effectiveAmount, payment.getReceiptDate(),interestRate)
 				: Collections.emptyList();
 		effectiveAmount -= principalCollections.stream().mapToDouble(EstateRentCollection::getRentPenaltyCollected).sum();
 		effectiveAmount -= principalCollections.stream().mapToDouble(EstateRentCollection::getGstPenaltyCollected).sum();
@@ -81,7 +84,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 	}
 	
 	private List<EstateRentCollection> extractPenalty(List<EstateDemand> demands, double paymentAmount,
-			long paymentTimestamp) {
+			long paymentTimestamp,double interestRate) {
 		ArrayList<EstateRentCollection> collections = new ArrayList<EstateRentCollection>();
 		List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnPaid).collect(Collectors.toList());
 		
@@ -108,7 +111,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			if (noOfDaysForInterestCalculation == 0) {
 				continue;
 			}
-			double GSTinterest = demand.getGst()*0.18* noOfDaysForInterestCalculation/365;
+			double GSTinterest = demand.getGst()*(interestRate/100)* noOfDaysForInterestCalculation/365;
 					
 					
 
@@ -168,7 +171,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			} else {
 				// some calculation
 				
-				rentTobePaid = paymentAmount*100/(100+18);
+				rentTobePaid = paymentAmount*100/(100+interestRate);
 				gstToBePaid= paymentAmount-rentTobePaid;
 				if(gstToBePaid>demand.getRemainingGST())
 					rentTobePaid+=(gstToBePaid-demand.getRemainingGST());
@@ -291,6 +294,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 	 * @return List<RentAccountStatement>
 	 */
 	
+	@Override
 	public List<EstateAccountStatement> getAccountStatement(List<EstateDemand> demands, List<EstatePayment> payments,
 			double interestRate, Long fromDateTimestamp, Long toDateTimestamp) {
 		
@@ -436,10 +440,11 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 						LocalDate demandInterestSinceDate = getLocalDate(demand.getInterestSince());
 
 						long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(demandInterestSinceDate, atDate);
-						calculatedInterest = demand.getGst() * 0.18
+						calculatedInterest = demand.getGst() * (interestRate/100)
 								* noOfDaysForInterestCalculation / 365 ;
 					}
 						
+
 					return EstateRentSummary.builder()
 							.rent(demand.getRent())
 							.collectedRent(demand.getCollectedRent()!=null?demand.getCollectedRent():0)

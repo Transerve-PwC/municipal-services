@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
 import org.egov.ps.web.contracts.BusinessService;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -56,11 +58,24 @@ public class PropertyService {
 	@Autowired
 	private IEstateRentCollectionService estateRentCollectionService;
 
+	@Autowired
+	private IEstateRentCollectionService estateRentCollectionService;
+	
+	
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
 		producer.push(config.getSavePropertyTopic(), request);
+		processRentSummary(request);
 		return request.getProperties();
+	}
+	
+	private void processRentSummary(PropertyRequest request) {
+		request.getProperties().stream().filter(property -> property.getDemands() != null
+				&& property.getPayments() != null && property.getEstateAccount() != null).forEach(property -> {
+					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(property.getDemands(),
+							property.getEstateAccount(), property.getPropertyDetails().getInterestRate()));
+				});
 	}
 
 	/**
@@ -108,7 +123,33 @@ public class PropertyService {
 			criteria.setUserId(requestInfo.getUserInfo().getUuid());
 		}
 
-		return repository.getProperties(criteria);
+		List<Property> properties = repository.getProperties(criteria);
+		
+		if (CollectionUtils.isEmpty(properties))
+			return Collections.emptyList();
+		
+		// Note : criteria.getRelations().contains(PSConstants.RELATION_FINANCE) filter is in rented-properties do we need to put here?
+		if (properties.size() <= 1 || !CollectionUtils.isEmpty(criteria.getRelations())) {
+			properties.stream().forEach(property -> {
+				List<String> propertyDetailsIds = new ArrayList<>();
+				propertyDetailsIds.add(property.getId());
+				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
+				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
+				
+				EstateAccount estateAccount = repository
+						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
+				
+				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
+					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands, estateAccount,
+							property.getPropertyDetails().getInterestRate()));
+					property.setDemands(demands);
+					property.setPayments(payments);
+					property.setEstateAccount(estateAccount);
+				}
+			});
+		}
+
+		return properties;
 	}
 	
 	

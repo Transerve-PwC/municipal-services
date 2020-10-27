@@ -13,6 +13,7 @@ import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.workflow.WorkflowIntegrator;
@@ -53,6 +54,9 @@ public class PropertyRepository {
 
 	@Autowired
 	WorkflowIntegrator workflowIntegrator;
+	
+	@Autowired
+	private RentAccountRowMapper rentAccountrowMapper;
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -269,7 +273,7 @@ public class PropertyRepository {
 		String estatePaymentsQuery = propertyQueryBuilder.getEstatePaymentsQuery(propertyDetailsIds, params);
 		return namedParameterJdbcTemplate.query(estatePaymentsQuery, params, estatePaymentRowMapper);
 	}
-
+	
 	public Property findPropertyById(String propertyId) {
 		PropertyCriteria propertySearchCriteria = PropertyCriteria.builder().propertyId(propertyId).build();
 		List<Property> properties = this.getProperties(propertySearchCriteria);
@@ -277,5 +281,13 @@ public class PropertyRepository {
 			return null;
 		}
 		return properties.get(0);
+	}
+
+	public EstateAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
+		log.debug("query:" + query);
+		log.debug("preparedStmtList:" + preparedStmtList);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountrowMapper);
 	}
 }

@@ -30,33 +30,33 @@ public class EstateRentCollectionUtils {
 		// System.out.println(statementItem);
 		// });
 		System.out.println(String.format("%10s |%10s |%10s |"
-				+ "%14s|%14s|%14s"
-				+ "|%14s|%14s|%14s"
-				+ "|%14s|%14s|%14s"
-				+ "|%14s|%14s|%14s"
-				+ "|%13s |%13s |%15s |%5s", 
+				+ "%14s"
+				+ "| %12s"
+				+ "| %14s"
+				+ "| %14s"
+				+ "|%13s |%15s |%5s", 
 				"Date", "Amount", "Type",
-				"Rent","Rent Received","Principal Due", 
-				"GST","GST Received","GST Due",
-				"Interest Panelty","Interest Panelty Collected","Interest Panelty Due",
-				"GST Panelty","GST Panelty Collected","GST Panelty Due",
-				"Interest Due", "Total Due", "Account Balance","Receipt No"));
+				"Principal Due", 
+				"GST Due",
+				"Interest Panelty Due",
+				"GST Panelty Due",
+				 "Total Due", "Account Balance","Receipt No"));
 		System.out.println(
 				"===============================================================================================================================================================================================================================================================================================================================================================================================================");
 		accountStatementItems.forEach(item -> {
 			System.out.println(String.format("%10s |%10.2f |%10s|"
-					+ "%14.2f |%14.2f |%14.2f "
-					+ "|%14.2f |%14.2f |%14.2f  "
-					+ "|%17.2f |%17.2f |%17.2f  "
-					+ "|%11.2f |%11.2f |%11.2f  "
-					+ "| %13.2f |%13.2f |%15.2f |%5s",
+					+ "%14.2f "
+					+ "|%12.2f  "
+					+ "|%18.2f  "
+					+ "|%14.2f  "
+					+ "|%13.2f |%15.2f |%5s",
 					dateFormat.format(new Date(item.getDate())), item.getAmount(),
 					item.getType() == EstateAccountStatement.Type.C ? "Payment" : "Rent", 
-							item.getRent(),item.getCollectedRent(),item.getRemainingPrincipal(),
-							item.getGst(),item.getCollectedGST(),item.getRemainingGST(),
-							item.getRentPanelty(),item.getCollectedRentPanelty(),item.getRemainingRentPenalty(),
-							item.getGSTPanelty(),item.getCollectedGSTPanelty(),item.getRemainingGSTPenalty(),
-					item.getRemainingInterest(), item.getDueAmount(), item.getRemainingBalance(),item.getReceiptNo()));
+							item.getRemainingPrincipal(),
+							item.getRemainingGST(),
+							item.getRemainingRentPenalty(),
+							item.getRemainingGSTPenalty(),
+					 item.getDueAmount(), item.getRemainingBalance(),item.getReceiptNo()));
 		});
 	}
 
