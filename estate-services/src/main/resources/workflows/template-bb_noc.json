@@ -370,7 +370,7 @@
                     "currentState": "PENDING_PAYMENT",
                     "nextState": "PENDING_DA_PREPARE_LETTER",
                     "roles": [
-                        "CITIZEN", "ES_EB_FINANCIAL_OFFICER"
+                        "CITIZEN"
                     ]
                 }
             ],
