@@ -131,8 +131,8 @@ public class PropertyService {
 				.getEstatePaymentsForPropertyDetailsIds(Collections.singletonList(property.getPropertyDetails().getId()));
 
 		return AccountStatementResponse.builder()
-				.rentAccountStatements(rentCollectionService.getAccountStatement(demands, payments,
-						18.00, // property.getPropertyDetails().getInterestRate(), // TODO: hard coded for now
+				.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments,
+						18.00,
 						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
 				.build();
 	}
