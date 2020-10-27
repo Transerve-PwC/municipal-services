@@ -70,6 +70,8 @@ public class PaymentUpdateService {
 
 				Role role = Role.builder().code("SYSTEM_PAYMENT").build();
 				requestInfo.getUserInfo().getRoles().add(role);
+				
+				
 				ApplicationRequest updateRequest = ApplicationRequest.builder().requestInfo(requestInfo)
 						.applications(applications).build();
 
