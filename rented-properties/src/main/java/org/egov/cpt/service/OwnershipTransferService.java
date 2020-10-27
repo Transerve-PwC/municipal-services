@@ -71,6 +71,7 @@ public class OwnershipTransferService {
 
 	public List<Owner> createOwnershipTransfer(OwnershipTransferRequest request) {
 		// propertyValidator.validateCreateRequest(request);
+		propertyValidator.validateNumericValueForOwnershipTransfer(request);
 		List<Property> propertyFromSearch = propertyValidator.getPropertyForOT(request);
 		enrichmentService.enrichCreateOwnershipTransfer(request, propertyFromSearch);
 		if (config.getIsWorkflowEnabled()) {
@@ -125,6 +126,7 @@ public class OwnershipTransferService {
 	}
 
 	public List<Owner> updateOwnershipTransfer(OwnershipTransferRequest request) {
+		propertyValidator.validateNumericValueForOwnershipTransfer(request);
 		List<Owner> ownersFromSearch = propertyValidator.validateUpdateRequest(request);
 		enrichmentService.enrichUpdateOwnershipTransfer(request, ownersFromSearch);
 		String applicationState = request.getOwners().get(0).getApplicationState(); // demand generation
