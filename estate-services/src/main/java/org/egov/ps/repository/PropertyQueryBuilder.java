@@ -140,7 +140,9 @@ public class PropertyQueryBuilder {
 
 		Long limit = config.getDefaultLimit();
 		Long offset = config.getDefaultOffset();
-		String finalQuery = paginationWrapper.replace("{}", query);
+		String finalQuery;
+
+		finalQuery = paginationWrapper.replace("{}", query);
 
 		if (criteria.getLimit() != null && criteria.getLimit() <= config.getMaxSearchLimit())
 			limit = criteria.getLimit();
@@ -289,6 +291,6 @@ public class PropertyQueryBuilder {
 			builder.append(" where account.property_id IN (:propId)");
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
-		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return builder.toString();
 	}
 }
