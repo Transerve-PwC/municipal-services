@@ -104,12 +104,14 @@ public class PropertyQueryBuilder {
 
 	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
-	
-	private static final String ACCOUNT_SEARCH_QUERY = SELECT + " account.*, "
-			+ " account.id as account_id,account.property_id as account_pid,account.remainingAmount as account_remainingAmount, account.remaining_since as account_remaining_since,"
+
+	private static final String ACCOUNT_SEARCH_COLUMN = " account.id as account_id,account.property_id as account_pid,account.remainingAmount as account_remainingAmount, account.remaining_since as account_remaining_since,"
 			+ " account.created_by as account_created_by, account.created_date as account_created_date,"
-			+ " account.modified_by as account_modified_by,account.modified_date as account_modified_date "
-			+ " FROM cs_pt_account account ";
+			+ " account.modified_by as account_modified_by,account.modified_date as account_modified_date ";
+
+	private static final String OWNER_DOCS_COLUMNS = " doc.id as docid, doc.reference_id as docreference_id, doc.tenantid as doctenantid,"
+			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
+			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
 
 	// + LEFT_JOIN
 	// + " cs_ep_payment_v1 payment ON ptdl.id=payment.property_details_id ";
@@ -121,6 +123,8 @@ public class PropertyQueryBuilder {
 	private static final String ESTATE_DEMAND_TABLE = " cs_ep_demand estd ";
 
 	private static final String ESTATE_PAYMENT_TABLE = " cs_ep_payment estp ";
+
+	private static final String ESTATE_ACCOUNT_COLUMN = " cs_pt_account account ";
 
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
@@ -223,10 +227,6 @@ public class PropertyQueryBuilder {
 		}
 	}
 
-	private static final String OWNER_DOCS_COLUMNS = " doc.id as docid, doc.reference_id as docreference_id, doc.tenantid as doctenantid,"
-			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
-			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
-
 	public String getOwnerDocsQuery(List<String> ownerDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(OWNER_DOCS_COLUMNS);
@@ -280,14 +280,13 @@ public class PropertyQueryBuilder {
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
-	
-	
 
 	public String getPropertyRentAccountSearchQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
-		StringBuilder builder = new StringBuilder(ACCOUNT_SEARCH_QUERY);
+		StringBuilder builder = new StringBuilder(SELECT);
+		builder.append(ACCOUNT_SEARCH_COLUMN);
+		builder.append(" FROM " + ESTATE_ACCOUNT_COLUMN);
 		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
-			addClauseIfRequired(preparedStmtList, builder);
-			builder.append("account.property_id=:propId");
+			builder.append(" where account.property_id IN (:propId)");
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
