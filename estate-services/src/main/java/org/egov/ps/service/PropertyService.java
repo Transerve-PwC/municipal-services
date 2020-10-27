@@ -51,16 +51,10 @@ public class PropertyService {
 
 	@Autowired
 	private WorkflowService workflowService;
-	
-	@Autowired
-	private IRentCollectionService rentCollectionService;
-	
-	@Autowired
-	private IEstateRentCollectionService estateRentCollectionService;
 
 	@Autowired
 	private IEstateRentCollectionService estateRentCollectionService;
-	
+
 	
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
