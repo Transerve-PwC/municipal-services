@@ -140,9 +140,7 @@ public class PropertyQueryBuilder {
 
 		Long limit = config.getDefaultLimit();
 		Long offset = config.getDefaultOffset();
-		String finalQuery;
-
-		finalQuery = paginationWrapper.replace("{}", query);
+		String finalQuery = paginationWrapper.replace("{}", query);
 
 		if (criteria.getLimit() != null && criteria.getLimit() <= config.getMaxSearchLimit())
 			limit = criteria.getLimit();
