@@ -258,7 +258,7 @@ public class DemandService {
 	}
 
 	public List<Application> generateFinanceDemand(ApplicationRequest applicationRequest) {
-
+		
 		/**
 		 * Generate an actual finance demand
 		 */
@@ -266,7 +266,6 @@ public class DemandService {
 
 		for (Application application : applicationRequest.getApplications()) {
 
-//		Application application = applicationRequest.getApplications().get(0);
 			/**
 			 * Get the bill generated.
 			 */
@@ -298,8 +297,6 @@ public class DemandService {
 		List<Demand> demands = new LinkedList<>();
 
 		for (Application application : applications) {
-
-//		Application application = applications.get(0);
 
 			List<Demand> searchResult = searchDemand(application.getTenantId(),
 					Collections.singleton(application.getApplicationNumber()), requestInfo,
@@ -338,7 +335,6 @@ public class DemandService {
 		String ownerName = applicationDetails.get("transferee").get("name").asText();
 		String ownerPhone = applicationDetails.get("transferee").get("mobileNo").asText();
 		String tenantId = application.getTenantId();
-//		OwnerDetails ownerDetails = application.getOwnerDetails();
 
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
 				.totalAmountPaid(paymentAmount).receiptDate(System.currentTimeMillis())

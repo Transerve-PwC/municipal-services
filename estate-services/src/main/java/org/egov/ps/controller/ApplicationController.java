@@ -9,7 +9,6 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.service.ApplicationService;
-import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.util.ResponseInfoFactory;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.ApplicationResponse;
@@ -34,9 +33,6 @@ public class ApplicationController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
-	@Autowired
-	private DemandService demandService;
 
 	@PostMapping("/_create")
 	public ResponseEntity<ApplicationResponse> create(@Valid @RequestBody ApplicationRequest applicationRequest) {
