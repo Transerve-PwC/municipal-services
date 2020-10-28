@@ -291,9 +291,9 @@ public class PropertyRepository {
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountrowMapper);
 	}
 
-	public EstateAccount getAccountDetailsForPropertyDetailsIds(List<String> propertyDetailsIds) {
+	public EstateAccount getAccountDetailsForPropertyDetailsIds(List<String> propertyIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
-		String estateAccountQuery = propertyQueryBuilder.getEstateAccountQuery(propertyDetailsIds, params);
+		String estateAccountQuery = propertyQueryBuilder.getEstateAccountQuery(propertyIds, params);
 		log.debug("query:" + estateAccountQuery);
 		log.debug("preparedStmtList:" + params);
 		return namedParameterJdbcTemplate.query(estateAccountQuery, params, rentAccountrowMapper);

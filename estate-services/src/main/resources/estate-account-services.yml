@@ -6,9 +6,9 @@ serviceMaps:
       fromTopic: save-estate-accout
       isTransaction: true
       queryMaps:
-      - query: INSERT INTO cs_ep_account(id, property_id, remainingAmount, remaining_since, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET remainingAmount=?, remaining_since=?, modified_by=?, modified_date=?;
-           basePath: $.Properties.*.estateAccount
-           jsonMaps:
+      - query: INSERT INTO cs_ep_account(id, property_id, remainingamount, remaining_since, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET remainingAmount=?, remaining_since=?, modified_by=?, modified_date=?;
+        basePath: Properties.*.estateAccount
+        jsonMaps:
               - jsonPath: $.Properties.*.estateAccount.id
               
               - jsonPath: $.Properties.*.estateAccount.propertyId

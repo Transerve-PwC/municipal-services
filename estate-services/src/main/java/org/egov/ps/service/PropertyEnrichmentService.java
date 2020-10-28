@@ -258,30 +258,15 @@ public class PropertyEnrichmentService {
 	}
 
 	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
-		/**
-		 * Delete existing data as new data is coming in.
-		 */
-		if (property.getEstateAccount() != null) {
-			EstateAccount estateAccount = property.getPropertyDetails().getEstateAccount();
-			boolean hasNewEstateAccount = estateAccount.getId() == null || estateAccount.getId().isEmpty();
-
-			if (hasNewEstateAccount) {
-				EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
-						Collections.singletonList(property.getPropertyDetails().getId()));
-				property.getPropertyDetails().setInActiveEstateAccount(existingEstateAccount);
+			
+			EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
+					Collections.singletonList(property.getId()));
+			if(existingEstateAccount == null) {
+				existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
+						.propertyId(property.getId())
+						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
 			}
-
-			if (estateAccount.getId() == null) {
-				property.getPropertyDetails().getEstateAccount().setId(UUID.randomUUID().toString());
-				property.getPropertyDetails().getEstateAccount()
-						.setAuditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true));
-			}
-		} else {
-			property.getPropertyDetails()
-					.setEstateAccount(EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
-							.propertyId(property.getId())
-							.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build());
-		}
+			property.setEstateAccount(existingEstateAccount);
 	}
 
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {

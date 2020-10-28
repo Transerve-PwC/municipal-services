@@ -255,13 +255,5 @@ public class PropertyDetails {
 	@Builder.Default
 	@JsonProperty("interestRate")
 	private Double interestRate = 0.0;
-	
-	@Valid
-	@JsonProperty
-	private EstateAccount estateAccount;
-	
-	@Valid
-	@JsonProperty
-	private EstateAccount inActiveEstateAccount;
-	
+			
 }

@@ -98,7 +98,7 @@ public class Property {
 	private List<EstatePayment> payments;
 	
 	@Valid
-	@JsonProperty
+	@JsonProperty("estateAccount")
 	private EstateAccount estateAccount;
 	
 	@Valid
