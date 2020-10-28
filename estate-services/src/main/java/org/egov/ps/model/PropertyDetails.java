@@ -207,7 +207,7 @@ public class PropertyDetails {
 	@Valid
 	@JsonProperty
 	private List<AuctionBidder> inActiveBidders;
-	
+
 	@JsonProperty("estateDemands")
 	@Builder.Default
 	private List<EstateDemand> estateDemands = new ArrayList<EstateDemand>();
@@ -224,7 +224,7 @@ public class PropertyDetails {
 		this.estateDemands.add(estateDemandItem);
 		return this;
 	}
-	
+
 	@Valid
 	@JsonProperty
 	private List<EstateDemand> inActiveEstateDemands;
@@ -245,14 +245,15 @@ public class PropertyDetails {
 		this.estatePayments.add(estatePaymentItem);
 		return this;
 	}
-	
+
 	@Valid
 	@JsonProperty
 	private List<EstatePayment> inActiveEstatePayments;
-	
+
 	@NotNull
 	@Builder.Default
 	@JsonProperty("interestRate")
 	private Double interestRate = 0.0;
-	
+
+
 }

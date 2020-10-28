@@ -1,6 +1,9 @@
 package org.egov.ps.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +15,12 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
+import org.egov.ps.model.Owner;
+import org.egov.ps.model.Property;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.workflow.WorkflowService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +29,10 @@ public class Util {
 
 	@Autowired
 	private Configuration config;
-	
+
 	@Autowired
 	private WorkflowService workflowService;
-	
+
 	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
 
 		Long time = System.currentTimeMillis();
@@ -36,7 +42,7 @@ public class Util {
 		else
 			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
 	}
-	
+
 	public MdmsCriteriaReq prepareMdMsRequest(String tenantId, String moduleName, List<String> names, String filter,
 			RequestInfo requestInfo) {
 
@@ -52,7 +58,7 @@ public class Util {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
-	
+
 	/**
 	 * Creates demand Search url based on tenanatId,businessService and ConsumerCode
 	 * 
@@ -72,7 +78,7 @@ public class Util {
 		url.append("{3}");
 		return url.toString();
 	}
-	
+
 	/**
 	 * Creates a map of id to isStateUpdatable
 	 * 
@@ -80,7 +86,8 @@ public class Util {
 	 * @param businessService The businessService configuration
 	 * @return Map of is to isStateUpdatable
 	 */
-	public Map<String, Boolean> getIdToIsStateUpdatableMap(BusinessService businessService, List<Application> searchresult) {
+	public Map<String, Boolean> getIdToIsStateUpdatableMap(BusinessService businessService,
+			List<Application> searchresult) {
 		Map<String, Boolean> idToIsStateUpdatableMap = new HashMap<>();
 		searchresult.forEach(result -> {
 			if (result.getState().equals("")) {
@@ -93,4 +100,44 @@ public class Util {
 		return idToIsStateUpdatableMap;
 	}
 
+	Owner currentOwner = null;
+
+	public Owner getCurrentOwnerFromProperty(Property property) {
+		/**
+		 * Validate that there is an existing active owner.
+		 */
+		property.getPropertyDetails().getOwners().forEach(owner -> {
+			if (owner.getOwnerDetails().getIsCurrentOwner()) {
+				currentOwner = owner;
+			}
+		});
+
+		if (currentOwner == null) {
+			throw new CustomException(Collections.singletonMap("PROPERTY_OWNER_NOT_FOUND",
+					"Could not find current owner for property with id " + property.getId()));
+		}
+
+		return currentOwner;
+	}
+
+	/**
+	 * Generates a new consumer code from a transit number to be sent while creating
+	 * a bill.
+	 * 
+	 * @param fileNumber
+	 * @return
+	 */
+	public String getPropertyRentConsumerCode(String fileNumber) {
+		return String.format("SITE-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
+	}
+	
+	SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD-HH-MM-SS");
+	
+	public String getStateLevelTenantId(String tenantId) {
+		String[] components = tenantId.split(".");
+		if (components.length == 0) {
+			return "ch";
+		}
+		return components[0];
+	}
 }
