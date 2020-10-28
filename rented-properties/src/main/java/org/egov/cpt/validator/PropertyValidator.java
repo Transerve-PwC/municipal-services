@@ -1093,7 +1093,7 @@ public class PropertyValidator {
 		});
 	}
 
-	public void validateNumericValueForOwnershipTransfer(OwnershipTransferRequest request) {
+	public void validatePropertyRentDetails(OwnershipTransferRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		List<Owner> owners = request.getOwners();
 		owners.forEach(owner -> {
