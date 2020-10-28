@@ -14,6 +14,7 @@ import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
+import org.egov.ps.service.calculation.IEstateRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuctionSaveRequest;
@@ -37,6 +38,9 @@ public class PropertyEnrichmentService {
 
 	@Autowired
 	private PropertyRepository propertyRepository;
+	
+	@Autowired
+	private IEstateRentCollectionService estateRentCollectionService;
 
 	public void enrichPropertyRequest(PropertyRequest request) {
 
@@ -82,6 +86,28 @@ public class PropertyEnrichmentService {
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
 		enrichEstateAccount(property, requestInfo);
+		enrichCollection(property, requestInfo);
+
+	}
+
+	public void enrichCollection(Property property,RequestInfo requestInfo) {
+		if(property.getDemands() != null
+				&& property.getPayments() != null && property.getEstateAccount() != null){
+					property.setRentCollections(
+							estateRentCollectionService.settle(property.getDemands(), property.getPayments(),
+									property.getEstateAccount(), property.getPropertyDetails().getInterestRate(),true));
+		}
+
+		if (!CollectionUtils.isEmpty(property.getRentCollections())) {
+			property.getRentCollections().forEach(collection -> {
+				if (collection.getId() == null) {
+					AuditDetails rentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+							true);
+					collection.setId(UUID.randomUUID().toString());
+					collection.setAuditDetails(rentAuditDetails);
+				}
+			});
+		}		
 
 	}
 
@@ -231,26 +257,33 @@ public class PropertyEnrichmentService {
 
 	}
 
-	private void enrichEstateAccount(Property property, RequestInfo requestInfo){
+	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
 		/**
 		 * Delete existing data as new data is coming in.
 		 */
-		if(property.getEstateAccount() != null) {
+		if (property.getEstateAccount() != null) {
 			EstateAccount estateAccount = property.getPropertyDetails().getEstateAccount();
 			boolean hasNewEstateAccount = estateAccount.getId() == null || estateAccount.getId().isEmpty();
-			
-			if(hasNewEstateAccount) {
+
+			if (hasNewEstateAccount) {
 				EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
 						Collections.singletonList(property.getPropertyDetails().getId()));
-				property.getPropertyDetails().setInActiveEstateAccount(existingEstateAccount);				
+				property.getPropertyDetails().setInActiveEstateAccount(existingEstateAccount);
 			}
-			
+
 			if (estateAccount.getId() == null) {
 				property.getPropertyDetails().getEstateAccount().setId(UUID.randomUUID().toString());
-				property.getPropertyDetails().getEstateAccount().setAuditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true));
+				property.getPropertyDetails().getEstateAccount()
+						.setAuditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true));
 			}
-		}		
+		} else {
+			property.getPropertyDetails()
+					.setEstateAccount(EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
+							.propertyId(property.getId())
+							.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build());
+		}
 	}
+
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
 
 		/**

@@ -8,6 +8,7 @@ import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
+import org.egov.ps.web.contracts.EstateRentCollection;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.springframework.validation.annotation.Validated;
 
@@ -106,6 +107,6 @@ public class Property {
 	
 	@Valid
 	@JsonProperty
-	private List<RentCollection> rentCollections;
+	private List<EstateRentCollection> rentCollections;
 	
 }
