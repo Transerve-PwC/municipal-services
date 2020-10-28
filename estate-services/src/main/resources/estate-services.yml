@@ -501,7 +501,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.id
 
-        - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?, last_modified_by = ?, last_modified_time = ?;
+        - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid,remaining_rent_penalty,remaining_gst_penalty,remaining_rent,collected_gst_penalty,collected_rent_penalty,interest_since, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?,remaining_rent_penalty=?,remaining_gst_penalty=?,remaining_rent=?,collected_gst_penalty=?,collected_rent_penalty=?,interest_since=?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.estateDemands.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.id
@@ -527,6 +527,18 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRentPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGSTPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGSTPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRentPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.interestSince
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.createdBy
 
@@ -555,6 +567,18 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRentPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGSTPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGSTPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRentPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.interestSince
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
 
