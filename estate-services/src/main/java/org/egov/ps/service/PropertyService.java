@@ -78,7 +78,7 @@ public class PropertyService {
 
 	@Autowired
 	private DemandRepository demandRepository;
-	
+
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
@@ -155,8 +155,8 @@ public class PropertyService {
 				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 
-				EstateAccount estateAccount = repository
-						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
+				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(
+						PropertyCriteria.builder().propertyId(property.getId()).build());
 
 				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
@@ -239,9 +239,15 @@ public class PropertyService {
 				owner.getOwnerDetails().getOwnerName(), property.getTenantId());
 
 		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = propertiesFromDB.stream()
+				.map(propertyFromDb -> propertyFromDb.getPropertyDetails().getId()).collect(Collectors.toList());
+
+		/**
 		 * Generate Calculations for the property.
 		 */
-		List<EstateDemand> demands = repository.getPropertyRentDemandDetails(propertyCriteria);
+		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 		RentAccount account = repository.getPropertyRentAccountDetails(propertyCriteria);
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
 			RentSummary rentSummary = rentCollectionService.calculateRentSummary(demands, account,
@@ -270,7 +276,7 @@ public class PropertyService {
 			 */
 			demandService.createCashPaymentProperty(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
 					bills.get(0).getId(), owner, config.getAosBusinessServiceValue());
-			
+
 			propertyRequest.setProperties(Collections.singletonList(property));
 			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 
@@ -284,7 +290,5 @@ public class PropertyService {
 		}
 		return Collections.singletonList(property);
 	}
-
-	
 
 }

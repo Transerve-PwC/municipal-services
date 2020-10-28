@@ -1,6 +1,8 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +14,10 @@ import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Payment;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyDetails;
+import org.egov.ps.model.RentSummary;
+import org.egov.ps.model.calculation.Calculation;
+import org.egov.ps.model.calculation.Category;
+import org.egov.ps.model.calculation.TaxHeadEstimate;
 import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
@@ -316,5 +322,63 @@ public class PropertyEnrichmentService {
 				auction.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 			});
 		}
+	}
+
+	public void enrichRentDemand(Property property, RentSummary rentSummary) {
+		if (rentSummary == null)
+			return;
+		List<TaxHeadEstimate> estimates = new LinkedList<>();
+		double amount = property.getPaymentAmount();
+		double balPrincipal = rentSummary.getBalancePrincipal();
+		double balInterest = rentSummary.getBalanceInterest();
+
+		if (amount >= balInterest) {
+			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
+			estimate1.setEstimateAmount(new BigDecimal(balInterest));
+			estimate1.setCategory(Category.INTEREST);
+			estimate1.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.INTEREST));
+			estimates.add(estimate1);
+			double remainingAmmount = amount - balInterest;
+			if (remainingAmmount >= balPrincipal) {
+				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+				estimate2.setEstimateAmount(new BigDecimal(balPrincipal));
+				estimate2.setCategory(Category.PRINCIPAL);
+				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
+				estimates.add(estimate2);
+			} else {
+				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+				estimate2.setEstimateAmount(new BigDecimal(remainingAmmount));
+				estimate2.setCategory(Category.PRINCIPAL);
+				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
+				estimates.add(estimate2);
+			}
+			remainingAmmount = amount - balInterest - balPrincipal;
+			if (remainingAmmount > 0) {
+				TaxHeadEstimate estimate3 = new TaxHeadEstimate();
+				estimate3.setEstimateAmount(new BigDecimal(remainingAmmount));
+				estimate3.setCategory(Category.ADVANCE_COLLECTION);
+				estimate3.setTaxHeadCode(
+						getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
+				estimates.add(estimate3);
+			}
+		} else {
+			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+			estimate2.setEstimateAmount(new BigDecimal(amount));
+			estimate2.setCategory(Category.ADVANCE_COLLECTION);
+			estimate2.setTaxHeadCode(
+					getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
+			estimates.add(estimate2);
+		}
+
+		// estimates.add(estimate);
+		Calculation calculation = Calculation.builder()
+				.applicationNumber(util.getPropertyRentConsumerCode(property.getFileNumber()))
+				.taxHeadEstimates(estimates).tenantId(property.getTenantId()).build();
+		property.setCalculation(calculation);
+
+	}
+	
+	private String getTaxHeadCode(String billingBusService, Category category) {
+		return String.format("%s_%s", billingBusService, category.toString());
 	}
 }
