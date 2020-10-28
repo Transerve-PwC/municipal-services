@@ -124,7 +124,7 @@ public class PropertyQueryBuilder {
 
 	private static final String ESTATE_PAYMENT_TABLE = " cs_ep_payment estp ";
 
-	private static final String ESTATE_ACCOUNT_COLUMN = " cs_pt_account account ";
+	private static final String ESTATE_ACCOUNT_COLUMN = " cs_ep_account account ";
 
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
@@ -289,6 +289,15 @@ public class PropertyQueryBuilder {
 			builder.append(" where account.property_id IN (:propId)");
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
+		return builder.toString();
+	}
+
+	public String getEstateAccountQuery(List<String> propertyDetailsIds, Map<String, Object> params) {
+		StringBuilder builder = new StringBuilder(SELECT);
+		builder.append(ACCOUNT_SEARCH_COLUMN);
+		builder.append(" FROM " + ESTATE_ACCOUNT_COLUMN);
+		builder.append(" where account.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailsIds);
 		return builder.toString();
 	}
 }

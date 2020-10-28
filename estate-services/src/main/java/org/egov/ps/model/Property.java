@@ -104,5 +104,8 @@ public class Property {
 	@JsonProperty
 	private EstateRentSummary estateRentSummary;
 	
-
+	@Valid
+	@JsonProperty
+	private List<RentCollection> rentCollections;
+	
 }

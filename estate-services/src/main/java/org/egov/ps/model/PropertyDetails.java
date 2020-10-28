@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.springframework.validation.annotation.Validated;
@@ -254,5 +255,13 @@ public class PropertyDetails {
 	@Builder.Default
 	@JsonProperty("interestRate")
 	private Double interestRate = 0.0;
+	
+	@Valid
+	@JsonProperty
+	private EstateAccount estateAccount;
+	
+	@Valid
+	@JsonProperty
+	private EstateAccount inActiveEstateAccount;
 	
 }

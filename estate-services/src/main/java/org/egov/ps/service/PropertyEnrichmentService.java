@@ -18,6 +18,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuctionSaveRequest;
 import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -80,6 +81,7 @@ public class PropertyEnrichmentService {
 		enrichBidders(property, requestInfo);
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
+		enrichEstateAccount(property, requestInfo);
 
 	}
 
@@ -229,6 +231,26 @@ public class PropertyEnrichmentService {
 
 	}
 
+	private void enrichEstateAccount(Property property, RequestInfo requestInfo){
+		/**
+		 * Delete existing data as new data is coming in.
+		 */
+		if(property.getEstateAccount() != null) {
+			EstateAccount estateAccount = property.getPropertyDetails().getEstateAccount();
+			boolean hasNewEstateAccount = estateAccount.getId() == null || estateAccount.getId().isEmpty();
+			
+			if(hasNewEstateAccount) {
+				EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
+						Collections.singletonList(property.getPropertyDetails().getId()));
+				property.getPropertyDetails().setInActiveEstateAccount(existingEstateAccount);				
+			}
+			
+			if (estateAccount.getId() == null) {
+				property.getPropertyDetails().getEstateAccount().setId(UUID.randomUUID().toString());
+				property.getPropertyDetails().getEstateAccount().setAuditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true));
+			}
+		}		
+	}
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
 
 		/**
