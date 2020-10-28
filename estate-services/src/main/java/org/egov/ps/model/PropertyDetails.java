@@ -8,8 +8,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
+import org.egov.ps.web.contracts.EstateRentCollection;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -249,6 +251,27 @@ public class PropertyDetails {
 	@Valid
 	@JsonProperty
 	private List<EstatePayment> inActiveEstatePayments;
+	
+	@Valid
+	@JsonProperty("estateAccount")
+	private EstateAccount estateAccount;
+	
+	@Valid
+	@JsonProperty("estateRentCollections")
+	private List<EstateRentCollection> estateRentCollections;
+	
+	public PropertyDetails addCollectionItem(EstateRentCollection newCollectionItem) {
+		if (this.estateRentCollections == null) {
+			this.estateRentCollections = new ArrayList<>();
+		}
+		for (EstateRentCollection estateRentCollections : estateRentCollections) {
+			if (estateRentCollections.getId().equalsIgnoreCase(newCollectionItem.getId())) {
+				return this;
+			}
+		}
+		this.estateRentCollections.add(newCollectionItem);
+		return this;
+	}
 	
 	@NotNull
 	@Builder.Default

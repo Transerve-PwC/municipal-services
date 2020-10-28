@@ -321,4 +321,24 @@ public class PropertyEnrichmentService {
 			});
 		}
 	}
+
+	public void enrichCollection(PropertyRequest request) {
+		RequestInfo requestInfo = request.getRequestInfo();
+		if (!CollectionUtils.isEmpty(request.getProperties())) {
+			request.getProperties().forEach(property -> {
+
+				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateRentCollections())) {
+					property.getPropertyDetails().getEstateRentCollections().forEach(collection -> {
+						if (collection.getId() == null) {
+							AuditDetails estateCollectionAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+							collection.setId(UUID.randomUUID().toString());
+							collection.setAuditDetails(estateCollectionAuditDetails);
+						}
+
+					});
+				}
+			});
+		}
+		
+	}
 }
