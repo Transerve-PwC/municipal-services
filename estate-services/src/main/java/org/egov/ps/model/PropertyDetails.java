@@ -7,14 +7,14 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -135,6 +135,15 @@ public class PropertyDetails {
 
 	@JsonProperty("entityType")
 	private String entityType;
+
+	@JsonProperty("houseNumber")
+	private String houseNumber;
+
+	@JsonProperty("village")
+	private String village;
+
+	@JsonProperty("mohalla")
+	private String mohalla;
 
 	@JsonProperty("owners")
 	@Builder.Default

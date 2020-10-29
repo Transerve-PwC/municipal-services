@@ -61,7 +61,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.emdDate(rs.getLong("emd_date")).decreeDate(rs.getLong("decree_date"))
 							.courtDetails(rs.getString("court_details")).civilTitledAs(rs.getString("civil_titled_as"))
 							.companyRegistrationDate(rs.getLong("company_registration_date"))
-							.entityType(rs.getString("entity_type"))
+							.entityType(rs.getString("entity_type")).houseNumber(rs.getString("house_number"))
+							.village(rs.getString("village")).mohalla(rs.getString("mohalla"))
 							.propertyRegisteredTo(rs.getString("property_registered_to"))
 							.companyOrFirm(rs.getString("company_or_firm")).auditDetails(pdAuditdetails).build();
 
