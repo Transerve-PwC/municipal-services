@@ -72,6 +72,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.propertyMasterOrAllotmentOfSite(rs.getString("property_master_or_allotment_of_site"))
 							.isCancelationOfSite(rs.getBoolean("is_cancelation_of_site"))
 							.action(rs.getString("paction")).propertyDetails(propertyDetails).auditDetails(auditdetails)
+							.bankName(rs.getString("ptbank_name")).transactionId(rs.getString("pttransaction_number"))
+							.paymentAmount(rs.getBigDecimal("ptamount")).dateOfPayment(rs.getLong("ptdate_of_payment"))
 							.build();
 					propertyMap.put(propertyId, currentProperty);
 				}

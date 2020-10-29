@@ -1,5 +1,6 @@
 package org.egov.ps.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -7,10 +8,6 @@ import javax.validation.constraints.Size;
 
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.web.contracts.AuditDetails;
-import org.egov.ps.web.contracts.EstateAccount;
-import org.egov.ps.web.contracts.EstateDemand;
-import org.egov.ps.web.contracts.EstatePayment;
-import org.egov.ps.web.contracts.EstateRentCollection;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.springframework.validation.annotation.Validated;
 
@@ -77,7 +74,7 @@ public class Property {
 
 	@JsonProperty("action")
 	private String action;
-	
+
 	@JsonProperty("assignee")
 	@Builder.Default
 	private List<String> assignee = null;
@@ -90,16 +87,16 @@ public class Property {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
-	
+
 	@Valid
 	@JsonProperty("estateRentSummary")
 	private EstateRentSummary estateRentSummary;
-	
+
 	/**
 	 * Amount to be paid
 	 */
 	@JsonProperty("paymentAmount")
-	private Double paymentAmount;
+	private BigDecimal paymentAmount;
 
 	/**
 	 * Pending consumer code. This needs to be saved in the database for online
@@ -116,10 +113,13 @@ public class Property {
 	@JsonProperty("bankName")
 	@Size(max = 256, message = "Bank name must be between 0 and 256 characters in length")
 	private String bankName;
-	
+
+	@JsonProperty("dateOfPayment")
+	private Long dateOfPayment;
+
 	@JsonProperty("calculation")
 	Calculation calculation;
-	
+
 	@JsonProperty("billingBusinessService")
 	@Size(max = 256, message = "Billing business service must be between 0 and 256 characters in length")
 	private String billingBusinessService;

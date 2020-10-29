@@ -28,6 +28,8 @@ public class PropertyQueryBuilder {
 			+ " pt.site_number, pt.sector_number, pt.state as pstate, pt.action as paction, pt.created_by as pcreated_by, pt.created_time as pcreated_time, "
 			+ " pt.last_modified_by as pmodified_by, pt.last_modified_time as pmodified_time, "
 			+ " pt.property_master_or_allotment_of_site, pt.is_cancelation_of_site, "
+			+ " pt.bank_name as ptbank_name, pt.transaction_number as pttransaction_number, "
+			+ " pt.amount as ptamount, pt.date_of_payment as ptdate_of_payment, "
 
 			+ " ptdl.id as ptdlid, ptdl.property_id as pdproperty_id, ptdl.branch_type as branch_type, ptdl.property_type as pdproperty_type, "
 			+ " ptdl.tenantid as pdtenantid, ptdl.type_of_allocation, ptdl.mode_of_auction, ptdl.scheme_name,ptdl.date_of_auction, "

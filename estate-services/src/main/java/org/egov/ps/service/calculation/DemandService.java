@@ -367,15 +367,15 @@ public class DemandService {
 		return demandRepository.savePayment(paymentRequest);
 	}
 
-	public Object createCashPaymentProperty(RequestInfo requestInfo, Double paymentAmount, String billId, Owner owner,
+	public Object createCashPaymentProperty(RequestInfo requestInfo, BigDecimal paymentAmount, String billId, Owner owner,
 			String billingBusinessService) {
 		String tenantId = owner.getTenantId();
 		OwnerDetails ownerDetails = owner.getOwnerDetails();
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
-				.totalAmountPaid(BigDecimal.valueOf(paymentAmount)).receiptDate(System.currentTimeMillis())
+				.totalAmountPaid(paymentAmount).receiptDate(System.currentTimeMillis())
 				.businessService(billingBusinessService).billId(billId).build();
 		CollectionPayment payment = CollectionPayment.builder().paymentMode(CollectionPaymentModeEnum.CASH)
-				.tenantId(tenantId).totalAmountPaid(BigDecimal.valueOf(paymentAmount)).payerName(ownerDetails.getOwnerName())
+				.tenantId(tenantId).totalAmountPaid(paymentAmount).payerName(ownerDetails.getOwnerName())
 				.paidBy("COUNTER").mobileNumber(ownerDetails.getMobileNumber())
 				.paymentDetails(Collections.singletonList(paymentDetail)).build();
 
