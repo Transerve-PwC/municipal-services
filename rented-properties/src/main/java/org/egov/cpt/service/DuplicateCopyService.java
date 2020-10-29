@@ -24,6 +24,7 @@ import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.DuplicateCopyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
 import org.egov.cpt.workflow.WorkflowService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -109,8 +110,12 @@ public class DuplicateCopyService {
 
 	private List<DuplicateCopy> getApplication(DuplicateCopySearchCriteria criteria, RequestInfo requestInfo) {
 		List<DuplicateCopy> applications = repository.getDuplicateCopyProperties(criteria);
-		if (applications.isEmpty())
-			return Collections.emptyList();
+		if (applications.isEmpty()){
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PTConstants.ROLE_CITIZEN)&& criteria.getApplicationNumber()!=null)
+				throw new CustomException("INVALID ACCESS", "You can not access this application.");
+			else
+				return Collections.emptyList();
+		}
 		
 		addRentSummary(applications);
 		

@@ -1,5 +1,6 @@
 package org.egov.cpt.service.notification;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,13 +12,14 @@ import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.SMSRequest;
+import org.egov.cpt.models.web.Event;
+import org.egov.cpt.models.web.EventRequest;
 import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.util.PTConstants;
 import org.egov.cpt.web.contracts.NoticeGenerationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 @Service
 public class NoticeNotificationService {
 
@@ -49,6 +51,13 @@ public class NoticeNotificationService {
 				enrichEMAILRequest(request, propertiesFromDb, emailRequest);
 				if (!CollectionUtils.isEmpty(emailRequest))
 					util.sendEMAIL(emailRequest, true);
+			}
+		}
+		if(null != config.getIsUserEventsNotificationEnabledForRP()) {
+			if(config.getIsUserEventsNotificationEnabledForRP()) {
+				EventRequest eventRequest = getEventsForNG(request,propertiesFromDb);
+				if(null != eventRequest)
+					util.sendEventNotification(eventRequest);
 			}
 		}
 
@@ -121,5 +130,36 @@ public class NoticeNotificationService {
 		}
 
 	}
+	
+	/**
+     * Creates and registers an event at the egov-user-event service at defined trigger points as that of sms notifs.
+     * @param request
+     * @return
+     */
+    public EventRequest getEventsForNG(NoticeGenerationRequest request,List<Property> propertiesFromDb) {
+    	List<Event> events = new ArrayList<>();
+        String tenantId = request.getNoticeApplications().get(0).getTenantId();
+        String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
+        for(NoticeGeneration notice : request.getNoticeApplications()){
+        	Owner ownerDtl = propertiesFromDb.get(0).getOwners().stream().filter(owner -> {
+				return owner.getId().equalsIgnoreCase(propertiesFromDb.get(0).getPropertyDetails().getCurrentOwner());
+			}).findFirst().get();
+            String message = util.getCustomizedNoticeMsg(request.getRequestInfo(), notice, ownerDtl, localizationMessages);
+            if(message == null) continue;
+            message = message.replaceAll("<br/>", "");
+            Map<String,String > mobileNumberToOwner = new HashMap<>();
+            if (ownerDtl.getOwnerDetails().getPhone() != null) {
+				mobileNumberToOwner.put(ownerDtl.getOwnerDetails().getPhone(), ownerDtl.getOwnerDetails().getName());
+			}
+            
+            events = util.createEvent(message,mobileNumberToOwner,request.getRequestInfo(),tenantId,null,null);
+        }
+        if(!CollectionUtils.isEmpty(events)) {
+    		return EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
+        }else {
+        	return null;
+        }
+		
+    }
 
 }

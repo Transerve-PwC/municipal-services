@@ -167,11 +167,13 @@ public class MaterialIssueService extends DomainService {
 					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 						materialIssueDetail.setId(detailSequenceNos.get(j));
 						materialIssueDetail.setTenantId(materialIssue.getTenantId());
+						//fetch amount from receipt table --aniket review
 						BigDecimal value = getMaterialIssuedFromReceiptData(materialIssue.getFromStore(),
 								materialIssueDetail.getMaterial(), materialIssue.getIssueDate(),
 								materialIssue.getTenantId(), materialIssueDetail);
 						totalIssueValue = totalIssueValue.add(value);
 						materialIssueDetail.setValue(value);
+						//update indent issue quantity in indentdetail table for that material
 						backUpdateIndentAdd(materialIssueDetail, materialIssue.getTenantId());
 						j++;
 					}
@@ -1231,6 +1233,7 @@ public class MaterialIssueService extends DomainService {
 					Instant wfDate = Instant.ofEpochMilli(processData.getAuditDetails().getCreatedTime());
 					// Need to integrate Workflow
 					JSONObject jsonWork = new JSONObject();
+					jsonWork.put("srNo", j+1);
 					jsonWork.put("date", wfdateFormat.format(wfDate.atZone(ZoneId.systemDefault())));
 					jsonWork.put("updatedBy", processData.getAssigner().getName());
 					jsonWork.put("comments", processData.getComment());

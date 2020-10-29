@@ -14,6 +14,7 @@ import org.egov.cpt.models.DuplicateCopySearchCriteria;
 import org.egov.cpt.models.Mortgage;
 import org.egov.cpt.models.NoticeGeneration;
 import org.egov.cpt.models.NoticeSearchCriteria;
+import org.egov.cpt.models.OfflinePaymentDetails;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.PropertyImages;
@@ -91,6 +92,12 @@ public class PropertyRepository {
 
 	@Autowired
 	private PropertyDueRowMapper propertyDueRowMapper;
+
+	@Autowired
+	private OfflinePaymentDetailQueryBuilder offlinePaymentDetailQueryBuilder;
+
+	@Autowired
+	private OfflinePaymentDetailRowMapper offlinePaymentDetailRowMapper;
 
 	public List<Property> getProperties(PropertyCriteria criteria) {
 
@@ -200,4 +207,11 @@ public class PropertyRepository {
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, propertyDueRowMapper);
 	}
 
+	public List<OfflinePaymentDetails> getPropertyOfflinePaymentDetails(PropertyCriteria criteria) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = offlinePaymentDetailQueryBuilder.getPropertyOfflinePaymentDetailSearchQuery(criteria, preparedStmtList);
+		log.info("query:" + query);
+		log.info("preparedStmtList:" + preparedStmtList);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, offlinePaymentDetailRowMapper);
+	}
 }

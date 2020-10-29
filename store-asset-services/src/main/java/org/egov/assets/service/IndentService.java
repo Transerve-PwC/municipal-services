@@ -640,12 +640,14 @@ public class IndentService extends DomainService {
 				ProcessInstanceResponse workflowData = workflowIntegrator.getWorkflowDataByID(requestInfo,
 						in.getIndentNumber(), in.getTenantId());
 				JSONArray workflows = new JSONArray();
+				int wfSrNo=1;
 				for (int j = 0; j < workflowData.getProcessInstances().size(); j++) {
 					ProcessInstance processData = workflowData.getProcessInstances().get(j);
 					Instant wfDate = Instant.ofEpochMilli(processData.getAuditDetails().getCreatedTime());
 					// Need to integrate Workflow
 					JSONObject jsonWork = new JSONObject();
 					// fmt.format()
+					jsonWork.put("srNo", wfSrNo);
 					jsonWork.put("date", wfdateFormat.format(wfDate.atZone(ZoneId.systemDefault())));
 					jsonWork.put("updatedBy", processData.getAssigner().getName());
 					jsonWork.put("comments", processData.getComment());
@@ -660,6 +662,7 @@ public class IndentService extends DomainService {
 
 					jsonWork.put("status", processData.getState().getApplicationStatus());
 					workflows.add(jsonWork);
+					wfSrNo++;
 				}
 				indent.put("workflowDetails", workflows);
 				indents.add(indent);

@@ -1,5 +1,7 @@
 package org.egov.cpt.models;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -17,9 +19,11 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class RentAccount {
 
+	@Size(max = 256)
 	@JsonProperty("id")
 	private String id;
 
+	@Size(max = 256)
 	@JsonProperty("propertyId")
 	private String propertyId;
 

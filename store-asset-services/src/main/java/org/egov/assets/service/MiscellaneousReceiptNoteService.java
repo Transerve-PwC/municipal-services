@@ -98,7 +98,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
 			materialReceipt.setMrnNumber(appendString(materialReceipt));
 			materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
 			materialReceipt.setReceiptType(MaterialReceipt.ReceiptTypeEnum.MISCELLANEOUS_RECEIPT);
-			materialReceipt.setAuditDetails(getAuditDetails(materialReceiptRequest.getRequestInfo(), tenantId));
+			materialReceipt.setAuditDetails(getAuditDetails(materialReceiptRequest.getRequestInfo(), Constants.ACTION_CREATE));
 			if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
 				materialReceipt.setTenantId(tenantId);
 			}
@@ -402,6 +402,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
 					Instant wfDate = Instant.ofEpochMilli(processData.getAuditDetails().getCreatedTime());
 					// Need to integrate Workflow
 					JSONObject jsonWork = new JSONObject();
+					jsonWork.put("srNo", j+1);
 					jsonWork.put("date", wfdateFormat.format(wfDate.atZone(ZoneId.systemDefault())));
 					jsonWork.put("updatedBy", processData.getAssigner().getName());
 					jsonWork.put("comments", processData.getComment());

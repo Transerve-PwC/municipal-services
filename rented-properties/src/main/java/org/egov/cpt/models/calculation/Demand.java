@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import org.egov.common.contract.request.User;
 import org.egov.cpt.models.AuditDetails;
@@ -29,18 +30,23 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Demand {
 
+	@Size(max = 64)
 	@JsonProperty("id")
 	private String id;
 
+	@Size(max = 250)
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@Size(max = 250)
 	@JsonProperty("consumerCode")
 	private String consumerCode;
 
+	@Size(max = 250)
 	@JsonProperty("consumerType")
 	private String consumerType;
 
+	@Size(max = 250)
 	@JsonProperty("businessService")
 	private String businessService;
 
@@ -103,6 +109,7 @@ public class Demand {
 		}
 	}
 
+	@Size(max = 64)
 	@JsonProperty("status")
 	private StatusEnum status;
 

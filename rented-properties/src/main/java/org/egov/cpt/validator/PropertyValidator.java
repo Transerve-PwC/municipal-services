@@ -1052,7 +1052,7 @@ public class PropertyValidator {
 		Map<String, String> errorMap = new HashMap<>();
 		noticeGenerationRequest.getNoticeApplications().forEach(application -> {
 			if (CollectionUtils.isEmpty(application.getApplicationDocuments())) {
-				errorMap.put("PROPERTY_IMAGES_NOT_FOUND", "No property images found");
+				errorMap.put("PROPERTY_IMAGES_NOT_FOUND", "Atleast 1 image should be uploaded");
 			} else if (application.getApplicationDocuments().size() > maxValue.intValue()) {
 				errorMap.put("PROPERTY_IMAGES_LIMIT_EXCEEDS",
 						"Property images upload limit exceeds max limit " + maxValue);

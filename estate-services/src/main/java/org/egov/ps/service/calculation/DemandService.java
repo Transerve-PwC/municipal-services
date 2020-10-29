@@ -258,7 +258,7 @@ public class DemandService {
 	}
 
 	public List<Application> generateFinanceDemand(ApplicationRequest applicationRequest) {
-		
+
 		/**
 		 * Generate an actual finance demand
 		 */
@@ -332,9 +332,22 @@ public class DemandService {
 			Application application, String billingBusinessService) {
 
 		JsonNode applicationDetails = application.getApplicationDetails();
-		String ownerName = applicationDetails.get("transferee").get("name").asText();
-		String ownerPhone = applicationDetails.get("transferee").get("mobileNo").asText();
 		String tenantId = application.getTenantId();
+		String ownerName = null;
+		String ownerPhone = null;
+
+		if (applicationDetails.get("transferee") != null) {
+			ownerName = applicationDetails.get("transferee").get("name").asText();
+			ownerPhone = applicationDetails.get("transferee").get("mobileNo").asText();
+
+		} else if (applicationDetails.get("transferor") != null) {
+			ownerName = applicationDetails.get("transferor").get("transferorDetails").get("ownerName").asText();
+			ownerPhone = applicationDetails.get("transferor").get("transferorDetails").get("mobileNumber").asText();
+
+		} else if (applicationDetails.get("owner") != null) {
+			ownerName = applicationDetails.get("owner").get("transferorDetails").get("ownerName").asText();
+			ownerPhone = applicationDetails.get("owner").get("transferorDetails").get("mobileNumber").asText();
+		}
 
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
 				.totalAmountPaid(paymentAmount).receiptDate(System.currentTimeMillis())

@@ -2,6 +2,8 @@ package org.egov.cpt.models.calculation;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Size;
+
 import org.egov.cpt.models.AuditDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,12 +24,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DemandDetail {
 
+	@Size(max = 64)
 	@JsonProperty("id")
 	private String id;
 
+	@Size(max = 64)
 	@JsonProperty("demandId")
 	private String demandId;
 
+	@Size(max = 250)
 	@JsonProperty("taxHeadMasterCode")
 	private String taxHeadMasterCode;
 
@@ -44,6 +49,7 @@ public class DemandDetail {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@Size(max = 250)
 	@JsonProperty("tenantId")
 	private String tenantId;
 

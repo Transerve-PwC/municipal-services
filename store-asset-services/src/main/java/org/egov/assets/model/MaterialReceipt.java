@@ -56,10 +56,8 @@ public class MaterialReceipt {
 
 		INWARD_RECEIPT("INWARD RECEIPT"),
 
-		NON_PURCHASE_RECEIPT("NON PURCHASE RECEIPT"),
-		OPENING_BALANCE("OPENING BALANCE");
+		NON_PURCHASE_RECEIPT("NON PURCHASE RECEIPT"), OPENING_BALANCE("OPENING BALANCE");
 
-		
 		private String value;
 
 		ReceiptTypeEnum(String value) {
@@ -85,6 +83,7 @@ public class MaterialReceipt {
 
 	@JsonProperty("receiptType")
 	private ReceiptTypeEnum receiptType = null;
+
 	/**
 	 * Applicable if receipt type is MISCELLANEOUS RECEIPT
 	 */
@@ -156,16 +155,16 @@ public class MaterialReceipt {
 	public enum MrnStatusEnum {
 		CREATED("CREATED"),
 
-		REVIEWOFSDO("Review Of SDO"), REVIEWOFEE("Review/Approval Of EE"), REVIEWOFSE("Review/Approval Of SE"), REVIEWOFCE(
-				"Review/Approval Of CE"), SENDTOCREATOR("Send To Creator"), COMMISSIONERAPPROVAL("Commissioner Approval"), APPROVED(
-						"Approved"), REASSIGNTOJE(
-								"REASSIGNTOJE"), REVIEWOFCAO("Review/Approval Of CAO"), REVIEWOFACMC("Review/Approval Of ACMC"),
+		REVIEWOFSDO("Review Of SDO"), REVIEWOFEE("Review/Approval Of EE"), REVIEWOFSE(
+				"Review/Approval Of SE"), REVIEWOFCE("Review/Approval Of CE"), SENDTOCREATOR(
+						"Send To Creator"), COMMISSIONERAPPROVAL("Commissioner Approval"), APPROVED(
+								"Approved"), REASSIGNTOJE("REASSIGNTOJE"), REVIEWOFCAO(
+										"Review/Approval Of CAO"), REVIEWOFACMC("Review/Approval Of ACMC"),
 
 		REVIEWOFSO("Review Of SO"), REVIEWOFSA("Review Of SA"), REVIEWOFSP("Review Of SP"), REVIEWOFJC(
 				"Review/Approval Of Jt Comm"), REVIEWOFMOH("Review/Approval Of MOH"),
 
-		REJECTED("Rejected"),
-		CANCELED("CANCELED"),
+		REJECTED("Rejected"), CANCELED("CANCELED"),
 
 		RECEIPTED("RECEIPTED");
 
@@ -221,6 +220,9 @@ public class MaterialReceipt {
 
 	@JsonProperty("supplierBillPaid")
 	private Boolean supplierBillPaid = false;
+
+	@JsonProperty("isAdHoc")
+	private Boolean isAdHoc = false;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
@@ -778,13 +780,31 @@ public class MaterialReceipt {
 		this.paymentTerms = paymentTerms;
 	}
 
+	/**
+	 * Boolean value to identify whether the isadhoc receipt.
+	 *
+	 * @return isadhoc
+	 **/
+	public Boolean getIsAdHoc() {
+		return isAdHoc;
+	}
+
+	public void setIsAdHoc(Boolean isAdHoc) {
+		this.isAdHoc = isAdHoc;
+	}
+
+	public MaterialReceipt isAdHoc(Boolean isAdHoc) {
+		this.isAdHoc = isAdHoc;
+		return this;
+	}
+
 	public MaterialReceipt supplierBillPaid(Boolean supplierBillPaid) {
 		this.supplierBillPaid = supplierBillPaid;
 		return this;
 	}
 
 	/**
-	 * Boolean value to identify whether the supplierbill paid for the selected
+	 * Boolean value to identify whether the supplier bill paid for seleceted
 	 * receipt.
 	 *
 	 * @return supplierBillPaid

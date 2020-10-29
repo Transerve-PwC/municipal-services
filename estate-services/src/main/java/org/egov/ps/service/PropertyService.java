@@ -59,16 +59,30 @@ public class PropertyService {
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
+		processRentHistory(request);
 		producer.push(config.getSavePropertyTopic(), request);
 		processRentSummary(request);
 		return request.getProperties();
 	}
 	
+	private void processRentHistory(PropertyRequest request) {
+		if (!CollectionUtils.isEmpty(request.getProperties())) {
+			request.getProperties().stream().filter(property -> property.getPropertyDetails().getEstateDemands() != null
+					&& property.getPropertyDetails().getEstatePayments() != null && property.getPropertyDetails().getEstateAccount() != null).forEach(property -> {
+						property.getPropertyDetails().setEstateRentCollections(
+								estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(),
+										property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getInterestRate(),true));
+					});
+		}
+		enrichmentService.enrichCollection(request);
+		
+	}
+
 	private void processRentSummary(PropertyRequest request) {
-		request.getProperties().stream().filter(property -> property.getDemands() != null
-				&& property.getPayments() != null && property.getEstateAccount() != null).forEach(property -> {
-					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(property.getDemands(),
-							property.getEstateAccount(), property.getPropertyDetails().getInterestRate()));
+		request.getProperties().stream().filter(property -> property.getPropertyDetails().getEstateDemands() != null
+				&& property.getPropertyDetails().getEstatePayments() != null && property.getPropertyDetails().getEstateAccount() != null).forEach(property -> {
+					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(property.getPropertyDetails().getEstateDemands(),
+							property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getInterestRate()));
 				});
 	}
 
@@ -81,12 +95,13 @@ public class PropertyService {
 	public List<Property> updateProperty(PropertyRequest request) {
 		propertyValidator.validateUpdateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
+		processRentHistory(request);
 		String action = request.getProperties().get(0).getAction();
 		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)) {
 			wfIntegrator.callWorkFlow(request);
 		}
 		producer.push(config.getUpdatePropertyTopic(), request);
-
+		processRentSummary(request);
 		return request.getProperties();
 	}
 
@@ -136,9 +151,9 @@ public class PropertyService {
 				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands, estateAccount,
 							property.getPropertyDetails().getInterestRate()));
-					property.setDemands(demands);
-					property.setPayments(payments);
-					property.setEstateAccount(estateAccount);
+					property.getPropertyDetails().setEstateDemands(demands);
+					property.getPropertyDetails().setEstatePayments(payments);
+					property.getPropertyDetails().setEstateAccount(estateAccount);
 				}
 			});
 		}

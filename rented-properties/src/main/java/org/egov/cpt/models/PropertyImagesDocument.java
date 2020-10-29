@@ -29,25 +29,25 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class PropertyImagesDocument {
 
-	@Size(max = 64)
+	@Size(max = 64, message = "Id must be between 0 and 64 characters in length")
 	@JsonProperty("id")
 	private String id;
 
 	@JsonProperty("applicationId")
 	private String applicationId;
 
-	@Size(max = 64)
+	@Size(max = 64, message = "Tenant id must be between 0 and 64 characters in length")
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
 	@JsonProperty("active")
 	private Boolean active;
 
-	@Size(max = 64)
+	@Size(max = 64, message = "Document type must be between 0 and 64 characters in length")
 	@JsonProperty("documentType")
 	private String documentType = null;
 
-	@Size(max = 64)
+	@Size(max = 64, message = "File store id must be between 0 and 64 characters in length")
 	@JsonProperty("fileStoreId")
 	private String fileStoreId = null;
 

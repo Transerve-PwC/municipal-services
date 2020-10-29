@@ -228,4 +228,8 @@ public class Application {
 	
 	@JsonProperty("paymentType")
 	private String paymentType;
+	
+	@JsonProperty("dateOfPayment")
+	private Long dateOfPayment;
+	
 }

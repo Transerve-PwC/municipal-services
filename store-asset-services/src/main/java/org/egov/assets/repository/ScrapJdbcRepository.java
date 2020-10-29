@@ -53,7 +53,15 @@ public class ScrapJdbcRepository extends JdbcRepository{
 	            params.append("status = :scrapStatus");
 	            paramValues.put("scrapStatus", scrapSearch.getScrapStatus());
 	        }
+
 	        
+	        if (scrapSearch.getIssueNumber() != null) {
+	            if (params.length() > 0)
+	                params.append(" and ");
+	            params.append("issuenumber = :issuenumber");
+	            paramValues.put("issuenumber", scrapSearch.getIssueNumber());
+	        }
+
 	        if (scrapSearch.getTenantId() != null) {
 	            if (params.length() > 0)
 	                params.append(" and ");

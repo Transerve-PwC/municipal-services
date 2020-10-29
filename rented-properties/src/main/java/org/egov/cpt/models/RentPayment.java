@@ -3,6 +3,8 @@ package org.egov.cpt.models;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class RentPayment implements Comparable<RentPayment> {
 	/**
 	 * Unique id of the demand
 	 */
+	@Size(max = 256)
 	@JsonProperty("id")
 	private String id;
 
@@ -34,12 +37,14 @@ public class RentPayment implements Comparable<RentPayment> {
 	/**
 	 * Receipt no of the payment
 	 */
+	@Size(max = 64)
 	@JsonProperty("receiptNo")
 	private String receiptNo;
 
 	/**
 	 * Property for which the rent is paid for.
 	 */
+	@Size(max = 256)
 	@JsonProperty("propertyId")
 	private String propertyId;
 

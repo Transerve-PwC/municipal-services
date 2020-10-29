@@ -86,6 +86,8 @@ public class MaterialReceiptEntity {
 
 	private String paymentTerms;
 
+	private Boolean isAdHoc;
+
 	public MaterialReceipt toDomain() {
 		MaterialReceipt materialReceipt = new MaterialReceipt();
 
@@ -102,8 +104,7 @@ public class MaterialReceiptEntity {
 				.mrnStatus(null != mrnStatus ? MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) : null)
 				.inspectionRemarks(inspectionRemarks).receiptDetails(Collections.emptyList())
 				.totalReceiptValue(totalReceiptValue).fileStoreId(fileStoreId).paymentTerms(paymentTerms)
-				.tenantId(tenantId)
-				.auditDetails(buildAuditDetails());
+				.tenantId(tenantId).isAdHoc(isAdHoc).auditDetails(buildAuditDetails());
 	}
 
 	public MaterialReceiptEntity toEntity(MaterialReceipt materialReceipt) {
@@ -149,6 +150,7 @@ public class MaterialReceiptEntity {
 		this.supplierCode = materialReceipt.getSupplier() != null ? materialReceipt.getSupplier().getCode() : null;
 		this.totalReceiptValue = materialReceipt.getTotalReceiptValue();
 		this.tenantId = materialReceipt.getTenantId();
+		this.isAdHoc = materialReceipt.getIsAdHoc() != null ? materialReceipt.getIsAdHoc() : null;
 		return this;
 	}
 

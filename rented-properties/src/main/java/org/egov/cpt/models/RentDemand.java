@@ -3,6 +3,8 @@ package org.egov.cpt.models;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,12 +25,14 @@ public class RentDemand implements Comparable<RentDemand> {
   /**
    * Unique id of the demand
    */
+  @Size(max = 256)
   @JsonProperty("id")
   private String id;
 
   /**
    * Property that this rent is generated for.
    */
+  @Size(max = 256)
   @JsonProperty("propertyId")
   private String propertyId;
   /**

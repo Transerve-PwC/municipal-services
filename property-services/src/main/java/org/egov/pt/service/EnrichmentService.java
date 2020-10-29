@@ -114,7 +114,6 @@ public class EnrichmentService {
 			property.getAddress().setId(propertyFromDb.getAddress().getId());
 
 		} else if (isWfEnabled && iswfStarting) {
-
 			enrichPropertyForNewWf(requestInfo, property, false);
 		}
 		
@@ -138,8 +137,6 @@ public class EnrichmentService {
 				propertyutil.jsonMerge(propertyFromDb.getAdditionalDetails(), property.getAdditionalDetails()));
     }
 
-
-
     /**
 	 * Sets the acknowledgement and assessment Numbers for given PropertyRequest
 	 * 
@@ -156,9 +153,9 @@ public class EnrichmentService {
 			property.setStatus(Status.ACTIVE);
 		}
 		
-		String pId = propertyutil.getIdList(requestInfo, tenantId, config.getPropertyIdGenName(), config.getPropertyIdGenFormat(), 1).get(0);
+		//String pId = propertyutil.getIdList(requestInfo, tenantId, config.getPropertyIdGenName(), config.getPropertyIdGenFormat(), 1).get(0);
 		String ackNo = propertyutil.getIdList(requestInfo, tenantId, config.getAckIdGenName(), config.getAckIdGenFormat(), 1).get(0);
-		property.setPropertyId(pId);
+		//property.setPropertyId(pId);
 		property.setAcknowldgementNumber(ackNo);
 	}
 

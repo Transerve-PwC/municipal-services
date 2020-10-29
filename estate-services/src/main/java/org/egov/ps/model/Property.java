@@ -90,6 +90,11 @@ public class Property {
 	private AuditDetails auditDetails;
 	
 	@Valid
+	@JsonProperty("estateRentSummary")
+	private EstateRentSummary estateRentSummary;
+	
+	
+	@Valid
 	@JsonProperty
 	private List<EstateDemand> demands;
 	
@@ -97,13 +102,10 @@ public class Property {
 	@JsonProperty
 	private List<EstatePayment> payments;
 	
+	
 	@Valid
 	@JsonProperty("estateAccount")
 	private EstateAccount estateAccount;
-	
-	@Valid
-	@JsonProperty
-	private EstateRentSummary estateRentSummary;
 	
 	@Valid
 	@JsonProperty

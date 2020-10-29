@@ -53,7 +53,7 @@ public class BoundaryService {
 		if (ObjectUtils.isEmpty(property))
 			return;
 
-		String tenantId = property.getTenantId();
+		/*String tenantId = property.getTenantId();
 
 		if (property.getAddress() == null || property.getAddress().getLocality() == null)
 			throw new CustomException("INVALID ADDRESS", "The address or locality cannot be null");
@@ -90,7 +90,7 @@ public class BoundaryService {
 						+ property.getAddress().getLocality().getCode() + " is not available");
 			property.getAddress().setLocality(boundary);
 
-		}
+		}*/
 
 		// $..boundary[?(@.code=="JLC476")].area
 
