@@ -646,6 +646,38 @@ serviceMaps:
             - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedBy
       
             - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedTime
+        
+        - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
+          basePath: $.Properties.*.rentCollections.*
+          jsonMaps:
+            - jsonPath: $.Properties.*.rentCollections.*.id
+
+            - jsonPath: $.Properties.*.rentCollections.*.demandId
+
+            - jsonPath: $.Properties.*.rentCollections.*.interestCollected
+
+            - jsonPath: $.Properties.*.rentCollections.*.principalCollected
+
+            - jsonPath: $.Properties.*.rentCollections.*.collectedAt
+
+            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.createdBy
+
+            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.createdTime
+
+            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.Properties.*.rentCollections.*.interestCollected
+
+            - jsonPath: $.Properties.*.rentCollections.*.principalCollected
+
+            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
+            
+            
+      
 
     - version: 1.0
       description: Persists Application details in cs_ep_application_v1 table
