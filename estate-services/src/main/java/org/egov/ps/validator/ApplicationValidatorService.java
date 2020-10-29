@@ -18,6 +18,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.application.OwnerValidator;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -90,14 +91,18 @@ public class ApplicationValidatorService {
 				String applicationDetailsString = this.objectMapper.writeValueAsString(applicationDetails);
 				Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
 				DocumentContext applicationObjectContext = JsonPath.using(conf).parse(applicationDetailsString);
-				Map<String, List<String>> errorMap = this.performValidationsFromMDMS(application.getMDMSModuleName(),
-						applicationObjectContext, request.getRequestInfo(), application.getTenantId(), propertyId);
+				Map<String, List<String>> errorMap;
+					errorMap = this.performValidationsFromMDMS(application.getMDMSModuleName(),
+							applicationObjectContext, request.getRequestInfo(), application.getTenantId(), propertyId);
+				
 
 				if (!errorMap.isEmpty()) {
 					throw new CustomException("INVALID_FIELDS", "Please enter the valid fields " + errorMap.toString());
 				}
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				log.error("Can not parse Json fie",e);
+			} catch (Exception e) {
+				log.error("Exception",e);
 			}
 
 		});
@@ -116,7 +121,7 @@ public class ApplicationValidatorService {
 	@SuppressWarnings("unchecked")
 	public Map<String, List<String>> performValidationsFromMDMS(final String applicationType,
 			DocumentContext applicationObject, RequestInfo RequestInfo, final String tenantId,
-			final String propertyId) {
+			final String propertyId) throws JSONException {
 		List<Map<String, Object>> fieldConfigurations = this.mdmsService.getApplicationConfig(applicationType,
 				RequestInfo, tenantId);
 		Map<String, List<String>> errorsMap = new HashMap<String, List<String>>();

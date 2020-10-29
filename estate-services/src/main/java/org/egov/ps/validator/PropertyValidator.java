@@ -23,6 +23,7 @@ import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Component
 public class PropertyValidator {
 
@@ -203,8 +206,12 @@ public class PropertyValidator {
 
 				// Document Validation
 				if (null != o.getOwnerDetails() && null != o.getOwnerDetails().getOwnerDocuments()) {
-					validateDocumentsOnType(request.getRequestInfo(), property_Optional.get().getTenantId(), o,
-							errorMap, "");
+					try {
+						validateDocumentsOnType(request.getRequestInfo(), property_Optional.get().getTenantId(), o,
+								errorMap, "");
+					} catch (Exception e) {
+						log.error("Can not parse Json fie",e);
+					}
 				}
 
 			});
@@ -221,7 +228,7 @@ public class PropertyValidator {
 	}
 
 	public void validateDocumentsOnType(RequestInfo requestInfo, String tenantId, Owner owner,
-			Map<String, String> errorMap, String code) {
+			Map<String, String> errorMap, String code) throws JSONException {
 
 		List<Map<String, Object>> fieldConfigurations = mdmsservice.getDocumentConfig("documents", requestInfo,
 				tenantId);

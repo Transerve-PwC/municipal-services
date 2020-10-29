@@ -79,20 +79,34 @@ public class PropertyService {
 	@Autowired
 	private DemandRepository demandRepository;
 
+
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
+		processRentHistory(request);
 		producer.push(config.getSavePropertyTopic(), request);
 		processRentSummary(request);
 		return request.getProperties();
 	}
 
+	private void processRentHistory(PropertyRequest request) {
+		if (!CollectionUtils.isEmpty(request.getProperties())) {
+			request.getProperties().stream().filter(property -> property.getPropertyDetails().getEstateDemands() != null
+					&& property.getPropertyDetails().getEstatePayments() != null && property.getPropertyDetails().getEstateAccount() != null).forEach(property -> {
+						property.getPropertyDetails().setEstateRentCollections(
+								estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(),
+										property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getInterestRate(),true));
+					});
+		}
+		enrichmentService.enrichCollection(request);
+
+	}
+
 	private void processRentSummary(PropertyRequest request) {
-		request.getProperties().stream().filter(property -> property.getDemands() != null
-				&& property.getPayments() != null && property.getEstateAccount() != null).forEach(property -> {
-					property.setEstateRentSummary(
-							estateRentCollectionService.calculateRentSummary(property.getDemands(),
-									property.getEstateAccount(), property.getPropertyDetails().getInterestRate()));
+		request.getProperties().stream().filter(property -> property.getPropertyDetails().getEstateDemands() != null
+				&& property.getPropertyDetails().getEstatePayments() != null && property.getPropertyDetails().getEstateAccount() != null).forEach(property -> {
+					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(property.getPropertyDetails().getEstateDemands(),
+							property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getInterestRate()));
 				});
 	}
 
@@ -105,12 +119,13 @@ public class PropertyService {
 	public List<Property> updateProperty(PropertyRequest request) {
 		propertyValidator.validateUpdateRequest(request);
 		enrichmentService.enrichPropertyRequest(request);
+		processRentHistory(request);
 		String action = request.getProperties().get(0).getAction();
 		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)) {
 			wfIntegrator.callWorkFlow(request);
 		}
 		producer.push(config.getUpdatePropertyTopic(), request);
-
+		processRentSummary(request);
 		return request.getProperties();
 	}
 
@@ -159,11 +174,11 @@ public class PropertyService {
 						PropertyCriteria.builder().propertyId(property.getId()).build());
 
 				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
-					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-							estateAccount, property.getPropertyDetails().getInterestRate()));
-					property.setDemands(demands);
-					property.setPayments(payments);
-					property.setEstateAccount(estateAccount);
+					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands, estateAccount,
+							property.getPropertyDetails().getInterestRate()));
+					property.getPropertyDetails().setEstateDemands(demands);
+					property.getPropertyDetails().setEstatePayments(payments);
+					property.getPropertyDetails().setEstateAccount(estateAccount);
 				}
 			});
 		}
@@ -178,7 +193,8 @@ public class PropertyService {
 				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
 						.relations(Collections.singletonList("finance")).build());
 		if (CollectionUtils.isEmpty(properties)) {
-			return AccountStatementResponse.builder().rentAccountStatements(Collections.emptyList()).build();
+			return AccountStatementResponse.builder().estateAccountStatements(Collections.emptyList())
+					.build();
 		}
 
 		Property property = properties.get(0);
@@ -189,9 +205,9 @@ public class PropertyService {
 				Collections.singletonList(property.getPropertyDetails().getId()));
 
 		return AccountStatementResponse.builder()
-				.rentAccountStatements(rentCollectionService.getAccountStatement(demands, payments,
-						property.getPropertyDetails().getInterestRate(), accountStatementCriteria.getFromDate(),
-						accountStatementCriteria.getToDate()))
+				.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments,
+						18.00,
+						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
 				.build();
 	}
 

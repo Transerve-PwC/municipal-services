@@ -265,6 +265,10 @@ public class PropertyEnrichmentService {
 					estateDemand.setPropertyDetailsId(property.getPropertyDetails().getId());
 
 				}
+				estateDemand.setRemainingRentPenalty(estateDemand.getPenaltyInterest());
+				estateDemand.setRemainingGSTPenalty(estateDemand.getGstInterest());
+				estateDemand.setRemainingRent(estateDemand.getRent());
+				estateDemand.setInterestSince(estateDemand.getGenerationDate());
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				estateDemand.setAuditDetails(estateDemandAuditDetails);
 
@@ -365,8 +369,7 @@ public class PropertyEnrichmentService {
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(new BigDecimal(amount));
 			estimate2.setCategory(Category.ADVANCE_COLLECTION);
-			estimate2.setTaxHeadCode(
-					getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
+			estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
 			estimates.add(estimate2);
 		}
 
@@ -377,8 +380,29 @@ public class PropertyEnrichmentService {
 		property.setCalculation(calculation);
 
 	}
-	
+
 	private String getTaxHeadCode(String billingBusService, Category category) {
 		return String.format("%s_%s", billingBusService, category.toString());
+	}
+
+	public void enrichCollection(PropertyRequest request) {
+		RequestInfo requestInfo = request.getRequestInfo();
+		if (!CollectionUtils.isEmpty(request.getProperties())) {
+			request.getProperties().forEach(property -> {
+
+				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateRentCollections())) {
+					property.getPropertyDetails().getEstateRentCollections().forEach(collection -> {
+						if (collection.getId() == null) {
+							AuditDetails estateCollectionAuditDetails = util
+									.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+							collection.setId(UUID.randomUUID().toString());
+							collection.setAuditDetails(estateCollectionAuditDetails);
+						}
+
+					});
+				}
+			});
+		}
+
 	}
 }

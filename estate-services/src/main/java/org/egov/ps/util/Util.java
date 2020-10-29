@@ -61,7 +61,7 @@ public class Util {
 
 	/**
 	 * Creates demand Search url based on tenanatId,businessService and ConsumerCode
-	 * 
+	 *
 	 * @return demand search url
 	 */
 	public String getDemandSearchURL() {
@@ -78,16 +78,14 @@ public class Util {
 		url.append("{3}");
 		return url.toString();
 	}
-
 	/**
 	 * Creates a map of id to isStateUpdatable
-	 * 
+	 *
 	 * @param searchresult    Licenses from DB
 	 * @param businessService The businessService configuration
 	 * @return Map of is to isStateUpdatable
 	 */
-	public Map<String, Boolean> getIdToIsStateUpdatableMap(BusinessService businessService,
-			List<Application> searchresult) {
+	public Map<String, Boolean> getIdToIsStateUpdatableMap(BusinessService businessService, List<Application> searchresult) {
 		Map<String, Boolean> idToIsStateUpdatableMap = new HashMap<>();
 		searchresult.forEach(result -> {
 			if (result.getState().equals("")) {
@@ -123,16 +121,16 @@ public class Util {
 	/**
 	 * Generates a new consumer code from a transit number to be sent while creating
 	 * a bill.
-	 * 
+	 *
 	 * @param fileNumber
 	 * @return
 	 */
 	public String getPropertyRentConsumerCode(String fileNumber) {
 		return String.format("SITE-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
 	}
-	
+
 	SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD-HH-MM-SS");
-	
+
 	public String getStateLevelTenantId(String tenantId) {
 		String[] components = tenantId.split(".");
 		if (components.length == 0) {

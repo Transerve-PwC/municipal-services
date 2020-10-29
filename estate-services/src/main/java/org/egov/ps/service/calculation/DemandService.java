@@ -75,7 +75,7 @@ public class DemandService {
 
 	/**
 	 * Creates demand for the given list of calculations
-	 * 
+	 *
 	 * @param requestInfo  The RequestInfo of the calculation request
 	 * @param applications List of calculation object
 	 * @return Demands that are created
@@ -149,7 +149,7 @@ public class DemandService {
 
 	/**
 	 * Updates demand for the given list of calculations
-	 * 
+	 *
 	 * @param requestInfo  The RequestInfo of the calculation request
 	 * @param calculations List of calculation object
 	 * @return Demands that are updated
@@ -184,7 +184,7 @@ public class DemandService {
 
 	/**
 	 * Searches demand for the given consumerCode and tenantIDd
-	 * 
+	 *
 	 * @param tenantId      The tenantId of the tradeLicense
 	 * @param consumerCodes The set of consumerCode of the demands
 	 * @param requestInfo   The RequestInfo of the incoming request
@@ -216,7 +216,7 @@ public class DemandService {
 
 	/**
 	 * Returns the list of new DemandDetail to be added for updating the demand
-	 * 
+	 *
 	 * @param application   The calculation object for the update tequest
 	 * @param demandDetails The list of demandDetails from the existing demand
 	 * @return The list of new DemandDetails
@@ -262,7 +262,7 @@ public class DemandService {
 	}
 
 	public List<Application> generateFinanceDemand(ApplicationRequest applicationRequest) {
-		
+
 		/**
 		 * Generate an actual finance demand
 		 */
@@ -324,7 +324,7 @@ public class DemandService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestInfo   RequestInfo object from the original request.
 	 * @param paymentAmount Total amount paid.
 	 * @param billId        The bill that was generated for this payment.
@@ -336,9 +336,22 @@ public class DemandService {
 			Application application, String billingBusinessService) {
 
 		JsonNode applicationDetails = application.getApplicationDetails();
-		String ownerName = applicationDetails.get("transferee").get("name").asText();
-		String ownerPhone = applicationDetails.get("transferee").get("mobileNo").asText();
 		String tenantId = application.getTenantId();
+		String ownerName = null;
+		String ownerPhone = null;
+
+		if (applicationDetails.get("transferee") != null) {
+			ownerName = applicationDetails.get("transferee").get("name").asText();
+			ownerPhone = applicationDetails.get("transferee").get("mobileNo").asText();
+
+		} else if (applicationDetails.get("transferor") != null) {
+			ownerName = applicationDetails.get("transferor").get("transferorDetails").get("ownerName").asText();
+			ownerPhone = applicationDetails.get("transferor").get("transferorDetails").get("mobileNumber").asText();
+
+		} else if (applicationDetails.get("owner") != null) {
+			ownerName = applicationDetails.get("owner").get("transferorDetails").get("ownerName").asText();
+			ownerPhone = applicationDetails.get("owner").get("transferorDetails").get("mobileNumber").asText();
+		}
 
 		CollectionPaymentDetail paymentDetail = CollectionPaymentDetail.builder().tenantId(tenantId)
 				.totalAmountPaid(paymentAmount).receiptDate(System.currentTimeMillis())
@@ -371,7 +384,7 @@ public class DemandService {
 
 		return demandRepository.savePayment(paymentRequest);
 	}
-	
+
 	public List<Demand> generateFinanceRentDemand(RequestInfo requestInfo, Property property) {
 		List<Demand> demands = new LinkedList<>();
 		String existingConsumerCode = property.getRentPaymentConsumerCode();
@@ -395,7 +408,7 @@ public class DemandService {
 		property.setRentPaymentConsumerCode(utils.getPropertyRentConsumerCode(property.getFileNumber()));
 		return createRentDemand(requestInfo, property);
 	}
-	
+
 	private List<DemandDetail> getUpdatedDemandDetails(Property property, List<DemandDetail> demandDetails) {
 		List<DemandDetail> newDemandDetails = new ArrayList<>();
 		Map<String, List<DemandDetail>> taxHeadToDemandDetail = new HashMap<>();
@@ -434,7 +447,7 @@ public class DemandService {
 		combinedBillDetials.addAll(newDemandDetails);
 		return combinedBillDetials;
 	}
-	
+
 	private List<Demand> createRentDemand(RequestInfo requestInfo, Property property) {
 		User user=null;
 		if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)){
@@ -461,7 +474,7 @@ public class DemandService {
 				.businessService(property.getBillingBusinessService()).additionalDetails(null).build());
 		return demandRepository.saveDemand(requestInfo, demands);
 	}
-	
+
 	/**
 	 * Get EGov User details based on current owner.
 	 */

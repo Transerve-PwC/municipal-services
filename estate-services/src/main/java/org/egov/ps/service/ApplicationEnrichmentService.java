@@ -31,6 +31,7 @@ import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -39,6 +40,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.jaegertracing.thriftjava.Log;
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class ApplicationEnrichmentService {
 
@@ -308,8 +312,10 @@ public class ApplicationEnrichmentService {
 
 			// TODO : We have to fetch the data from MDMS
 			// Master name -> module name
-			List<Map<String, Object>> feesConfigurations = mdmsservice
-					.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
+			List<Map<String, Object>> feesConfigurations;
+			try {
+				feesConfigurations = mdmsservice
+						.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
 
 			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 
@@ -323,6 +329,9 @@ public class ApplicationEnrichmentService {
 			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimateDue);
+			} catch (JSONException e) {
+				log.error("Can not parse Json file",e);
+			}
 		}
 
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
@@ -333,10 +342,16 @@ public class ApplicationEnrichmentService {
 	// Used for get feePercentGST 
 	public BigDecimal feesGSTOfApplication(Application application, RequestInfo requestInfo) {
 		BigDecimal responseGSTEstateAmount = new BigDecimal(0.0);
-		List<Map<String, Object>> feeGsts = mdmsservice.getApplicationGST(application.getMDMSModuleName(),
-				requestInfo, application.getTenantId());
+		List<Map<String, Object>> feeGsts;
+		try {
+			feeGsts = mdmsservice.getApplicationGST(application.getMDMSModuleName(),
+					requestInfo, application.getTenantId());
+		
 		if(!feeGsts.isEmpty()) {
 			responseGSTEstateAmount = new BigDecimal(feeGsts.get(0).get("gst").toString());
+		}
+		} catch (JSONException e) {
+			log.error("Can not parse Json fie",e);
 		}
 		return responseGSTEstateAmount;
 	}
