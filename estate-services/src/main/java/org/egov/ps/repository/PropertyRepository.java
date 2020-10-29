@@ -36,6 +36,7 @@ public class PropertyRepository {
 
 	@Autowired
 	private DocumentsRowMapper documentRowMapper;
+	
 
 	@Autowired
 	private OwnerRowMapper ownerRowMapper;
