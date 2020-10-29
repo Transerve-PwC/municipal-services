@@ -656,7 +656,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.interestCollected
 
-            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.principalCollected
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.rentCollected
 
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.collectedAt
 
