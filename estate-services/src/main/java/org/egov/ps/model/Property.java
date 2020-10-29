@@ -1,6 +1,5 @@
 package org.egov.ps.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -93,29 +92,12 @@ public class Property {
 	private EstateRentSummary estateRentSummary;
 
 	/**
-	 * Amount to be paid
-	 */
-	@JsonProperty("paymentAmount")
-	private BigDecimal paymentAmount;
-
-	/**
 	 * Pending consumer code. This needs to be saved in the database for online
 	 * payments.
 	 */
 	@JsonProperty("rentPaymentConsumerCode")
 	@Size(max = 256, message = "Rent payment consumer code must be between 0 and 256 characters in length")
 	private String rentPaymentConsumerCode;
-
-	@JsonProperty("transactionId")
-	@Size(max = 256, message = "Transaction id must be between 0 and 256 characters in length")
-	private String transactionId;
-
-	@JsonProperty("bankName")
-	@Size(max = 256, message = "Bank name must be between 0 and 256 characters in length")
-	private String bankName;
-
-	@JsonProperty("dateOfPayment")
-	private Long dateOfPayment;
 
 	@JsonProperty("calculation")
 	Calculation calculation;

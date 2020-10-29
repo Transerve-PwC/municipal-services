@@ -6,7 +6,7 @@ serviceMaps:
       fromTopic: save-property-master
       isTransaction: true
       queryMaps:
-        - query: INSERT INTO cs_ep_property_v1 (id, file_number, tenantid, category, sub_category, site_number, sector_number, property_master_or_allotment_of_site, is_cancelation_of_site, state, action, bank_name, transaction_number, amount, date_of_payment,  created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO cs_ep_property_v1 (id, file_number, tenantid, category, sub_category, site_number, sector_number, property_master_or_allotment_of_site, is_cancelation_of_site, state, action, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: Properties.*
           jsonMaps:
             - jsonPath: $.Properties.*.id
@@ -30,14 +30,6 @@ serviceMaps:
             - jsonPath: $.Properties.*.state
 
             - jsonPath: $.Properties.*.action
-            
-            - jsonPath: $.Applications.*.bankName
-
-            - jsonPath: $.Applications.*.transactionId
-
-            - jsonPath: $.Applications.*.paymentAmount
-
-            - jsonPath: $.Applications.*.dateOfPayment
 
             - jsonPath: $.Properties.*.auditDetails.createdBy
 
@@ -124,7 +116,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.id
 
-        - query: UPDATE cs_ep_property_v1 SET tenantid = ?, category = ?, sub_category = ?, site_number = ?, sector_number = ?, property_master_or_allotment_of_site = ?, is_cancelation_of_site = ?, state = ?, action = ?, bank_name = ?, transaction_number = ?, amount = ?, date_of_payment = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
+        - query: UPDATE cs_ep_property_v1 SET tenantid = ?, category = ?, sub_category = ?, site_number = ?, sector_number = ?, property_master_or_allotment_of_site = ?, is_cancelation_of_site = ?, state = ?, action = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
           basePath: Properties.*
           jsonMaps:
             - jsonPath: $.Properties.*.tenantId
@@ -144,14 +136,6 @@ serviceMaps:
             - jsonPath: $.Properties.*.state
 
             - jsonPath: $.Properties.*.action
-            
-            - jsonPath: $.Applications.*.bankName
-
-            - jsonPath: $.Applications.*.transactionId
-
-            - jsonPath: $.Applications.*.paymentAmount
-
-            - jsonPath: $.Applications.*.dateOfPayment
 
             - jsonPath: $.Properties.*.auditDetails.lastModifiedBy
 
@@ -635,6 +619,36 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime
+            
+            
+        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment) VALUES (?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?;
+          basePath: $.Properties.*.propertyDetails.offlinePaymentDetails.*
+          jsonMaps:
+          
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.amount
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.bankName
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.transactionNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.amount
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.bankName
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.transactionNumber
+            
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
+
 
     - version: 1.0
       description: Persists Application details in cs_ep_application_v1 table

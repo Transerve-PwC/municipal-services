@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.AccountStatementCriteria;
 import org.egov.ps.model.BillV2;
+import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
@@ -226,7 +228,7 @@ public class PropertyService {
 			throw new CustomException(
 					Collections.singletonMap("NO_PROPERTY_ID_FOUND", "No Property found to process rent"));
 		}
-		if (propertyFromRequest.getPaymentAmount() == null) {
+		if (propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount() == null) {
 			throw new CustomException(
 					Collections.singletonMap("NO_PAYMENT_AMOUNT_FOUND", "No Property tenantId found to process rent"));
 		}
@@ -243,9 +245,6 @@ public class PropertyService {
 		}
 
 		Property property = propertiesFromDB.get(0);
-		property.setPaymentAmount(propertyFromRequest.getPaymentAmount());
-		property.setTransactionId(propertyFromRequest.getTransactionId());
-		property.setBankName(propertyFromRequest.getBankName());
 		Owner owner = utils.getCurrentOwnerFromProperty(property);
 
 		/**
@@ -290,9 +289,17 @@ public class PropertyService {
 			/**
 			 * if offline, create a payment.
 			 */
-			demandService.createCashPaymentProperty(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
+			demandService.createCashPaymentProperty(propertyRequest.getRequestInfo(), property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount(),
 					bills.get(0).getId(), owner, config.getAosBusinessServiceValue());
 
+			OfflinePaymentDetails offlinePaymentDetails = OfflinePaymentDetails.builder()
+					.id(UUID.randomUUID().toString()).propertyDetailsId(property.getPropertyDetails().getId())
+					.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
+					.amount(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount())
+					.bankName(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getBankName())
+					.transactionNumber(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getTransactionNumber()).build();
+			property.getPropertyDetails().setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
+			
 			propertyRequest.setProperties(Collections.singletonList(property));
 			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 

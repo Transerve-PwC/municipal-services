@@ -279,5 +279,7 @@ public class PropertyDetails {
 	@JsonProperty("interestRate")
 	private Double interestRate = 0.0;
 
-
+	@Valid
+	@JsonProperty
+	private List<OfflinePaymentDetails> offlinePaymentDetails;
 }

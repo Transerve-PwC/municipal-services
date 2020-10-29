@@ -332,7 +332,7 @@ public class PropertyEnrichmentService {
 		if (rentSummary == null)
 			return;
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
-		double amount = property.getPaymentAmount().doubleValue();
+		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
 		double balPrincipal = rentSummary.getBalancePrincipal();
 		double balInterest = rentSummary.getBalanceInterest();
 

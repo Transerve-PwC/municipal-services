@@ -28,8 +28,6 @@ public class PropertyQueryBuilder {
 			+ " pt.site_number, pt.sector_number, pt.state as pstate, pt.action as paction, pt.created_by as pcreated_by, pt.created_time as pcreated_time, "
 			+ " pt.last_modified_by as pmodified_by, pt.last_modified_time as pmodified_time, "
 			+ " pt.property_master_or_allotment_of_site, pt.is_cancelation_of_site, "
-			+ " pt.bank_name as ptbank_name, pt.transaction_number as pttransaction_number, "
-			+ " pt.amount as ptamount, pt.date_of_payment as ptdate_of_payment, "
 
 			+ " ptdl.id as ptdlid, ptdl.property_id as pdproperty_id, ptdl.branch_type as branch_type, ptdl.property_type as pdproperty_type, "
 			+ " ptdl.tenantid as pdtenantid, ptdl.type_of_allocation, ptdl.mode_of_auction, ptdl.scheme_name,ptdl.date_of_auction, "
@@ -115,6 +113,11 @@ public class PropertyQueryBuilder {
 			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
 			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
 
+	private static final String OFFLINE_PAYMENT_COLUMN = " offline.id as offlineid, "
+			+ " offline.property_details_id as offlineproperty_details_id, offline.demand_id as offlinedemand_id, "
+			+ " offline.amount as offlineamount, offline.bank_name as offlinebank_name, "
+			+ " offline.transaction_number as offlinetransaction_number, offline.date_of_payment as offlinedate_of_payment ";
+	
 	// + LEFT_JOIN
 	// + " cs_ep_payment_v1 payment ON ptdl.id=payment.property_details_id ";
 
@@ -127,6 +130,8 @@ public class PropertyQueryBuilder {
 	private static final String ESTATE_PAYMENT_TABLE = " cs_ep_payment estp ";
 
 	private static final String ESTATE_ACCOUNT_COLUMN = " cs_pt_account account ";
+	
+	private static final String OFFLINE_PAYMENT_TABLE = " cs_ep_offline_payment_detail offline ";
 
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
@@ -137,6 +142,8 @@ public class PropertyQueryBuilder {
 	public static final String RELATION_COURT = "court";
 	public static final String RELATION_BIDDER = "bidder";
 	public static final String RELATION_ESTATE_FINANCE = "finance";
+	public static final String RELATION_OFFLINE_PAYMENT = "offline";
+
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
 
@@ -292,5 +299,14 @@ public class PropertyQueryBuilder {
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 		return builder.toString();
+	}
+	
+	public String getOfflinePaymentsQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(OFFLINE_PAYMENT_COLUMN);
+		sb.append(" FROM " + OFFLINE_PAYMENT_TABLE);
+		sb.append(" where offline.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
 	}
 }
