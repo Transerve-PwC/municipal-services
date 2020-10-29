@@ -648,33 +648,33 @@ serviceMaps:
             - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedTime
         
         - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
-          basePath: $.Properties.*.rentCollections.*
+          basePath: $.Properties.*.propertyDetails.estateRentCollections.*
           jsonMaps:
-            - jsonPath: $.Properties.*.rentCollections.*.id
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.id
 
-            - jsonPath: $.Properties.*.rentCollections.*.demandId
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.demandId
 
-            - jsonPath: $.Properties.*.rentCollections.*.interestCollected
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.interestCollected
 
-            - jsonPath: $.Properties.*.rentCollections.*.principalCollected
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.principalCollected
 
-            - jsonPath: $.Properties.*.rentCollections.*.collectedAt
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.collectedAt
 
-            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.createdBy
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.createdBy
 
-            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.createdTime
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.createdTime
 
-            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedTime
 
-            - jsonPath: $.Properties.*.rentCollections.*.interestCollected
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.interestCollected
 
-            - jsonPath: $.Properties.*.rentCollections.*.principalCollected
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.principalCollected
 
-            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedTime
             
             
       

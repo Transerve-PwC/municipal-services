@@ -86,28 +86,6 @@ public class PropertyEnrichmentService {
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
 		enrichEstateAccount(property, requestInfo);
-		enrichCollection(property, requestInfo);
-
-	}
-
-	public void enrichCollection(Property property,RequestInfo requestInfo) {
-		if(property.getDemands() != null
-				&& property.getPayments() != null && property.getEstateAccount() != null){
-					property.setRentCollections(
-							estateRentCollectionService.settle(property.getDemands(), property.getPayments(),
-									property.getEstateAccount(), property.getPropertyDetails().getInterestRate(),true));
-		}
-
-		if (!CollectionUtils.isEmpty(property.getRentCollections())) {
-			property.getRentCollections().forEach(collection -> {
-				if (collection.getId() == null) {
-					AuditDetails rentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
-							true);
-					collection.setId(UUID.randomUUID().toString());
-					collection.setAuditDetails(rentAuditDetails);
-				}
-			});
-		}		
 
 	}
 
@@ -267,6 +245,7 @@ public class PropertyEnrichmentService {
 						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
 			}
 			property.setEstateAccount(existingEstateAccount);
+			property.getPropertyDetails().setEstateAccount(existingEstateAccount);
 	}
 
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
