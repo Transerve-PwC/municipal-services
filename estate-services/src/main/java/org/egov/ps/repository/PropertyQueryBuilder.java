@@ -92,6 +92,9 @@ public class PropertyQueryBuilder {
 			+ " estd.rent as estdrent, estd.penalty_interest as estdpenalty_interest, "
 			+ " estd.gst_interest as estdgst_interest, estd.gst as estdgst, estd.collected_rent as estdcollected_rent, "
 			+ " estd.collected_gst as estdcollected_gst, estd.no_of_days as estdno_of_days, estd.paid as estdpaid, "
+			+ " estd.remaining_rent_penalty as estdremaining_rent_penalty, estd.remaining_gst_penalty as estdremaining_gst_penalty,"
+			+ " estd.remaining_rent as estdremaining_rent,estd.collected_gst_penalty as estdcollected_gst_penalty, "
+			+ " estd.collected_rent_penalty as estdcollected_rent_penalty,estd.interest_since as estdinterest_since, estd.remaining_gst as estdremaining_gst,"
 			+ " estd.created_by as estdcreated_by, estd.last_modified_by as estdlast_modified_by, "
 			+ " estd.created_time as estdcreated_time, estd.last_modified_time as estdlast_modified_time ";
 
