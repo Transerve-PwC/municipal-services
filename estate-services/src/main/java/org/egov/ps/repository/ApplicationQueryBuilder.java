@@ -161,6 +161,11 @@ public class ApplicationQueryBuilder {
 			builder.append("app.module_type IN (:moduleType)");
 			preparedStmtList.put("moduleType", criteria.getModuleType());
 		}
+		if (null != criteria.getBranchType()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.branch_type IN (:branchType)");
+			preparedStmtList.put("branchType", criteria.getBranchType());
+		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}

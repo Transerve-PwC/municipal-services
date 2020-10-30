@@ -1,5 +1,5 @@
 serviceMaps:
-  serviceName: property-service
+  serviceName: estate-services
   mappings:
     - version: 1.0
       description: Persists Properties details in cs_ep_property_v1 table
@@ -39,7 +39,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO cs_ep_property_details_v1 (id, property_id, branch_type, property_type, tenantid, type_of_allocation, emd_amount, emd_date, mode_of_auction, scheme_name, date_of_auction, area_sqft, rate_per_sqft, last_noc_date, service_category, is_property_active, trade_type, company_name, company_address, company_registration_number, company_type, decree_date, court_details, civil_titled_as, company_registration_date, company_or_firm, property_registered_to, entity_type, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO cs_ep_property_details_v1 (id, property_id, branch_type, property_type, tenantid, type_of_allocation, emd_amount, emd_date, mode_of_auction, scheme_name, date_of_auction, area_sqft, rate_per_sqft, last_noc_date, service_category, is_property_active, trade_type, company_name, company_address, company_registration_number, company_type, decree_date, court_details, civil_titled_as, company_registration_date, company_or_firm, property_registered_to, entity_type, house_number, village, mohalla, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: Properties.*.propertyDetails
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.id
@@ -97,6 +97,12 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.propertyRegisteredTo
 
             - jsonPath: $.Properties.*.propertyDetails.entityType
+
+            - jsonPath: $.Properties.*.propertyDetails.houseNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.village
+
+            - jsonPath: $.Properties.*.propertyDetails.mohalla
 
             - jsonPath: $.Properties.*.propertyDetails.auditDetails.createdBy
 
@@ -148,7 +154,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.id
 
-        - query: UPDATE cs_ep_property_details_v1 SET branch_type = ?, property_type = ?, tenantid = ?, type_of_allocation = ?, emd_amount = ?,  emd_date = ?, mode_of_auction = ?, scheme_name = ?, date_of_auction = ?, area_sqft = ?, rate_per_sqft = ?, last_noc_date = ?, service_category = ?, is_property_active = ?, trade_type = ?, company_name = ?, company_address = ?, company_registration_number = ?, company_type = ?, decree_date = ?, court_details = ?, civil_titled_as = ?, company_registration_date = ?, company_or_firm = ?, property_registered_to = ?, entity_type = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
+        - query: UPDATE cs_ep_property_details_v1 SET branch_type = ?, property_type = ?, tenantid = ?, type_of_allocation = ?, emd_amount = ?,  emd_date = ?, mode_of_auction = ?, scheme_name = ?, date_of_auction = ?, area_sqft = ?, rate_per_sqft = ?, last_noc_date = ?, service_category = ?, is_property_active = ?, trade_type = ?, company_name = ?, company_address = ?, company_registration_number = ?, company_type = ?, decree_date = ?, court_details = ?, civil_titled_as = ?, company_registration_date = ?, company_or_firm = ?, property_registered_to = ?, entity_type = ?, house_number = ?, village = ?, mohalla = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
           basePath: Properties.*.propertyDetails
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.branchType
@@ -202,6 +208,12 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.propertyRegisteredTo
 
             - jsonPath: $.Properties.*.propertyDetails.entityType
+
+            - jsonPath: $.Properties.*.propertyDetails.houseNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.village
+
+            - jsonPath: $.Properties.*.propertyDetails.mohalla
 
             - jsonPath: $.Properties.*.propertyDetails.auditDetails.lastModifiedBy
 
@@ -508,7 +520,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.propertyDetailsId
 
-            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.demandDate
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.generationDate
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isPrevious
 
