@@ -249,6 +249,14 @@ public class PropertyEnrichmentService {
 				existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
 						.propertyId(property.getId())
 						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
+			}else {
+				existingEstateAccount.setRemainingAmount(property.getEstateAccount().getRemainingAmount());
+				existingEstateAccount.setRemainingSince(property.getEstateAccount().getRemainingSince());
+				existingEstateAccount.setPropertyId(property.getEstateAccount().getPropertyId());
+				AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+				auditDetails.setCreatedBy(existingEstateAccount.getAuditDetails().getCreatedBy());
+				auditDetails.setCreatedTime(existingEstateAccount.getAuditDetails().getCreatedTime());
+				existingEstateAccount.setAuditDetails(auditDetails);
 			}
 			property.getPropertyDetails().setEstateAccount(existingEstateAccount);
 	}
