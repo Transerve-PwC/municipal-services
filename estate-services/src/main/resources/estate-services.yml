@@ -539,7 +539,7 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
-            
+
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRentPenalty
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGSTPenalty
@@ -551,7 +551,21 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRentPenalty
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.interestSince
-            
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGST
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRentPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGSTPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRent
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedGSTPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRentPenalty
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.interestSince
+
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGST
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.createdBy
@@ -581,7 +595,9 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.noOfDays
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.paid
-            
+
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRentPenalty
+
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingRentPenalty
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGSTPenalty
@@ -593,7 +609,7 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.collectedRentPenalty
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.interestSince
-            
+
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.remainingGST
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.auditDetails.lastModifiedBy
@@ -635,34 +651,65 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime
-            
+
         - query: INSERT INTO cs_ep_account(id, property_details_id, remainingAmount, remaining_since, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET remainingAmount=?, remaining_since=?, modified_by=?, modified_date=?;
           basePath: Properties.*.propertyDetails.estateAccount
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.id
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.propertyDetailsId
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingAmount
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingSince
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.createdBy
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedBy
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.createdTime
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedTime
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingAmount
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingSince
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedBy
-      
+
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedTime
-        
+
+
+
+        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment) VALUES (?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?;
+          basePath: $.Properties.*.propertyDetails.offlinePaymentDetails.*
+          jsonMaps:
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.id
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.propertyDetailsId
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.amount
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.bankName
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.transactionNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.amount
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.bankName
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.transactionNumber
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
+
+
         - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
           basePath: $.Properties.*.propertyDetails.estateRentCollections.*
           jsonMaps:
@@ -691,9 +738,6 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedTime
-            
-            
-      
 
     - version: 1.0
       description: Persists Application details in cs_ep_application_v1 table

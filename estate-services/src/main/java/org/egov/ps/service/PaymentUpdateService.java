@@ -52,40 +52,50 @@ public class PaymentUpdateService {
 			RequestInfo requestInfo = paymentRequest.getRequestInfo();
 			List<PaymentDetail> paymentDetails = paymentRequest.getPayment().getPaymentDetails();
 			for (PaymentDetail paymentDetail : paymentDetails) {
+				switch (paymentDetail.getBusinessService()) {
+					case PSConstants.BUSINESS_SERVICE_EB_RENT:
+					case PSConstants.BUSINESS_SERVICE_BB_RENT:
+					case PSConstants.BUSINESS_SERVICE_MB_RENT:
+						log.info("Post enrichment need to do");
+						break;
+					default: {
+						ApplicationCriteria searchCriteria = new ApplicationCriteria();
+						searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
 
-				ApplicationCriteria searchCriteria = new ApplicationCriteria();
-				searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
+						List<Application> applications = applicationService.searchApplication(searchCriteria,
+								requestInfo);
 
-				List<Application> applications = applicationService.searchApplication(searchCriteria, requestInfo);
+						if (CollectionUtils.isEmpty(applications))
+							throw new CustomException("INVALID RECEIPT",
+									"No Owner found for the comsumerCode " + searchCriteria.getApplicationNumber());
 
-				BusinessService otBusinessService = workflowService.getBusinessService(
-						applications.get(0).getTenantId(), requestInfo,
-						applications.get(0).getWorkFlowBusinessService());
+						BusinessService otBusinessService = workflowService.getBusinessService(
+								applications.get(0).getTenantId(), requestInfo,
+								applications.get(0).getWorkFlowBusinessService());
 
-				if (CollectionUtils.isEmpty(applications))
-					throw new CustomException("INVALID RECEIPT",
-							"No Owner found for the comsumerCode " + searchCriteria.getApplicationNumber());
+						applications.forEach(application -> application.setAction(PSConstants.ACTION_PAY));
 
-				applications.forEach(application -> application.setAction(PSConstants.ACTION_PAY));
+						Role role = Role.builder().code("SYSTEM_PAYMENT").build();
+						requestInfo.getUserInfo().getRoles().add(role);
 
-				Role role = Role.builder().code("SYSTEM_PAYMENT").build();
-				requestInfo.getUserInfo().getRoles().add(role);
-				
-				
-				ApplicationRequest updateRequest = ApplicationRequest.builder().requestInfo(requestInfo)
-						.applications(applications).build();
+						ApplicationRequest updateRequest = ApplicationRequest.builder().requestInfo(requestInfo)
+								.applications(applications).build();
 
-				updateRequest.getApplications()
-						.forEach(obj -> log.info(" the status of the application is : " + obj.getState()));
+						updateRequest.getApplications()
+								.forEach(obj -> log.info(" the status of the application is : " + obj.getState()));
 
-				/**
-				 * Payment is not the end state for Ownership Transfer. No need to postEnrich
-				 */
+						/**
+						 * Payment is not the end state for Ownership Transfer. No need to postEnrich
+						 */
 
-				Map<String, Boolean> idToIsStateUpdatableMap = util.getIdToIsStateUpdatableMap(otBusinessService,
-						applications);
+						Map<String, Boolean> idToIsStateUpdatableMap = util
+								.getIdToIsStateUpdatableMap(otBusinessService, applications);
 
-				applicationService.updatePostPayment(updateRequest, idToIsStateUpdatableMap);
+						applicationService.updatePostPayment(updateRequest, idToIsStateUpdatableMap);
+						break;
+					}
+
+				}
 			}
 		} catch (
 

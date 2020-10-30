@@ -117,7 +117,7 @@ public class WorkflowIntegrator {
 				});
 			}
 			obj.put(TENANTIDKEY, wfTenantId);
-			if( property.getPropertyDetails().getBranchType() == PSConstants.ESTATE_BRANCH){
+			if( property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)){
 				obj.put(BUSINESSSERVICEKEY, config.getAosBusinessServiceValue());
 			} else obj.put(BUSINESSSERVICEKEY, config.getBbPmBusinessServiceValue());
 			obj.put(BUSINESSIDKEY, property.getFileNumber());

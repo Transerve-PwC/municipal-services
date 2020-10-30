@@ -6,9 +6,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -218,7 +220,7 @@ public class PropertyDetails {
 	@Valid
 	@JsonProperty
 	private List<AuctionBidder> inActiveBidders;
-	
+
 	@JsonProperty("estateDemands")
 	@Builder.Default
 	private List<EstateDemand> estateDemands = new ArrayList<EstateDemand>();
@@ -235,7 +237,7 @@ public class PropertyDetails {
 		this.estateDemands.add(estateDemandItem);
 		return this;
 	}
-	
+
 	@Valid
 	@JsonProperty
 	private List<EstateDemand> inActiveEstateDemands;
@@ -256,19 +258,19 @@ public class PropertyDetails {
 		this.estatePayments.add(estatePaymentItem);
 		return this;
 	}
-	
+
 	@Valid
 	@JsonProperty
 	private List<EstatePayment> inActiveEstatePayments;
-	
+
 	@Valid
 	@JsonProperty("estateAccount")
 	private EstateAccount estateAccount;
-	
+
 	@Valid
 	@JsonProperty("estateRentCollections")
 	private List<EstateRentCollection> estateRentCollections;
-	
+
 	public PropertyDetails addCollectionItem(EstateRentCollection newCollectionItem) {
 		if (this.estateRentCollections == null) {
 			this.estateRentCollections = new ArrayList<>();
@@ -281,10 +283,43 @@ public class PropertyDetails {
 		this.estateRentCollections.add(newCollectionItem);
 		return this;
 	}
-	
+
 	@NotNull
 	@Builder.Default
 	@JsonProperty("interestRate")
 	private Double interestRate = 0.0;
-			
+
+	@Valid
+	@JsonProperty
+	private List<OfflinePaymentDetails> offlinePaymentDetails;
+
+	@JsonProperty("billingBusinessService")
+	@Size(max = 256, message = "Billing business service must be between 0 and 256 characters in length")
+	private String billingBusinessService;
+
+	public String getWorkFlowBusinessService() {
+		return String.format("ES-%s", extractPrefix(this.getBranchType()));
+	}
+
+	public String getBillingBusinessService() {
+		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE, camelToSnake(this.getBranchType()),
+				PSConstants.PROPERTY_MASTER);
+	}
+
+	private String extractPrefix(String inputString) {
+		String outputString = "";
+
+		for (int i = 0; i < inputString.length(); i++) {
+			char c = inputString.charAt(i);
+			outputString += Character.isUpperCase(c) ? c : "";
+		}
+		return outputString;
+	}
+
+	public static String camelToSnake(String str) {
+		String regex = "([a-z])([A-Z]+)";
+		String replacement = "$1_$2";
+		str = str.replaceAll(regex, replacement).toUpperCase();
+		return str;
+	}
 }

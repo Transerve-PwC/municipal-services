@@ -1,6 +1,8 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,9 +14,12 @@ import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Payment;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyDetails;
+import org.egov.ps.model.RentSummary;
+import org.egov.ps.model.calculation.Calculation;
+import org.egov.ps.model.calculation.Category;
+import org.egov.ps.model.calculation.TaxHeadEstimate;
 import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
-import org.egov.ps.service.calculation.IEstateRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuctionSaveRequest;
@@ -38,9 +43,6 @@ public class PropertyEnrichmentService {
 
 	@Autowired
 	private PropertyRepository propertyRepository;
-	
-	@Autowired
-	private IEstateRentCollectionService estateRentCollectionService;
 
 	public void enrichPropertyRequest(PropertyRequest request) {
 
@@ -236,13 +238,13 @@ public class PropertyEnrichmentService {
 	}
 
 	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
-			
+
 			EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
 					Collections.singletonList(property.getPropertyDetails().getId()));
 			if(existingEstateAccount == null ) {
 				existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
 						.propertyDetailsId(property.getPropertyDetails().getId())
-						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
+						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();
 			}else {
 				if(property.getPropertyDetails().getEstateAccount() != null) {
 					existingEstateAccount.setRemainingAmount(property.getPropertyDetails().getEstateAccount().getRemainingAmount());
@@ -255,10 +257,9 @@ public class PropertyEnrichmentService {
 				}else {
 					existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
 							.propertyDetailsId(property.getPropertyDetails().getId())
-							.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
+							.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();
 				}
 			}
-			property.setEstateAccount(existingEstateAccount);
 			property.getPropertyDetails().setEstateAccount(existingEstateAccount);
 	}
 
@@ -356,6 +357,67 @@ public class PropertyEnrichmentService {
 		}
 	}
 
+	public void enrichRentDemand(Property property, RentSummary rentSummary) {
+		if (rentSummary == null)
+			return;
+		List<TaxHeadEstimate> estimates = new LinkedList<>();
+		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
+		double balPrincipal = rentSummary.getBalancePrincipal();
+		double balInterest = rentSummary.getBalanceInterest();
+
+		if (amount >= balInterest) {
+			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
+			estimate1.setEstimateAmount(new BigDecimal(balInterest));
+			estimate1.setCategory(Category.INTEREST);
+			estimate1.setTaxHeadCode(
+					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.INTEREST));
+			estimates.add(estimate1);
+			double remainingAmmount = amount - balInterest;
+			if (remainingAmmount >= balPrincipal) {
+				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+				estimate2.setEstimateAmount(new BigDecimal(balPrincipal));
+				estimate2.setCategory(Category.PRINCIPAL);
+				estimate2.setTaxHeadCode(
+						getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
+				estimates.add(estimate2);
+			} else {
+				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+				estimate2.setEstimateAmount(new BigDecimal(remainingAmmount));
+				estimate2.setCategory(Category.PRINCIPAL);
+				estimate2.setTaxHeadCode(
+						getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
+				estimates.add(estimate2);
+			}
+			remainingAmmount = amount - balInterest - balPrincipal;
+			if (remainingAmmount > 0) {
+				TaxHeadEstimate estimate3 = new TaxHeadEstimate();
+				estimate3.setEstimateAmount(new BigDecimal(remainingAmmount));
+				estimate3.setCategory(Category.ADVANCE_COLLECTION);
+				estimate3.setTaxHeadCode(getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(),
+						Category.ADVANCE_COLLECTION));
+				estimates.add(estimate3);
+			}
+		} else {
+			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+			estimate2.setEstimateAmount(new BigDecimal(amount));
+			estimate2.setCategory(Category.ADVANCE_COLLECTION);
+			estimate2.setTaxHeadCode(getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(),
+					Category.ADVANCE_COLLECTION));
+			estimates.add(estimate2);
+		}
+
+		// estimates.add(estimate);
+		Calculation calculation = Calculation.builder()
+				.applicationNumber(util.getPropertyRentConsumerCode(property.getFileNumber()))
+				.taxHeadEstimates(estimates).tenantId(property.getTenantId()).build();
+		property.setCalculation(calculation);
+
+	}
+
+	private String getTaxHeadCode(String billingBusService, Category category) {
+		return String.format("%s_%s", billingBusService, category.toString());
+	}
+
 	public void enrichCollection(PropertyRequest request) {
 		RequestInfo requestInfo = request.getRequestInfo();
 		if (!CollectionUtils.isEmpty(request.getProperties())) {
@@ -364,7 +426,8 @@ public class PropertyEnrichmentService {
 				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateRentCollections())) {
 					property.getPropertyDetails().getEstateRentCollections().forEach(collection -> {
 						if (collection.getId() == null) {
-							AuditDetails estateCollectionAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+							AuditDetails estateCollectionAuditDetails = util
+									.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 							collection.setId(UUID.randomUUID().toString());
 							collection.setAuditDetails(estateCollectionAuditDetails);
 						}
@@ -373,6 +436,5 @@ public class PropertyEnrichmentService {
 				}
 			});
 		}
-		
 	}
 }

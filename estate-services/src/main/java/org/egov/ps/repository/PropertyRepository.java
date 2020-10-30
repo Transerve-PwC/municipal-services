@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.CourtCase;
 import org.egov.ps.model.Document;
+import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
+import org.egov.ps.model.RentAccount;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
@@ -54,12 +56,18 @@ public class PropertyRepository {
 
 	@Autowired
 	WorkflowIntegrator workflowIntegrator;
-	
+
 	@Autowired
-	private RentAccountRowMapper rentAccountrowMapper;
+	private EstateAccountRowMapper estateAccountrowMapper;
+
+	@Autowired
+	private RentAccountRowMapper rentAccountRowMapper;
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Autowired
+	private OfflinePaymentRowMapper offlinePaymentRowMapper;
 
 	public List<Property> getProperties(PropertyCriteria criteria) {
 
@@ -80,6 +88,7 @@ public class PropertyRepository {
 				relations.add(PropertyQueryBuilder.RELATION_COURT);
 				relations.add(PropertyQueryBuilder.RELATION_BIDDER);
 				relations.add(PropertyQueryBuilder.RELATION_ESTATE_FINANCE);
+				relations.add(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT);
 			}
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_OWNER)) {
@@ -97,6 +106,9 @@ public class PropertyRepository {
 		if (relations.contains(PropertyQueryBuilder.RELATION_ESTATE_FINANCE)) {
 			this.addEstateDemandToProperties(properties);
 			this.addEstatePaymentToProperties(properties);
+		}
+		if (relations.contains(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT)) {
+			this.addOfflinePaymentToProperties(properties);
 		}
 		return properties;
 	}
@@ -256,6 +268,30 @@ public class PropertyRepository {
 		});
 	}
 
+	private void addOfflinePaymentToProperties(List<Property> properties) {
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch bidders from database
+		 */
+		List<OfflinePaymentDetails> offlinePayments = this.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+
+		/**
+		 * Assign court cases to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
+			property.getPropertyDetails()
+					.setOfflinePaymentDetails(offlinePayments.stream()
+							.filter(offlinePayment -> offlinePayment.getPropertyDetailsId()
+									.equalsIgnoreCase(property.getPropertyDetails().getId()))
+							.collect(Collectors.toList()));
+		});
+	}
+
 	public List<AuctionBidder> getBiddersForPropertyDetailsIds(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String biddersQuery = propertyQueryBuilder.getBiddersQuery(propertyDetailsIds, params);
@@ -273,7 +309,7 @@ public class PropertyRepository {
 		String estatePaymentsQuery = propertyQueryBuilder.getEstatePaymentsQuery(propertyDetailsIds, params);
 		return namedParameterJdbcTemplate.query(estatePaymentsQuery, params, estatePaymentRowMapper);
 	}
-	
+
 	public Property findPropertyById(String propertyId) {
 		PropertyCriteria propertySearchCriteria = PropertyCriteria.builder().propertyId(propertyId).build();
 		List<Property> properties = this.getProperties(propertySearchCriteria);
@@ -283,12 +319,26 @@ public class PropertyRepository {
 		return properties.get(0);
 	}
 
-	public EstateAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
+	public EstateAccount getPropertyEstateAccountDetails(PropertyCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
 		log.debug("query:" + query);
 		log.debug("preparedStmtList:" + preparedStmtList);
-		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountrowMapper);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, estateAccountrowMapper);
+	}
+
+	public RentAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
+		log.debug("query:" + query);
+		log.debug("preparedStmtList:" + preparedStmtList);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountRowMapper);
+	}
+
+	public List<OfflinePaymentDetails> getOfflinePaymentsForPropertyDetailsIds(List<String> propertyDetailsIds) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String offlinePaymentsQuery = propertyQueryBuilder.getOfflinePaymentsQuery(propertyDetailsIds, params);
+		return namedParameterJdbcTemplate.query(offlinePaymentsQuery, params, offlinePaymentRowMapper);
 	}
 
 	public EstateAccount getAccountDetailsForPropertyDetailsIds(List<String> propertyDetailsIds) {
@@ -296,6 +346,6 @@ public class PropertyRepository {
 		String estateAccountQuery = propertyQueryBuilder.getEstateAccountQuery(propertyDetailsIds, params);
 		log.debug("query:" + estateAccountQuery);
 		log.debug("preparedStmtList:" + params);
-		return namedParameterJdbcTemplate.query(estateAccountQuery, params, rentAccountrowMapper);
+		return namedParameterJdbcTemplate.query(estateAccountQuery, params, estateAccountrowMapper);
 	}
 }
