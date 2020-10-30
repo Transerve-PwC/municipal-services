@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS cs_ep_collection;
 --> Account Table
 CREATE TABLE cs_ep_account (
    id           		CHARACTER VARYING (256) NOT NULL,
-   property_details_id  		CHARACTER VARYING (256) NOT NULL,
+   property_id  		CHARACTER VARYING (256) NOT NULL,
    remainingamount	    numeric(13,6),
    remaining_since      bigint,
   
@@ -14,7 +14,7 @@ CREATE TABLE cs_ep_account (
    modified_date       	bigint,
 	
   CONSTRAINT pk_cs_ep_account PRIMARY KEY (id), 
-  CONSTRAINT fk_cs_ep_account_property_details FOREIGN KEY (property_details_id) REFERENCES cs_ep_property_details_v1 (id)
+  CONSTRAINT fk_cs_ep_account_property FOREIGN KEY (property_id) REFERENCES cs_ep_property_v1 (id)
 );
 
 --> Collection Table
