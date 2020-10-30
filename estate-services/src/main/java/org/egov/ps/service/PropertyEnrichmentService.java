@@ -20,10 +20,12 @@ import org.egov.ps.model.calculation.Category;
 import org.egov.ps.model.calculation.TaxHeadEstimate;
 import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
+import org.egov.ps.service.calculation.IEstateRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuctionSaveRequest;
 import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -42,6 +44,9 @@ public class PropertyEnrichmentService {
 
 	@Autowired
 	private PropertyRepository propertyRepository;
+	
+	@Autowired
+	private IEstateRentCollectionService estateRentCollectionService;
 
 	public void enrichPropertyRequest(PropertyRequest request) {
 
@@ -86,6 +91,7 @@ public class PropertyEnrichmentService {
 		enrichBidders(property, requestInfo);
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
+		enrichEstateAccount(property, requestInfo);
 
 	}
 
@@ -235,6 +241,18 @@ public class PropertyEnrichmentService {
 
 	}
 
+	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
+			
+			EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
+					Collections.singletonList(property.getId()));
+			if(existingEstateAccount == null) {
+				existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
+						.propertyId(property.getId())
+						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
+			}
+			property.getPropertyDetails().setEstateAccount(existingEstateAccount);
+	}
+
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
 
 		/**
@@ -266,9 +284,10 @@ public class PropertyEnrichmentService {
 
 				}
 				estateDemand.setRemainingRentPenalty(estateDemand.getPenaltyInterest());
-				estateDemand.setRemainingGSTPenalty(estateDemand.getGstInterest());
+				estateDemand.setRemainingGST(estateDemand.getGstInterest());
 				estateDemand.setRemainingRent(estateDemand.getRent());
 				estateDemand.setInterestSince(estateDemand.getGenerationDate());
+				estateDemand.setIsPrevious(false);
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				estateDemand.setAuditDetails(estateDemandAuditDetails);
 
