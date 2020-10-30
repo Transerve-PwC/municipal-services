@@ -471,7 +471,7 @@ public class DemandService {
 				.consumerCode(property.getRentPaymentConsumerCode()).demandDetails(demandDetails).payer(user)
 				.minimumAmountPayable(config.getMinimumPayableAmount()).tenantId(property.getTenantId())
 				.taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo).consumerType("rentedproperties")
-				.businessService(property.getBillingBusinessService()).additionalDetails(null).build());
+				.businessService(property.getPropertyDetails().getBillingBusinessService()).additionalDetails(null).build());
 		return demandRepository.saveDemand(requestInfo, demands);
 	}
 

@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.egov.ps.model.calculation.Calculation;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.springframework.validation.annotation.Validated;
@@ -102,7 +103,5 @@ public class Property {
 	@JsonProperty("calculation")
 	Calculation calculation;
 
-	@JsonProperty("billingBusinessService")
-	@Size(max = 256, message = "Billing business service must be between 0 and 256 characters in length")
-	private String billingBusinessService;
+	
 }

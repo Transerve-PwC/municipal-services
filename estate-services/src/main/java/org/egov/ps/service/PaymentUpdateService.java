@@ -52,7 +52,14 @@ public class PaymentUpdateService {
 			RequestInfo requestInfo = paymentRequest.getRequestInfo();
 			List<PaymentDetail> paymentDetails = paymentRequest.getPayment().getPaymentDetails();
 			for (PaymentDetail paymentDetail : paymentDetails) {
-
+				switch (paymentDetail.getBusinessService()) {
+				case PSConstants.BUSINESS_SERVICE_EB_RENT:
+				case PSConstants.BUSINESS_SERVICE_BB_RENT:
+				case PSConstants.BUSINESS_SERVICE_MB_RENT:
+					log.info("Post enrichment need to do");
+				break;
+				default:
+				{
 				ApplicationCriteria searchCriteria = new ApplicationCriteria();
 				searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
 
@@ -86,8 +93,12 @@ public class PaymentUpdateService {
 						applications);
 
 				applicationService.updatePostPayment(updateRequest, idToIsStateUpdatableMap);
+				break;
 			}
-		} catch (
+				
+		  }
+		} 
+		}catch (
 
 		Exception e) {
 			log.error("Error while processing the payment ", e);

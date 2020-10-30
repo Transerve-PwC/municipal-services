@@ -267,6 +267,7 @@ public class PropertyService {
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
 			RentSummary rentSummary = rentCollectionService.calculateRentSummary(demands, account,
 					property.getPropertyDetails().getInterestRate());
+			property.getPropertyDetails().setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
 			enrichmentService.enrichRentDemand(property, rentSummary);
 		}
 
@@ -279,7 +280,7 @@ public class PropertyService {
 		 * Get the bill generated.
 		 */
 		List<BillV2> bills = demandRepository.fetchBill(propertyRequest.getRequestInfo(), property.getTenantId(),
-				property.getRentPaymentConsumerCode(), config.getAosBusinessServiceValue());
+				property.getRentPaymentConsumerCode(), property.getPropertyDetails().getBillingBusinessService());
 		if (CollectionUtils.isEmpty(bills)) {
 			throw new CustomException("BILL_NOT_GENERATED",
 					"No bills were found for the consumer code " + property.getRentPaymentConsumerCode());

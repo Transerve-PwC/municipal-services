@@ -61,5 +61,11 @@ public class PSConstants {
 	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
 
 	public static final String ACTION_PAY = "PAY";
+	
+	public static final String PROPERTY_MASTER = "PROPERTY_MASTER";
+	
+	public static final String BUSINESS_SERVICE_EB_RENT="ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";
+	public static final String BUSINESS_SERVICE_BB_RENT="ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_MASTER";
+	public static final String BUSINESS_SERVICE_MB_RENT="ESTATE_SERVICE_MANIMAJRA_BRANCH.PROPERTY_MASTER";
 
 }

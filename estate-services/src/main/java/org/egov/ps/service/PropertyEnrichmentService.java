@@ -250,9 +250,9 @@ public class PropertyEnrichmentService {
 						.propertyId(property.getId())
 						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
 			}else {
-				existingEstateAccount.setRemainingAmount(property.getEstateAccount().getRemainingAmount());
-				existingEstateAccount.setRemainingSince(property.getEstateAccount().getRemainingSince());
-				existingEstateAccount.setPropertyId(property.getEstateAccount().getPropertyId());
+				existingEstateAccount.setRemainingAmount(property.getPropertyDetails().getEstateAccount().getRemainingAmount());
+				existingEstateAccount.setRemainingSince(property.getPropertyDetails().getEstateAccount().getRemainingSince());
+				existingEstateAccount.setPropertyId(property.getPropertyDetails().getEstateAccount().getPropertyId());
 				AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				auditDetails.setCreatedBy(existingEstateAccount.getAuditDetails().getCreatedBy());
 				auditDetails.setCreatedTime(existingEstateAccount.getAuditDetails().getCreatedTime());
@@ -367,20 +367,20 @@ public class PropertyEnrichmentService {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(new BigDecimal(balInterest));
 			estimate1.setCategory(Category.INTEREST);
-			estimate1.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.INTEREST));
+			estimate1.setTaxHeadCode(getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.INTEREST));
 			estimates.add(estimate1);
 			double remainingAmmount = amount - balInterest;
 			if (remainingAmmount >= balPrincipal) {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(balPrincipal));
 				estimate2.setCategory(Category.PRINCIPAL);
-				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
+				estimate2.setTaxHeadCode(getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
 				estimates.add(estimate2);
 			} else {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate2.setCategory(Category.PRINCIPAL);
-				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
+				estimate2.setTaxHeadCode(getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
 				estimates.add(estimate2);
 			}
 			remainingAmmount = amount - balInterest - balPrincipal;
@@ -389,14 +389,14 @@ public class PropertyEnrichmentService {
 				estimate3.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate3.setCategory(Category.ADVANCE_COLLECTION);
 				estimate3.setTaxHeadCode(
-						getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
+						getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.ADVANCE_COLLECTION));
 				estimates.add(estimate3);
 			}
 		} else {
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setEstimateAmount(new BigDecimal(amount));
 			estimate2.setCategory(Category.ADVANCE_COLLECTION);
-			estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.ADVANCE_COLLECTION));
+			estimate2.setTaxHeadCode(getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.ADVANCE_COLLECTION));
 			estimates.add(estimate2);
 		}
 
