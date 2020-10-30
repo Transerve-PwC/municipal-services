@@ -5,10 +5,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.Property;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
@@ -18,10 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -116,7 +117,9 @@ public class WorkflowIntegrator {
 				});
 			}
 			obj.put(TENANTIDKEY, wfTenantId);
-			obj.put(BUSINESSSERVICEKEY, config.getAosBusinessServiceValue());
+			if( property.getPropertyDetails().getBranchType() == PSConstants.ESTATE_BRANCH){
+				obj.put(BUSINESSSERVICEKEY, config.getAosBusinessServiceValue());
+			} else obj.put(BUSINESSSERVICEKEY, config.getBbPmBusinessServiceValue());
 			obj.put(BUSINESSIDKEY, property.getFileNumber());
 			obj.put(ACTIONKEY, property.getAction());
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
