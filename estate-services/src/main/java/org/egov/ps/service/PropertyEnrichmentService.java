@@ -238,19 +238,25 @@ public class PropertyEnrichmentService {
 	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
 			
 			EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
-					Collections.singletonList(property.getId()));
-			if(existingEstateAccount == null) {
+					Collections.singletonList(property.getPropertyDetails().getId()));
+			if(existingEstateAccount == null ) {
 				existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
-						.propertyId(property.getId())
+						.propertyDetailsId(property.getPropertyDetails().getId())
 						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
 			}else {
-				existingEstateAccount.setRemainingAmount(property.getEstateAccount().getRemainingAmount());
-				existingEstateAccount.setRemainingSince(property.getEstateAccount().getRemainingSince());
-				existingEstateAccount.setPropertyId(property.getEstateAccount().getPropertyId());
-				AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-				auditDetails.setCreatedBy(existingEstateAccount.getAuditDetails().getCreatedBy());
-				auditDetails.setCreatedTime(existingEstateAccount.getAuditDetails().getCreatedTime());
-				existingEstateAccount.setAuditDetails(auditDetails);
+				if(property.getPropertyDetails().getEstateAccount() != null) {
+					existingEstateAccount.setRemainingAmount(property.getPropertyDetails().getEstateAccount().getRemainingAmount());
+					existingEstateAccount.setRemainingSince(property.getPropertyDetails().getEstateAccount().getRemainingSince());
+					existingEstateAccount.setPropertyDetailsId(property.getPropertyDetails().getEstateAccount().getPropertyDetailsId());
+					AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+					auditDetails.setCreatedBy(existingEstateAccount.getAuditDetails().getCreatedBy());
+					auditDetails.setCreatedTime(existingEstateAccount.getAuditDetails().getCreatedTime());
+					existingEstateAccount.setAuditDetails(auditDetails);
+				}else {
+					existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
+							.propertyDetailsId(property.getPropertyDetails().getId())
+							.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();	
+				}
 			}
 			property.setEstateAccount(existingEstateAccount);
 			property.getPropertyDetails().setEstateAccount(existingEstateAccount);

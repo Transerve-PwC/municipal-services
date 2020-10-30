@@ -22,8 +22,8 @@ public class EstateAccount {
 	@JsonProperty("id")
 	private String id;
 
-	@JsonProperty("propertyId")
-	private String propertyId;
+	@JsonProperty("propertyDetailsId")
+	private String propertyDetailsId;
 
 	@JsonProperty("remainingAmount")
 	@Builder.Default

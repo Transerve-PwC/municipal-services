@@ -636,32 +636,32 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedTime
             
-        - query: INSERT INTO cs_ep_account(id, property_id, remainingAmount, remaining_since, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET remainingAmount=?, remaining_since=?, modified_by=?, modified_date=?;
-          basePath: Properties.*.estateAccount
+        - query: INSERT INTO cs_ep_account(id, property_details_id, remainingAmount, remaining_since, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET remainingAmount=?, remaining_since=?, modified_by=?, modified_date=?;
+          basePath: Properties.*.propertyDetails.estateAccount
           jsonMaps:
-            - jsonPath: $.Properties.*.estateAccount.id
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.id
       
-            - jsonPath: $.Properties.*.estateAccount.propertyId
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.propertyDetailsId
       
-            - jsonPath: $.Properties.*.estateAccount.remainingAmount
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingAmount
       
-            - jsonPath: $.Properties.*.estateAccount.remainingSince
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingSince
       
-            - jsonPath: $.Properties.*.estateAccount.auditDetails.createdBy
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.createdBy
       
-            - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedBy
       
-            - jsonPath: $.Properties.*.estateAccount.auditDetails.createdTime
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.createdTime
       
-            - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedTime
       
-            - jsonPath: $.Properties.*.estateAccount.remainingAmount
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingAmount
       
-            - jsonPath: $.Properties.*.estateAccount.remainingSince
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.remainingSince
       
-            - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedBy
       
-            - jsonPath: $.Properties.*.estateAccount.auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedTime
         
         - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
           basePath: $.Properties.*.propertyDetails.estateRentCollections.*
