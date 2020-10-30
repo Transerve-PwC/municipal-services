@@ -77,4 +77,24 @@ public class PropertyController {
 		return new ResponseEntity<>(resposne, HttpStatus.OK);
 	}
 
+	/**
+	 * Offline payment : Employees Request { amount :  } Response { property }
+	 *  
+	 * Online payment : Citizen Request { amount :  }
+	 * 
+	 * Response { consumerCode : }
+	 * 
+	 * @apiNote For offline payment, we need to get the existing demand, update it
+	 *          with new amount if one does not exist and send that consumer code.
+	 * @param propertyRentRequest
+	 * @return
+	 */
+	@PostMapping("/_payrent")
+	public ResponseEntity<PropertyResponse> rentPayment(@Valid @RequestBody PropertyRequest propertyRequest) {
+		List<Property> properties = propertyService.generateFinanceDemand(propertyRequest);
+		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(),
+				true);
+		PropertyResponse response = PropertyResponse.builder().properties(properties).responseInfo(resInfo).build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

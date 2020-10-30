@@ -117,6 +117,11 @@ public class PropertyQueryBuilder {
 			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
 			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
 
+	private static final String OFFLINE_PAYMENT_COLUMN = " offline.id as offlineid, "
+			+ " offline.property_details_id as offlineproperty_details_id, offline.demand_id as offlinedemand_id, "
+			+ " offline.amount as offlineamount, offline.bank_name as offlinebank_name, "
+			+ " offline.transaction_number as offlinetransaction_number, offline.date_of_payment as offlinedate_of_payment ";
+
 	// + LEFT_JOIN
 	// + " cs_ep_payment_v1 payment ON ptdl.id=payment.property_details_id ";
 
@@ -127,6 +132,8 @@ public class PropertyQueryBuilder {
 	private static final String ESTATE_DEMAND_TABLE = " cs_ep_demand estd ";
 
 	private static final String ESTATE_PAYMENT_TABLE = " cs_ep_payment estp ";
+
+	private static final String OFFLINE_PAYMENT_TABLE = " cs_ep_offline_payment_detail offline ";
 
 	private static final String ESTATE_ACCOUNT_COLUMN = " cs_ep_account account ";
 
@@ -139,6 +146,7 @@ public class PropertyQueryBuilder {
 	public static final String RELATION_COURT = "court";
 	public static final String RELATION_BIDDER = "bidder";
 	public static final String RELATION_ESTATE_FINANCE = "finance";
+	public static final String RELATION_OFFLINE_PAYMENT = "offline";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
 
@@ -164,7 +172,7 @@ public class PropertyQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param criteria
 	 * @param preparedStmtList
 	 * @return
@@ -294,6 +302,15 @@ public class PropertyQueryBuilder {
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 		return builder.toString();
+	}
+
+	public String getOfflinePaymentsQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(OFFLINE_PAYMENT_COLUMN);
+		sb.append(" FROM " + OFFLINE_PAYMENT_TABLE);
+		sb.append(" where offline.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
 	}
 
 	public String getEstateAccountQuery(List<String> propertyIds, Map<String, Object> params) {
