@@ -59,7 +59,7 @@ public class PropertyRepository {
 	@Autowired
 	private EstateAccountRowMapper estateAccountrowMapper;
 
-	
+
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -316,9 +316,9 @@ public class PropertyRepository {
 		return properties.get(0);
 	}
 
-	public EstateAccount getPropertyEstateAccountDetails(PropertyCriteria criteria) {
+	public EstateAccount getPropertyEstateAccountDetails(List<String> propertyDetailsIds) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
-		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
+		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(propertyDetailsIds, preparedStmtList);
 		log.debug("query:" + query);
 		log.debug("preparedStmtList:" + preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, estateAccountrowMapper);
