@@ -27,6 +27,7 @@ import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
+import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -357,12 +358,12 @@ public class PropertyEnrichmentService {
 		}
 	}
 
-	public void enrichRentDemand(Property property, RentSummary rentSummary) {
+	public void enrichRentDemand(Property property, EstateRentSummary rentSummary) {
 		if (rentSummary == null)
 			return;
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
-		double balPrincipal = rentSummary.getBalancePrincipal();
+		double balPrincipal = rentSummary.getBalanceRent();
 		double balInterest = rentSummary.getBalanceInterest();
 
 		if (amount >= balInterest) {
