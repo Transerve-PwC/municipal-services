@@ -14,7 +14,6 @@ import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
-import org.egov.ps.model.RentAccount;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
@@ -60,8 +59,6 @@ public class PropertyRepository {
 	@Autowired
 	private EstateAccountRowMapper estateAccountrowMapper;
 
-	@Autowired
-	private RentAccountRowMapper rentAccountRowMapper;
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -319,21 +316,21 @@ public class PropertyRepository {
 		return properties.get(0);
 	}
 
-	public EstateAccount getPropertyEstateAccountDetails(PropertyCriteria criteria) {
+	public EstateAccount getPropertyEstateAccountDetails(List<String> propertyDetailsIds) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
-		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
+		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(propertyDetailsIds, preparedStmtList);
 		log.debug("query:" + query);
 		log.debug("preparedStmtList:" + preparedStmtList);
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, estateAccountrowMapper);
 	}
 
-	public RentAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
-		Map<String, Object> preparedStmtList = new HashMap<>();
-		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
-		log.debug("query:" + query);
-		log.debug("preparedStmtList:" + preparedStmtList);
-		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountRowMapper);
-	}
+//	public RentAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
+//		Map<String, Object> preparedStmtList = new HashMap<>();
+//		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
+//		log.debug("query:" + query);
+//		log.debug("preparedStmtList:" + preparedStmtList);
+//		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountRowMapper);
+//	}
 
 	public List<OfflinePaymentDetails> getOfflinePaymentsForPropertyDetailsIds(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);

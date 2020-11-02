@@ -21,7 +21,7 @@ public class EstateAccountRowMapper implements ResultSetExtractor<EstateAccount>
 					.createdTime(rs.getLong("account_created_date")).lastModifiedBy(rs.getString("account_modified_by"))
 					.lastModifiedTime(rs.getLong("account_modified_date")).build();
 			estateAccount = EstateAccount.builder().id(rs.getString("account_id"))
-					.propertyDetailsId("account_pid")
+					.propertyDetailsId("account.property_details_id")
 					.remainingAmount(rs.getDouble("account_remainingAmount"))
 					.remainingSince(rs.getLong("account_remaining_since")).auditDetails(accountAuditDetails).build();
 		}

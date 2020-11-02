@@ -61,6 +61,7 @@ public class EstateRentCollectionServiceTests {
     private static final String AUG_1_2020="01 08 2000";
     private static final String SEP_1_2020="01 09 2000";
     private static final String JUl_7_2000 = "07 07 2000";
+    private static final String NOV_30_2000 = "30 11 2000";
     public static final double DEFAULT_INTEREST_RATE = 18D;
     private static final double ZERO_INTEREST_RATE = 0D;
 
@@ -335,7 +336,8 @@ public class EstateRentCollectionServiceTests {
 
           utils=new EstateRentCollectionUtils();
         List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
-                payments, DEFAULT_INTEREST_RATE, null, null);
+                payments, DEFAULT_INTEREST_RATE, null,null);
+       // getEpochFromDateString(NOV_30_2000)
         utils.printStatement(accountStatementItems);
         utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
     }

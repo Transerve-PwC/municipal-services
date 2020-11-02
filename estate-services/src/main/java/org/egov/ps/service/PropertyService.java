@@ -15,7 +15,6 @@ import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
-import org.egov.ps.model.RentAccount;
 import org.egov.ps.model.RentSummary;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
@@ -30,6 +29,7 @@ import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
+import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
@@ -63,10 +63,7 @@ public class PropertyService {
 	@Autowired
 	private WorkflowService workflowService;
 
-	@Autowired
-	private IRentCollectionService rentCollectionService;
-
-	@Autowired
+		@Autowired
 	private IEstateRentCollectionService estateRentCollectionService;
 
 	@Autowired
@@ -178,18 +175,20 @@ public class PropertyService {
 		if (properties.size() <= 1 || !CollectionUtils.isEmpty(criteria.getRelations())) {
 			properties.stream().forEach(property -> {
 				List<String> propertyDetailsIds = new ArrayList<>();
-				propertyDetailsIds.add(property.getId());
+				propertyDetailsIds.add(property.getPropertyDetails().getId());
 				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 
-				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(
-						PropertyCriteria.builder().propertyId(property.getId()).build());
+				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
+				if (!CollectionUtils.isEmpty(demands)) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
 							estateAccount, property.getPropertyDetails().getInterestRate()));
 					property.getPropertyDetails().setEstateDemands(demands);
 					property.getPropertyDetails().setEstatePayments(payments);
+
+				}
+				if (estateAccount != null) {
 					property.getPropertyDetails().setEstateAccount(estateAccount);
 				}
 			});
@@ -271,9 +270,10 @@ public class PropertyService {
 		 * Generate Calculations for the property.
 		 */
 		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
-		RentAccount account = repository.getPropertyRentAccountDetails(propertyCriteria);
+		EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
+
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
-			RentSummary rentSummary = rentCollectionService.calculateRentSummary(demands, account,
+			EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
 					property.getPropertyDetails().getInterestRate());
 			property.getPropertyDetails()
 					.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());

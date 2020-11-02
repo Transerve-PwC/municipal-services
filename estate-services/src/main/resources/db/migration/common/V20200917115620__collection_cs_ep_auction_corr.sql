@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS cs_ep_auction;
-
+--> Auction table
 CREATE TABLE cs_ep_auction
 (
   id CHARACTER VARYING (256) NOT NULL,

@@ -109,7 +109,7 @@ public class PropertyQueryBuilder {
 	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
 
-	private static final String ACCOUNT_SEARCH_COLUMN = " account.id as account_id,account.property_details_id as account_pid,account.remainingAmount as account_remainingAmount,account.remaining_since as account_remaining_since,"
+	private static final String ACCOUNT_SEARCH_COLUMN = " account.id as account_id,account.property_details_id as account_pdid,account.remainingAmount as account_remainingAmount,account.remaining_since as account_remaining_since,"
 			+ " account.created_by as account_created_by, account.created_date as account_created_date,"
 			+ " account.modified_by as account_modified_by,account.modified_date as account_modified_date ";
 
@@ -293,13 +293,13 @@ public class PropertyQueryBuilder {
 		return sb.toString();
 	}
 
-	public String getPropertyRentAccountSearchQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
+	public String getPropertyRentAccountSearchQuery(List<String> propertyDetailIds, Map<String, Object> preparedStmtList) {
 		StringBuilder builder = new StringBuilder(SELECT);
 		builder.append(ACCOUNT_SEARCH_COLUMN);
 		builder.append(" FROM " + ESTATE_ACCOUNT_COLUMN);
-		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
-			builder.append(" where account.property_id IN (:propId)");
-			preparedStmtList.put("propId", criteria.getPropertyId());
+		if (!ObjectUtils.isEmpty(propertyDetailIds)) {
+			builder.append(" where account.property_details_id IN (:propDetailsId)");
+			preparedStmtList.put("propDetailsId", propertyDetailIds);
 		}
 		return builder.toString();
 	}
