@@ -182,8 +182,7 @@ public class PropertyService {
 				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 
-				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(
-						PropertyCriteria.builder().propertyId(property.getId()).build());
+				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
 				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
@@ -271,7 +270,7 @@ public class PropertyService {
 		 * Generate Calculations for the property.
 		 */
 		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
-		RentAccount account = repository.getPropertyRentAccountDetails(propertyCriteria);
+		RentAccount account = repository.getPropertyRentAccountDetails(propertyDetailsIds);
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
 			RentSummary rentSummary = rentCollectionService.calculateRentSummary(demands, account,
 					property.getPropertyDetails().getInterestRate());
