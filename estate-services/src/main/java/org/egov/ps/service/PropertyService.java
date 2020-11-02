@@ -178,17 +178,20 @@ public class PropertyService {
 		if (properties.size() <= 1 || !CollectionUtils.isEmpty(criteria.getRelations())) {
 			properties.stream().forEach(property -> {
 				List<String> propertyDetailsIds = new ArrayList<>();
-				propertyDetailsIds.add(property.getId());
+				propertyDetailsIds.add(property.getPropertyDetails().getId());
 				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-				if (!CollectionUtils.isEmpty(demands) && null != estateAccount) {
+				if (!CollectionUtils.isEmpty(demands)) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
 							estateAccount, property.getPropertyDetails().getInterestRate()));
 					property.getPropertyDetails().setEstateDemands(demands);
 					property.getPropertyDetails().setEstatePayments(payments);
+
+				}
+				if (estateAccount != null) {
 					property.getPropertyDetails().setEstateAccount(estateAccount);
 				}
 			});

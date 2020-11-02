@@ -1,15 +1,3 @@
-DROP TABLE IF EXISTS cs_ep_property_v1;
-DROP TABLE IF EXISTS cs_ep_property_details_v1;
-DROP TABLE IF EXISTS cs_ep_owner_v1;
-DROP TABLE IF EXISTS cs_ep_owner_details_v1;
-DROP TABLE IF EXISTS cs_ep_documents_v1;
-DROP TABLE IF EXISTS cs_ep_court_case_v1;
-
-DROP TABLE IF EXISTS cs_ep_property_audit_v1;
-DROP TABLE IF EXISTS cs_ep_property_details_audit_v1;
-DROP TABLE IF EXISTS cs_ep_owner_audit_v1;
-DROP TABLE IF EXISTS cs_ep_owner_details_audit_v1;
-
 --> Property tables
 
 CREATE TABLE cs_ep_property_v1 (
@@ -54,15 +42,24 @@ CREATE TABLE cs_ep_property_details_v1 (
    trade_type			   CHARACTER VARYING (256),
    company_name			CHARACTER VARYING (256),
    company_address		CHARACTER VARYING (256),
-   company_registration_number	CHARACTER VARYING (256),
-   company_type			CHARACTER VARYING (256),
-   decree_date			   bigint,
-   court_details		   CHARACTER VARYING (256),
-   civil_titled_as		CHARACTER VARYING (256),
-   company_registration_date	bigint,
-   company_or_firm				CHARACTER VARYING (256),
-   property_registered_to		CHARACTER VARYING (256),
-   entity_type					   CHARACTER VARYING (256),
+   company_registration_number	   CHARACTER VARYING (256),
+   company_type			            CHARACTER VARYING (256),
+   decree_date			               bigint,
+   court_details		               CHARACTER VARYING (256),
+   civil_titled_as		            CHARACTER VARYING (256),
+   company_registration_date	      bigint,
+   company_or_firm				      CHARACTER VARYING (256),
+   property_registered_to		      CHARACTER VARYING (256),
+   entity_type					         CHARACTER VARYING (256),
+   annual_license_renewal_charges   numeric(12,2),
+   monthly_rent_amount              numeric(12,2),
+   due_amount                       numeric(12,2),
+   registration_number              character varying(64),
+   registration_date                bigint,
+   house_number                     CHARACTER VARYING (256),
+   mohalla                          CHARACTER VARYING (256),
+   village                          CHARACTER VARYING (256),
+   interest_rate                    numeric(12,2),
 
    created_by           CHARACTER VARYING (128) NOT NULL,
    last_modified_by     CHARACTER VARYING (128),
@@ -215,15 +212,25 @@ CREATE TABLE cs_ep_property_details_audit_v1 (
    trade_type			   CHARACTER VARYING (256),
    company_name			CHARACTER VARYING (256),
    company_address		CHARACTER VARYING (256),
-   company_registration_number	CHARACTER VARYING (256),
-   company_type					   CHARACTER VARYING (256),
-   decree_date					   bigint,
-   court_details				   CHARACTER VARYING (256),
-   civil_titled_as				CHARACTER VARYING (256),
-   company_registration_date	bigint,
-   company_or_firm				CHARACTER VARYING (256),
-   property_registered_to		CHARACTER VARYING (256),
-   entity_type					   CHARACTER VARYING (256),
+   company_registration_number	   CHARACTER VARYING (256),
+   company_type					      CHARACTER VARYING (256),
+   decree_date					         bigint,
+   court_details				         CHARACTER VARYING (256),
+   civil_titled_as				      CHARACTER VARYING (256),
+   company_registration_date	      bigint,
+   company_or_firm				      CHARACTER VARYING (256),
+   property_registered_to		      CHARACTER VARYING (256),
+   entity_type					         CHARACTER VARYING (256),
+   annual_license_renewal_charges   numeric(12,2),
+   monthly_rent_amount              numeric(12,2),
+   due_amount                       numeric(12,2),
+   registration_number              character varying(64),
+   registration_date                bigint,
+   house_number                     CHARACTER VARYING (256),
+   mohalla                          CHARACTER VARYING (256),
+   village                          CHARACTER VARYING (256),
+   interest_rate                    numeric(12,2),
+
 
    created_by           CHARACTER VARYING (128) NOT NULL,
    last_modified_by     CHARACTER VARYING (128),
