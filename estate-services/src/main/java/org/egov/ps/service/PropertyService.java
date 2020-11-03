@@ -15,7 +15,6 @@ import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
-import org.egov.ps.model.RentSummary;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
@@ -237,7 +236,7 @@ public class PropertyService {
 		}
 		if (propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount() == null) {
 			throw new CustomException(
-					Collections.singletonMap("NO_PAYMENT_AMOUNT_FOUND", "No Property tenantId found to process rent"));
+					Collections.singletonMap("NO_PAYMENT_AMOUNT_FOUND", "Payment amount should not be empty"));
 		}
 		PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
 				.propertyId(propertyFromRequest.getId()).build();

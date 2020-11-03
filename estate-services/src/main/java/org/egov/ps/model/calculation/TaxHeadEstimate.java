@@ -1,11 +1,11 @@
 package org.egov.ps.model.calculation;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -18,4 +18,6 @@ public class TaxHeadEstimate {
     private BigDecimal estimateAmount;
 
     private Category category;
+    
+    private BigDecimal gst;
 }
