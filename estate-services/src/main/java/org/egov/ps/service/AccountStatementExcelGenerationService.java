@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -58,14 +57,13 @@ public class AccountStatementExcelGenerationService {
 			AccountStatementCriteria accountStatementCriteria, RequestInfo requestInfo) {
 
 		List<Property> properties = propertyRepository
-				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
-						.relations(Collections.singletonList("owner")).build());
+				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid()).build());
 
 		Property property = properties.get(0);
 
 		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
 				requestInfo);
-		
+
 		try {
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("AccountStatement");
@@ -82,9 +80,9 @@ public class AccountStatementExcelGenerationService {
 			// Create a Row
 			Row headerRow = sheet.createRow(0);
 
-			Cell cell = headerRow.createCell(8);
-			cell.setCellValue("STATEMENT SHOWING THE RENT RECEIVED FROM SHOP NO. "+ property.getSiteNumber() +" "+ property.getPropertyDetails().getVillage());
-			//cell.setBlank();
+			Cell cell = headerRow.createCell(1);
+			cell.setCellValue("STATEMENT SHOWING THE RENT RECEIVED FROM SHOP NO. " + property.getSiteNumber());
+			// cell.setBlank();
 			cell.setCellStyle(headerCellStyle);
 
 			Row headerRow3 = sheet.createRow(2);
@@ -93,39 +91,44 @@ public class AccountStatementExcelGenerationService {
 				cell.setCellValue(headerColumns[i]);
 				cell.setCellStyle(headerCellStyle);
 			}
-			
+
 			int rowNum = 3;
 			int statementsSize = accountStatementResponse.getEstateAccountStatements().size();
- 
+
 			for (int i = 0; i < statementsSize; i++) {
 				EstateAccountStatement rentAccountStmt = accountStatementResponse.getEstateAccountStatements().get(i);
 				Row row = sheet.createRow(rowNum++);
 				if (i < statementsSize - 1) {
 					row.createCell(0).setCellValue(getFormattedDate(rentAccountStmt.getDate()));
 					row.createCell(1).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getAmount())));
-					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
+					Optional.ofNullable(rentAccountStmt)
+							.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
 							.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
-					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(EstateAccountStatement.Type.D.name()))
+					Optional.ofNullable(rentAccountStmt)
+							.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.D.name()))
 							.ifPresent(o -> row.createCell(3).setCellValue(RENT));
 				} else {
 					row.createCell(0).setCellValue("Balance as on " + getFormattedDate(rentAccountStmt.getDate()));
 				}
 
-				row.createCell(4).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingPrincipal())));
-				//gst due
-				row.createCell(5).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGST())));
-				
-				row.createCell(6).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingRentPenalty())));
-				//gst penalty due
-				row.createCell(7).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGSTPenalty())));
+				row.createCell(4)
+						.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingPrincipal())));
+				row.createCell(5)
+						.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGST())));
+				row.createCell(6).setCellValue(
+						String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingRentPenalty())));
+				row.createCell(7)
+						.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGSTPenalty())));
 				row.createCell(8).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getDueAmount())));
-				row.createCell(9).setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingBalance())));
+				row.createCell(9)
+						.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingBalance())));
 				if (i < statementsSize - 1) {
-					Optional.ofNullable(rentAccountStmt).filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
+					Optional.ofNullable(rentAccountStmt)
+							.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
 							.ifPresent(o -> row.createCell(10).setCellValue(o.getReceiptNo()));
 				}
 			}
-			
+
 			/**
 			 * Write workbook to byte array
 			 */
@@ -142,7 +145,7 @@ public class AccountStatementExcelGenerationService {
 			workbook.close();
 			return response;
 
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
 		throw new CustomException("XLS_NOT_GENERATED", "Could not generate account statement");
