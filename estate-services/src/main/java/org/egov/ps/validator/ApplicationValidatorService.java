@@ -113,7 +113,7 @@ public class ApplicationValidatorService {
 		if (property == null) {
 			throw new CustomException("INVALID_PROPERTY", "Could not find property with the given id:" + propertyId);
 		}
-		if (!property.getState().contentEquals(PSConstants.PM_APPROVED) || !property.getState().contentEquals(PSConstants.ES_APPROVED) ) {
+		if (!property.getState().contentEquals(PSConstants.PM_APPROVED) && !property.getState().contentEquals(PSConstants.ES_APPROVED) ) {
 			throw new CustomException("INVALID_PROPERTY", "Property with the given " + propertyId + " is not approved");
 		}
 	}
