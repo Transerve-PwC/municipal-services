@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.egov.ps.model.Application;
+import org.egov.ps.model.calculation.Category;
+import org.egov.ps.service.ApplicationEnrichmentService;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.ApplicationField;
 import org.egov.ps.validator.ApplicationValidation;
 import org.egov.ps.validator.DateField;
@@ -70,6 +73,9 @@ public class ValidatorTests {
 
 	@Autowired
 	ArrayLengthValidator arrayLengthValidator;
+
+	@Autowired
+	ApplicationEnrichmentService applicationEnrichmentService;
 
 	@Test
 	public void testEmailValidator() {
@@ -521,5 +527,13 @@ public class ValidatorTests {
 	public void testBusinessServiceName() {
 		Application application = Application.builder().branchType("EstateBranch").applicationType("RegisteredWill").build();
 		assertEquals("ESTATE_SERVICE_ESTATE_BRANCH.REGISTERED_WILL", application.getBillingBusinessService());
+	}
+	
+	@Test
+	public void testTaxHeadCodeWithCharge() {
+		Application application = Application.builder().branchType("EstateBranch").applicationType("RegisteredWill").build();
+		assertEquals("ESTATE_SERVICE_ESTATE_BRANCH.REGISTERED_WILL_APPLICATION_TAX", 
+				applicationEnrichmentService.getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
+						PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
 	}
 }

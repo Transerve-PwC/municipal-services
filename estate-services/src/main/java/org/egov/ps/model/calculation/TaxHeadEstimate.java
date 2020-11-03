@@ -19,5 +19,4 @@ public class TaxHeadEstimate {
 
     private Category category;
     
-    private BigDecimal gst;
 }
