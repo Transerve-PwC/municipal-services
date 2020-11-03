@@ -240,18 +240,21 @@ public class PropertyEnrichmentService {
 
 	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
 
-		if (property.getPropertyDetails().getEstateAccount() != null) {
+		if (property.getPropertyDetails().getEstateAccount() == null) {
+
+			EstateAccount existingEstateAccount = EstateAccount.builder().remainingAmount(0D).build();
+
+			property.getPropertyDetails().setEstateAccount(existingEstateAccount);
 
 			if (property.getPropertyDetails().getEstateAccount().getId() == null) {
 				String gen_estate_account_id = UUID.randomUUID().toString();
-
 				property.getPropertyDetails().getEstateAccount().setId(gen_estate_account_id);
 				property.getPropertyDetails().getEstateAccount()
 						.setPropertyDetailsId(property.getPropertyDetails().getId());
 			}
-			AuditDetails estateAccountAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-			property.getPropertyDetails().getEstateAccount().setAuditDetails(estateAccountAuditDetails);
 		}
+		AuditDetails estateAccountAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+		property.getPropertyDetails().getEstateAccount().setAuditDetails(estateAccountAuditDetails);
 	}
 
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
