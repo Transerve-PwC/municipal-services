@@ -48,6 +48,7 @@ public class PurchaseOrderEntity {
 	private String lastModifiedBy;
 	private Long createdTime;
 	private Long lastModifiedTime;
+	private String externalPoNumber;
 
 	public PurchaseOrder toDomain() {
 		PurchaseOrder purchaseOrder = new PurchaseOrder();
@@ -79,6 +80,7 @@ public class PurchaseOrderEntity {
 		purchaseOrder.setSupplier(new Supplier().code(supplier));
 
 		purchaseOrder.setStateId(this.stateId);
+		purchaseOrder.setExternalPoNumber(this.externalPoNumber);
 
 		return purchaseOrder;
 	}
@@ -109,7 +111,7 @@ public class PurchaseOrderEntity {
 		this.lastModifiedBy = po.getAuditDetails().getLastModifiedBy();
 		this.createdTime = po.getAuditDetails().getCreatedTime();
 		this.lastModifiedTime = po.getAuditDetails().getLastModifiedTime();
-
+		this.externalPoNumber = po.getExternalPoNumber() != null ? po.getExternalPoNumber() : null;
 		return this;
 	}
 

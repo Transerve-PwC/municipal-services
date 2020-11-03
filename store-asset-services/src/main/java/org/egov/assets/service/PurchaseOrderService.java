@@ -4,6 +4,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -244,7 +245,12 @@ public class PurchaseOrderService extends DomainService {
 
 				}
 
-				purchaseOrder.setStatus(StatusEnum.CREATED);
+				if (purchaseOrder.getRateType() != null
+						&& purchaseOrder.getRateType().toString().equalsIgnoreCase(RateTypeEnum.GEM.toString()))
+					purchaseOrder.setStatus(StatusEnum.APPROVED);
+				else
+					purchaseOrder.setStatus(StatusEnum.CREATED);
+
 				String purchaseOrderNumber = appendString(purchaseOrder);
 				purchaseOrder.setId(sequenceNos.get(i));
 
@@ -348,27 +354,29 @@ public class PurchaseOrderService extends DomainService {
 
 			}
 
-			// TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
-			// PUSH DATA TO KAFKA.
-
 			if (errors.getValidationErrors().size() > 0)
 				throw errors;
 
-			for (PurchaseOrder po : purchaseOrderRequest.getPurchaseOrders()) {
-				if (po.getRateType() != null
-						&& po.getRateType().toString().equalsIgnoreCase(RateTypeEnum.GEM.toString())) {
-					saveRateContractForGem(purchaseOrderRequest, tenantId);
+			// for (PurchaseOrder po : purchaseOrderRequest.getPurchaseOrders()) {
+			// if (po.getRateType() != null
+			// && po.getRateType().toString().equalsIgnoreCase(RateTypeEnum.GEM.toString()))
+			// {
+			// saveRateContractForGem(purchaseOrderRequest, tenantId);
+			// }
+			// }
+			if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getRateType() != null) {
+				if (!purchaseOrders.get(0).getRateType().toString().equalsIgnoreCase(RateTypeEnum.GEM.toString())) {
+
+					WorkFlowDetails workFlowDetails = purchaseOrderRequest.getWorkFlowDetails();
+					workFlowDetails
+							.setBusinessId(purchaseOrderRequest.getPurchaseOrders().get(0).getPurchaseOrderNumber());
+					workflowIntegrator.callWorkFlow(purchaseOrderRequest.getRequestInfo(), workFlowDetails,
+							purchaseOrderRequest.getPurchaseOrders().get(0).getTenantId());
 				}
 			}
-			WorkFlowDetails workFlowDetails = purchaseOrderRequest.getWorkFlowDetails();
-			workFlowDetails.setBusinessId(purchaseOrderRequest.getPurchaseOrders().get(0).getPurchaseOrderNumber());
-			workflowIntegrator.callWorkFlow(purchaseOrderRequest.getRequestInfo(), workFlowDetails,
-					purchaseOrderRequest.getPurchaseOrders().get(0).getTenantId());
-
 			if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
 				if (purchaseOrders.get(0).getPurchaseType().toString()
 						.equalsIgnoreCase(PurchaseTypeEnum.INDENT.toString())) {
-
 					kafkaQue.send(saveTopic, saveKey, purchaseOrderRequest);
 					purchaseOrderRepository.markIndentUsedForPo(purchaseOrderRequest, tenantId);
 				} else {
@@ -779,13 +787,13 @@ public class PurchaseOrderService extends DomainService {
 									}
 								}
 
-							if (!eachPurchaseOrder.getRateType().toString()
-									.equalsIgnoreCase(RateTypeEnum.GEM.toString())
-									&& (purchaseOrderDetail.getPriceList() == null
-											|| purchaseOrderDetail.getPriceList().getId() == null)) {
-								errors.addDataError(ErrorCode.NOT_NULL.getCode(), "rateContract", "null");
-							}
-
+							/*
+							 * if (!eachPurchaseOrder.getRateType().toString()
+							 * .equalsIgnoreCase(RateTypeEnum.GEM.toString()) &&
+							 * (purchaseOrderDetail.getPriceList() == null ||
+							 * purchaseOrderDetail.getPriceList().getId() == null)) {
+							 * errors.addDataError(ErrorCode.NOT_NULL.getCode(), "rateContract", "null"); }
+							 */
 						}
 					indentNumbers.replaceAll(",$", "");
 
@@ -797,13 +805,26 @@ public class PurchaseOrderService extends DomainService {
 									IndentSearch is = IndentSearch.builder().tenantId(tenantId)
 											.indentNumber(indentList.get(i)).build();
 									IndentResponse isr = indentService.search(is, new RequestInfo());
-									for (Indent in : isr.getIndents()) {
-										if (in.getIndentDate()
-												.compareTo(eachPurchaseOrder.getPurchaseOrderDate()) > 0) {
-											String date = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
-											errors.addDataError(ErrorCode.DATE1_LE_DATE2.getCode(),
-													date + " at serial no." + pos.indexOf(eachPurchaseOrder));
+									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+									String poDate = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
+									
+									try {
+										for (Indent in : isr.getIndents()) {
+											/*
+											 * if (in.getIndentDate()
+											 * .compareTo(eachPurchaseOrder.getPurchaseOrderDate()) > 0) {
+											 */
+											String indentDate = convertEpochtoDate(in.getIndentDate());
+											LOG.info("Indent Date Greater Than PO Date : ",
+													sdf.parse(indentDate).after(sdf.parse(poDate)));
+											if (sdf.parse(indentDate).after(sdf.parse(poDate))) {
+												errors.addDataError(ErrorCode.DATE1_LE_DATE2.getCode(),
+														poDate + " at serial no." + pos.indexOf(eachPurchaseOrder));
+											}
 										}
+									} catch (ParseException e) {
+										LOG.info(" Date Parsing Error in Purchase Order Create Validation");
+
 									}
 								}
 							}
@@ -1355,7 +1376,7 @@ public class PurchaseOrderService extends DomainService {
 					Instant wfDate = Instant.ofEpochMilli(processData.getAuditDetails().getCreatedTime());
 					// Need to integrate Workflow
 					JSONObject jsonWork = new JSONObject();
-					jsonWork.put("srNo", j+1);
+					jsonWork.put("srNo", j + 1);
 					jsonWork.put("date", wfdateFormat.format(wfDate.atZone(ZoneId.systemDefault())));
 					jsonWork.put("updatedBy", processData.getAssigner().getName());
 					jsonWork.put("comments", processData.getComment());

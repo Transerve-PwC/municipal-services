@@ -216,8 +216,10 @@ public class Application {
 	 */
 	@JsonProperty("paymentAmount")
 	private BigDecimal paymentAmount;
-	
 
+	@JsonProperty("gst")
+	private BigDecimal gst;
+	
 	@JsonProperty("bankName")
 	@Size(max = 256, message = "bank name must be between 0 and 256 characters in length")
 	private String bankName;

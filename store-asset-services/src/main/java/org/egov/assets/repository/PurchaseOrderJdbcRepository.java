@@ -399,6 +399,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 						String query = "update indentdetail set poorderedquantity = poorderedquantity + :indentquantity where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
 						paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
 						paramValues.put("tenantId", tenantId);
+						paramValues.put("indentquantity", purchaseIndentDetail.getIndentDetail().getIndentQuantity());
 						namedParameterJdbcTemplate.update(query.toString(), paramValues);
 					}
 				}

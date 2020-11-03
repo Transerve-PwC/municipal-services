@@ -40,7 +40,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.jaegertracing.thriftjava.Log;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
@@ -322,9 +321,10 @@ public class ApplicationEnrichmentService {
 			// TODO : replace 500 from the MDMS data , get it dynamic based on application
 			// cat and sub cat provided by FE
 			BigDecimal estimateAmount = fetchEstimateAmountFromMDMSJson(feesConfigurations,application);
-			BigDecimal gstEstimateAmount = estimateAmount.multiply( 
-					feesGSTOfApplication(application,requestInfo)).divide(new BigDecimal(100.0));
-			estimateDue.setEstimateAmount(estimateAmount.add(gstEstimateAmount));
+			BigDecimal gstEstimateAmount = feesGSTOfApplication(application, requestInfo);
+					
+			estimateDue.setEstimateAmount(estimateAmount);
+			estimateDue.setGst(gstEstimateAmount);
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
@@ -447,13 +447,13 @@ public class ApplicationEnrichmentService {
 	private void enrichCollectPaymentDemand(Application application, RequestInfo requestInfo) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
-		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-
-		estimateDue.setEstimateAmount(application.getPaymentAmount());
-		estimateDue.setCategory(Category.FEE);
-		estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
+		TaxHeadEstimate estimateFee = new TaxHeadEstimate();
+		estimateFee.setEstimateAmount(application.getPaymentAmount());
+		estimateFee.setCategory(Category.FEE);
+		estimateFee.setGst(application.getGst());
+		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 				PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
-		estimates.add(estimateDue);
+		estimates.add(estimateFee);
 
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
 				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
