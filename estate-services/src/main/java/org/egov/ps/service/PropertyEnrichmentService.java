@@ -240,28 +240,15 @@ public class PropertyEnrichmentService {
 
 	private void enrichEstateAccount(Property property, RequestInfo requestInfo) {
 
-			EstateAccount existingEstateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(
-					Collections.singletonList(property.getPropertyDetails().getId()));
-			if(existingEstateAccount == null ) {
-				existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
-						.propertyDetailsId(property.getPropertyDetails().getId())
-						.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();
-			}else {
-				if(property.getPropertyDetails().getEstateAccount() != null) {
-					existingEstateAccount.setRemainingAmount(property.getPropertyDetails().getEstateAccount().getRemainingAmount());
-					existingEstateAccount.setRemainingSince(property.getPropertyDetails().getEstateAccount().getRemainingSince());
-					existingEstateAccount.setPropertyDetailsId(property.getPropertyDetails().getEstateAccount().getPropertyDetailsId());
-					AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-					auditDetails.setCreatedBy(existingEstateAccount.getAuditDetails().getCreatedBy());
-					auditDetails.setCreatedTime(existingEstateAccount.getAuditDetails().getCreatedTime());
-					existingEstateAccount.setAuditDetails(auditDetails);
-				}else {
-					existingEstateAccount = EstateAccount.builder().remainingAmount(0D).id(UUID.randomUUID().toString())
-							.propertyDetailsId(property.getPropertyDetails().getId())
-							.auditDetails(util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true)).build();
-				}
-			}
-			property.getPropertyDetails().setEstateAccount(existingEstateAccount);
+		if (property.getPropertyDetails().getEstateAccount().getId() == null) {
+			String gen_estate_account_id = UUID.randomUUID().toString();
+
+			property.getPropertyDetails().getEstateAccount().setId(gen_estate_account_id);
+			property.getPropertyDetails().getEstateAccount()
+					.setPropertyDetailsId(property.getPropertyDetails().getId());
+		}
+		AuditDetails estateAccountAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+		property.getPropertyDetails().getEstateAccount().setAuditDetails(estateAccountAuditDetails);
 	}
 
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
