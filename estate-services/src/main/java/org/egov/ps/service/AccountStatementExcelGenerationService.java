@@ -82,7 +82,6 @@ public class AccountStatementExcelGenerationService {
 
 			Cell cell = headerRow.createCell(1);
 			cell.setCellValue("STATEMENT SHOWING THE RENT RECEIVED FROM SHOP NO. " + property.getSiteNumber());
-			// cell.setBlank();
 			cell.setCellStyle(headerCellStyle);
 
 			Row headerRow3 = sheet.createRow(2);
