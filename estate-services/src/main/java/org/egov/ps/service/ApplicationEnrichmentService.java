@@ -321,7 +321,7 @@ public class ApplicationEnrichmentService {
 				estimateDue.setCategory(Category.FEE);
 				estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 						PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
-				
+
 				TaxHeadEstimate estimateGst = new TaxHeadEstimate();
 				BigDecimal gstEstimateAmount = feesGSTOfApplication(application, requestInfo);
 				estimateGst.setEstimateAmount(gstEstimateAmount);
@@ -454,13 +454,13 @@ public class ApplicationEnrichmentService {
 		estimateFee.setCategory(Category.FEE);
 		estimateFee.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 				PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
-		
+
 		TaxHeadEstimate estimateGst = new TaxHeadEstimate();
 		estimateGst.setEstimateAmount(application.getGst());
 		estimateGst.setCategory(Category.TAX);
 		estimateGst.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 				PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
-		
+
 		estimates.add(estimateFee);
 
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())

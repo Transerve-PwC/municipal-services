@@ -201,6 +201,9 @@ public class PurchaseOrder {
 	@JsonProperty("indentNumbers")
 	private List<String> indentNumbers = null;
 
+	@JsonProperty("externalPoNumber")
+	private String externalPoNumber = null;
+
 	public PurchaseOrder id(String id) {
 		this.id = id;
 		return this;
@@ -345,7 +348,7 @@ public class PurchaseOrder {
 	 * 
 	 * @return supplier
 	 **/
-	@NotNull
+//	@NotNull
 	public Supplier getSupplier() {
 		return supplier;
 	}
@@ -676,6 +679,25 @@ public class PurchaseOrder {
 		this.indentNumbers = indents;
 	}
 
+	public PurchaseOrder externalPoNumber(String externalPoNumber) {
+		this.externalPoNumber = externalPoNumber;
+		return this;
+	}
+
+	/**
+	 * purchaseOrderNumber Auto generated number, read only
+	 * 
+	 * @return purchaseOrderNumber
+	 **/
+	public String getExternalPoNumber() {
+		return externalPoNumber;
+	}
+
+	public void setExternalPoNumber(String externalPoNumber) {
+		this.externalPoNumber = externalPoNumber;
+	}
+
+	
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {

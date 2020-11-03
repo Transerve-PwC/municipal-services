@@ -90,8 +90,8 @@ public class Violation {
 	private String emailId;
 	
 	@Size(max = 256)
-	@NotNull(message = "fatherName  should not be empty or null")
-	@NotBlank(message = "fatherName  should not be empty or null")
+	//@NotNull(message = "fatherName  should not be empty or null")
+	//@NotBlank(message = "fatherName  should not be empty or null")
 	@JsonProperty("fatherName")
 	private String fatherName;
 
