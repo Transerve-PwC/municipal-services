@@ -53,12 +53,14 @@ public class PaymentUpdateService {
 			List<PaymentDetail> paymentDetails = paymentRequest.getPayment().getPaymentDetails();
 			for (PaymentDetail paymentDetail : paymentDetails) {
 				switch (paymentDetail.getBusinessService()) {
-					case PSConstants.BUSINESS_SERVICE_EB_RENT:
-					case PSConstants.BUSINESS_SERVICE_BB_RENT:
-					case PSConstants.BUSINESS_SERVICE_MB_RENT:
-						log.info("Post enrichment need to do");
-						break;
-					default: {
+				case PSConstants.BUSINESS_SERVICE_EB_RENT:
+				case PSConstants.BUSINESS_SERVICE_BB_RENT:
+				case PSConstants.BUSINESS_SERVICE_MB_RENT:
+					log.info("Post enrichment need to do");
+					break;
+				default: {
+					if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
+
 						ApplicationCriteria searchCriteria = new ApplicationCriteria();
 						searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
 
@@ -92,8 +94,9 @@ public class PaymentUpdateService {
 								.getIdToIsStateUpdatableMap(otBusinessService, applications);
 
 						applicationService.updatePostPayment(updateRequest, idToIsStateUpdatableMap);
-						break;
 					}
+					break;
+				}
 
 				}
 			}
