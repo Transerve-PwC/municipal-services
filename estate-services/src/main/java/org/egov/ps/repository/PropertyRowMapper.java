@@ -64,7 +64,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.entityType(rs.getString("entity_type")).houseNumber(rs.getString("house_number"))
 							.village(rs.getString("village")).mohalla(rs.getString("mohalla"))
 							.propertyRegisteredTo(rs.getString("property_registered_to"))
-							.companyOrFirm(rs.getString("company_or_firm")).auditDetails(pdAuditdetails).build();
+							.companyOrFirm(rs.getString("company_or_firm"))
+							.interestRate(rs.getDouble("interest_rate")).auditDetails(pdAuditdetails).build();
 
 					currentProperty = Property.builder().id(propertyId).fileNumber(rs.getString("file_number"))
 							.tenantId(tenantId).category(rs.getString("category"))

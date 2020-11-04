@@ -35,7 +35,7 @@ public class PropertyQueryBuilder {
 			+ " ptdl.is_property_active, ptdl.trade_type, ptdl.company_name, ptdl.company_address, ptdl.company_registration_number, "
 			+ " ptdl.company_registration_date, ptdl.decree_date, ptdl.court_details, ptdl.civil_titled_as, ptdl.company_or_firm, "
 			+ " ptdl.company_type, ptdl.emd_amount, ptdl.emd_date , ptdl.property_registered_to, ptdl.entity_type, "
-			+ " ptdl.house_number, ptdl.mohalla, ptdl.village ";
+			+ " ptdl.house_number, ptdl.mohalla, ptdl.village, ptdl.interest_rate ";
 
 	private static final String OWNER_COLUMNS = " ownership.id as oid, ownership.property_details_id as oproperty_details_id, "
 			+ " ownership.tenantid as otenantid, ownership.serial_number as oserial_number, "

@@ -330,6 +330,7 @@ public class ApplicationEnrichmentService {
 						PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
 
 				estimates.add(estimateDue);
+				estimates.add(estimateGst);
 			} catch (JSONException e) {
 				log.error("Can not parse Json file", e);
 			}
@@ -462,6 +463,7 @@ public class ApplicationEnrichmentService {
 				PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
 
 		estimates.add(estimateFee);
+		estimates.add(estimateGst);
 
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
 				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
