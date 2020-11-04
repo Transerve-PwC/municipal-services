@@ -321,16 +321,20 @@ public class ApplicationEnrichmentService {
 				estimateDue.setCategory(Category.FEE);
 				estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 						PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+				estimates.add(estimateDue);
 
 				TaxHeadEstimate estimateGst = new TaxHeadEstimate();
-				BigDecimal gstEstimateAmount = feesGSTOfApplication(application, requestInfo);
-				estimateGst.setEstimateAmount(gstEstimateAmount);
-				estimateGst.setCategory(Category.TAX);
-				estimateGst.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
-						PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
+				BigDecimal gstEstimatePercentage = feesGSTOfApplication(application, requestInfo);
+				if (null != gstEstimatePercentage && null != estimateAmount) {
+					BigDecimal gstEstimateAmount = (estimateAmount.multiply(gstEstimatePercentage))
+							.divide(new BigDecimal(100));
+					estimateGst.setEstimateAmount(gstEstimateAmount);
+					estimateGst.setCategory(Category.TAX);
+					estimateGst.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
+							PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
+					estimates.add(estimateGst);
+				}
 
-				estimates.add(estimateDue);
-				estimates.add(estimateGst);
 			} catch (JSONException e) {
 				log.error("Can not parse Json file", e);
 			}
