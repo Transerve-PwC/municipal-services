@@ -90,7 +90,7 @@ public class EstateDemand implements Comparable<EstateDemand> {
    * GST of demand.
    */
   @JsonProperty("gst")
-  private Integer gst;
+  private Double gst;
 
   /**
    * Collected Rent of demand.

@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,37 +86,34 @@ public class EstateCalculationExcelReadService {
 				}
 
 				if (shouldParseRows && SKIP_ROW_COUNT == 0 && !checkEmpty(currentRow.getCell(0))) {
-					Map<String, Object> cellData = new HashedMap<String, Object>();
-					int headerCount = 0;
-					/* Fetching Body Data will read after this */
-					for (int columnNumber : REQUIRED_COLUMNS) {
-						Cell cell = currentRow.getCell(columnNumber, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-						if (columnNumber == 6) {
-							cellData.put(EXCELMAPPINGNAME[headerCount],
-									extractDateFromString(String.valueOf(getValueFromCell(cell, evaluator))));
-						} else {
-							cellData.put(EXCELMAPPINGNAME[headerCount], getValueFromCell(cell, evaluator));
-						}
-						headerCount++;
-					}
+					Map<String, Object> cellData = fetchDataFromRow(currentRow,evaluator);
 					estateCalculations.add(cellData);
+//					if(Double.parseDouble(cellData.get("rentReceived").toString()) > 0.0) {
+//						cellData = Collections.emptyMap();
+//						cellData = fetchDataFromRow(currentRow,evaluator);
+//						cellData.remove("rentReceived");
+//						estateCalculations.add(cellData);
+//					}
+					
 				}
 			}
 			estateCalculations.forEach(estateCalculationMap -> {
 				estateDemands.add(EstateDemand.builder().isPrevious(checkPreviousTab(estateCalculationMap.get("month")))
-						.generationDate(checkModifyValueLong(estateCalculationMap.get("dueDateOfRent")))
+						.generationDate(checkModifyValueLong(estateCalculationMap.get("month")))
 						.rent(checkModifyValue(estateCalculationMap.get("rentDue")))
 						.penaltyInterest(checkModifyValue(estateCalculationMap.get("penaltyInterest")))
 						.gstInterest(calculateDelayedPayment(estateCalculationMap))
-						.gst((int) (checkModifyValue(estateCalculationMap.get("stGstRate")) * 100))
-						.collectedRent(checkModifyValue(estateCalculationMap.get("rentReceived")))
-						.collectedGST(checkModifyValue(estateCalculationMap.get("stGstDue")))
+						.gst(checkModifyValue(estateCalculationMap.get("stGstDue")))
+						/* These values should not be read from excel, this will calculate in the settle */
+						//.collectedRent(checkModifyValue(estateCalculationMap.get("rentReceived")))
+						//.collectedGST(checkModifyValue(estateCalculationMap.get("stGstDue")))
 						.noOfDays(checkModifyValue(estateCalculationMap.get("noOfDays")))
 						.paid(checkModifyValue(estateCalculationMap.get("paid"))).build());
 
 				if (parseInDouble(estateCalculationMap.get("rentReceived")) != null
 						&& parseInDouble(estateCalculationMap.get("rentReceived")) > 0) {
 					estatePayments.add(EstatePayment.builder()
+							.paymentDate(checkModifyValueLong(estateCalculationMap.get("date")))
 							.receiptDate(checkModifyValueLong(estateCalculationMap.get("rentDateOfReceipt")))
 							.rentReceived(checkModifyValue(estateCalculationMap.get("rentReceived")))
 							.receiptNo(String.valueOf(estateCalculationMap.get("rentReceiptNo"))).build());
@@ -126,6 +124,23 @@ public class EstateCalculationExcelReadService {
 			e.printStackTrace();
 		}
 		return EstateModuleResponse.builder().estateDemands(estateDemands).estatePayments(estatePayments).build();
+	}
+	
+	private Map<String, Object> fetchDataFromRow(Row currentRow, FormulaEvaluator evaluator){
+		Map<String, Object> cellData = new HashedMap<String, Object>();
+		int headerCount = 0;
+		/* Fetching Body Data will read after this */
+		for (int columnNumber : REQUIRED_COLUMNS) {
+			Cell cell = currentRow.getCell(columnNumber, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+			if (columnNumber == 6) {
+				cellData.put(EXCELMAPPINGNAME[headerCount],
+						extractDateFromString(String.valueOf(getValueFromCell(cell, evaluator))));
+			} else {
+				cellData.put(EXCELMAPPINGNAME[headerCount], getValueFromCell(cell, evaluator));							
+			}
+			headerCount++;						
+		}
+		return cellData;
 	}
 
 	private Boolean checkPreviousTab(Object value) {

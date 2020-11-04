@@ -41,6 +41,12 @@ public class EstatePayment implements Comparable<EstatePayment> {
 	 */
 	@JsonProperty("receiptDate")
 	private Long receiptDate;
+	
+	/**
+	 * Payment Date of demand.
+	 */
+	@JsonProperty("paymentDate")
+	private Long paymentDate;
 
 	/**
 	 * Rent Received of demand.

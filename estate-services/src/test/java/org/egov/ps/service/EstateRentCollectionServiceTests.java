@@ -255,7 +255,7 @@ public class EstateRentCollectionServiceTests {
     private EstateDemand getDemand(double amount, Integer gst, String date, String demandId,double penaltyInterest,double gstInterest) throws ParseException {
         return EstateDemand.builder()
         		.rent(amount)
-        		.gst(gst)
+        		.gst(Double.parseDouble(gst.toString()))
         		.penaltyInterest(penaltyInterest)
         		.gstInterest(gstInterest)
         		.generationDate(getEpochFromDateString(date))
@@ -272,7 +272,7 @@ public class EstateRentCollectionServiceTests {
     		,double collectedGST,double collectedRentPenalty,double collectedGSTPenaty) throws ParseException {
         return EstateDemand.builder()
         		.rent(amount)
-        		.gst(gst)
+        		.gst(Double.parseDouble(gst.toString()))
         		.penaltyInterest(penaltyInterest)
         		.gstInterest(gstInterest)
         		.generationDate(getEpochFromDateString(date))
