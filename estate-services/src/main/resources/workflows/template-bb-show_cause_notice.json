@@ -94,7 +94,7 @@
                     "currentState": "PENDING_AC_APPROVAL",
                     "nextState": "REJECTED",
                     "roles": [
-                        "ES_BB_ADDITIONAL_COMMISSIONER"
+                        "ES_ADDITIONAL_COMMISSIONER"
                     ]
                 },
                 {
@@ -102,7 +102,7 @@
                     "currentState": "PENDING_AC_APPROVAL",
                     "nextState": "APPROVED",
                     "roles": [
-                        "ES_BB_ADDITIONAL_COMMISSIONER"
+                        "ES_ADDITIONAL_COMMISSIONER"
                     ]
                 },
                 {
@@ -110,7 +110,7 @@
                     "currentState": "PENDING_AC_APPROVAL",
                     "nextState": "PENDING_SDE_VERIFICATION",
                     "roles": [
-                        "ES_BB_ADDITIONAL_COMMISSIONER"
+                        "ES_ADDITIONAL_COMMISSIONER"
                     ]
                 }
             ],

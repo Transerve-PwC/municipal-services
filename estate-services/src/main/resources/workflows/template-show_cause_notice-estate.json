@@ -111,7 +111,7 @@
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "REJECTED",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -119,7 +119,7 @@
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_DA_NOTICE_CREATION",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -127,7 +127,7 @@
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_VERIFICATION",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         }
       ],
@@ -227,7 +227,7 @@
           "currentState": "PENDING_AC_NOTICE_APPROVAL",
           "nextState": "REJECTED",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -235,7 +235,7 @@
           "currentState": "PENDING_AC_NOTICE_APPROVAL",
           "nextState": "PENDING_DA_HEARING_APPROVAL",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -243,7 +243,7 @@
           "currentState": "PENDING_AC_NOTICE_APPROVAL",
           "nextState": "PENDING_SO_NOTICE_VERIFICATION",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         }
       ],
@@ -289,7 +289,7 @@
           "currentState": "PENDING_AC_HEARING_APPROVAL",
           "nextState": "REJECTED",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -297,7 +297,7 @@
           "currentState": "PENDING_AC_HEARING_APPROVAL",
           "nextState": "PENDING_DA_PENALTY",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -305,7 +305,7 @@
           "currentState": "PENDING_AC_HEARING_APPROVAL",
           "nextState": "PENDING_DA_HEARING_APPROVAL",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         }
       ],
@@ -405,7 +405,7 @@
           "currentState": "PENDING_AC_PENALTY_APPROVAL",
           "nextState": "REJECTED",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -413,7 +413,7 @@
           "currentState": "PENDING_AC_PENALTY_APPROVAL",
           "nextState": "PENDING_DA_PENALTY_APPROVAL",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         },
         {
@@ -421,7 +421,7 @@
           "currentState": "PENDING_AC_PENALTY_APPROVAL",
           "nextState": "PENDING_SO_PENALTY_VERIFICATION",
           "roles": [
-            "ES_EB_ADDITIONAL_COMMISSIONER"
+            "ES_ADDITIONAL_COMMISSIONER"
           ]
         }
       ],
