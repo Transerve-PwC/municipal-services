@@ -2,8 +2,6 @@ package org.egov.ps.web.contracts;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.model.PropertyPenalty;
 
@@ -21,9 +19,8 @@ import lombok.NoArgsConstructor;
 public class PropertyPenaltyRequest {
 
 	@JsonProperty("RequestInfo")
-	private RequestInfo RequestInfo;
+	private RequestInfo requestInfo;
 
-	@JsonProperty("PropertyPenaltys")
-	@Valid
-	private List<PropertyPenalty> PropertyPenaltys;
+	@JsonProperty("PropertyPenalties")
+	private List<PropertyPenalty> propertyPenalties;
 }

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
-import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,7 +20,7 @@ import lombok.ToString;
  * A Object holds the basic data for a Property Penalty
  */
 @ApiModel(description = "A Object holds the basic data for a Property Penalty")
-@Validated
+
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2020-11-05T17:05:11.263+05:30")
 
 @Getter

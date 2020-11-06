@@ -27,10 +27,10 @@ public class PropertyViolationService {
 
 	public List<PropertyPenalty> penalty(PropertyPenaltyRequest propertyPenaltyRequest) {
 		propertyEnrichmentService.enrichPenalty(propertyPenaltyRequest);
-		demandService.createPenaltyDemand(propertyPenaltyRequest.getRequestInfo(),
-				propertyPenaltyRequest.getPropertyPenaltys());
+//		demandService.createPenaltyDemand(propertyPenaltyRequest.getRequestInfo(),
+//				propertyPenaltyRequest.getPropertyPenalties());
 		producer.push(config.getSavePenaltyTopic(), propertyPenaltyRequest);
-		return propertyPenaltyRequest.getPropertyPenaltys();
+		return propertyPenaltyRequest.getPropertyPenalties();
 	}
 
 }

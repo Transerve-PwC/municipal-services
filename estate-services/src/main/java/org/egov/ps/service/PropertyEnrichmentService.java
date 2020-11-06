@@ -446,10 +446,10 @@ public class PropertyEnrichmentService {
 	public void enrichPenalty(PropertyPenaltyRequest propertyPenaltyRequest) {
 
 		Property property = propertyRepository
-				.findPropertyById(propertyPenaltyRequest.getPropertyPenaltys().get(0).getId());
+				.findPropertyById(propertyPenaltyRequest.getPropertyPenalties().get(0).getPropertyId());
 
 		setIdgenIds(propertyPenaltyRequest);
-		propertyPenaltyRequest.getPropertyPenaltys().forEach(propertyPenalty -> {
+		propertyPenaltyRequest.getPropertyPenalties().forEach(propertyPenalty -> {
 
 			AuditDetails penaltyAuditDetails = util.getAuditDetails(
 					propertyPenaltyRequest.getRequestInfo().getUserInfo().getUuid(), propertyPenalty.getId() == null);
@@ -476,9 +476,9 @@ public class PropertyEnrichmentService {
 	 */
 	private void setIdgenIds(PropertyPenaltyRequest request) {
 		RequestInfo requestInfo = request.getRequestInfo();
-		String tenantId = request.getPropertyPenaltys().get(0).getTenantId();
-		List<PropertyPenalty> propertyPenalties = request.getPropertyPenaltys();
-		int size = request.getPropertyPenaltys().size();
+		String tenantId = request.getPropertyPenalties().get(0).getTenantId();
+		List<PropertyPenalty> propertyPenalties = request.getPropertyPenalties();
+		int size = request.getPropertyPenalties().size();
 
 		List<String> penaltyNumbers = setIdgenIds(requestInfo, tenantId, size,
 				config.getApplicationNumberIdgenNamePS());

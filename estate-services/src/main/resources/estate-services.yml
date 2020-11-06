@@ -862,31 +862,31 @@ serviceMaps:
       isTransaction: true
       queryMaps:
         - query: INSERT INTO cs_ep_property_penalty_v1 (id, tenantid, property_id, branch_type, penalty_amount, violation_type, isPaid, total_penalty_due, penalty_number, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-          basePath: PropertyPenaltys.*
+          basePath: PropertyPenalties.*
           jsonMaps:
-            - jsonPath: $.PropertyPenaltys.*.id
+            - jsonPath: $.PropertyPenalties.*.id
 
-            - jsonPath: $.PropertyPenaltys.*.tenantId
+            - jsonPath: $.PropertyPenalties.*.tenantId
 
-            - jsonPath: $.PropertyPenaltys.*.propertyId
+            - jsonPath: $.PropertyPenalties.*.propertyId
 
-            - jsonPath: $.PropertyPenaltys.*.branchType
+            - jsonPath: $.PropertyPenalties.*.branchType
 
-            - jsonPath: $.PropertyPenaltys.*.penaltyAmount
+            - jsonPath: $.PropertyPenalties.*.penaltyAmount
 
-            - jsonPath: $.PropertyPenaltys.*.violationType
+            - jsonPath: $.PropertyPenalties.*.violationType
 
-            - jsonPath: $.PropertyPenaltys.*.isPaid
+            - jsonPath: $.PropertyPenalties.*.isPaid
 
-            - jsonPath: $.PropertyPenaltys.*.totalPenaltyDue
+            - jsonPath: $.PropertyPenalties.*.totalPenaltyDue
 
-            - jsonPath: $.PropertyPenaltys.*.penaltyNumber
+            - jsonPath: $.PropertyPenalties.*.penaltyNumber
 
-            - jsonPath: $.PropertyPenaltys.*.auditDetails.createdBy
+            - jsonPath: $.PropertyPenalties.*.auditDetails.createdBy
 
-            - jsonPath: $.PropertyPenaltys.*.auditDetails.lastModifiedBy
+            - jsonPath: $.PropertyPenalties.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.PropertyPenaltys.*.auditDetails.createdTime
+            - jsonPath: $.PropertyPenalties.*.auditDetails.createdTime
 
-            - jsonPath: $.PropertyPenaltys.*.auditDetails.lastModifiedTime   
+            - jsonPath: $.PropertyPenalties.*.auditDetails.lastModifiedTime   
                      

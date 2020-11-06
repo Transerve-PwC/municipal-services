@@ -21,9 +21,9 @@ import lombok.NoArgsConstructor;
 public class PropertyPenaltyResponse {
 
 	@JsonProperty("ResponseInfo")
-	private ResponseInfo ResponseInfo;
+	private ResponseInfo responseInfo;
 
-	@JsonProperty("PropertyPenaltys")
+	@JsonProperty("PropertyPenalties")
 	@Valid
-	private List<PropertyPenalty> PropertyPenaltys;
+	private List<PropertyPenalty> propertyPenalties;
 }
