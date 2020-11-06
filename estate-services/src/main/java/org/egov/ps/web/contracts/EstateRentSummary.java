@@ -82,6 +82,9 @@ public class EstateRentSummary {
 		//return Math.max(0, this.balanceAmount - this.balanceInterest);
 	}
 
+	  @Builder.Default
+	  private Boolean isPrevious=false;
+	
 	public String toString() {
 		return String.format("Principal : %.2f, Interest: %.2f, Amount: %.2f", this.getBalanceRent(),
 				this.getBalanceInterest(), this.getBalanceAmount());

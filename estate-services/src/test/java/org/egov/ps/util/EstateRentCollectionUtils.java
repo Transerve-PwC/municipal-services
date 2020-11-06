@@ -29,7 +29,7 @@ public class EstateRentCollectionUtils {
 		// accountStatementItems.forEach(statementItem -> {
 		// System.out.println(statementItem);
 		// });
-		System.out.println(String.format("%10s |%10s |%10s |"
+		System.out.println(String.format("%20s |%10s |%10s |"
 				+ "%14s"
 				+ "| %12s"
 				+ "| %14s"
@@ -44,19 +44,19 @@ public class EstateRentCollectionUtils {
 		System.out.println(
 				"===============================================================================================================================================================================================================================================================================================================================================================================================================");
 		accountStatementItems.forEach(item -> {
-			System.out.println(String.format("%10s |%10.2f |%10s|"
+			System.out.println(String.format("%20s |%10.2f |%10s|"
 					+ "%14.2f "
 					+ "|%12.2f  "
 					+ "|%18.2f  "
 					+ "|%14.2f  "
-					+ "|%13.2f |%15.2f |%5s",
-					dateFormat.format(new Date(item.getDate())), item.getAmount(),
+					+ "|%13.2f |%15.2f |%5s |%5s",
+					item.getIsPrevious() ?"Previous Balance":dateFormat.format(new Date(item.getDate())), item.getAmount(),
 					item.getType() == EstateAccountStatement.Type.C ? "Payment" : "Rent", 
 							item.getRemainingPrincipal(),
 							item.getRemainingGST(),
 							item.getRemainingRentPenalty(),
 							item.getRemainingGSTPenalty(),
-					 item.getDueAmount(), item.getRemainingBalance(),item.getReceiptNo()));
+					 item.getDueAmount(), item.getRemainingBalance(),item.getReceiptNo(),String.valueOf(item.getIsPrevious())));
 		});
 	}
 

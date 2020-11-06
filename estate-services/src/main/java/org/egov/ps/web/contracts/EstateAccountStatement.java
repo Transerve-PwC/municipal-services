@@ -118,6 +118,9 @@ public class EstateAccountStatement {
 
     @JsonIgnore
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yy");
+    
+    @JsonProperty("isPrevious") 
+	private Boolean isPrevious=false;
 
     @Override
     public String toString() {
