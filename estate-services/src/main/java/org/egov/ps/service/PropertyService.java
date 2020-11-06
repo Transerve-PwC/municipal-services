@@ -62,7 +62,7 @@ public class PropertyService {
 	@Autowired
 	private WorkflowService workflowService;
 
-		@Autowired
+	@Autowired
 	private IEstateRentCollectionService estateRentCollectionService;
 
 	@Autowired

@@ -24,6 +24,7 @@ import org.egov.ps.model.CollectionPaymentRequest;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyPenalty;
 import org.egov.ps.model.UserResponse;
 import org.egov.ps.model.UserSearchRequestCore;
 import org.egov.ps.model.calculation.Demand;
@@ -505,4 +506,72 @@ public class DemandService {
 				.type(requestInfo.getUserInfo().getType()).mobileNumber(mobileNumber).emailId(requestUser.getEmailId())
 				.roles(requestUser.getRoles()).tenantId(requestUser.getTenantId()).uuid(requestUser.getUuid()).build();
 	}
+	
+	public List<Demand> createPenaltyDemand(RequestInfo requestInfo, List<PropertyPenalty> propertyPenalties) {
+		List<Demand> demands = new LinkedList<>();
+		for (PropertyPenalty application : propertyPenalties) {
+			if (application == null)
+				throw new CustomException("INVALID APPLICATIONNUMBER",
+						"Demand cannot be generated for this application");
+
+			String tenantId = application.getTenantId();
+			String consumerCode = application.getPenaltyNumber();
+
+			String url = config.getUserHost().concat(config.getUserSearchEndpoint());
+
+			List<org.egov.ps.model.User> applicationUser = null;
+			Set<String> uuid = new HashSet<>();
+			uuid.add(application.getAuditDetails().getCreatedBy());
+
+			UserSearchRequestCore userSearchRequest = UserSearchRequestCore.builder().requestInfo(requestInfo)
+					.uuid(uuid).build();
+
+			applicationUser = mapper
+					.convertValue(serviceRequestRepository.fetchResult(url, userSearchRequest), UserResponse.class)
+					.getUser();
+
+			log.info("applicationUser:" + applicationUser);
+
+			// User requestUser = requestInfo.getUserInfo(); // user from request
+			// information
+			User requestUser = applicationUser.get(0).toCommonUser();
+			log.info("requestUser:" + requestUser);
+			User user = null;
+			if (requestUser.getMobileNumber() != null) {
+				user = User.builder().id(requestUser.getId()).userName(requestUser.getUserName())
+						.name(requestUser.getName()).type(requestInfo.getUserInfo().getType())
+						.mobileNumber(requestUser.getMobileNumber()).emailId(requestUser.getEmailId())
+						.roles(requestUser.getRoles()).tenantId(requestUser.getTenantId()).uuid(requestUser.getUuid())
+						.build();
+			} else {
+				user = User.builder().id(requestUser.getId()).userName(requestUser.getUserName())
+						.name(requestUser.getName()).type(requestInfo.getUserInfo().getType())
+						.mobileNumber(requestUser.getUserName()).emailId(requestUser.getEmailId())
+						.roles(requestUser.getRoles()).tenantId(requestUser.getTenantId()).uuid(requestUser.getUuid())
+						.build();
+			}
+
+			List<DemandDetail> demandDetails = new LinkedList<>();
+			if (!CollectionUtils.isEmpty(application.getCalculation().getTaxHeadEstimates())) {
+				application.getCalculation().getTaxHeadEstimates().forEach(taxHeadEstimate -> {
+					demandDetails.add(DemandDetail.builder().taxAmount(taxHeadEstimate.getEstimateAmount())
+							.taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode()).collectionAmount(BigDecimal.ZERO)
+							.tenantId(tenantId).build());
+				});
+			}
+
+			Long taxPeriodFrom = System.currentTimeMillis();
+			Long taxPeriodTo = System.currentTimeMillis();
+
+			Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)
+					.demandDetails(demandDetails).payer(user).minimumAmountPayable(config.getMinimumPayableAmount())
+					.tenantId(tenantId).taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo)
+					.consumerType(PSConstants.ESTATE_SERVICE).businessService(application.getPenaltyBusinessService())
+					.additionalDetails(null).build();
+
+			demands.add(singleDemand);
+		}
+		return demandRepository.saveDemand(requestInfo, demands);
+	}
+
 }

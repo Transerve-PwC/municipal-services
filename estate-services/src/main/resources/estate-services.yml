@@ -855,3 +855,38 @@ serviceMaps:
             - jsonPath: $.Applications.*.allDocuments.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Applications.*.allDocuments.*.auditDetails.lastModifiedTime
+
+    - version: 1.0
+      description: Persists Property Penalty details in cs_ep_property_penalty_v1 table
+      fromTopic: save-penalty-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO cs_ep_property_penalty_v1 (id, tenantid, property_id, branch_type, penalty_amount, violation_type, isPaid, total_penalty_due, penalty_number, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: PropertyPenaltys.*
+          jsonMaps:
+            - jsonPath: $.PropertyPenaltys.*.id
+
+            - jsonPath: $.PropertyPenaltys.*.tenantId
+
+            - jsonPath: $.PropertyPenaltys.*.propertyId
+
+            - jsonPath: $.PropertyPenaltys.*.branchType
+
+            - jsonPath: $.PropertyPenaltys.*.penaltyAmount
+
+            - jsonPath: $.PropertyPenaltys.*.violationType
+
+            - jsonPath: $.PropertyPenaltys.*.isPaid
+
+            - jsonPath: $.PropertyPenaltys.*.totalPenaltyDue
+
+            - jsonPath: $.PropertyPenaltys.*.penaltyNumber
+
+            - jsonPath: $.PropertyPenaltys.*.auditDetails.createdBy
+
+            - jsonPath: $.PropertyPenaltys.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.PropertyPenaltys.*.auditDetails.createdTime
+
+            - jsonPath: $.PropertyPenaltys.*.auditDetails.lastModifiedTime   
+                     
