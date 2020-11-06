@@ -13,7 +13,9 @@ public enum Category {
 
 	ADVANCE_COLLECTION("ADVANCE_COLLECTION"),
 
-	INTEREST("INTEREST");
+	INTEREST("INTEREST"),
+
+	PENALTY("PENALTY");
 
 	private String value;
 
