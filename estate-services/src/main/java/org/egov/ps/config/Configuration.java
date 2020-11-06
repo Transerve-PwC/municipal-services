@@ -152,4 +152,13 @@ public class Configuration {
 	
 	@Value("${egov.bill.gen.endpoint}")
 	private String billGenerateEndpoint;
+
+	/**
+	 * Localization Service
+	 */
+	@Value("${egov.translation.host}")
+	private String localizationHost;
+
+	@Value("${egov.translation.endpoint.search.path}")
+	private String localizationEndpoint;
 }

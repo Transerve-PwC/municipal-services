@@ -72,4 +72,7 @@ public class PSConstants {
 	public static final String BUSINESS_SERVICE_BB_RENT = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_MB_RENT = "ESTATE_SERVICE_MANIMAJRA_BRANCH.PROPERTY_MASTER";
 
+	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";
+	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages.*.message";
+	
 }
