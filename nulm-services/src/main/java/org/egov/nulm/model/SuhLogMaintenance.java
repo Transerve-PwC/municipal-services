@@ -53,6 +53,9 @@ public class SuhLogMaintenance {
 	@JsonProperty("date")
 	private String date;
 
+	@JsonProperty("dob")
+	private String dob;
+
 	@Pattern(regexp = "^[0-9]{12}$", message = "AdharNumber should be 12 digit number")
 	@JsonProperty("aadhaarNo")
 	private String aadhaarNo;

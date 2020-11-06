@@ -60,7 +60,7 @@ public class SMIDRowMapper implements ResultSetExtractor<List<SmidApplication>> 
 							.nulmApplicationId(rs.getString("nulm_application_id")).phoneNo(rs.getString("phone_no"))
 							.qualification(rs.getString("qualification")).remark(rs.getString("remark"))
 							.tenantId(rs.getString("tenant_id")).wardNo(rs.getString("ward_no"))
-							.isRegistered(rs.getBoolean("is_registered")).cobNumber(rs.getString("cob_number")).build();
+							.isRegistered(rs.getBoolean("is_registered")).cobNumber(rs.getString("cob_number")).age(rs.getInt("age")).build();
 					JSONArray documentAttachment = null;
 					if (rs.getString("document_attachemnt") != null) {
 						documentAttachment = (mapper.readValue(rs.getString("document_attachemnt"), JSONArray.class));

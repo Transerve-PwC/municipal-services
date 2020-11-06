@@ -141,6 +141,9 @@ public class SusvApplication {
 	@JsonProperty("susvApplicationFamilyDetails")
 	private List<SusvApplicationFamilyDetails> susvApplicationFamilyDetails;
 
+	@JsonProperty("dob")
+	private String dob;
+
 	@JsonProperty("fromDate")
 	private String fromDate;
 	

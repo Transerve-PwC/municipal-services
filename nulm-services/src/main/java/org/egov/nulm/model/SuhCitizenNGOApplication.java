@@ -59,4 +59,8 @@ public class SuhCitizenNGOApplication {
 
 	@JsonProperty("toDate")
 	private String toDate;
+
+	@JsonProperty("dob")
+	private String dob;
+
 }

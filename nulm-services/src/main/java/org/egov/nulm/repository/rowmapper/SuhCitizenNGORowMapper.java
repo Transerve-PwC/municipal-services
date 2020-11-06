@@ -38,8 +38,9 @@ public class SuhCitizenNGORowMapper implements ResultSetExtractor<List<SuhCitize
 							.age(rs.getInt("age")).gender(rs.getString("gender"))
 							.reasonForStaying(rs.getString("reason_for_staying"))
 							.nominatedBy(rs.getString("nominated_by"))
+							.dob(rs.getString("dob"))
 							.nameOfNominatedPerson(rs.getString("name_of_nominated_person"))
-							.contactNo(rs.getString("contact_no")).isDisabled(rs.getBoolean("is_disabled"))
+							.contactNo(rs.getString("contact_no")).isDisabled(rs.getBoolean("is_disabled")).contactNo(rs.getString("contact_no"))
 							.isActive(rs.getBoolean("is_active")).build();
 					suhList.add(suhapp);
 				}

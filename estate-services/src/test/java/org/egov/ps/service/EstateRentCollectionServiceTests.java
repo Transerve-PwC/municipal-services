@@ -19,6 +19,7 @@ import org.egov.ps.web.contracts.EstateAccountStatement;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
+import org.egov.ps.web.contracts.EstateRentSummary;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -252,10 +253,10 @@ public class EstateRentCollectionServiceTests {
     private EstatePayment getPayment(double amount, String date) throws ParseException {
         return EstatePayment.builder().rentReceived(amount).receiptNo("X-1212").receiptDate(getEpochFromDateString(date)).build();
     }
-    private EstateDemand getDemand(double amount, Integer gst, String date, String demandId,double penaltyInterest,double gstInterest) throws ParseException {
+    private EstateDemand getDemand(double amount, double gst, String date, String demandId,double penaltyInterest,double gstInterest) throws ParseException {
         return EstateDemand.builder()
         		.rent(amount)
-        		.gst(Double.parseDouble(gst.toString()))
+        		.gst(gst)
         		.penaltyInterest(penaltyInterest)
         		.gstInterest(gstInterest)
         		.generationDate(getEpochFromDateString(date))
@@ -267,12 +268,11 @@ public class EstateRentCollectionServiceTests {
                .build();
     }
 
-   
-    private EstateDemand getDemand(double amount, Integer gst, String date, String demandId,double penaltyInterest,double gstInterest,double collectedRent
+    private EstateDemand getDemand(double amount, double gst, String date, String demandId,double penaltyInterest,double gstInterest,double collectedRent
     		,double collectedGST,double collectedRentPenalty,double collectedGSTPenaty) throws ParseException {
         return EstateDemand.builder()
         		.rent(amount)
-        		.gst(Double.parseDouble(gst.toString()))
+        		.gst(gst)
         		.penaltyInterest(penaltyInterest)
         		.gstInterest(gstInterest)
         		.generationDate(getEpochFromDateString(date))
@@ -290,7 +290,28 @@ public class EstateRentCollectionServiceTests {
     }
 
 
-      
+    private EstateDemand getDemand(double amount, double gst, String date, String demandId,double penaltyInterest,double gstInterest,double collectedRent
+    		,double collectedGST,double collectedRentPenalty,double collectedGSTPenaty,boolean isPrevious) throws ParseException {
+        return EstateDemand.builder()
+        		.rent(amount)
+        		.gst(gst)
+        		.penaltyInterest(penaltyInterest)
+        		.gstInterest(gstInterest)
+        		.generationDate(getEpochFromDateString(date))
+        		.id(demandId)
+        		.remainingRent(amount)
+        		.remainingGST(new Double(gst))
+        		.remainingRentPenalty(penaltyInterest)
+        		.remainingGSTPenalty(gstInterest)
+        		.collectedGST(collectedGST)
+        		.collectedGSTPenalty(collectedGSTPenaty)
+        		.collectedRentPenalty(collectedRentPenalty)
+        		.collectedRent(collectedRent)
+        		.interestSince(getEpochFromDateString(date))
+        		.isPrevious(isPrevious)
+               .build();
+    }
+  
 
     private long getEpochFromDateString(String date) throws ParseException {
         return this.getDateFromString(date).getTime();
@@ -331,19 +352,31 @@ public class EstateRentCollectionServiceTests {
     @Test
 
     public void testSimpleInterestSettlementStatement() throws ParseException {
-    	  List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0));
+    	  List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0,true), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0,false));
           List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
 
           utils=new EstateRentCollectionUtils();
         List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
-                payments, DEFAULT_INTEREST_RATE, null,null);
+                payments, DEFAULT_INTEREST_RATE, null,getEpochFromDateString(NOV_30_2000));
        // getEpochFromDateString(NOV_30_2000)
         utils.printStatement(accountStatementItems);
         utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
     }
     
     
-    
+    @Test
+
+    public void accountStatementWithPrevious() throws ParseException {
+    	  List<EstateDemand> demands = Arrays.asList(getDemand(7000D,700 ,JAN_1_1999,"101",468,96,0,0,0,0,true), getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0,false), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0,false));
+          List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
+
+          utils=new EstateRentCollectionUtils();
+        List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
+                payments, DEFAULT_INTEREST_RATE, null,getEpochFromDateString(NOV_30_2000));
+       // getEpochFromDateString(NOV_30_2000)
+        utils.printStatement(accountStatementItems);
+        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
+    }
     
     @Test
 
@@ -450,5 +483,57 @@ public class EstateRentCollectionServiceTests {
         utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
     }
     
+    @Test
+    public void testSingleDebitSummary() throws ParseException {
+        EstateAccount rentAccount = getAccount(0);
+        
+        List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10));
+        
+
+        EstateRentSummary summary = this.estateRentCollectionService.calculateRentSummaryAt(demands, rentAccount,
+                DEFAULT_INTEREST_RATE, getEpochFromDateString(DEC_1_1998));
+        System.out.println(summary);
+    }
+
+    @Test
+    public void testTwoDebitSummary() throws ParseException {
+    	 List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0));
+       EstateAccount rentAccount = getAccount(0);
+        EstateRentSummary summary = this.estateRentCollectionService.calculateRentSummaryAt(demands, rentAccount,
+                DEFAULT_INTEREST_RATE, getEpochFromDateString(JAN_1_1999));
+        System.out.println(summary);
+    }
+ @Test
+    public void testInterestSettlement() throws ParseException {
+	 List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0));
+     List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
+  EstateAccount account = getAccount(0);
+        List<EstateRentCollection> collections = this.estateRentCollectionService.settle(demands, payments, account,
+                DEFAULT_INTEREST_RATE,true);
+        //assertEquals(29, collections.size());
+        EstateRentSummary summary = this.estateRentCollectionService.calculateRentSummary(demands, account, DEFAULT_INTEREST_RATE);
+        System.out.println(summary);
+        assertEquals(0, summary.getBalanceAmount(), 0.1);
+    }
+	
+	  @Test
+    public void testAdditionalBalanceUsecase1Summary() throws ParseException {
+		  List<EstateDemand> demands = Arrays.asList( getDemand(2678D,482 ,FEB_1_1999,"102",268,10,0,0,0,0), getDemand(2678D, 482 ,MAR_1_1999,"103",268,6,0,0,0,0));
+          List<EstatePayment> payments = Arrays.asList( getPayment(5356D, MAR_7_1999));
+        EstateAccount rentAccount = getAccount(40.03);
+        EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummaryAt(demands, rentAccount,
+                DEFAULT_INTEREST_RATE, getEpochFromDateString(JUN_1_2000));
+        System.out.println(rentSummary);
+        assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
+
+
+	  }
+
+
+
+
+
+ 
+    }
     
-}
+    

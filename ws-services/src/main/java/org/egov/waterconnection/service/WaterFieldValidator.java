@@ -15,6 +15,7 @@ public class WaterFieldValidator implements WaterActionValidator {
 	@Override
 	public ValidatorResult validate(WaterConnectionRequest waterConnectionRequest, boolean isUpdate) {
 		Map<String, String> errorMap = new HashMap<>();
+		
 		if (isUpdate) {
 			if (WCConstants.WS_NEW_TUBEWELL_CONNECTION
 					.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getApplicationType())) {
@@ -40,8 +41,13 @@ public class WaterFieldValidator implements WaterActionValidator {
 						errorMap.put("INVALID_CONNECTION_EXECUTION_DATE", "Connection execution date should not be empty");
 					}
 	
-				}
-				if (WCConstants.ACTION_APPROVE_CONNECTION_CONST
+				}else if(WCConstants.ACTION_APPLY_SECURITY_DEPOSIT
+						.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+					if(waterConnectionRequest.getWaterConnection().getSecurityCharge() == null
+							|| waterConnectionRequest.getWaterConnection().getSecurityCharge() == 0) {
+						errorMap.put("INVALID_SECURITY_AMOUNT", "Security deposit cannot be empty");
+					}
+				}else if (WCConstants.ACTION_APPROVE_CONNECTION_CONST
 						.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
 					/*if (StringUtils.isEmpty(waterConnectionRequest.getWaterConnection().getRoadType())) {
 						errorMap.put("INVALID_ROAD_TYPE", "Road type should not be empty");

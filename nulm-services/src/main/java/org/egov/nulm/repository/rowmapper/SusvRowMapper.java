@@ -73,6 +73,7 @@ public class SusvRowMapper implements ResultSetExtractor<List<SusvApplication>> 
 							.tenantId(rs.getString("tenant_id"))
 							.isActive(rs.getBoolean("is_active"))
 							.tenantId(rs.getString("tenant_id"))
+							.dob(rs.getString("dob"))
 							.build();
 					List<SusvApplicationDocument> documentAttachment = null;
 					if (rs.getString("document") != null) {

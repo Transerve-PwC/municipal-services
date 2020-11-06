@@ -40,14 +40,14 @@ public class SepApplication {
 	private StatusEnum applicationStatus ;
 
 	public enum StatusEnum {
-	    DRAFTED("DRAFTED"),
-	    CREATED("CREATED"),
-	    APPROVED("APPROVED"),
-		REJECTED("REJECTED"),
-	    FORWARDEDTOTASKFORCECOMMITTEE("Forwarded to Task force Committee"),
-	    APPROVEDBYTASKFORCECOMMITTEE("Approved by Task force committee"),
-	    REJECTEDBYTASKFORCECOMMITTEE("Rejected by Task force committee"),
-		SENDTOBANKFORPROCESSING("Sent to bank for processing"),
+	    DRAFTED("Drafted"),
+	    CREATED("Created"),
+	    APPROVED("Approved"),
+		REJECTED("Rejected"),
+	    FORWARDEDTOTASKFORCECOMMITTEE("Forwarded to Task Force Committee"),
+	    APPROVEDBYTASKFORCECOMMITTEE("Approved by Task Force Committee"),
+	    REJECTEDBYTASKFORCECOMMITTEE("Rejected by Task Force Committee"),
+		SENDTOBANKFORPROCESSING("Sent to Bank for Processing"),
 		SANCTIONEDBYBANKBank("Sanctioned by Bank");
 	    private String value;
 

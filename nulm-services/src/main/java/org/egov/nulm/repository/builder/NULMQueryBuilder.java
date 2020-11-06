@@ -117,7 +117,7 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \n"
 			+ " TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND UPPER(na.name_of_shelter) like concat('%',case when UPPER(:nameOfShelter)<>'' then UPPER(:nameOfShelter) else UPPER(na.name_of_shelter) end,'%') ORDER BY created_time desc";
 
-	public static final String GET_SUH_LOG_QUERY = "SELECT log_uuid, name_of_shelter, date, name, qualification, gender, age, address, adhar_no, reason_for_staying, tenant_id, is_active, created_by, created_time, last_modified_by, last_modified_time\n"
+	public static final String GET_SUH_LOG_QUERY = "SELECT log_uuid, name_of_shelter, date, name, qualification, gender, age, address, adhar_no, reason_for_staying, tenant_id, is_active, created_by, created_time, last_modified_by, last_modified_time,dob\n"
 			+ "  FROM public.nulm_suh_occupancy_log where log_uuid=(case when ?  <>'' then ?   else log_uuid end) and created_by=(case when ?  <>'' then ?  else created_by end)  "
 			+ "AND UPPER(name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(name) end,'%') "
 			+ "AND UPPER(name_of_shelter) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(name_of_shelter) end,'%') AND TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
@@ -132,7 +132,7 @@ public class NULMQueryBuilder {
 
 	public static final String GET_SUSV_DOCUMENT_QUERY = "SELECT count(*)  FROM public.nulm_susv_application_document  WHERE application_uuid=? and tenant_id=? and filestore_id=? and document_type=? and is_active='true';";
 
-	public static final String GET_SUSV_QUERY = "SELECT SA.application_uuid, SA.application_id, SA.nulm_application_id, SA.application_status,SA.name_of_applicant, SA.gender, SA.age, SA.adhar_no, SA.mother_name, SA.father_or_husband_name,\n"
+	public static final String GET_SUSV_QUERY = "SELECT SA.application_uuid, SA.application_id, SA.nulm_application_id, SA.application_status,SA.name_of_applicant, SA.gender, SA.age,SA.dob, SA.adhar_no, SA.mother_name, SA.father_or_husband_name,\n"
 			+ "SA.permanent_address, SA.present_address, SA.mobile_no, SA.is_disability,SA.category, SA.qualification, SA.blood_group, SA.category_of_vending, SA.proposed_location_of_vending,\n"
 			+ "SA.proposed_time_of_vending, SA.goverment_scheme, SA.name_of_nominee,SA.tenant_id, SA.remark,SA.is_undertaking,SA.date,SA.place,  SA.is_active, SA.created_by,\n"
 			+ "SA.created_time, SA.last_modified_by, SA.last_modified_time,ND.document,NF.familymembers\n"

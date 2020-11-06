@@ -51,6 +51,7 @@ public class SuhLogRowMapper implements ResultSetExtractor<List<SuhLogMaintenanc
 							.qualification(rs.getString("qualification"))
 							.reasonForStaying(rs.getString("reason_for_staying"))
 							.tenantId(rs.getString("tenant_id"))
+							.dob(rs.getString("dob"))
 							.build();
 					logMap.put(id, log);
 				listSuhLogMaintenance.add(log);

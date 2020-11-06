@@ -111,8 +111,8 @@ public class SusvService {
 		if(!susvApplication.getAction().toString().equalsIgnoreCase(SusvApplication.StatusEnum.DRAFTED.toString())) {
 			 //workflow service call to integrate nulm workflow
 			String workflowStatus=workflowIntegration(request.getRequestInfo(), susvApplication);
-			System.out.println(workflowStatus);
 			susvApplication.setApplicationStatus(SusvApplication.StatusEnum.fromValue(workflowStatus));
+		
 		}
 			repository.createSusvApplication(susvApplication);
 

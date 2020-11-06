@@ -90,6 +90,9 @@ public class SmidApplication {
 	@JsonProperty("dob")
 	private String dob ;
 	
+	@JsonProperty("age")
+	private Integer age ;
+
 	@JsonProperty("emailId")
 	private String emailId ;
 	
