@@ -69,7 +69,7 @@ public class PropertyController {
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/_accountstatement")
 	public ResponseEntity<AccountStatementResponse> searchDateWise(
 			@Valid @RequestBody AccountStatementRequest request) {
@@ -83,9 +83,9 @@ public class PropertyController {
 	}
 
 	/**
-	 * Offline payment : Employees Request { amount :  } Response { property }
-	 *  
-	 * Online payment : Citizen Request { amount :  }
+	 * Offline payment : Employees Request { amount : } Response { property }
+	 * 
+	 * Online payment : Citizen Request { amount : }
 	 * 
 	 * Response { consumerCode : }
 	 * 
@@ -114,4 +114,5 @@ public class PropertyController {
 				.generateAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
 }
