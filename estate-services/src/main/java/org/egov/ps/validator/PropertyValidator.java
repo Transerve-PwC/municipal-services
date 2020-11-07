@@ -1,5 +1,6 @@
 package org.egov.ps.validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
@@ -29,11 +34,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
 public class PropertyValidator {
@@ -210,7 +212,7 @@ public class PropertyValidator {
 						validateDocumentsOnType(request.getRequestInfo(), property_Optional.get().getTenantId(), o,
 								errorMap, "");
 					} catch (Exception e) {
-						log.error("Can not parse Json fie",e);
+						log.error("Can not parse Json fie", e);
 					}
 				}
 
@@ -266,9 +268,33 @@ public class PropertyValidator {
 		List<Property> propertiesFromSearchResponse = repository.getProperties(criteria);
 		boolean ifPropertyExists = PropertyExists(propertiesFromSearchResponse);
 		if (!ifPropertyExists) {
-			throw new CustomException("PROPERTY NOT FOUND", "The property to be updated does not exist");
+			errorMap.put("PROPERTY NOT FOUND", "The property to be updated does not exist");
 		}
 
+		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
+			PropertyCriteria auctionCriteria = new PropertyCriteria();
+			List<String> bidders = new ArrayList<String>();
+			bidders.add("bidder");
+			auctionCriteria.setRelations(bidders);
+			List<Property> auctionPropertiesFromSearchResponse = repository.getProperties(auctionCriteria);
+			String requestAuctionId = request.getProperties().get(0).getPropertyDetails().getBidders().get(0)
+					.getAuctionId().trim();
+			if (!CollectionUtils.isEmpty(propertiesFromSearchResponse)) {
+				auctionPropertiesFromSearchResponse.forEach(property -> {
+					if (!CollectionUtils.isEmpty(property.getPropertyDetails().getBidders())) {
+						String responseAuctionId = property.getPropertyDetails().getBidders().get(0).getAuctionId();
+						request.getProperties().get(0).getPropertyDetails().getBidders().forEach(bidder -> {
+							if (bidder.getId() == null && responseAuctionId.equalsIgnoreCase(requestAuctionId)) {
+								errorMap.put("AUCTION_ID_ALREADY_EXIST", "The given Auction Id already exists");
+							}
+						});
+					}
+				});
+			}
+		}
+		if (!errorMap.isEmpty()) {
+			throw new CustomException(errorMap);
+		}
 		validateOwner(request, errorMap);
 	}
 

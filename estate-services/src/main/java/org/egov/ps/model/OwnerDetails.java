@@ -3,10 +3,10 @@ package org.egov.ps.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -69,6 +69,9 @@ public class OwnerDetails {
 
 	@JsonProperty("isMasterEntry")
 	private Boolean isMasterEntry;
+
+	@JsonProperty("isPreviousOwnerRequired")
+	private Boolean isPreviousOwnerRequired;
 
 	@JsonProperty("address")
 	private String address;

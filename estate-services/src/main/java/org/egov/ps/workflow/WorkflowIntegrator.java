@@ -117,11 +117,22 @@ public class WorkflowIntegrator {
 				});
 			}
 			obj.put(TENANTIDKEY, wfTenantId);
-			if( property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)){
+			if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
+					&& !property.getState().contentEquals(PSConstants.PM_APPROVED)) {
 				obj.put(BUSINESSSERVICEKEY, config.getAosBusinessServiceValue());
-			} else obj.put(BUSINESSSERVICEKEY, config.getBbPmBusinessServiceValue());
-			obj.put(BUSINESSIDKEY, property.getFileNumber());
-			obj.put(ACTIONKEY, property.getAction());
+				obj.put(BUSINESSIDKEY, property.getFileNumber());
+				obj.put(ACTIONKEY, property.getAction());
+			} else if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.BUILDING_BRANCH)) {
+				obj.put(BUSINESSSERVICEKEY, config.getBbPmBusinessServiceValue());
+				obj.put(BUSINESSIDKEY, property.getFileNumber());
+				obj.put(ACTIONKEY, property.getAction());
+			} else if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
+					&& property.getState().contentEquals(PSConstants.PM_APPROVED)
+					&& property.getPropertyDetails().getBidders().get(0).getAuctionId() != null) {
+				obj.put(BUSINESSSERVICEKEY, config.getEbRoeBusinessServiceValue());
+				obj.put(BUSINESSIDKEY, property.getPropertyDetails().getBidders().get(0).getAuctionId());
+				obj.put(ACTIONKEY, property.getPropertyDetails().getBidders().get(0).getAction());
+			}
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(AUDITDETAILSKEY, property.getAuditDetails());
 			obj.put(COMMENTKEY, property.getComments());
@@ -139,7 +150,13 @@ public class WorkflowIntegrator {
 
 		// setting the status back to Property object from wf response
 		request.getProperties().forEach(property -> {
-			property.setState(idStatusMap.get(property.getFileNumber()));
+			if (!property.getState().contentEquals(PSConstants.PM_APPROVED)) {
+				property.setState(idStatusMap.get(property.getFileNumber()));
+			} else {
+				property.getPropertyDetails().getBidders().forEach(bidder -> {
+					bidder.setState(idStatusMap.get(property.getPropertyDetails().getBidders().get(0).getAuctionId()));
+				});
+			}
 		});
 	}
 

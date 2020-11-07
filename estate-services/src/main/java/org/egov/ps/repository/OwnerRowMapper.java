@@ -37,7 +37,7 @@ public class OwnerRowMapper implements ResultSetExtractor<List<Owner>> {
                     .address(rs.getString("address")).isDirector(rs.getBoolean("is_director"))
                     .sellerName(rs.getString("seller_name")).sellerGuardianName(rs.getString("seller_guardian_name"))
                     .sellerRelation(rs.getString("seller_relation")).modeOfTransfer(rs.getString("mode_of_transfer"))
-                    .dob(rs.getLong("dob"))
+                    .dob(rs.getLong("dob")).isPreviousOwnerRequired(rs.getBoolean("is_previous_owner_required"))
                     .auditDetails(auditdetails).build();
 
             final Owner owner = Owner.builder().id(ownerId).propertyDetailsId(OwnerPropertyDetailId)

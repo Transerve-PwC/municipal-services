@@ -62,7 +62,7 @@ public class PropertyService {
 	@Autowired
 	private WorkflowService workflowService;
 
-		@Autowired
+	@Autowired
 	private IEstateRentCollectionService estateRentCollectionService;
 
 	@Autowired
@@ -129,9 +129,19 @@ public class PropertyService {
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		String action = request.getProperties().get(0).getAction();
-		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)) {
+		String state = request.getProperties().get(0).getState();
+		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)
+				&& !state.contentEquals(PSConstants.PM_APPROVED)) {
 			wfIntegrator.callWorkFlow(request);
 		}
+		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
+			String roeAction = request.getProperties().get(0).getPropertyDetails().getBidders().get(0).getAction();
+			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
+					&& state.contentEquals(PSConstants.PM_APPROVED)) {
+				wfIntegrator.callWorkFlow(request);
+			}
+		}
+
 		producer.push(config.getUpdatePropertyTopic(), request);
 		processRentSummary(request);
 		return request.getProperties();

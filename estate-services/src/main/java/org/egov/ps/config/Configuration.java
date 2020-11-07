@@ -68,6 +68,9 @@ public class Configuration {
 	@Value("${create.es.eb.aos.workflow.name}")
 	private String aosBusinessServiceValue;
 
+	@Value("${create.es.eb.roe.workflow.name}")
+	private String ebRoeBusinessServiceValue;
+
 	@Value("${create.es.bb.pm.workflow.name}")
 	private String bbPmBusinessServiceValue;
 
