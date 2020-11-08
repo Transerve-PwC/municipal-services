@@ -74,6 +74,9 @@ public class PSConstants {
 
 	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";
 	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages.*.message";
+	public static final String LOCALIZATION_MODULE = "rainmaker-es";
+	public static final String LOCALIZATION_TENANTID = "ch";
+	public static final String LOCALIZATION_LOCALE = "en_IN";
 	
 	public static final String PROPERTY_VIOLATION = "PROPERTY_VIOLATION";
 }

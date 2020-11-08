@@ -1,4 +1,5 @@
 package org.egov.ps.service;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.egov.ps.repository.ServiceRequestRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ public class LocalisationService {
 	@Autowired
     private ServiceRequestRepository serviceRequestRepository;
     
-    public static final Map<String, Map<String, String>> localisedMessageMap = new HashMap<>();
+    Map<String, Map<String, String>> localisedMessageMap = new HashMap<>();
 /**
 	 * Populates the localized msg cache
 	 * 
@@ -34,7 +36,8 @@ public class LocalisationService {
 	 * @param locale
 	 * @param module
 	 */
-	public void getLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale, String module) {
+	@Cacheable(value = "allLocalisedMessages", key = "#tenantId")
+	public Map<String, Map<String, String>> getAllLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale, String module) {
 		Map<String, String> mapOfCodesAndMessages = new HashMap<>();
         StringBuilder uri = new StringBuilder();
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -61,5 +64,6 @@ public class LocalisationService {
 			}
 			localisedMessageMap.put(locale + "|" + tenantId, mapOfCodesAndMessages);
 		}
+		return localisedMessageMap;
 	}
 }

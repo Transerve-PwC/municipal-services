@@ -19,6 +19,7 @@ import org.egov.ps.model.Application;
 import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
 import org.egov.ps.model.NotificationsSms;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -164,16 +165,15 @@ public class ApplicationsNotificationService {
 
     private String enrichLocalizationPatternsInString(Application application, RequestInfo requestInfo,
             String sourceString) {
-        String module = "rainmaker-es"; //application.getMDMSModuleName();
-        String tenantId = "ch"; //application.getTenantId();
-        String locale = "en_IN";
+        String tenantId = PSConstants.LOCALIZATION_TENANTID; //application.getTenantId();
+        String locale = PSConstants.LOCALIZATION_LOCALE;
         List<String> listOfStringForLocalisation = localisationStringList(sourceString);
+        
+        
 
-        if (null == LocalisationService.localisedMessageMap.get(locale + "|" + tenantId)) {// static map that saves code-message pair against locale | tenantId.
-            localisationService.getLocalisedMessages(requestInfo, tenantId, locale, module);
-
-        }
-        Map<String, String> messageMap = LocalisationService.localisedMessageMap.get(locale + "|" + tenantId);
+        Map <String, Map<String, String>> localisedMessages = localisationService.getAllLocalisedMessages(requestInfo, tenantId, locale , PSConstants.LOCALIZATION_MODULE);
+        Map<String, String> messageMap = localisedMessages.get(locale + "|" + tenantId);
+        
         if ( messageMap != null) {
             String replacedString = listOfStringForLocalisation.stream().reduce(sourceString, (result, match) -> {
                 String path = match;
@@ -201,8 +201,3 @@ public class ApplicationsNotificationService {
         return list;
     }
 }
-
-/**
- * application.getMDMSModuleName(), applicationObjectContext,
- * request.getRequestInfo(), application.getTenantId()
- */

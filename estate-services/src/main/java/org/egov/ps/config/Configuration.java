@@ -162,9 +162,9 @@ public class Configuration {
 	/**
 	 * Localization Service
 	 */
-	@Value("${egov.translation.host}")
+	@Value("${egov.localization.host}")
 	private String localizationHost;
 
-	@Value("${egov.translation.endpoint.search.path}")
+	@Value("${egov.localization.endpoint.search.path}")
 	private String localizationEndpoint;
 }
