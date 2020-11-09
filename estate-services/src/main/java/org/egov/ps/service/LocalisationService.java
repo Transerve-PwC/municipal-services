@@ -27,7 +27,6 @@ public class LocalisationService {
 	@Autowired
     private ServiceRequestRepository serviceRequestRepository;
     
-    Map<String, Map<String, String>> localisedMessageMap = new HashMap<>();
 /**
 	 * Populates the localized msg cache
 	 * 
@@ -38,6 +37,7 @@ public class LocalisationService {
 	 */
 	@Cacheable(value = "allLocalisedMessages", key = "#tenantId")
 	public Map<String, Map<String, String>> getAllLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale, String module) {
+		Map<String, Map<String, String>> localisedMessageMap = new HashMap<>();
 		Map<String, String> mapOfCodesAndMessages = new HashMap<>();
         StringBuilder uri = new StringBuilder();
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
