@@ -5,12 +5,14 @@ import java.text.DecimalFormat;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang.math.NumberUtils;
@@ -28,9 +30,6 @@ import org.egov.ps.web.contracts.EstateModuleResponse;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.javers.common.collections.Arrays;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class EstateCalculationExcelReadService {
@@ -86,15 +85,15 @@ public class EstateCalculationExcelReadService {
 				}
 
 				if (shouldParseRows && SKIP_ROW_COUNT == 0 && !checkEmpty(currentRow.getCell(0))) {
-					Map<String, Object> cellData = fetchDataFromRow(currentRow,evaluator);
+					Map<String, Object> cellData = fetchDataFromRow(currentRow, evaluator);
 					estateCalculations.add(cellData);
-//					if(Double.parseDouble(cellData.get("rentReceived").toString()) > 0.0) {
-//						cellData = Collections.emptyMap();
-//						cellData = fetchDataFromRow(currentRow,evaluator);
-//						cellData.remove("rentReceived");
-//						estateCalculations.add(cellData);
-//					}
-					
+					// if(Double.parseDouble(cellData.get("rentReceived").toString()) > 0.0) {
+					// cellData = Collections.emptyMap();
+					// cellData = fetchDataFromRow(currentRow,evaluator);
+					// cellData.remove("rentReceived");
+					// estateCalculations.add(cellData);
+					// }
+
 				}
 			}
 			estateCalculations.forEach(estateCalculationMap -> {
@@ -104,19 +103,21 @@ public class EstateCalculationExcelReadService {
 						.penaltyInterest(checkModifyValue(estateCalculationMap.get("penaltyInterest")))
 						.gstInterest(calculateDelayedPayment(estateCalculationMap))
 						.gst(checkModifyValue(estateCalculationMap.get("stGstDue")))
-						/* These values should not be read from excel, this will calculate in the settle */
-						//.collectedRent(checkModifyValue(estateCalculationMap.get("rentReceived")))
-						//.collectedGST(checkModifyValue(estateCalculationMap.get("stGstDue")))
+						/*
+						 * These values should not be read from excel, this will calculate in the settle
+						 */
+						// .collectedRent(checkModifyValue(estateCalculationMap.get("rentReceived")))
+						// .collectedGST(checkModifyValue(estateCalculationMap.get("stGstDue")))
 						.noOfDays(checkModifyValue(estateCalculationMap.get("noOfDays")))
 						.paid(checkModifyValue(estateCalculationMap.get("paid"))).build());
 
 				if (parseInDouble(estateCalculationMap.get("rentReceived")) != null
 						&& parseInDouble(estateCalculationMap.get("rentReceived")) > 0) {
-					estatePayments.add(EstatePayment.builder()
-							.paymentDate(checkModifyValueLong(estateCalculationMap.get("date")))
-							.receiptDate(checkModifyValueLong(estateCalculationMap.get("rentDateOfReceipt")))
-							.rentReceived(checkModifyValue(estateCalculationMap.get("rentReceived")))
-							.receiptNo(String.valueOf(estateCalculationMap.get("rentReceiptNo"))).build());
+					estatePayments.add(
+							EstatePayment.builder().paymentDate(checkModifyValueLong(estateCalculationMap.get("date")))
+									.receiptDate(checkModifyValueLong(estateCalculationMap.get("rentDateOfReceipt")))
+									.rentReceived(checkModifyValue(estateCalculationMap.get("rentReceived")))
+									.receiptNo(String.valueOf(estateCalculationMap.get("rentReceiptNo"))).build());
 
 				}
 			});
@@ -125,8 +126,8 @@ public class EstateCalculationExcelReadService {
 		}
 		return EstateModuleResponse.builder().estateDemands(estateDemands).estatePayments(estatePayments).build();
 	}
-	
-	private Map<String, Object> fetchDataFromRow(Row currentRow, FormulaEvaluator evaluator){
+
+	private Map<String, Object> fetchDataFromRow(Row currentRow, FormulaEvaluator evaluator) {
 		Map<String, Object> cellData = new HashedMap<String, Object>();
 		int headerCount = 0;
 		/* Fetching Body Data will read after this */
@@ -136,9 +137,9 @@ public class EstateCalculationExcelReadService {
 				cellData.put(EXCELMAPPINGNAME[headerCount],
 						extractDateFromString(String.valueOf(getValueFromCell(cell, evaluator))));
 			} else {
-				cellData.put(EXCELMAPPINGNAME[headerCount], getValueFromCell(cell, evaluator));							
+				cellData.put(EXCELMAPPINGNAME[headerCount], getValueFromCell(cell, evaluator));
 			}
-			headerCount++;						
+			headerCount++;
 		}
 		return cellData;
 	}

@@ -14,9 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @RunWith(JUnit4.class)
 public class ReadExcelServiceTest {
 
@@ -51,13 +48,13 @@ public class ReadExcelServiceTest {
 				.collect(Collectors.summingDouble(Double::doubleValue));
 		Double gstInterest = responsne.getEstateDemands().stream().map(EstateDemand::getGstInterest)
 				.collect(Collectors.summingDouble(Double::doubleValue));
-				
+
 		assertEquals(expectedReceivedRent, rentReceived, 1.0);
 		assertEquals(expectedRentDue, rentDue, 1.0);
 		assertEquals(expectedPenaltyInterest, penaltyInterest, 1.0);
 		assertEquals(expectedGstInterest, gstInterest, 3.0);
 	}
-	
+
 	@Test
 	public void testReadExcelsheetTemp() throws FileNotFoundException {
 		String filepath = "excel/EstatePayment calculation_sriraj.xlsx";

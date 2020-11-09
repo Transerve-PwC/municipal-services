@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,11 @@ import org.egov.ps.config.Configuration;
 import org.egov.ps.repository.ServiceRequestRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.RequestInfoWrapper;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,13 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 
 public class LocalisationService {
-    @Autowired
+	@Autowired
 	private Configuration config;
 
 	@Autowired
-    private ServiceRequestRepository serviceRequestRepository;
-    
-/**
+	private ServiceRequestRepository serviceRequestRepository;
+
+	/**
 	 * Populates the localized msg cache
 	 * 
 	 * @param requestInfo
@@ -36,34 +39,27 @@ public class LocalisationService {
 	 * @param module
 	 */
 	@Cacheable(value = "allLocalisedMessages", key = "#tenantId")
-	public Map<String, Map<String, String>> getAllLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale, String module) {
-		Map<String, Map<String, String>> localisedMessageMap = new HashMap<>();
-		Map<String, String> mapOfCodesAndMessages = new HashMap<>();
-        StringBuilder uri = new StringBuilder();
-        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		// RequestInfoWrapper requestInfoWrapper ;// = hCUtils.prepareRequestForLocalization(uri, requestInfo, locale,
-				// tenantId, module);
-		requestInfoWrapper.setRequestInfo(requestInfo);
-        uri.append(config.getLocalizationHost()).append(config.getLocalizationEndpoint()).append("?tenantId=" + tenantId)
-                .append("&module=" + module).append("&locale=" + locale);
-        
-        
-		List<String> codes = null;
-		List<String> messages = null;
-		Object result = null;
+	public Map<String, String> getAllLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale,
+			String module) {
+		StringBuilder uri = new StringBuilder();
+		uri.append(config.getLocalizationHost()).append(config.getLocalizationEndpoint())
+				.append("?tenantId=" + tenantId).append("&module=" + module).append("&locale=" + locale);
+
 		try {
-			result = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
-			codes = JsonPath.read(result, PSConstants.LOCALIZATION_CODES_JSONPATH);
-			messages = JsonPath.read(result, PSConstants.LOCALIZATION_MSGS_JSONPATH);
+			Map<String, String> mapOfCodesAndMessages = new HashMap<>();
+			Object result = serviceRequestRepository.fetchResult(uri,
+					RequestInfoWrapper.builder().requestInfo(requestInfo).build());
+			List<Map<String, String>> items = JsonPath.read(result, PSConstants.LOCALIZATION_MSGS_JSONPATH);
+			if (CollectionUtils.isEmpty(items)) {
+				return Collections.emptyMap();
+			}
+			for (Map<String, String> map : items) {
+				mapOfCodesAndMessages.put(map.get("code"), map.get("message"));
+			}
+			return mapOfCodesAndMessages;
 		} catch (Exception e) {
 			log.error("Exception while fetching from localization: " + e);
+			throw new CustomException("LOCALIZATION_NOT_FOUND", "Could not fetch localizations");
 		}
-		if (null != result && codes != null && messages != null) {
-			for (int i = 0; i < codes.size(); i++) {
-				mapOfCodesAndMessages.put(codes.get(i), messages.get(i));
-			}
-			localisedMessageMap.put(locale + "|" + tenantId, mapOfCodesAndMessages);
-		}
-		return localisedMessageMap;
 	}
 }

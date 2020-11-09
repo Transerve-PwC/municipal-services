@@ -20,6 +20,7 @@ import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
 import org.egov.ps.model.NotificationsSms;
 import org.egov.ps.util.PSConstants;
+import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,10 @@ public class ApplicationsNotificationService {
 
     @Autowired
     private LocalisationService localisationService;
+
+    @Autowired
+    Util util;
+
     /**
      * Invoke process notification on each application in the request
      */
@@ -165,36 +170,30 @@ public class ApplicationsNotificationService {
 
     private String enrichLocalizationPatternsInString(Application application, RequestInfo requestInfo,
             String sourceString) {
-        String tenantId = PSConstants.LOCALIZATION_TENANTID; //application.getTenantId();
+        String tenantId = this.util.getStateLevelTenantId(application.getTenantId());
         String locale = PSConstants.LOCALIZATION_LOCALE;
         List<String> listOfStringForLocalisation = localisationStringList(sourceString);
-        
-        
 
-        Map <String, Map<String, String>> localisedMessages = localisationService.getAllLocalisedMessages(requestInfo, tenantId, locale , PSConstants.LOCALIZATION_MODULE);
-        Map<String, String> messageMap = localisedMessages.get(locale + "|" + tenantId);
-        
-        if ( messageMap != null) {
-            String replacedString = listOfStringForLocalisation.stream().reduce(sourceString, (result, match) -> {
-                String path = match;
-                String replacement = messageMap.get(path);
-                if (replacement == null) {
-                    replacement = path;
-                }
-                // Object value = (JsonPath.read(applicationJsonString, path));
-                return result.replaceAll(String.format("\\[%s\\]", path), "" + replacement);
-            });
-            log.debug("Original String:" +sourceString + "\n" + "Post replaced final localised string is: " + replacedString);
-            return replacedString;
-        }
-        return sourceString;
+        Map<String, String> messageMap = localisationService.getAllLocalisedMessages(requestInfo, tenantId, locale,
+                PSConstants.LOCALIZATION_MODULE);
+
+        String replacedString = listOfStringForLocalisation.stream().reduce(sourceString, (result, match) -> {
+            String replacement = messageMap.get(match.toUpperCase());
+            if (replacement == null) {
+                replacement = match;
+            }
+            return result.replaceAll(String.format("\\[%s\\]", match), "" + replacement);
+        });
+        log.debug("Original String:" + sourceString + "\n" + "Post replaced final localised string is: "
+                + replacedString);
+        return replacedString;
     }
 
     private List<String> localisationStringList(String str) {
         Pattern pattern = Pattern.compile("\\[(.*?)\\]");
         Matcher m = pattern.matcher(str);
         List<String> list = new ArrayList<String>();
-        
+
         while (m.find()) {
             list.add(m.group(1));
         }
