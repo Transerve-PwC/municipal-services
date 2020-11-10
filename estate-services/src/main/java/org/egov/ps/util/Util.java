@@ -124,7 +124,7 @@ public class Util {
 	 * @return
 	 */
 	public String getPropertyRentConsumerCode(String fileNumber) {
-		return String.format("SITE-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
+		return String.format("SITE-%s-%s", fileNumber.trim().toUpperCase(), dateFormat.format(new Date()));
 	}
 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD-HH-MM-SS");

@@ -152,7 +152,7 @@ public class PropertyService {
 		 * Convert file number to upper case if provided.
 		 */
 		if (criteria.getFileNumber() != null) {
-			criteria.setFileNumber(criteria.getFileNumber().toUpperCase());
+			criteria.setFileNumber(criteria.getFileNumber().trim().toUpperCase());
 		}
 
 		if (criteria.isEmpty()) {

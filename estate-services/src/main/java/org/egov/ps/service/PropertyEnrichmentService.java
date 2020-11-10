@@ -68,7 +68,7 @@ public class PropertyEnrichmentService {
 				if (property.getId() == null) {
 					property.setId(UUID.randomUUID().toString());
 					property.setState(PSConstants.PM_DRAFTED);
-					property.setFileNumber(property.getFileNumber().toUpperCase());
+					property.setFileNumber(property.getFileNumber().trim().toUpperCase());
 				}
 
 				property.setAuditDetails(propertyAuditDetails);
