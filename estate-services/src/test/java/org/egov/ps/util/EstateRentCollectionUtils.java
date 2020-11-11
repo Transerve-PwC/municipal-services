@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-
 import org.egov.ps.web.contracts.EstateAccountStatement;
 import org.egov.ps.web.contracts.EstateAccountStatement.Type;
 
@@ -38,8 +37,8 @@ public class EstateRentCollectionUtils {
 				"Date", "Amount", "Type",
 				"Principal Due", 
 				"GST Due",
-				"Interest Panelty Due",
-				"GST Panelty Due",
+				"Interest Penalty Due",
+				"GST Penalty Due",
 				 "Total Due", "Account Balance","Receipt No"));
 		System.out.println(
 				"===============================================================================================================================================================================================================================================================================================================================================================================================================");

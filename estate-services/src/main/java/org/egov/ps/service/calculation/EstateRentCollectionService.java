@@ -358,13 +358,13 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 		//	statement.setReceiptNo(currentPayment!=null?currentPayment.getReceiptNo():"");
 			statement.setRent(rentSummary.getRent());
 			statement.setCollectedRent(rentSummary.getCollectedRent());
-			statement.setRentPanelty(rentSummary.getRentPanelty());
+			statement.setRentPenalty(rentSummary.getRentPenalty());
 			statement.setGst(rentSummary.getGst());
 			statement.setCollectedGST(rentSummary.getCollectedGST());
-			statement.setRentPanelty(rentSummary.getRentPanelty());
-			statement.setCollectedRentPanelty(rentSummary.getCollectedRentPanelty());
-			statement.setGSTPanelty(rentSummary.getGSTPanelty());
-			statement.setCollectedGSTPanelty(rentSummary.getCollectedGSTPanelty());
+			statement.setRentPenalty(rentSummary.getRentPenalty());
+			statement.setCollectedRentPenalty(rentSummary.getCollectedRentPenalty());
+			statement.setGSTPenalty(rentSummary.getGSTPenalty());
+			statement.setCollectedGSTPenalty(rentSummary.getCollectedGSTPenalty());
 			statement.setIsPrevious(rentSummary.getIsPrevious());
 			accountStatementItems.add(statement);
 			if (reachedLast) {
@@ -457,11 +457,11 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 							.gst(demand.getGst())
 							.collectedGST(demand.getCollectedGST()!=null?demand.getCollectedGST():0)
 							.balanceGST(summary.getBalanceGST() + demand.getRemainingGST())
-						     .GSTPanelty( calculatedInterest) 				
-							.collectedGSTPanelty(demand.getCollectedGSTPenalty()!=null?demand.getCollectedGSTPenalty():0)
+						     .GSTPenalty( calculatedInterest) 				
+							.collectedGSTPenalty(demand.getCollectedGSTPenalty()!=null?demand.getCollectedGSTPenalty():0)
 							.balanceGSTPenalty(summary.getBalanceGSTPenalty() + demand.getRemainingGSTPenalty())
 							.balanceRentPenalty(demand.getPenaltyInterest())
-				            .collectedRentPanelty(  demand.getCollectedRentPenalty()!=null?demand.getCollectedRentPenalty():0)
+				            .collectedRentPenalty(  demand.getCollectedRentPenalty()!=null?demand.getCollectedRentPenalty():0)
 							.balanceRentPenalty(summary.getBalanceRentPenalty() + demand.getRemainingRentPenalty())
 							.balanceAmount(rentAccount.getRemainingAmount())
 							.isPrevious(demand.getIsPrevious())

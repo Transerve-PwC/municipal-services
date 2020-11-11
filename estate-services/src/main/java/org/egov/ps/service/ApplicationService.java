@@ -66,7 +66,7 @@ public class ApplicationService {
 
 	public List<Application> searchApplication(ApplicationCriteria criteria, RequestInfo requestInfo) {
 		if (criteria.getFileNumber() != null) {
-			criteria.setFileNumber(criteria.getFileNumber().toUpperCase());
+			criteria.setFileNumber(criteria.getFileNumber().trim().toUpperCase());
 		}
 		List<Application> applications = applicationRepository.getApplications(criteria);
 

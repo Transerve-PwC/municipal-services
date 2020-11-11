@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ import org.egov.ps.model.Application;
 import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
 import org.egov.ps.model.NotificationsSms;
+import org.egov.ps.util.PSConstants;
+import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,12 @@ public class ApplicationsNotificationService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LocalisationService localisationService;
+
+    @Autowired
+    Util util;
+
     /**
      * Invoke process notification on each application in the request
      */
@@ -55,7 +64,8 @@ public class ApplicationsNotificationService {
                  */
                 this.processNotification(notificationConfigs, application, request.getRequestInfo());
             } catch (Exception e) {
-                log.error("Exception while fetching notification config for application no '{}' '{}'", application.getApplicationNumber(), e);
+                log.error("Exception while fetching notification config for application no '{}' '{}'",
+                        application.getApplicationNumber(), e);
             }
 
         });
@@ -107,7 +117,8 @@ public class ApplicationsNotificationService {
             String applicationJsonString = mapper.writeValueAsString(application);
             String contentWithPathsEnriched = enrichPathPatternsWithApplication(notification.getContent(),
                     applicationJsonString);
-            String enrichedContent = enrichLocalizationPatternsInString(contentWithPathsEnriched);
+            String enrichedContent = enrichLocalizationPatternsInString(application, requestInfo,
+                    contentWithPathsEnriched);
 
             /**
              * Send email
@@ -157,7 +168,35 @@ public class ApplicationsNotificationService {
         return replacedString;
     }
 
-    private String enrichLocalizationPatternsInString(String sourceString) {
-        return sourceString;
+    private String enrichLocalizationPatternsInString(Application application, RequestInfo requestInfo,
+            String sourceString) {
+        String tenantId = this.util.getStateLevelTenantId(application.getTenantId());
+        String locale = PSConstants.LOCALIZATION_LOCALE;
+        List<String> listOfStringForLocalisation = localisationStringList(sourceString);
+
+        Map<String, String> messageMap = localisationService.getAllLocalisedMessages(requestInfo, tenantId, locale,
+                PSConstants.LOCALIZATION_MODULE);
+
+        String replacedString = listOfStringForLocalisation.stream().reduce(sourceString, (result, match) -> {
+            String replacement = messageMap.get(match.toUpperCase());
+            if (replacement == null) {
+                replacement = match;
+            }
+            return result.replaceAll(String.format("\\[%s\\]", match), "" + replacement);
+        });
+        log.debug("Original String:" + sourceString + "\n" + "Post replaced final localised string is: "
+                + replacedString);
+        return replacedString;
+    }
+
+    private List<String> localisationStringList(String str) {
+        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+        Matcher m = pattern.matcher(str);
+        List<String> list = new ArrayList<String>();
+
+        while (m.find()) {
+            list.add(m.group(1));
+        }
+        return list;
     }
 }

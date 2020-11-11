@@ -29,9 +29,6 @@ public class PropertyViolationService {
 	PropertyEnrichmentService propertyEnrichmentService;
 
 	@Autowired
-	private DemandService demandService;
-
-	@Autowired
 	private Configuration config;
 
 	@Autowired
@@ -51,11 +48,12 @@ public class PropertyViolationService {
 
 	@Autowired
 	PenaltyCollectionService penaltyCollectionService;
+	
+	@Autowired
+	DemandService demandService;
 
 	public List<PropertyPenalty> penalty(PropertyPenaltyRequest propertyPenaltyRequest) {
 		propertyEnrichmentService.enrichPenalty(propertyPenaltyRequest);
-//		demandService.createPenaltyDemand(propertyPenaltyRequest.getRequestInfo(),
-//				propertyPenaltyRequest.getPropertyPenalties());
 		producer.push(config.getSavePenaltyTopic(), propertyPenaltyRequest);
 		return propertyPenaltyRequest.getPropertyPenalties();
 	}
