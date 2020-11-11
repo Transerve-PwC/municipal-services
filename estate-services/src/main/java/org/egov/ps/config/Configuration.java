@@ -63,6 +63,9 @@ public class Configuration {
 	@Value("${persister.save.penalty.topic}")
 	private String savePenaltyTopic;
 	
+	@Value("${persister.update.penalty.topic}")
+	private String updatePenaltyTopic;
+	
 	// Workflow
 
 	@Value("${is.workflow.enabled}")

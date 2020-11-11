@@ -2,6 +2,8 @@ package org.egov.ps.service;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +36,7 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
+import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
@@ -443,12 +446,25 @@ public class PropertyEnrichmentService {
 		}
 	}
 
+	PropertyPenalty highestTotalPenalty = null; // TODO: change to local
+	PropertyPenalty highestRemainingPenalty = null; // TODO: change to local
+
 	public void enrichPenalty(PropertyPenaltyRequest propertyPenaltyRequest) {
 
 		Property property = propertyRepository
-				.findPropertyById(propertyPenaltyRequest.getPropertyPenalties().get(0).getPropertyId());
+				.findPropertyById(propertyPenaltyRequest.getPropertyPenalties().get(0).getProperty().getId());
 
-		setIdgenIds(propertyPenaltyRequest);
+		List<PropertyPenalty> propertyPenaltiesDb = propertyRepository.getPenaltyDemandsForPropertyId(property.getId());
+
+		if (!CollectionUtils.isEmpty(propertyPenaltiesDb)) {
+			highestTotalPenalty = propertyPenaltiesDb.stream().filter(PropertyPenalty::isUnPaid)
+					.max(Comparator.comparing(PropertyPenalty::getTotalPenaltyDue)).get();
+
+			highestRemainingPenalty = propertyPenaltiesDb.stream().filter(PropertyPenalty::isUnPaid)
+					.max(Comparator.comparing(PropertyPenalty::getRemainingPenaltyDue)).get();
+
+		}
+
 		propertyPenaltyRequest.getPropertyPenalties().forEach(propertyPenalty -> {
 
 			AuditDetails penaltyAuditDetails = util.getAuditDetails(
@@ -458,15 +474,27 @@ public class PropertyEnrichmentService {
 
 				propertyPenalty.setId(UUID.randomUUID().toString());
 				propertyPenalty.setTenantId(property.getTenantId());
+				propertyPenalty.setBranchType(property.getPropertyDetails().getBranchType());
+				propertyPenalty.setGenerationDate(new Date().getTime());
+				propertyPenalty.setStatus(PaymentStatusEnum.UNPAID);
 				propertyPenalty.setIsPaid(false);
+				if (!CollectionUtils.isEmpty(propertyPenaltiesDb)) {
 
-				enrichGenerateDemand(propertyPenalty, propertyPenaltyRequest.getRequestInfo());
+					propertyPenalty.setTotalPenaltyDue(
+							highestTotalPenalty.getTotalPenaltyDue() + propertyPenalty.getPenaltyAmount());
+					propertyPenalty.setRemainingPenaltyDue(
+							highestRemainingPenalty.getRemainingPenaltyDue() + propertyPenalty.getPenaltyAmount());
+				} else {
+					propertyPenalty.setTotalPenaltyDue(propertyPenalty.getPenaltyAmount());
+					propertyPenalty.setRemainingPenaltyDue(propertyPenalty.getPenaltyAmount());
+				}
+//				enrichGenerateDemand(propertyPenalty, propertyPenaltyRequest.getRequestInfo());
 			}
 
 			propertyPenalty.setAuditDetails(penaltyAuditDetails);
 
 		});
-
+		setIdgenIds(propertyPenaltyRequest);
 	}
 
 	/**
@@ -480,8 +508,7 @@ public class PropertyEnrichmentService {
 		List<PropertyPenalty> propertyPenalties = request.getPropertyPenalties();
 		int size = request.getPropertyPenalties().size();
 
-		List<String> penaltyNumbers = setIdgenIds(requestInfo, tenantId, size,
-				config.getApplicationNumberIdgenNamePS());
+		List<String> penaltyNumbers = setIdgenIds(requestInfo, tenantId, size, config.getPenaltyNumberIdgenNamePS());
 		ListIterator<String> itr = penaltyNumbers.listIterator();
 
 		if (!CollectionUtils.isEmpty(propertyPenalties)) {
@@ -527,18 +554,19 @@ public class PropertyEnrichmentService {
 		return idResponses.stream().map(IdResponse::getId).collect(Collectors.toList());
 	}
 
-	private void enrichGenerateDemand(PropertyPenalty propertyPenalty, RequestInfo requestInfo) {
+	public void enrichGenerateDemand(PropertyPenalty propertyPenalty, RequestInfo requestInfo, String consumerCode) {
 
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-		estimateDue.setEstimateAmount(propertyPenalty.getPenaltyAmount());
+		estimateDue.setEstimateAmount(propertyPenalty.getOfflinePaymentDetails().get(0).getAmount());
 		estimateDue.setCategory(Category.PENALTY);
 		estimateDue.setTaxHeadCode(getTaxHeadCode(propertyPenalty.getPenaltyBusinessService(), Category.PENALTY));
 		estimates.add(estimateDue);
 
-		Calculation calculation = Calculation.builder().applicationNumber(propertyPenalty.getPenaltyNumber())
-				.taxHeadEstimates(estimates).tenantId(propertyPenalty.getTenantId()).build();
+		Calculation calculation = Calculation.builder()
+				.applicationNumber(consumerCode).taxHeadEstimates(estimates)
+				.tenantId(propertyPenalty.getTenantId()).build();
 		propertyPenalty.setCalculation(calculation);
 	}
 

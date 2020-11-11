@@ -122,6 +122,15 @@ public class PropertyQueryBuilder {
 			+ " offline.amount as offlineamount, offline.bank_name as offlinebank_name, "
 			+ " offline.transaction_number as offlinetransaction_number, offline.date_of_payment as offlinedate_of_payment ";
 
+	private static final String PROPERTY_PENALTY_COLUMN = " penalty.id as penalty_id, penalty.tenantid as penalty_tenantid, "
+			+ " penalty.property_id as penalty_property_id, penalty.branch_type as penalty_branch_type, "
+			+ " penalty.penalty_amount as penalty_penalty_amount, penalty.violation_type as penalty_violation_type, "
+			+ " penalty.isPaid as penalty_isPaid, penalty.total_penalty_due as penalty_total_penalty_due, "
+			+ " penalty.penalty_number as penalty_penalty_number, penalty.generation_date as penalty_generation_date, "
+			+ " penalty.remaining_penalty_due as penalty_remaining_penalty_due, penalty.status as penalty_status, "
+			+ " penalty.created_by as penalty_created_by, penalty.last_modified_by as penalty_last_modified_by, "
+			+ " penalty.created_time as penalty_created_time, penalty.last_modified_time as penalty_last_modified_time ";
+
 	// + LEFT_JOIN
 	// + " cs_ep_payment_v1 payment ON ptdl.id=payment.property_details_id ";
 
@@ -136,6 +145,8 @@ public class PropertyQueryBuilder {
 	private static final String OFFLINE_PAYMENT_TABLE = " cs_ep_offline_payment_detail offline ";
 
 	private static final String ESTATE_ACCOUNT_COLUMN = " cs_ep_account account ";
+
+	private static final String PROPERTY_PENALTY_TABLE = " cs_ep_property_penalty_v1 penalty ";
 
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
@@ -293,7 +304,8 @@ public class PropertyQueryBuilder {
 		return sb.toString();
 	}
 
-	public String getPropertyRentAccountSearchQuery(List<String> propertyDetailIds, Map<String, Object> preparedStmtList) {
+	public String getPropertyRentAccountSearchQuery(List<String> propertyDetailIds,
+			Map<String, Object> preparedStmtList) {
 		StringBuilder builder = new StringBuilder(SELECT);
 		builder.append(ACCOUNT_SEARCH_COLUMN);
 		builder.append(" FROM " + ESTATE_ACCOUNT_COLUMN);
@@ -303,7 +315,6 @@ public class PropertyQueryBuilder {
 		}
 		return builder.toString();
 	}
-
 
 	public String getOfflinePaymentsQuery(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
@@ -321,5 +332,14 @@ public class PropertyQueryBuilder {
 		builder.append(" where account.property_details_id IN (:propertyDetailsIds)");
 		params.put("propertyDetailsIds", propertyDetailsIds);
 		return builder.toString();
+	}
+
+	public String getPropertyPenaltyQuery(String propertyId, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(PROPERTY_PENALTY_COLUMN);
+		sb.append(" FROM " + PROPERTY_PENALTY_TABLE);
+		sb.append(" where penalty.property_id IN (:propertyId)");
+		params.put("propertyId", propertyId);
+		return sb.toString();
 	}
 }

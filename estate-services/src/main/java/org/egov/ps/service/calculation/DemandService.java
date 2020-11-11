@@ -511,12 +511,12 @@ public class DemandService {
 				.roles(requestUser.getRoles()).tenantId(requestUser.getTenantId()).uuid(requestUser.getUuid()).build();
 	}
 
-	public List<Demand> createPenaltyDemand(RequestInfo requestInfo, List<PropertyPenalty> propertyPenalties) {
+	public List<Demand> createPenaltyDemand(RequestInfo requestInfo, List<PropertyPenalty> propertyPenalties,
+			String consumerCode) {
 		List<Demand> demands = new LinkedList<>();
 
-		Property property = propertyRepository.findPropertyById(propertyPenalties.get(0).getPropertyId());
-
-		property.getPropertyDetails().getOwners().stream().filter(owner -> owner.getOwnerDetails().getIsCurrentOwner());
+		Property property = propertyRepository.findPropertyById(propertyPenalties.get(0).getProperty().getId());
+		Owner owner = utils.getCurrentOwnerFromProperty(property);
 
 		for (PropertyPenalty propertyPenalty : propertyPenalties) {
 			if (propertyPenalty == null)
@@ -524,16 +524,13 @@ public class DemandService {
 						"Demand cannot be generated for this application");
 
 			String tenantId = propertyPenalty.getTenantId();
-			String consumerCode = propertyPenalty.getPenaltyNumber();
 
 			String url = config.getUserHost().concat(config.getUserSearchEndpoint());
 
 			List<org.egov.ps.model.User> applicationUser = null;
-			Set<String> uuid = new HashSet<>();
-			uuid.add(propertyPenalty.getAuditDetails().getCreatedBy());
 
 			UserSearchRequestCore userSearchRequest = UserSearchRequestCore.builder().requestInfo(requestInfo)
-					.uuid(uuid).build();
+					.userName(owner.getOwnerDetails().getMobileNumber()).tenantId("ch").build();
 
 			applicationUser = mapper
 					.convertValue(serviceRequestRepository.fetchResult(url, userSearchRequest), UserResponse.class)
@@ -541,10 +538,9 @@ public class DemandService {
 
 			log.info("applicationUser:" + applicationUser);
 
-			// User requestUser = requestInfo.getUserInfo(); // user from request
-			// information
 			User requestUser = applicationUser.get(0).toCommonUser();
 			log.info("requestUser:" + requestUser);
+
 			User user = null;
 			if (requestUser.getMobileNumber() != null) {
 				user = User.builder().id(requestUser.getId()).userName(requestUser.getUserName())

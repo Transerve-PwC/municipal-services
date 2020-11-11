@@ -14,6 +14,7 @@ import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
+import org.egov.ps.model.PropertyPenalty;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
@@ -59,6 +60,8 @@ public class PropertyRepository {
 	@Autowired
 	private EstateAccountRowMapper estateAccountrowMapper;
 
+	@Autowired
+	private PropertyPenaltyRowMapper propertyPenaltyRowMapper;
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -344,5 +347,11 @@ public class PropertyRepository {
 		log.debug("query:" + estateAccountQuery);
 		log.debug("preparedStmtList:" + params);
 		return namedParameterJdbcTemplate.query(estateAccountQuery, params, estateAccountrowMapper);
+	}
+
+	public List<PropertyPenalty> getPenaltyDemandsForPropertyId(String propertyId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String propertyPenaltyQuery = propertyQueryBuilder.getPropertyPenaltyQuery(propertyId, params);
+		return namedParameterJdbcTemplate.query(propertyPenaltyQuery, params, propertyPenaltyRowMapper);
 	}
 }

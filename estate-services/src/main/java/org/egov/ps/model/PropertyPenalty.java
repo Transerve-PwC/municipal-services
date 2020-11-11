@@ -1,10 +1,13 @@
 package org.egov.ps.model;
 
-import java.math.BigDecimal;
+import java.util.List;
+
+import javax.validation.Valid;
 
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
+import org.egov.ps.web.contracts.PaymentStatusEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,7 +32,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-public class PropertyPenalty {
+public class PropertyPenalty implements Comparable<PropertyPenalty> {
 
 	@JsonProperty("id")
 	private String id;
@@ -37,29 +40,59 @@ public class PropertyPenalty {
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-	@JsonProperty("propertyId")
-	private String propertyId;
+//	@JsonProperty("propertyId")
+//	private String propertyId;
+
+	@JsonProperty("property")
+	private Property property;
 
 	@JsonProperty("branchType")
 	private String branchType;
 
-	@JsonProperty("penaltyAmount")
-	private BigDecimal penaltyAmount;
+	@JsonProperty("generationDate")
+	private Long generationDate;
 
 	@JsonProperty("violationType")
 	private String violationType;
 
-	@JsonProperty("isPaid")
-	private Boolean isPaid;
+	@JsonProperty("penaltyAmount")
+	private Double penaltyAmount;
 
 	@JsonProperty("totalPenaltyDue")
-	private BigDecimal totalPenaltyDue;
+	private Double totalPenaltyDue;
+
+	@Builder.Default
+	@JsonProperty("remainingPenaltyDue")
+	private Double remainingPenaltyDue = 0.0;
 
 	@JsonProperty("penaltyNumber")
 	private String penaltyNumber;
 
+	@JsonProperty("isPaid")
+	private Boolean isPaid;
+
+	@JsonProperty("status")
+	@Builder.Default
+	private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;
+
+	public boolean isPaid() {
+		return this.status == PaymentStatusEnum.PAID;
+	}
+
+	public boolean isUnPaid() {
+		return !this.isPaid();
+	}
+
 	@JsonProperty("penaltyBusinessService")
 	private String penaltyBusinessService;
+
+//	@Valid
+//	@JsonProperty
+//	private List<PenaltyCollection> penaltyCollection;
+	
+	@Valid
+	@JsonProperty
+	private List<OfflinePaymentDetails> offlinePaymentDetails;
 
 	@JsonProperty("calculation")
 	Calculation calculation;
@@ -81,4 +114,10 @@ public class PropertyPenalty {
 		str = str.replaceAll(regex, replacement).toUpperCase();
 		return str;
 	}
+
+	@Override
+	public int compareTo(PropertyPenalty other) {
+		return this.getGenerationDate().compareTo(other.getGenerationDate());
+	}
+
 }

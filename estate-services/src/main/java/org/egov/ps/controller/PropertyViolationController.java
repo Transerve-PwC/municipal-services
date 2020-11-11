@@ -2,6 +2,8 @@ package org.egov.ps.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ps.model.PropertyPenalty;
 import org.egov.ps.service.PropertyViolationService;
@@ -27,11 +29,21 @@ public class PropertyViolationController {
 	ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("/_penalty")
-	public ResponseEntity<PropertyPenaltyResponse> penalty(
-			 @RequestBody PropertyPenaltyRequest propertyPenaltyRequest) {
+	public ResponseEntity<PropertyPenaltyResponse> penalty(@RequestBody PropertyPenaltyRequest propertyPenaltyRequest) {
 		List<PropertyPenalty> propertyPenalties = propertyViolationService.penalty(propertyPenaltyRequest);
 		ResponseInfo resInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyPenaltyRequest.getRequestInfo(), true);
+		PropertyPenaltyResponse response = PropertyPenaltyResponse.builder().propertyPenalties(propertyPenalties)
+				.responseInfo(resInfo).build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PostMapping("/_penalty_payment")
+	public ResponseEntity<PropertyPenaltyResponse> penaltyPayment(
+			@Valid @RequestBody PropertyPenaltyRequest propertyPenaltyRequest) {
+		List<PropertyPenalty> propertyPenalties = propertyViolationService.generatePenaltyDemand(propertyPenaltyRequest);
+		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyPenaltyRequest.getRequestInfo(),
+				true);
 		PropertyPenaltyResponse response = PropertyPenaltyResponse.builder().propertyPenalties(propertyPenalties)
 				.responseInfo(resInfo).build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
