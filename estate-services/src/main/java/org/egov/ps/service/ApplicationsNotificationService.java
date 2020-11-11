@@ -1,6 +1,7 @@
 package org.egov.ps.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +16,13 @@ import com.jayway.jsonpath.JsonPath;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
 import org.egov.ps.model.NotificationsSms;
+import org.egov.ps.model.notification.uservevents.Event;
+import org.egov.ps.model.notification.uservevents.EventRequest;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
@@ -44,6 +48,9 @@ public class ApplicationsNotificationService {
     @Autowired
     private LocalisationService localisationService;
 
+    @Autowired
+    private Configuration config;
+    
     @Autowired
     Util util;
 
@@ -146,6 +153,14 @@ public class ApplicationsNotificationService {
                     log.warn("Notifications Invalid sms config found {}", smsConfig);
                 }
             }
+            
+            if(null != config.getIsUserEventsNotificationEnabledForEST()) {
+    			if(config.getIsUserEventsNotificationEnabledForEST()) {
+    				EventRequest eventRequest = getEventsForApplication(enrichedContent,requestInfo,application,smsConfig,applicationJsonString);
+    				if(null != eventRequest)
+    					util.sendEventNotification(eventRequest);
+    			}
+    		}
         } catch (Exception e) {
             log.error("Could not convert enrichedApplication to JSON", e);
         }
@@ -199,4 +214,18 @@ public class ApplicationsNotificationService {
         }
         return list;
     }
+    
+    public EventRequest getEventsForApplication(String message,RequestInfo requestInfo, Application application, NotificationsSms smsConfig, String applicationJsonString) {
+    	List<Event> events = new ArrayList<>();
+            if(message == null) return null;
+            String mobileNumber = enrichPathPatternsWithApplication(smsConfig.getTo(), applicationJsonString);
+            
+            events = util.createEvent(message,mobileNumber,requestInfo,application.getTenantId(),application.getState(),application.getApplicationNumber());
+            if(!CollectionUtils.isEmpty(events)) {
+    		return EventRequest.builder().requestInfo(requestInfo).events(events).build();
+        }else {
+        	return null;
+        }
+    }
+		
 }
