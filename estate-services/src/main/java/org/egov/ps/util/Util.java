@@ -29,7 +29,7 @@ import org.egov.ps.model.notification.uservevents.EventRequest;
 import org.egov.ps.model.notification.uservevents.Recepient;
 import org.egov.ps.model.notification.uservevents.Source;
 import org.egov.ps.producer.Producer;
-import org.egov.ps.repository.ServiceRequestRepository;
+import org.egov.ps.service.UserService;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.workflow.WorkflowService;
@@ -37,8 +37,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -52,10 +50,10 @@ public class Util {
 	private WorkflowService workflowService;
 	
 	@Autowired
-	private ServiceRequestRepository serviceRequestRepository;
+	private Producer producer;
 	
 	@Autowired
-	private Producer producer;
+	private UserService userService;
 
 	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
 
@@ -161,12 +159,12 @@ public class Util {
 	}
 
 	public List<Event> createEvent(String message, String mobileNumber, RequestInfo requestInfo, String tenantId,
-			String applicationStatus, String applicationNumber) {
+			String applicationStatus, String applicationNumber, String triggers) {
 			 List<Event> events = new ArrayList<>();
 			 List<SMSRequest> smsRequests = new ArrayList<>();
 			 smsRequests.add(new SMSRequest(mobileNumber, message));
 	     	Set<String> mobileNumbers = smsRequests.stream().map(SMSRequest :: getMobileNumber).collect(Collectors.toSet());
-	     	Map<String, String> mapOfPhnoAndUUIDs = fetchUserUUIDs(mobileNumbers, requestInfo, tenantId);
+	     	Map<String, String> mapOfPhnoAndUUIDs = userService.fetchUserUUIDs(mobileNumbers, requestInfo, tenantId);
 	 		if (CollectionUtils.isEmpty(mapOfPhnoAndUUIDs.keySet())) {
 	 			log.info("UUID search failed!");
 	 			return events;
@@ -180,7 +178,7 @@ public class Util {
 	 			List<String> toUsers = new ArrayList<>();
 	 			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
 	 			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
-	 			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
+	 			List<String> payTriggerList = Arrays.asList(triggers.split("[,]"));
 	 			Action action = null;
 	 			if(payTriggerList.contains(applicationStatus)) {
 	 				action= generateAction(applicationStatus,mobile,applicationNumber,tenantId);
@@ -205,14 +203,14 @@ public class Util {
 				return Action.builder().actionUrls(items).build();
 		}
 		
-		 /**
+		/**
 	     * Fetches UUIDs of CITIZENs based on the phone number.
 	     * 
 	     * @param mobileNumbers
 	     * @param requestInfo
 	     * @param tenantId
 	     * @return
-	     */
+	     *//*
 	    private Map<String, String> fetchUserUUIDs(Set<String> mobileNumbers, RequestInfo requestInfo, String tenantId) {
 	    	Map<String, String> mapOfPhnoAndUUIDs = new HashMap<>();
 	    	for(String mobileNo: mobileNumbers) {
@@ -249,7 +247,7 @@ public class Util {
 				log.error("Exception while fetching user for username - "+mobileNumber);
 			}
 			return user;
-	    }
+	    }*/
 	    
 	    /**
 		 * User event

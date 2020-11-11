@@ -4,9 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -28,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -223,4 +226,50 @@ public class UserService {
 		// owner.setLastModifiedDate(System.currentTimeMillis());
 		owner.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
+	
+	 /**
+     * Fetches UUIDs of CITIZENs based on the phone number.
+     * 
+     * @param mobileNumbers
+     * @param requestInfo
+     * @param tenantId
+     * @return
+     */
+    public Map<String, String> fetchUserUUIDs(Set<String> mobileNumbers, RequestInfo requestInfo, String tenantId) {
+    	Map<String, String> mapOfPhnoAndUUIDs = new HashMap<>();
+    	for(String mobileNo: mobileNumbers) {
+    		try {
+    			Object user = userDetails(requestInfo,tenantId,mobileNo);
+    			if(null != user) {
+    				String uuid = JsonPath.read(user, "$.user[0].uuid");
+    				mapOfPhnoAndUUIDs.put(mobileNo, uuid);
+    			}else {
+        			log.error("Service returned null while fetching user for username - "+mobileNo);
+    			}
+    		}catch(Exception e) {
+    			log.error("Exception while fetching user for username - "+mobileNo);
+    			log.error("Exception trace: ",e);
+    			continue;
+    		}
+    	}
+    	return mapOfPhnoAndUUIDs;
+    }
+    
+    public Object userDetails( RequestInfo requestInfo, String tenantId,String mobileNumber){
+    	Object user=null;
+    	StringBuilder uri = new StringBuilder();
+    	uri.append(config.getUserHost()).append(config.getUserSearchEndpoint());
+    	Map<String, Object> userSearchRequest = new HashMap<>();
+    	userSearchRequest.put("RequestInfo", requestInfo);
+		userSearchRequest.put("tenantId", tenantId);
+		userSearchRequest.put("userType", "CITIZEN");
+		userSearchRequest.put("userName", mobileNumber);
+		
+		try {
+			 user = serviceRequestRepository.fetchResult(uri, userSearchRequest);
+		}catch(Exception e) {
+			log.error("Exception while fetching user for username - "+mobileNumber);
+		}
+		return user;
+    }
 }

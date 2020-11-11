@@ -172,9 +172,6 @@ public class Configuration {
 	private String localizationEndpoint;
 	
 	//Web notiifcation
-	@Value("${egov.user.event.notification.enabledForEST}")
-	private Boolean isUserEventsNotificationEnabledForEST;
-	
 	@Value("${egov.usr.events.create.topic}")
 	private String saveUserEventsTopic;
 
@@ -183,9 +180,6 @@ public class Configuration {
 	
 	@Value("${egov.usr.events.pay.code}")
 	private String payCode;
-	
-	@Value("${egov.usr.events.pay.triggers}")
-	private String payTriggers;
 	
 	@Value("${egov.ui.app.host}")
 	private String uiAppHost;

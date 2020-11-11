@@ -22,4 +22,11 @@ public class NotificationsEvent {
 
 	@JsonProperty("to")
 	private String to;
+	
+	@JsonProperty("trigger")
+	private String trigger;
+	
+	public boolean isValid() {
+		return to != null;
+	}
 }

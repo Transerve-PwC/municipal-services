@@ -1,7 +1,6 @@
 package org.egov.ps.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +15,10 @@ import com.jayway.jsonpath.JsonPath;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
+import org.egov.ps.model.NotificationsEvent;
 import org.egov.ps.model.NotificationsSms;
 import org.egov.ps.model.notification.uservevents.Event;
 import org.egov.ps.model.notification.uservevents.EventRequest;
@@ -48,9 +47,6 @@ public class ApplicationsNotificationService {
     @Autowired
     private LocalisationService localisationService;
 
-    @Autowired
-    private Configuration config;
-    
     @Autowired
     Util util;
 
@@ -153,10 +149,13 @@ public class ApplicationsNotificationService {
                     log.warn("Notifications Invalid sms config found {}", smsConfig);
                 }
             }
-            
-            if(null != config.getIsUserEventsNotificationEnabledForEST()) {
-    			if(config.getIsUserEventsNotificationEnabledForEST()) {
-    				EventRequest eventRequest = getEventsForApplication(enrichedContent,requestInfo,application,smsConfig,applicationJsonString);
+            /**
+             * Web notification
+             */
+            NotificationsEvent eventConfig = notification.getModes().getEvent();
+            if(eventConfig.isEnabled()) {
+    			if(eventConfig.isValid()) {
+    				EventRequest eventRequest = getEventsForApplication(enrichedContent,requestInfo,application,eventConfig,applicationJsonString);
     				if(null != eventRequest)
     					util.sendEventNotification(eventRequest);
     			}
@@ -215,12 +214,12 @@ public class ApplicationsNotificationService {
         return list;
     }
     
-    public EventRequest getEventsForApplication(String message,RequestInfo requestInfo, Application application, NotificationsSms smsConfig, String applicationJsonString) {
+    public EventRequest getEventsForApplication(String message,RequestInfo requestInfo, Application application, NotificationsEvent eventConfig, String applicationJsonString) {
     	List<Event> events = new ArrayList<>();
             if(message == null) return null;
-            String mobileNumber = enrichPathPatternsWithApplication(smsConfig.getTo(), applicationJsonString);
-            
-            events = util.createEvent(message,mobileNumber,requestInfo,application.getTenantId(),application.getState(),application.getApplicationNumber());
+            String mobileNumber = enrichPathPatternsWithApplication(eventConfig.getTo(), applicationJsonString);
+            String triggers = enrichPathPatternsWithApplication(eventConfig.getTrigger(), applicationJsonString);
+            events = util.createEvent(message,mobileNumber,requestInfo,application.getTenantId(),application.getState(),application.getApplicationNumber(),triggers);
             if(!CollectionUtils.isEmpty(events)) {
     		return EventRequest.builder().requestInfo(requestInfo).events(events).build();
         }else {
