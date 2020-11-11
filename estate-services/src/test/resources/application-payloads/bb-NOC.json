@@ -32,7 +32,7 @@
   "otherViolations": "Some text here",
   "issueOfNoc": true,
   "issueOfNocDetails": "Some text here",
-  "ArchitectsReport": false,
+  "architectsReport": false,
   "fireNoc": false,
   "dateOfVist": 16752432
 }

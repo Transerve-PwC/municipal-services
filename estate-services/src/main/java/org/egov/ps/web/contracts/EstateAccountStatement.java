@@ -76,16 +76,16 @@ public class EstateAccountStatement {
 	private double collectedGST = 0D;
 	
 	@Builder.Default
-	private double rentPanelty = 0D;
+	private double rentPenalty = 0D;
 	
 	@Builder.Default
-	private double collectedRentPanelty = 0D;
+	private double collectedRentPenalty = 0D;
 	
 	@Builder.Default
-	private double GSTPanelty = 0D;
+	private double GSTPenalty = 0D;
 	
 	@Builder.Default
-	private double collectedGSTPanelty = 0D;
+	private double collectedGSTPenalty = 0D;
 
 
     public double getDueAmount() {
