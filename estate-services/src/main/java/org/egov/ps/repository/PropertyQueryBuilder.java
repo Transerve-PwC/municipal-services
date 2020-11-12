@@ -125,8 +125,7 @@ public class PropertyQueryBuilder {
 	private static final String PROPERTY_PENALTY_COLUMN = " penalty.id as penalty_id, penalty.tenantid as penalty_tenantid, "
 			+ " penalty.property_id as penalty_property_id, penalty.branch_type as penalty_branch_type, "
 			+ " penalty.penalty_amount as penalty_penalty_amount, penalty.violation_type as penalty_violation_type, "
-			+ " penalty.isPaid as penalty_isPaid, penalty.total_penalty_due as penalty_total_penalty_due, "
-			+ " penalty.penalty_number as penalty_penalty_number, penalty.generation_date as penalty_generation_date, "
+			+ " penalty.paid as penalty_paid, penalty.generation_date as penalty_generation_date, "
 			+ " penalty.remaining_penalty_due as penalty_remaining_penalty_due, penalty.status as penalty_status, "
 			+ " penalty.created_by as penalty_created_by, penalty.last_modified_by as penalty_last_modified_by, "
 			+ " penalty.created_time as penalty_created_time, penalty.last_modified_time as penalty_last_modified_time ";

@@ -677,7 +677,7 @@ serviceMaps:
 
 
 
-        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment) VALUES (?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?;
+        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment, type) VALUES (?,?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?, type=?;
           basePath: $.Properties.*.propertyDetails.offlinePaymentDetails.*
           jsonMaps:
 
@@ -694,6 +694,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.transactionNumber
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
+            
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.type
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
 
@@ -704,6 +706,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.transactionNumber
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
+            
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.type
 
 
         - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
@@ -869,7 +873,7 @@ serviceMaps:
       fromTopic: save-penalty-topic
       isTransaction: true
       queryMaps:
-        - query: INSERT INTO cs_ep_property_penalty_v1 (id, tenantid, property_id, branch_type, penalty_amount, violation_type, isPaid, total_penalty_due, penalty_number, generation_date, remaining_penalty_due, status, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO cs_ep_property_penalty_v1 (id, tenantid, property_id, branch_type, penalty_amount, violation_type, paid, generation_date, remaining_penalty_due, status, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: PropertyPenalties.*
           jsonMaps:
             - jsonPath: $.PropertyPenalties.*.id
@@ -885,10 +889,6 @@ serviceMaps:
             - jsonPath: $.PropertyPenalties.*.violationType
 
             - jsonPath: $.PropertyPenalties.*.isPaid
-
-            - jsonPath: $.PropertyPenalties.*.totalPenaltyDue
-
-            - jsonPath: $.PropertyPenalties.*.penaltyNumber
             
             - jsonPath: $.PropertyPenalties.*.generationDate
 
@@ -905,11 +905,11 @@ serviceMaps:
             - jsonPath: $.PropertyPenalties.*.auditDetails.lastModifiedTime   
                      
     - version: 1.0
-      description: Persists Property Penalty details in cs_ep_property_penalty_v1 table
+      description: Update Property Penalty details in cs_ep_property_penalty_v1 table
       fromTopic: update-penalty-topic
       isTransaction: true
       queryMaps:
-        - query: UPDATE cs_ep_property_penalty_v1 SET isPaid=?, remaining_penalty_due=?, status=?, last_modified_by=?, last_modified_time=? WHERE id=?;
+        - query: UPDATE cs_ep_property_penalty_v1 SET paid=?, remaining_penalty_due=?, status=?, last_modified_by=?, last_modified_time=? WHERE id=?;
           basePath: PropertyPenalties.*
           jsonMaps:
 
@@ -925,31 +925,3 @@ serviceMaps:
             
             - jsonPath: $.PropertyPenalties.*.id
              
-        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment) VALUES (?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?;
-          basePath: $.PropertyPenalties.*.offlinePaymentDetails.*
-          jsonMaps:
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.id
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.propertyDetailsId
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.demandId
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.amount
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.bankName
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.transactionNumber
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.dateOfPayment
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.demandId
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.amount
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.bankName
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.transactionNumber
-
-            - jsonPath: $.PropertyPenalties.*.offlinePaymentDetails.*.dateOfPayment   
-                              

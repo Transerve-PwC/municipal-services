@@ -26,9 +26,9 @@ public class PenaltyCollectionService {
 				penalty.setIsPaid(true);
 				penalty.setStatus(PaymentStatusEnum.PAID);
 			} else {
-				amountPaying = 0;
 				penalty.setRemainingPenaltyDue(penalty.getRemainingPenaltyDue() - amountPaying);
 				penalty.setStatus(PaymentStatusEnum.UNPAID);
+				amountPaying = 0;
 				break;
 			}
 			result.add(penalty);

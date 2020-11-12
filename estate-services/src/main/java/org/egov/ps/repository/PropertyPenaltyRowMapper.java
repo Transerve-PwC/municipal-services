@@ -32,7 +32,7 @@ public class PropertyPenaltyRowMapper implements ResultSetExtractor<List<Propert
 					.tenantId(rs.getString("penalty_tenantid")).property(property)
 					.branchType(rs.getString("penalty_branch_type"))
 					.penaltyAmount(rs.getDouble("penalty_penalty_amount"))
-					.violationType(rs.getString("penalty_violation_type")).isPaid(rs.getBoolean("penalty_isPaid"))
+					.violationType(rs.getString("penalty_violation_type")).isPaid(rs.getBoolean("penalty_paid"))
 					.generationDate(rs.getLong("penalty_generation_date"))
 					.remainingPenaltyDue(rs.getDouble("penalty_remaining_penalty_due"))
 					.status(PaymentStatusEnum.fromValue(rs.getString("penalty_status"))).auditDetails(auditdetails)

@@ -10,7 +10,6 @@ CREATE TABLE cs_ep_property_penalty_v1 (
    violation_type              	CHARACTER VARYING (100),
    paid              			boolean,
    status                 CHARACTER VARYING (100),
-   type                   CHARACTER VARYING (30),
    
    created_by           		CHARACTER VARYING (128) NOT NULL,
    last_modified_by     		CHARACTER VARYING (128),

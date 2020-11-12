@@ -450,6 +450,7 @@ public class PropertyEnrichmentService {
 			penalty.setGenerationDate(new Date().getTime());
 			penalty.setStatus(PaymentStatusEnum.UNPAID);
 			penalty.setIsPaid(false);
+			penalty.setRemainingPenaltyDue(penalty.getPenaltyAmount());
 		}
 		penalty.setTenantId(property.getTenantId());
 		penalty.setBranchType(property.getPropertyDetails().getBranchType());
