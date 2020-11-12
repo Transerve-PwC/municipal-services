@@ -126,10 +126,9 @@ public class Util {
 	public String getPropertyRentConsumerCode(String fileNumber) {
 		return String.format("SITE-%s-%s", fileNumber.trim().toUpperCase(), dateFormat.format(new Date()));
 	}
-	
-	
+
 	public String getPropertyPenaltyConsumerCode(String fileNumber) {
-		return String.format("PN-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
+		return String.format("ES-PN-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
 	}
 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD-HH-MM-SS");
@@ -140,5 +139,15 @@ public class Util {
 			return "ch";
 		}
 		return components[0];
+	}
+
+	/**
+	 * Convert camel case string to snake case string and capitalise string.
+	 */
+	public static String camelToSnake(String str) {
+		String regex = "([a-z])([A-Z]+)";
+		String replacement = "$1_$2";
+		str = str.replaceAll(regex, replacement).toUpperCase();
+		return str;
 	}
 }

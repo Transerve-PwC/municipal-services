@@ -9,13 +9,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Document;
-import org.egov.ps.model.MortgageDetails;
-import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.model.calculation.Calculation;
@@ -29,16 +31,11 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.AuditDetails;
-import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -268,43 +265,6 @@ public class ApplicationEnrichmentService {
 		}
 	}
 
-	public void enrichMortgageDetailsRequest(PropertyRequest request) {
-		if (!CollectionUtils.isEmpty(request.getProperties())) {
-			request.getProperties().forEach(property -> {
-				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
-					property.getPropertyDetails().getOwners().forEach(owner -> {
-						// checking - owner is existing and mortgage details bound with user.
-						if (null != owner.getId() && !owner.getId().isEmpty() && null != owner.getMortgageDetails()) {
-							// validate mortgage details - documents
-							validateMortgageDetails(property, owner, request.getRequestInfo(), owner.getId());
-							owner.setMortgageDetails(
-									getMortgage(property, owner, request.getRequestInfo(), owner.getId()));
-						}
-					});
-				}
-			});
-		}
-	}
-
-	public void validateMortgageDetails(Property property, Owner owner, RequestInfo requestInfo, String id) {
-		MortgageDetails mortgage = owner.getMortgageDetails();
-		List<Map<String, Object>> fieldConfigurations = mdmsservice
-				.getMortgageDocumentConfig(mortgage.getMortgageType(), requestInfo, property.getTenantId());
-
-		// TODO :: write code to validate documents base on master json template.
-	}
-
-	private MortgageDetails getMortgage(Property property, Owner owner, RequestInfo requestInfo, String gen_owner_id) {
-		String gen_mortgage_id = UUID.randomUUID().toString();
-
-		MortgageDetails mortgage = owner.getMortgageDetails();
-		mortgage.setId(gen_mortgage_id);
-		mortgage.setTenantId(property.getTenantId());
-		mortgage.setOwnerId(gen_owner_id);
-
-		return mortgage;
-	}
-
 	private void enrichGenerateDemand(Application application, RequestInfo requestInfo) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
@@ -398,24 +358,6 @@ public class ApplicationEnrichmentService {
 					: new BigDecimal("0");
 		}
 		return responseEstimateAmount;
-	}
-
-	// To be used in future
-	private void enrichUpdateDemand(Application application) {
-		List<TaxHeadEstimate> estimates = new LinkedList<>();
-
-		if (application.getAction().equalsIgnoreCase(PSConstants.EM_ACTION_APPROVE)) {
-
-			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-			estimateDue.setEstimateAmount(new BigDecimal(500.00));
-			estimateDue.setCategory(Category.FEE);
-			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
-					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
-			estimates.add(estimateDue);
-		}
-		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
-				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
-		application.setCalculation(calculation);
 	}
 
 	public String getTaxHeadCodeWithCharge(String billingBusService, String chargeFor, Category category) {

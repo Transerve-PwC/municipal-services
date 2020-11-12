@@ -42,13 +42,7 @@ public class WorkflowIntegrator {
 
 	private static final String MODULENAMEKEY = "moduleName";
 
-	private static final String STATEKEY = "state";
-
 	private static final String COMMENTKEY = "comment";
-
-	private static final String DOCUMENTSKEY = "documents";
-
-	private static final String ASSIGNERKEY = "assigner";
 
 	private static final String ASSIGNEEKEY = "assignee";
 

@@ -1,15 +1,19 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.BillV2;
 import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyPenalty;
+import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
@@ -17,6 +21,7 @@ import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.service.calculation.PenaltyCollectionService;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
+import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,111 +53,106 @@ public class PropertyViolationService {
 
 	@Autowired
 	PenaltyCollectionService penaltyCollectionService;
-	
+
 	@Autowired
 	DemandService demandService;
 
-	public List<PropertyPenalty> penalty(PropertyPenaltyRequest propertyPenaltyRequest) {
-		propertyEnrichmentService.enrichPenalty(propertyPenaltyRequest);
+	public List<PropertyPenalty> createPenalty(PropertyPenaltyRequest propertyPenaltyRequest) {
+		propertyEnrichmentService.enrichPenaltyRequest(propertyPenaltyRequest);
 		producer.push(config.getSavePenaltyTopic(), propertyPenaltyRequest);
 		return propertyPenaltyRequest.getPropertyPenalties();
 	}
 
-	public List<PropertyPenalty> generatePenaltyDemand(PropertyPenaltyRequest propertyPenaltyRequest) {
+	public List<OfflinePaymentDetails> processPropertyPenaltyPaymentRequest(PropertyRequest propertyRequest) {
 		/**
 		 * Validate not empty
 		 */
-		if (CollectionUtils.isEmpty(propertyPenaltyRequest.getPropertyPenalties())) {
+		if (CollectionUtils.isEmpty(propertyRequest.getProperties())) {
+			// return Collections.emptyList();
 			return Collections.emptyList();
 		}
-		PropertyPenalty propertyPenaltyFromRequest = propertyPenaltyRequest.getPropertyPenalties().get(0);
 
-		if (null == propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getAmount()) {
+		return propertyRequest.getProperties().stream().map(property -> {
+			List<OfflinePaymentDetails> offlinePaymentDetails = this
+					.processPropertyPenaltyPayment(propertyRequest.getRequestInfo(), property);
+			return offlinePaymentDetails.get(0);
+		}).collect(Collectors.toList());
+	}
+
+	private List<OfflinePaymentDetails> processPropertyPenaltyPayment(RequestInfo requestInfo, Property property) {
+		List<OfflinePaymentDetails> offlinePaymentDetails = property.getPropertyDetails().getOfflinePaymentDetails();
+
+		if (CollectionUtils.isEmpty(offlinePaymentDetails)) {
 			throw new CustomException(
 					Collections.singletonMap("NO_PAYMENT_AMOUNT_FOUND", "Payment amount should not be empty"));
 		}
 
-		Property property = repository.findPropertyById(propertyPenaltyFromRequest.getProperty().getId());
-		Owner owner = utils.getCurrentOwnerFromProperty(property);
+		if (offlinePaymentDetails.size() > 1) {
+			throw new CustomException(Collections.singletonMap("ONLY_ONE_PAYMENT_ACCEPTED",
+					"Only one payment can be accepted at a time"));
+		}
+
+		double paymentAmount = offlinePaymentDetails.get(0).getAmount().doubleValue();
+
+		/**
+		 * Calculate remaining due.
+		 */
+		List<PropertyPenalty> penalties = repository.getPenaltyDemandsForPropertyId(property.getId());
+		double totalDue = penalties.stream().filter(PropertyPenalty::isUnPaid)
+				.mapToDouble(PropertyPenalty::getRemainingPenaltyDue).sum();
+
+		if (totalDue < paymentAmount) {
+			throw new CustomException("DUE OVERFLOW",
+					String.format(
+							"Total due for all penalties is only Rs%.2f. Please don't collect more amount than that.",
+							totalDue));
+		}
 
 		/**
 		 * Create egov user if not already present.
 		 */
-		userService.createUser(propertyPenaltyRequest.getRequestInfo(), owner.getOwnerDetails().getMobileNumber(),
+		Owner owner = utils.getCurrentOwnerFromProperty(property);
+		userService.createUser(requestInfo, owner.getOwnerDetails().getMobileNumber(),
 				owner.getOwnerDetails().getOwnerName(), owner.getTenantId());
 
 		/**
 		 * Generate Calculations for the property.
 		 */
-		List<PropertyPenalty> demands = repository
-				.getPenaltyDemandsForPropertyId(propertyPenaltyFromRequest.getProperty().getId());
-		PropertyPenalty propertyPenaltyFromDb = null;
-		if (!CollectionUtils.isEmpty(demands)) {
-			propertyPenaltyFromDb = demands.get(0);
-//			demands.get(0).setPenaltyCollection(propertyPenaltyFromRequest.getPenaltyCollection());
-		} else {
-			throw new CustomException(Collections.singletonMap("NO_PENALTIES_FOUND",
-					"THERE SHOULD BE PENALTY TO PAY THE PENALTY AMOUNT"));
-		}
 
 		String consumerCode = utils.getPropertyPenaltyConsumerCode(property.getFileNumber());
-		if (!CollectionUtils.isEmpty(demands)) {
-			propertyPenaltyFromRequest.setTenantId(propertyPenaltyFromDb.getTenantId());
-			propertyPenaltyFromRequest.setPenaltyNumber(propertyPenaltyFromDb.getPenaltyNumber());
-			propertyPenaltyFromRequest.setBranchType(propertyPenaltyFromDb.getBranchType());
-			propertyPenaltyFromRequest.setId(propertyPenaltyFromDb.getId());
-//			propertyPenaltyFromRequest.setAuditDetails(propertyPenaltyFromDb.getAuditDetails());
-
-			/**
-			 * Enrich an actual finance demand
-			 */
-			propertyEnrichmentService.enrichGenerateDemand(propertyPenaltyFromRequest,
-					propertyPenaltyRequest.getRequestInfo(), consumerCode);
-
-		}
+		/**
+		 * Enrich an actual finance demand
+		 */
+		Calculation calculation = propertyEnrichmentService.enrichGenerateDemand(requestInfo, paymentAmount,
+				consumerCode, property);
 
 		/**
 		 * Generate an actual finance demand
 		 */
-		demandService.createPenaltyDemand(propertyPenaltyRequest.getRequestInfo(),
-				propertyPenaltyRequest.getPropertyPenalties(), consumerCode);
+		demandService.createPenaltyDemand(requestInfo, property, consumerCode, calculation);
 
 		/**
 		 * Get the bill generated.
 		 */
-		List<BillV2> bills = demandRepository.fetchBill(propertyPenaltyRequest.getRequestInfo(),
-				propertyPenaltyFromRequest.getTenantId(), consumerCode,
-				propertyPenaltyFromRequest.getPenaltyBusinessService());
+		List<BillV2> bills = demandRepository.fetchBill(requestInfo, property.getTenantId(), consumerCode,
+				property.getPenaltyBusinessService());
 		if (CollectionUtils.isEmpty(bills)) {
-			throw new CustomException("BILL_NOT_GENERATED", "No bills were found for the consumer code "
-					+ propertyPenaltyFromRequest.getPenaltyBusinessService());
+			throw new CustomException("BILL_NOT_GENERATED",
+					"No bills were found for the consumer code " + property.getPenaltyBusinessService());
 		}
 
-		demandService.createCashPaymentProperty(propertyPenaltyRequest.getRequestInfo(),
-				propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getAmount(), bills.get(0).getId(), owner,
-				propertyPenaltyFromRequest.getPenaltyBusinessService());
+		demandService.createCashPaymentProperty(requestInfo, new BigDecimal(paymentAmount), bills.get(0).getId(), owner,
+				property.getPenaltyBusinessService());
 
-		OfflinePaymentDetails offlinePenaltyPaymentDetails = OfflinePaymentDetails.builder()
-				.id(UUID.randomUUID().toString()).propertyDetailsId(property.getPropertyDetails().getId())
-				.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
-				.amount(propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getAmount())
-				.bankName(propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getBankName())
-				.transactionNumber(propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getTransactionNumber())
-				.dateOfPayment(propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getDateOfPayment()).build();
+		offlinePaymentDetails.forEach(ofpd -> {
+			ofpd.setId(UUID.randomUUID().toString());
+			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
+		});
 
-		List<PropertyPenalty> updatedPenaltyDetailsSettle = penaltyCollectionService.settle(demands,
-				propertyPenaltyFromRequest.getOfflinePaymentDetails().get(0).getAmount().doubleValue());
+		List<PropertyPenalty> updatedPenalties = penaltyCollectionService.settle(penalties, paymentAmount);
+		producer.push(config.getUpdatePenaltyTopic(), updatedPenalties);
 
-		updatedPenaltyDetailsSettle.get(0)
-				.setOfflinePaymentDetails(Collections.singletonList(offlinePenaltyPaymentDetails));
-
-//		propertyPenaltyRequest.setPropertyPenalties(updatedPenaltyDetailsSettle);
-
-		PropertyPenaltyRequest ppr = new PropertyPenaltyRequest(propertyPenaltyRequest.getRequestInfo(),
-				updatedPenaltyDetailsSettle);
-		producer.push(config.getUpdatePenaltyTopic(), ppr);
-
-		return Collections.singletonList(propertyPenaltyFromRequest);
+		return offlinePaymentDetails;
 	}
 
 }

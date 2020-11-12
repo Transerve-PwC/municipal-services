@@ -2,18 +2,12 @@ package org.egov.ps.service;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.ps.config.Configuration;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
@@ -25,7 +19,6 @@ import org.egov.ps.model.PropertyPenalty;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.model.calculation.Category;
 import org.egov.ps.model.calculation.TaxHeadEstimate;
-import org.egov.ps.model.idgen.IdResponse;
 import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
@@ -39,7 +32,6 @@ import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -55,9 +47,6 @@ public class PropertyEnrichmentService {
 
 	@Autowired
 	private PropertyRepository propertyRepository;
-
-	@Autowired
-	private Configuration config;
 
 	public void enrichPropertyRequest(PropertyRequest request) {
 
@@ -446,128 +435,41 @@ public class PropertyEnrichmentService {
 		}
 	}
 
-	PropertyPenalty highestTotalPenalty = null; // TODO: change to local
-	PropertyPenalty highestRemainingPenalty = null; // TODO: change to local
-
-	public void enrichPenalty(PropertyPenaltyRequest propertyPenaltyRequest) {
-
-		Property property = propertyRepository
-				.findPropertyById(propertyPenaltyRequest.getPropertyPenalties().get(0).getProperty().getId());
-
-		List<PropertyPenalty> propertyPenaltiesDb = propertyRepository.getPenaltyDemandsForPropertyId(property.getId());
-
-		if (!CollectionUtils.isEmpty(propertyPenaltiesDb)) {
-			highestTotalPenalty = propertyPenaltiesDb.stream().filter(PropertyPenalty::isUnPaid)
-					.max(Comparator.comparing(PropertyPenalty::getTotalPenaltyDue)).get();
-
-			highestRemainingPenalty = propertyPenaltiesDb.stream().filter(PropertyPenalty::isUnPaid)
-					.max(Comparator.comparing(PropertyPenalty::getRemainingPenaltyDue)).get();
-
-		}
-
+	public void enrichPenaltyRequest(PropertyPenaltyRequest propertyPenaltyRequest) {
 		propertyPenaltyRequest.getPropertyPenalties().forEach(propertyPenalty -> {
-
-			AuditDetails penaltyAuditDetails = util.getAuditDetails(
-					propertyPenaltyRequest.getRequestInfo().getUserInfo().getUuid(), propertyPenalty.getId() == null);
-
-			if (null == propertyPenalty.getId()) {
-
-				propertyPenalty.setId(UUID.randomUUID().toString());
-				propertyPenalty.setTenantId(property.getTenantId());
-				propertyPenalty.setBranchType(property.getPropertyDetails().getBranchType());
-				propertyPenalty.setGenerationDate(new Date().getTime());
-				propertyPenalty.setStatus(PaymentStatusEnum.UNPAID);
-				propertyPenalty.setIsPaid(false);
-				if (!CollectionUtils.isEmpty(propertyPenaltiesDb)) {
-
-					propertyPenalty.setTotalPenaltyDue(
-							highestTotalPenalty.getTotalPenaltyDue() + propertyPenalty.getPenaltyAmount());
-					propertyPenalty.setRemainingPenaltyDue(
-							highestRemainingPenalty.getRemainingPenaltyDue() + propertyPenalty.getPenaltyAmount());
-				} else {
-					propertyPenalty.setTotalPenaltyDue(propertyPenalty.getPenaltyAmount());
-					propertyPenalty.setRemainingPenaltyDue(propertyPenalty.getPenaltyAmount());
-				}
-//				enrichGenerateDemand(propertyPenalty, propertyPenaltyRequest.getRequestInfo());
-			}
-
-			propertyPenalty.setAuditDetails(penaltyAuditDetails);
-
+			enrichPenalty(propertyPenaltyRequest.getRequestInfo(), propertyPenalty);
 		});
-		setIdgenIds(propertyPenaltyRequest);
 	}
 
-	/**
-	 * Sets the ApplicationNumber for given EstateServiceApplicationRequest
-	 *
-	 * @param request EstateServiceApplicationRequest which is to be created
-	 */
-	private void setIdgenIds(PropertyPenaltyRequest request) {
-		RequestInfo requestInfo = request.getRequestInfo();
-		String tenantId = request.getPropertyPenalties().get(0).getTenantId();
-		List<PropertyPenalty> propertyPenalties = request.getPropertyPenalties();
-		int size = request.getPropertyPenalties().size();
-
-		List<String> penaltyNumbers = setIdgenIds(requestInfo, tenantId, size, config.getPenaltyNumberIdgenNamePS());
-		ListIterator<String> itr = penaltyNumbers.listIterator();
-
-		if (!CollectionUtils.isEmpty(propertyPenalties)) {
-			propertyPenalties.forEach(PropertyPenalty -> {
-				PropertyPenalty.setPenaltyNumber(itr.next());
-			});
+	private void enrichPenalty(RequestInfo requestInfo, PropertyPenalty penalty) {
+		Property property = propertyRepository.findPropertyById(penalty.getProperty().getId());
+		AuditDetails penaltyAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+				penalty.getId() == null);
+		if (null == penalty.getId()) {
+			penalty.setId(UUID.randomUUID().toString());
+			penalty.setGenerationDate(new Date().getTime());
+			penalty.setStatus(PaymentStatusEnum.UNPAID);
+			penalty.setIsPaid(false);
 		}
+		penalty.setTenantId(property.getTenantId());
+		penalty.setBranchType(property.getPropertyDetails().getBranchType());
+		penalty.setAuditDetails(penaltyAuditDetails);
 	}
 
-	private List<String> setIdgenIds(RequestInfo requestInfo, String tenantId, int size, String idGenName) {
-		List<String> penaltyNumbers = null;
-
-		penaltyNumbers = getIdList(requestInfo, tenantId, idGenName, size);
-
-		Map<String, String> errorMap = new HashMap<>();
-		if (penaltyNumbers.size() != size) {
-			errorMap.put("IDGEN ERROR ",
-					"The number of application number returned by idgen is not equal to number of Applications");
-		}
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-
-		return penaltyNumbers;
-	}
-
-	/**
-	 * Returns a list of numbers generated from idgen
-	 *
-	 * @param requestInfo RequestInfo from the request
-	 * @param tenantId    tenantId of the city
-	 * @param idKey       code of the field defined in application properties for
-	 *                    which ids are generated for
-	 * @param idformat    format in which ids are to be generated
-	 * @param count       Number of ids to be generated
-	 * @return List of ids generated using idGen service
-	 */
-	private List<String> getIdList(RequestInfo requestInfo, String tenantId, String idKey, int count) {
-		List<IdResponse> idResponses = idGenRepository.getId(requestInfo, tenantId, idKey, count).getIdResponses();
-
-		if (CollectionUtils.isEmpty(idResponses))
-			throw new CustomException("IDGEN ERROR", "No ids returned from idgen Service");
-
-		return idResponses.stream().map(IdResponse::getId).collect(Collectors.toList());
-	}
-
-	public void enrichGenerateDemand(PropertyPenalty propertyPenalty, RequestInfo requestInfo, String consumerCode) {
+	public Calculation enrichGenerateDemand(RequestInfo requestInfo, double paymentAmount, String consumerCode,
+			Property property) {
 
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-		estimateDue.setEstimateAmount(propertyPenalty.getOfflinePaymentDetails().get(0).getAmount());
+		estimateDue.setEstimateAmount(new BigDecimal(paymentAmount));
 		estimateDue.setCategory(Category.PENALTY);
-		estimateDue.setTaxHeadCode(getTaxHeadCode(propertyPenalty.getPenaltyBusinessService(), Category.PENALTY));
+		estimateDue.setTaxHeadCode(getTaxHeadCode(property.getPenaltyBusinessService(), Category.PENALTY));
 		estimates.add(estimateDue);
 
-		Calculation calculation = Calculation.builder()
-				.applicationNumber(consumerCode).taxHeadEstimates(estimates)
-				.tenantId(propertyPenalty.getTenantId()).build();
-		propertyPenalty.setCalculation(calculation);
+		Calculation calculation = Calculation.builder().applicationNumber(consumerCode).taxHeadEstimates(estimates)
+				.tenantId(property.getTenantId()).build();
+		return calculation;
 	}
 
 }

@@ -1,15 +1,10 @@
 package org.egov.ps.model;
 
-import java.util.List;
-
-import javax.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.ps.model.calculation.Calculation;
-import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -40,9 +35,6 @@ public class PropertyPenalty implements Comparable<PropertyPenalty> {
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-//	@JsonProperty("propertyId")
-//	private String propertyId;
-
 	@JsonProperty("property")
 	private Property property;
 
@@ -58,15 +50,8 @@ public class PropertyPenalty implements Comparable<PropertyPenalty> {
 	@JsonProperty("penaltyAmount")
 	private Double penaltyAmount;
 
-	@JsonProperty("totalPenaltyDue")
-	private Double totalPenaltyDue;
-
-	@Builder.Default
 	@JsonProperty("remainingPenaltyDue")
-	private Double remainingPenaltyDue = 0.0;
-
-	@JsonProperty("penaltyNumber")
-	private String penaltyNumber;
+	private Double remainingPenaltyDue;
 
 	@JsonProperty("isPaid")
 	private Boolean isPaid;
@@ -86,34 +71,11 @@ public class PropertyPenalty implements Comparable<PropertyPenalty> {
 	@JsonProperty("penaltyBusinessService")
 	private String penaltyBusinessService;
 
-//	@Valid
-//	@JsonProperty
-//	private List<PenaltyCollection> penaltyCollection;
-	
-	@Valid
-	@JsonProperty
-	private List<OfflinePaymentDetails> offlinePaymentDetails;
-
 	@JsonProperty("calculation")
 	Calculation calculation;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
-
-	public String getPenaltyBusinessService() {
-		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE, camelToSnake(this.getBranchType()),
-				PSConstants.PROPERTY_VIOLATION);
-	}
-
-	/**
-	 * Convert camel case string to snake case string and capitalise string.
-	 */
-	public static String camelToSnake(String str) {
-		String regex = "([a-z])([A-Z]+)";
-		String replacement = "$1_$2";
-		str = str.replaceAll(regex, replacement).toUpperCase();
-		return str;
-	}
 
 	@Override
 	public int compareTo(PropertyPenalty other) {

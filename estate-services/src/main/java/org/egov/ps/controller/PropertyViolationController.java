@@ -5,11 +5,14 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.PropertyPenalty;
 import org.egov.ps.service.PropertyViolationService;
 import org.egov.ps.util.ResponseInfoFactory;
+import org.egov.ps.web.contracts.PropertyOfflinePaymentResponse;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyPenaltyResponse;
+import org.egov.ps.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +32,9 @@ public class PropertyViolationController {
 	ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("/_penalty")
-	public ResponseEntity<PropertyPenaltyResponse> penalty(@RequestBody PropertyPenaltyRequest propertyPenaltyRequest) {
-		List<PropertyPenalty> propertyPenalties = propertyViolationService.penalty(propertyPenaltyRequest);
+	public ResponseEntity<PropertyPenaltyResponse> addPenalty(
+			@RequestBody PropertyPenaltyRequest propertyPenaltyRequest) {
+		List<PropertyPenalty> propertyPenalties = propertyViolationService.createPenalty(propertyPenaltyRequest);
 		ResponseInfo resInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyPenaltyRequest.getRequestInfo(), true);
 		PropertyPenaltyResponse response = PropertyPenaltyResponse.builder().propertyPenalties(propertyPenalties)
@@ -39,13 +43,14 @@ public class PropertyViolationController {
 	}
 
 	@PostMapping("/_penalty_payment")
-	public ResponseEntity<PropertyPenaltyResponse> penaltyPayment(
-			@Valid @RequestBody PropertyPenaltyRequest propertyPenaltyRequest) {
-		List<PropertyPenalty> propertyPenalties = propertyViolationService.generatePenaltyDemand(propertyPenaltyRequest);
-		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyPenaltyRequest.getRequestInfo(),
+	public ResponseEntity<PropertyOfflinePaymentResponse> penaltyPayment(
+			@Valid @RequestBody PropertyRequest propertyRequest) {
+		List<OfflinePaymentDetails> offlinePaymentDetails = propertyViolationService
+				.processPropertyPenaltyPaymentRequest(propertyRequest);
+		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(),
 				true);
-		PropertyPenaltyResponse response = PropertyPenaltyResponse.builder().propertyPenalties(propertyPenalties)
-				.responseInfo(resInfo).build();
+		PropertyOfflinePaymentResponse response = PropertyOfflinePaymentResponse.builder()
+				.offlinePaymentDetails(offlinePaymentDetails).responseInfo(resInfo).build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
