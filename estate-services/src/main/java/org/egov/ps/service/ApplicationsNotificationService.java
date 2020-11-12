@@ -218,8 +218,8 @@ public class ApplicationsNotificationService {
     	List<Event> events = new ArrayList<>();
             if(message == null) return null;
             String mobileNumber = enrichPathPatternsWithApplication(eventConfig.getTo(), applicationJsonString);
-            String triggers = enrichPathPatternsWithApplication(eventConfig.getTrigger(), applicationJsonString);
-            events = util.createEvent(message,mobileNumber,requestInfo,application.getTenantId(),application.getState(),application.getApplicationNumber(),triggers);
+            String uuid = enrichPathPatternsWithApplication(eventConfig.getTo(), applicationJsonString);
+            events = util.createEvent(message,mobileNumber,uuid,requestInfo,application.getTenantId(),application.getState(),application.getApplicationNumber(),eventConfig.isPayLink());
             if(!CollectionUtils.isEmpty(events)) {
     		return EventRequest.builder().requestInfo(requestInfo).events(events).build();
         }else {
