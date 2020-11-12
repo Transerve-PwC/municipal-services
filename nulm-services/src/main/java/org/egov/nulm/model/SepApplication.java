@@ -64,7 +64,7 @@ public class SepApplication {
 	    @JsonCreator
 	    public static StatusEnum fromValue(String text) {
 	      for (StatusEnum b : StatusEnum.values()) {
-	        if (String.valueOf(b.value).equals(text)) {
+	        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
 	          return b;
 	        }
 	      }

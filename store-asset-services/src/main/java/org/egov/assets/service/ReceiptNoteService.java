@@ -287,20 +287,25 @@ public class ReceiptNoteService extends DomainService {
 						new PurchaseOrderDetailEntity().toEntity(materialReceiptDetail.getPurchaseOrderDetail()),
 						"purchaseorderdetail", hashMap, null);
 
-				PurchaseOrderDetailEntity purchaseOrderDetailEntity = new PurchaseOrderDetailEntity();
-				purchaseOrderDetailEntity.setId(materialReceiptDetail.getPurchaseOrderDetail().getId());
-				purchaseOrderDetailEntity.setTenantId(tenantId);
-				PurchaseOrderDetailEntity orderDetailEntity = purchaseOrderDetailJdbcRepository
-						.findById(purchaseOrderDetailEntity);
-
-				PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
-				purchaseOrderSearch.setPurchaseOrderNumber(orderDetailEntity.getPurchaseOrder());
-				purchaseOrderSearch.setTenantId(tenantId);
-				if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
-					receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(),
-							"status = (case when status = 'RECEIPTED' then 'Approved' ELSE status end)"
-									+ " where purchaseordernumber = ('" + purchaseOrderSearch.getPurchaseOrderNumber()
-									+ "') and tenantid = '" + tenantId + "'");
+				/*
+				 * PurchaseOrderDetailEntity purchaseOrderDetailEntity = new
+				 * PurchaseOrderDetailEntity();
+				 * purchaseOrderDetailEntity.setId(materialReceiptDetail.getPurchaseOrderDetail(
+				 * ).getId()); purchaseOrderDetailEntity.setTenantId(tenantId);
+				 * PurchaseOrderDetailEntity orderDetailEntity =
+				 * purchaseOrderDetailJdbcRepository .findById(purchaseOrderDetailEntity);
+				 * 
+				 * PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+				 * purchaseOrderSearch.setPurchaseOrderNumber(orderDetailEntity.getPurchaseOrder
+				 * ()); purchaseOrderSearch.setTenantId(tenantId); if
+				 * (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
+				 * receiptNoteRepository.updateColumn(new PurchaseOrderEntity(),
+				 * "purchaseorder", new HashMap<>(),
+				 * "status = (case when status = 'RECEIPTED' then 'Approved' ELSE status end)" +
+				 * " where purchaseordernumber = ('" +
+				 * purchaseOrderSearch.getPurchaseOrderNumber() + "') and tenantid = '" +
+				 * tenantId + "'");
+				 */
 			}
 		}
 	}
@@ -848,7 +853,7 @@ public class ReceiptNoteService extends DomainService {
 					Instant wfDate = Instant.ofEpochMilli(processData.getAuditDetails().getCreatedTime());
 					// Need to integrate Workflow
 					JSONObject jsonWork = new JSONObject();
-					jsonWork.put("srNo", j+1);
+					jsonWork.put("srNo", j + 1);
 					jsonWork.put("date", wfdateFormat.format(wfDate.atZone(ZoneId.systemDefault())));
 					jsonWork.put("updatedBy", processData.getAssigner().getName());
 					jsonWork.put("comments", processData.getComment());
@@ -895,10 +900,48 @@ public class ReceiptNoteService extends DomainService {
 				materialReceiptSearch.setTenantId(materialReceiptRequest.getWorkFlowDetails().getTenantId());
 				MaterialReceiptResponse receiptResponse = search(materialReceiptSearch);
 				for (MaterialReceipt materialReceipt : receiptResponse.getMaterialReceipt()) {
+					for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+						PurchaseOrderDetailEntity purchaseOrderDetailEntity = new PurchaseOrderDetailEntity();
+						purchaseOrderDetailEntity.setId(materialReceiptDetail.getPurchaseOrderDetail().getId());
+						purchaseOrderDetailEntity.setTenantId(tenantId);
+						PurchaseOrderDetailEntity orderDetailEntity = purchaseOrderDetailJdbcRepository
+								.findById(purchaseOrderDetailEntity);
+						PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+						purchaseOrderSearch.setPurchaseOrderNumber(orderDetailEntity.getPurchaseOrder());
+						purchaseOrderSearch.setTenantId(tenantId);
+						if (purchaseOrderService.checkReceiptedStatusForPo(purchaseOrderSearch) != null)
+							receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder",
+									new HashMap<>(),
+									"status = '" + purchaseOrderService.checkReceiptedStatusForPo(purchaseOrderSearch)
+											+ "' where purchaseordernumber = ('"
+											+ purchaseOrderSearch.getPurchaseOrderNumber() + "') and tenantid = '"
+											+ tenantId + "'");
+
+					}
 					// generate PO
-					if (materialReceipt.getReceiptType() != null && materialReceipt.getReceiptType().toString()
-							.equals(ReceiptTypeEnum.NON_PURCHASE_RECEIPT.toString())) {
-						CreateNonPurchaseOrder(materialReceipt);
+					// if (materialReceipt.getReceiptType() != null &&
+					// materialReceipt.getReceiptType().toString()
+					// .equals(ReceiptTypeEnum.NON_PURCHASE_RECEIPT.toString())) {
+					// CreateNonPurchaseOrder(materialReceipt);
+					// }
+				}
+			} else if (materialReceiptRequest.getWorkFlowDetails().getStatus()
+					.equals(MrnStatusEnum.REJECTED.toString())) {
+				MaterialReceiptSearch materialReceiptSearch = new MaterialReceiptSearch();
+				materialReceiptSearch
+						.setMrnNumber(Arrays.asList(materialReceiptRequest.getWorkFlowDetails().getBusinessId()));
+				materialReceiptSearch.setTenantId(materialReceiptRequest.getWorkFlowDetails().getTenantId());
+				MaterialReceiptResponse receiptResponse = search(materialReceiptSearch);
+				for (MaterialReceipt materialReceipt : receiptResponse.getMaterialReceipt()) {
+					for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+						HashMap<String, String> hashMap = new HashMap<>();
+						hashMap.put("receivedquantity", "receivedquantity - " + materialReceiptDetail.getAcceptedQty());
+
+						materialReceiptDetail.getPurchaseOrderDetail().setTenantId(tenantId);
+						receiptNoteRepository.updateColumn(
+								new PurchaseOrderDetailEntity()
+										.toEntity(materialReceiptDetail.getPurchaseOrderDetail()),
+								"purchaseorderdetail", hashMap, null);
 					}
 				}
 			}

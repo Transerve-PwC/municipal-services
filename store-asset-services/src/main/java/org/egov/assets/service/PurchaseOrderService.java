@@ -807,7 +807,7 @@ public class PurchaseOrderService extends DomainService {
 									IndentResponse isr = indentService.search(is, new RequestInfo());
 									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 									String poDate = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
-									
+
 									try {
 										for (Indent in : isr.getIndents()) {
 											/*
@@ -1144,6 +1144,7 @@ public class PurchaseOrderService extends DomainService {
 		Boolean flag = true;
 
 		PurchaseOrderResponse search = search(purchaseOrderSearch);
+		BigDecimal balanceOrderQuantity = new BigDecimal(0);
 
 		if (search.getPurchaseOrders().size() > 0) {
 			List<PurchaseOrder> purchaseOrders = search.getPurchaseOrders();
@@ -1159,7 +1160,30 @@ public class PurchaseOrderService extends DomainService {
 		} else
 			throw new CustomException("po", "Purchase order not found");
 
-		return flag;
+		return true;
+	}
+
+	public String checkReceiptedStatusForPo(PurchaseOrderSearch purchaseOrderSearch) {
+		PurchaseOrderResponse search = search(purchaseOrderSearch);
+		if (!search.getPurchaseOrders().isEmpty()) {
+			List<PurchaseOrder> purchaseOrders = search.getPurchaseOrders();
+			for (PurchaseOrder purchaseOrder : purchaseOrders) {
+				for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+					if (null != purchaseOrderDetail.getReceivedQuantity()) {
+						if (purchaseOrderDetail.getOrderQuantity()
+								.compareTo(purchaseOrderDetail.getReceivedQuantity()) == 0) {
+							return PurchaseOrder.StatusEnum.RECEIPTED.toString();
+						} else if (purchaseOrderDetail.getOrderQuantity()
+								.compareTo(purchaseOrderDetail.getReceivedQuantity()) == 1) {
+							return PurchaseOrder.StatusEnum.PARTIALLYRECEIPTED.toString();
+						}
+					}
+				}
+			}
+		} else {
+			throw new CustomException("po", "Purchase order not found");
+		}
+		return null;
 	}
 
 	public PurchaseOrderResponse getPOPendingToDeliver(PurchaseOrderSearch purchaseOrderSearch) {

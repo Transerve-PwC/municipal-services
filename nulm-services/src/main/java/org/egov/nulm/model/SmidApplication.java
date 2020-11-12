@@ -35,10 +35,10 @@ public class SmidApplication {
 	private StatusEnum applicationStatus ;
 
 	public enum StatusEnum {
-	    DRAFTED("DRAFTED"),
-	    CREATED("CREATED"),
-	    APPROVED("APPROVED"),
-		REJECTED("REJECTED");
+	    DRAFTED("Drafted"),
+	    CREATED("Created"),
+	    APPROVED("Approved"),
+		REJECTED("Rejected");
 
 	    private String value;
 
@@ -55,7 +55,7 @@ public class SmidApplication {
 	    @JsonCreator
 	    public static StatusEnum fromValue(String text) {
 	      for (StatusEnum b : StatusEnum.values()) {
-	        if (String.valueOf(b.value).equals(text)) {
+	        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
 	          return b;
 	        }
 	      }

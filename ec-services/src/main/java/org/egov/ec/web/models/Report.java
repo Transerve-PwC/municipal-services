@@ -121,5 +121,9 @@ public class Report {
 	
 	@JsonProperty("tenantId")
 	private String tenantId;
-	
+
+	@Size(max = 256)
+	@JsonProperty("transactionId")
+	private String transactionId;
+
 }

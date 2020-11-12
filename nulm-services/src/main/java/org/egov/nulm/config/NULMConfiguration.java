@@ -93,6 +93,13 @@ public class NULMConfiguration {
 
 	@Value("${egov.idgen.nulm.susv.idformat}")
 	private String susvApplicationNumberIdgenFormat;
+
+	@Value("${egov.idgen.nulm.susvrenew.idname}")
+	private String susvRenewApplicationNumberIdgenName;
+
+	@Value("${egov.idgen.nulm.susvrenew.idformat}")
+	private String susvRenewApplicationNumberIdgenFormat;
+
 	
 	@Value("${nulm.businessservice}")
 	private String businessservice;
@@ -208,7 +215,16 @@ public class NULMConfiguration {
 	
 	@Value("${persister.update.susvapplication.status.topic}")
 	private String SusvApplicationUpdateStatusTopic;
+
+	@Value("${persister.save.susvrenewapplication.topic}")
+	private String SusvRenewApplicationSaveTopic;
 	
+	@Value("${persister.update.susvrenewapplication.topic}")
+	private String SusvRenewApplicationUpdateTopic;
+	
+	@Value("${persister.update.susvrenewapplication.status.topic}")
+	private String SusvRenewApplicationUpdateStatusTopic;
+
 	@Value("${persister.save.susvtransaction.topic}")
 	private String SusvTransactionSaveTopic;
 	

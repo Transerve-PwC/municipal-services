@@ -147,6 +147,10 @@ public class PurchaseOrder {
 
 		REJECTED("Rejected"),
 
+		RECEIPTED("Receipted"),
+
+		PARTIALLYRECEIPTED("Partially Receipted"),
+
 		FULFILLED_AND_PAID("Fulfilled and Paid"),
 
 		FULFILLED_AND_UNPAID("Fulfilled and Unpaid");

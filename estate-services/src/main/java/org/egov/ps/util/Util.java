@@ -18,6 +18,13 @@ import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
+import org.egov.ps.model.notification.uservevents.Action;
+import org.egov.ps.model.notification.uservevents.ActionItem;
+import org.egov.ps.model.notification.uservevents.Event;
+import org.egov.ps.model.notification.uservevents.EventRequest;
+import org.egov.ps.model.notification.uservevents.Recepient;
+import org.egov.ps.model.notification.uservevents.Source;
+import org.egov.ps.producer.Producer;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.workflow.WorkflowService;
@@ -25,6 +32,8 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Component
 public class Util {
 
@@ -33,6 +42,9 @@ public class Util {
 
 	@Autowired
 	private WorkflowService workflowService;
+
+	@Autowired
+	private Producer producer;
 
 	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
 
@@ -149,5 +161,41 @@ public class Util {
 		String replacement = "$1_$2";
 		str = str.replaceAll(regex, replacement).toUpperCase();
 		return str;
+	public List<Event> createEvent(String message, String mobileNumber, String uuid, RequestInfo requestInfo, String tenantId,
+			String applicationStatus, String applicationNumber, boolean isPayLink) {
+		List<Event> events = new ArrayList<>();
+		List<String> toUsers = new ArrayList<>();
+		toUsers.add(uuid);
+		Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
+		Action action = null;
+		if(isPayLink) {
+			action= generateAction(applicationStatus,mobileNumber,applicationNumber,tenantId);
+		}
+		events.add(Event.builder().tenantId(tenantId).description(message)
+				.eventType(PSConstants.USREVENTS_EVENT_TYPE).name(PSConstants.USREVENTS_EVENT_NAME)
+				.postedBy(PSConstants.USREVENTS_EVENT_POSTEDBY).source(Source.WEBAPP).recepient(recepient)
+				.eventDetails(null).actions(action).build());
+
+		return events;
+	}
+	private Action generateAction(String applicationStatus,String mobile, String applicationNumber, String tenantId) {
+		List<ActionItem> items = new ArrayList<>();
+		String actionLink=null;
+		actionLink = config.getPayLinkForApplication().replace("$mobile", mobile)
+				.replace("$applicationNo",applicationNumber )
+				.replace("$tenantId", tenantId);
+		actionLink = config.getUiAppHost() + actionLink;
+		ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
+		items.add(item);
+		return Action.builder().actionUrls(items).build();
+	}
+
+	/**
+	 * User event
+	 * @param request
+	 */
+	public void sendEventNotification(EventRequest request) {
+		log.info("userList:"+request.getEvents().get(0).getRecepient().getToUsers());
+		producer.push(config.getSaveUserEventsTopic(), request);
 	}
 }

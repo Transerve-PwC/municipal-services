@@ -24,7 +24,7 @@ public class PtMappingController {
 	}
 	
 	@PostMapping(value = "/_save")
-	public ResponseEntity<ResponseInfoWrapper> createSEPApplication(@Valid @RequestBody PtMappingRequest request) {
+	public ResponseEntity<ResponseInfoWrapper> savePtMapping(@Valid @RequestBody PtMappingRequest request) {
 		return service.savePtMapping(request);
 	}
 	

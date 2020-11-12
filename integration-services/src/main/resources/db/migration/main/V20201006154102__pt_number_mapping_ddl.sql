@@ -11,3 +11,5 @@ CREATE TABLE public.pt_citizen_mapping (
 	CONSTRAINT pt_citizen_mapping_pkey PRIMARY KEY (uuid),
 	CONSTRAINT fk_pt_citizen_mapping_userid FOREIGN KEY (user_id,tenant_id) REFERENCES eg_user(id,tenantid)
 );
+
+ALTER TABLE public.pt_citizen_mapping ADD CONSTRAINT pt_citizen_mapping_Unique UNIQUE (user_id, property_tax_id);

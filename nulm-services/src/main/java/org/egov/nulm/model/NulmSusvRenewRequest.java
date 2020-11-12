@@ -1,4 +1,6 @@
-package org.egov.integration.model;
+package org.egov.nulm.model;
+
+import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 
@@ -17,26 +19,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class PtRequestInfoWrapper {
+public class NulmSusvRenewRequest {
+
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@JsonProperty("uid")
-	private String uid;
+	@Valid
+	@JsonProperty("NulmSusvRenewRequest")
+	private SusvRenewApplication nulmSusvRenewRequest;
 
-	@JsonProperty("otp")
-	private String otp;
+	@JsonProperty("AuditDetails")
+	AuditDetails auditDetails;
 
-	@JsonProperty("mobileNo")
-	private String mobileNo;
-
-	@JsonProperty("tokenId")
-	private String tokenId;
-
-	@JsonProperty("houseNo")
-	private String houseNo;
-
-	@JsonProperty("sectorId")
-	private String sectorId;
 
 }
