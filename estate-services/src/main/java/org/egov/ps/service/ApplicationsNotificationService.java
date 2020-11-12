@@ -153,12 +153,10 @@ public class ApplicationsNotificationService {
              * Web notification
              */
             NotificationsEvent eventConfig = notification.getModes().getEvent();
-            if(eventConfig.isEnabled()) {
-    			if(eventConfig.isValid()) {
+            if(eventConfig.isEnabled() && eventConfig.isValid()) {
     				EventRequest eventRequest = getEventsForApplication(enrichedContent,requestInfo,application,eventConfig,applicationJsonString);
     				if(null != eventRequest)
     					util.sendEventNotification(eventRequest);
-    			}
     		}
         } catch (Exception e) {
             log.error("Could not convert enrichedApplication to JSON", e);
