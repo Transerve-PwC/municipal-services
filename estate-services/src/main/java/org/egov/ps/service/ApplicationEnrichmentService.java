@@ -158,8 +158,8 @@ public class ApplicationEnrichmentService {
 
 		PropertyDetails propertyDetails = new PropertyDetails();
 		propertyDetails.setBranchType(property.getPropertyDetails().getBranchType());
-		propertyDetails.setPropertyType(property.getPropertyDetails().getBranchType());
-		propertyDetails.setTypeOfAllocation(property.getPropertyDetails().getBranchType());
+		propertyDetails.setPropertyType(property.getPropertyDetails().getPropertyType());
+		propertyDetails.setTypeOfAllocation(property.getPropertyDetails().getTypeOfAllocation());
 		propertyDetails.setEmdAmount(property.getPropertyDetails().getEmdAmount());
 		propertyDetails.setEmdDate(property.getPropertyDetails().getEmdDate());
 		propertyDetails.setModeOfAuction(property.getPropertyDetails().getModeOfAuction());
