@@ -191,7 +191,7 @@ public class PropertyEnrichmentService {
 							String gen_payment_detail_id = UUID.randomUUID().toString();
 							payment.setId(gen_payment_detail_id);
 							payment.setTenantId(property.getTenantId());
-							payment.setOwnerDetailsId(owner.getOwnerDetails().getId());
+							payment.setPropertyDetailsId(property.getPropertyDetails().getId());
 							payment.setAuditDetails(paymentAuditDetails);
 						} else {
 							AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),

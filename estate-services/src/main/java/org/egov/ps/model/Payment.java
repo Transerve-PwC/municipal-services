@@ -1,11 +1,12 @@
 package org.egov.ps.model;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,120 +31,47 @@ import lombok.ToString;
 @Builder
 public class Payment {
 
+	/**
+	 * Unique id of the payment
+	 */
 	@JsonProperty("id")
 	private String id;
 
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-	@JsonProperty("ownerDetailsId")
-	private String ownerDetailsId;
+	/**
+	 * Property details that this payment is generated for.
+	 */
+	@JsonProperty("propertyDetailsId")
+	private String propertyDetailsId;
 
-//	main
-	
-	@JsonProperty("paymentType")
-	private String paymentType;
+	@JsonProperty("isIntrestApplicable")
+	private Boolean isIntrestApplicable;
 
 	@JsonProperty("dueDateOfPayment")
 	private Long dueDateOfPayment;
 
-	@JsonProperty("payable")
-	private BigDecimal payable;
+	@JsonProperty("noOfMonths")
+	private Long noOfMonths;
 
-	@JsonProperty("amount")
-	private BigDecimal amount;
+	@JsonProperty("rateOfInterest")
+	private BigDecimal rateOfInterest;
 
-	@JsonProperty("total")
-	private BigDecimal total;
-
-	@JsonProperty("dateOfDeposit")
-	private Long dateOfDeposit;
-
-	@JsonProperty("delayInPayment")
-	private BigDecimal delayInPayment;
-
-	@JsonProperty("interestForDelay")
-	private BigDecimal interestForDelay;
-
-	@JsonProperty("totalAmountDueWithInterest")
-	private BigDecimal totalAmountDueWithInterest;
-
-	@JsonProperty("amountDeposited")
-	private BigDecimal amountDeposited;
-
-	@JsonProperty("amountDepositedIntt")
-	private BigDecimal amountDepositedIntt;
-
-	@JsonProperty("balance")
-	private BigDecimal balance;
-
-	@JsonProperty("balanceIntt")
-	private BigDecimal balanceIntt;
-
-	@JsonProperty("totalDue")
-	private BigDecimal totalDue;
-
-	@JsonProperty("receiptNumber")
-	private String receiptNumber;
-
-	@JsonProperty("receiptDate")
-	private Long receiptDate;
-
-	@JsonProperty("stRateOfStGst")
-	private BigDecimal stRateOfStGst;
-
-	@JsonProperty("stAmountOfGst")
-	private BigDecimal stAmountOfGst;
-
-	@JsonProperty("stPaymentMadeBy")
-	private String stPaymentMadeBy;
-
-	@JsonProperty("bankName")
-	private String bankName;
-
-	@JsonProperty("chequeNumber")
-	private String chequeNumber;
-	
-//  other
-	
-	@JsonProperty("installmentOne")
-	private BigDecimal installmentOne;
-
-	@JsonProperty("installmentTwo")
-	private BigDecimal installmentTwo;
-
-	@JsonProperty("installmentTwoDueDate")
-	private Long installmentTwoDueDate;
-
-	@JsonProperty("installmentThree")
-	private BigDecimal installmentThree;
-
-	@JsonProperty("installmentThreeDueDate")
-	private Long installmentThreeDueDate;
-
-	@JsonProperty("monthlyOrAnnually")
-	private String monthlyOrAnnually;
-
-	@JsonProperty("groundRentStartDate")
-	private Long groundRentStartDate;
-
-	@JsonProperty("rentRevision")
-	private int rentRevision;
-
-	@JsonProperty("leasePeriod")
-	private int leasePeriod;
-
-	@JsonProperty("licenseFeeOfYear")
-	private int licenseFeeOfYear;
-
-	@JsonProperty("licenseFee")
-	private BigDecimal licenseFee;
-	
 	@JsonProperty("securityAmount")
 	private BigDecimal securityAmount;
 
-	@JsonProperty("securityDate")
-	private Long securityDate;
+	@JsonProperty("totalAmount")
+	private BigDecimal totalAmountDecimal;
+
+	@JsonProperty("isGrOrLi")
+	private Boolean isGrOrLi;
+
+	@JsonProperty("premiumAmount")
+	private List<PremiumAmount> premiumAmount;
+
+	@JsonProperty("grOrLi")
+	private List<GrOrLi> grOrLi;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
