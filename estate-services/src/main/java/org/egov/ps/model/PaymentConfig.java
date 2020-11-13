@@ -29,7 +29,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Payment {
+public class PaymentConfig {
 
 	/**
 	 * Unique id of the payment
