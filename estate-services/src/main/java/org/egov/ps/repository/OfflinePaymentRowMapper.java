@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.ps.model.OfflinePaymentDetails;
+import org.egov.ps.model.OfflinePaymentDetails.OfflinePaymentType;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,8 @@ public class OfflinePaymentRowMapper implements ResultSetExtractor<List<OfflineP
 					.demandId(rs.getString("offlinedemand_id")).amount(rs.getBigDecimal("offlineamount"))
 					.bankName(rs.getString("offlinebank_name"))
 					.transactionNumber(rs.getString("offlinetransaction_number"))
-					.dateOfPayment(rs.getLong("offlinedate_of_payment")).build();
+					.dateOfPayment(rs.getLong("offlinedate_of_payment"))
+					.type(OfflinePaymentType.fromValue(rs.getString("offline_type"))).build();
 			estatePayments.add(estatePayment);
 		}
 		return estatePayments;

@@ -188,7 +188,7 @@
             ],
             "body":{
                "mode":"raw",
-               "raw":"{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170110110900|en_IN\",\n        \"authToken\": \"f385a217-ec0b-43a7-9027-9d24a770fe2f\"\n    },\n    \"propertyPenalties\": [\n        {\n            \"property\": {\n                \"id\": \"87c379b3-c3e5-45ce-ac7d-eb657ecd8ef8\"\n            },\n            \"violationType\": \"check bounse\",\n            \"penaltyAmount\": 500.00\n        }\n    ]\n}",
+               "raw":"{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170110110900|en_IN\",\n        \"authToken\": \"f385a217-ec0b-43a7-9027-9d24a770fe2f\"\n    },\n    \"propertyPenalties\": [\n        {\n            \"property\": {\n                \"id\": \"87c379b3-c3e5-45ce-ac7d-eb657ecd8ef8\"\n            },\n            \"violationType\": \"check bounse\",\n            \"penaltyAmount\": 300.00\n        }\n    ]\n}",
                "options":{
                   "raw":{
                      "language":"json"
@@ -211,7 +211,7 @@
             ],
             "body":{
                "mode":"raw",
-               "raw":"{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170110110900|en_IN\",\n        \"authToken\": \"f385a217-ec0b-43a7-9027-9d24a770fe2f\"\n    },\n    \"Properties\": [\n        {\n            \"id\": \"87c379b3-c3e5-45ce-ac7d-eb657ecd8ef8\",\n            \"propertyDetails\": {\n                \"offlinePaymentDetails\": [\n                    {\n                        \"amount\": 500.0,\n                        \"bankName\": \"abc bank ltd\",\n                        \"transactionId\": \"trans-123\",\n                        \"dateOfPayment\": 1605011037000\n                    }\n                ]\n            }\n        }\n    ]\n}",
+               "raw":"{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170110110900|en_IN\",\n        \"authToken\": \"f385a217-ec0b-43a7-9027-9d24a770fe2f\"\n    },\n    \"Properties\": [\n        {\n            \"id\": \"87c379b3-c3e5-45ce-ac7d-eb657ecd8ef8\",\n            \"propertyDetails\": {\n                \"offlinePaymentDetails\": [\n                    {\n                        \"amount\": 100.0,\n                        \"bankName\": \"abc bank ltd\",\n                        \"transactionNumber\": \"trans-123\",\n                        \"dateOfPayment\": 1605011037000\n                    }\n                ]\n            }\n        }\n    ]\n}",
                "options":{
                   "raw":{
                      "language":"json"
@@ -219,6 +219,29 @@
                }
             },
             "url":"http:\/\/localhost:8083\/est-services\/violation\/_penalty_payment"
+         },
+         "response":[
+            
+         ]
+      },
+      {
+         "name":"PS_penalty_statement",
+         "_postman_id":"d3f415a8-a5ed-44be-a162-501f816291ab",
+         "request":{
+            "method":"POST",
+            "header":[
+               
+            ],
+            "body":{
+               "mode":"raw",
+               "raw":"{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170110110900|en_IN\",\n        \"authToken\": \"f385a217-ec0b-43a7-9027-9d24a770fe2f\"\n    },\n    \"Criteria\": {\n        \"fromDate\": 1605256755077,\n        \"toDate\": 1605257213709,\n        \"propertyid\": \"87c379b3-c3e5-45ce-ac7d-eb657ecd8ef8\"\n    }\n}",
+               "options":{
+                  "raw":{
+                     "language":"json"
+                  }
+               }
+            },
+            "url":"http:\/\/localhost:8083\/est-services\/violation\/_penalty_statement"
          },
          "response":[
             

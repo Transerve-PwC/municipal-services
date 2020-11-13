@@ -9,6 +9,8 @@ import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.PropertyPenalty;
 import org.egov.ps.service.PropertyViolationService;
 import org.egov.ps.util.ResponseInfoFactory;
+import org.egov.ps.web.contracts.AccountStatementRequest;
+import org.egov.ps.web.contracts.PenaltyStatementResponse;
 import org.egov.ps.web.contracts.PropertyOfflinePaymentResponse;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyPenaltyResponse;
@@ -52,6 +54,14 @@ public class PropertyViolationController {
 		PropertyOfflinePaymentResponse response = PropertyOfflinePaymentResponse.builder()
 				.offlinePaymentDetails(offlinePaymentDetails).responseInfo(resInfo).build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PostMapping("/_penalty_statement")
+	public ResponseEntity<PenaltyStatementResponse> penaltyStatement(
+			@Valid @RequestBody AccountStatementRequest accountStatementRequest) {
+		PenaltyStatementResponse penaltyStatementResponse = propertyViolationService
+				.createPenaltyStatement(accountStatementRequest);
+		return new ResponseEntity<>(penaltyStatementResponse, HttpStatus.OK);
 	}
 
 }

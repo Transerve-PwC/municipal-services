@@ -3,12 +3,14 @@ package org.egov.ps.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
+import org.egov.ps.model.AccountStatementCriteria;
 import org.egov.ps.model.BillV2;
 import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.OfflinePaymentDetails.OfflinePaymentType;
@@ -22,6 +24,9 @@ import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.service.calculation.PenaltyCollectionService;
 import org.egov.ps.util.Util;
+import org.egov.ps.web.contracts.AccountStatementRequest;
+import org.egov.ps.web.contracts.PenaltyStatementResponse;
+import org.egov.ps.web.contracts.PenaltyStatementSummery;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
@@ -157,6 +162,7 @@ public class PropertyViolationService {
 			ofpd.setId(UUID.randomUUID().toString());
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.PENALTY);
+			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
 		});
 
 		List<PropertyPenalty> updatedPenalties = penaltyCollectionService.settle(penalties, paymentAmount);
@@ -166,6 +172,56 @@ public class PropertyViolationService {
 		producer.push(config.getUpdatePenaltyTopic(), new PropertyPenaltyRequest(requestInfo, updatedPenalties));
 		producer.push(config.getUpdatePropertyTopic(), new PropertyRequest(requestInfo, properties));
 		return offlinePaymentDetails;
+	}
+
+	public PenaltyStatementResponse createPenaltyStatement(AccountStatementRequest accountStatementRequest) {
+
+		/* Set current date in a toDate if it is null */
+		accountStatementRequest.getCriteria()
+				.setToDate(accountStatementRequest.getCriteria().getToDate() == null ? new Date().getTime()
+						: accountStatementRequest.getCriteria().getToDate());
+		AccountStatementCriteria accountStatementCriteria = accountStatementRequest.getCriteria();
+		if (null == accountStatementCriteria.getFromDate()) {
+			throw new CustomException(Collections.singletonMap("NO_FROM_DATE", "From date should not be null"));
+		}
+		if (null == accountStatementCriteria.getPropertyid()) {
+			throw new CustomException(Collections.singletonMap("NO_PROPERTY_ID", "Property id should not be null"));
+		}
+
+		Property property = repository.findPropertyById(accountStatementCriteria.getPropertyid());
+		if (null == property) {
+			throw new CustomException(Collections.singletonMap("NO_PROPERTY_FOUND",
+					"Property not found for the given property id: " + accountStatementCriteria.getPropertyid()));
+		}
+
+		List<PropertyPenalty> propertyPenalties = repository.getPenaltyDemandsForPropertyId(property.getId());
+		List<PropertyPenalty> filteredPropertyPenalties = propertyPenalties.stream()
+//				.filter(PropertyPenalty::isUnPaid)
+				.filter(propertyPenalty -> propertyPenalty.getGenerationDate() >= accountStatementCriteria.getFromDate()
+						&& propertyPenalty.getGenerationDate() <= accountStatementCriteria.getToDate())
+				.collect(Collectors.toList());
+
+		List<String> propertyDetailsIds = new ArrayList<String>();
+		propertyDetailsIds.add(property.getPropertyDetails().getId());
+		List<OfflinePaymentDetails> offlinePaymentDetails = repository
+				.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+
+		double totalPenalty = filteredPropertyPenalties.stream().mapToDouble(PropertyPenalty::getPenaltyAmount).sum();
+		double totalPenaltyDue = filteredPropertyPenalties.stream().mapToDouble(PropertyPenalty::getRemainingPenaltyDue)
+				.sum();
+		BigDecimal totalPenaltyPaid = offlinePaymentDetails.stream()
+				.filter(offlinePaymentDetail -> offlinePaymentDetail.getType().equals(OfflinePaymentType.PENALTY))
+				.map(OfflinePaymentDetails::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		PenaltyStatementSummery penaltyStatementSummery = PenaltyStatementSummery.builder().totalPenalty(totalPenalty)
+				.totalPenaltyDue(totalPenaltyDue).totalPenaltyPaid(totalPenaltyPaid.doubleValue()).build();
+
+		PenaltyStatementResponse penaltyStatementResponse = PenaltyStatementResponse.builder()
+				.propertyPenalties(filteredPropertyPenalties)
+//				.offlinePaymentDetails(offlinePaymentDetails)
+				.penaltyStatementSummery(penaltyStatementSummery).build();
+
+		return penaltyStatementResponse;
 	}
 
 }

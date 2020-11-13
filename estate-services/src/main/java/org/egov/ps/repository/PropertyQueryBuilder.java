@@ -119,7 +119,7 @@ public class PropertyQueryBuilder {
 
 	private static final String OFFLINE_PAYMENT_COLUMN = " offline.id as offlineid, "
 			+ " offline.property_details_id as offlineproperty_details_id, offline.demand_id as offlinedemand_id, "
-			+ " offline.amount as offlineamount, offline.bank_name as offlinebank_name, "
+			+ " offline.amount as offlineamount, offline.bank_name as offlinebank_name, offline.type as offline_type, "
 			+ " offline.transaction_number as offlinetransaction_number, offline.date_of_payment as offlinedate_of_payment ";
 
 	private static final String PROPERTY_PENALTY_COLUMN = " penalty.id as penalty_id, penalty.tenantid as penalty_tenantid, "
