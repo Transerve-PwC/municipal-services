@@ -62,16 +62,31 @@ public class Payment {
 	private BigDecimal securityAmount;
 
 	@JsonProperty("totalAmount")
-	private BigDecimal totalAmountDecimal;
+	private BigDecimal totalAmount;
 
-	@JsonProperty("isGrOrLi")
-	private Boolean isGrOrLi;
+	@JsonProperty("isGroundRent")
+	private Boolean isGroundRent;
 
-	@JsonProperty("premiumAmount")
-	private List<PremiumAmount> premiumAmount;
+	@JsonProperty("groundRentGenerationType")
+	private String groundRentGenerationType;
 
-	@JsonProperty("grOrLi")
-	private List<GrOrLi> grOrLi;
+	@JsonProperty("groundRentGenerateDemand")
+	private String groundRentGenerateDemand;
+
+	@JsonProperty("groundRentAdvanceRent")
+	private BigDecimal groundRentAdvanceRent;
+
+	@JsonProperty("groundRentBillStartDate")
+	private Long groundRentBillStartDate;
+
+	@JsonProperty("groundRentAdvanceRentDate")
+	private Long groundRentAdvanceRentDate;
+
+	@JsonProperty("premiumAmountConfigItems")
+	private List<PremiumAmountConfigItems> premiumAmountConfigItems;
+
+	@JsonProperty("paymentConfigItems")
+	private List<PaymentConfigItems> paymentConfigItems;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

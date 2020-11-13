@@ -25,9 +25,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PremiumAmount {
+public class PremiumAmountConfigItems {
 
-    /**
+	/**
 	 * Unique id of the payment
 	 */
 	@JsonProperty("id")
@@ -36,12 +36,12 @@ public class PremiumAmount {
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-	@JsonProperty("paymentId")
-    private String paymentId;
-    
+	@JsonProperty("paymentConfigId")
+	private String paymentConfigId;
+
 	@JsonProperty("premiumAmount")
-    private String premiumAmount;
-    
+	private String premiumAmount;
+
 	@JsonProperty("premiumAmountDate")
 	private String premiumAmountDate;
 }
