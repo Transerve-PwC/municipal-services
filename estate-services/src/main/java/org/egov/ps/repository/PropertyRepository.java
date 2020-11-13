@@ -345,4 +345,20 @@ public class PropertyRepository {
 		log.debug("preparedStmtList:" + params);
 		return namedParameterJdbcTemplate.query(estateAccountQuery, params, estateAccountrowMapper);
 	}
+
+	public List<EstateDemand> getPropertyDetailsEstateDemandDetails(List<String> propertyDetailsIds) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = propertyQueryBuilder.getEstateDemandQueryWithDateASC(propertyDetailsIds, preparedStmtList);
+		log.debug("query:" + query);
+		log.debug("preparedStmtList:" + preparedStmtList);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, estateDemandRowMapper);
+	}
+	
+	public List<EstatePayment> getPropertyDetailsEstatePaymentDetails(List<String> propertyDetailsIds) {
+		Map<String, Object> preparedStmtList = new HashMap<>();
+		String query = propertyQueryBuilder.getEstatePaymentQueryWithDateASC(propertyDetailsIds, preparedStmtList);
+		log.debug("query:" + query);
+		log.debug("preparedStmtList:" + preparedStmtList);
+		return namedParameterJdbcTemplate.query(query, preparedStmtList, estatePaymentRowMapper);
+	}
 }

@@ -283,12 +283,32 @@ public class PropertyQueryBuilder {
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
+	
+	public String getEstateDemandQueryWithDateASC(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(ESTATE_DEMAND_COLUMNS);
+		sb.append(" FROM " + ESTATE_DEMAND_TABLE);
+		sb.append(" where estd.property_details_id IN (:propertyDetailIds)");
+		sb.append(" order by demand_date asc ");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
 
 	public String getEstatePaymentsQuery(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(ESTATE_PAYMENT_COLUMNS);
 		sb.append(" FROM " + ESTATE_PAYMENT_TABLE);
 		sb.append(" where estp.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
+	
+	public String getEstatePaymentQueryWithDateASC(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(ESTATE_PAYMENT_COLUMNS);
+		sb.append(" FROM " + ESTATE_PAYMENT_TABLE);
+		sb.append(" where estp.property_details_id IN (:propertyDetailIds)");
+		sb.append(" order by payment_date asc ");
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
