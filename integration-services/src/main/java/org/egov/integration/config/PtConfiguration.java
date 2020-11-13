@@ -43,13 +43,28 @@ public class PtConfiguration {
 		converter.setObjectMapper(objectMapper);
 		return converter;
 	}
-	
+
 	@Value("${pt.service.host}")
 	private String ptHost;
 
 	@Value("${pt.service.path}")
 	private String ptPath;
-	
+
 	@Value("${persister.save.ptmapping.topic}")
 	private String ptMappingApplicationSaveTopic;
+
+	@Value("${pt.service.demohost}")
+	private String ptDemoHost;
+
+	@Value("${pt.service.sendotp}")
+	private String ptSendotp;
+
+	@Value("${pt.service.verfyotp}")
+	private String ptVerifyOtp;
+
+	@Value("${pt.service.sectorlist}")
+	private String ptSectorList;
+
+	@Value("${pt.service.searchproperty}")
+	private String ptSearchProperty;
 }

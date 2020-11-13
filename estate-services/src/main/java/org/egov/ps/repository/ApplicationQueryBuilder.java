@@ -139,7 +139,7 @@ public class ApplicationQueryBuilder {
 		if (null != criteria.getFileNumber()) {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.file_number=:fileNumber");
-			preparedStmtList.put("fileNumber", criteria.getFileNumber());
+			preparedStmtList.put("fileNumber", criteria.getFileNumber().toUpperCase().trim());
 		}
 		if (null != criteria.getApplicationNumber()) {
 			addClauseIfRequired(preparedStmtList, builder);

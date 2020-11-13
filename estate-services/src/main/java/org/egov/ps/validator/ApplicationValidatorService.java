@@ -6,6 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.annotation.ApplicationValidator;
 import org.egov.ps.model.Application;
@@ -23,14 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -58,7 +58,7 @@ public class ApplicationValidatorService {
 
 	@Autowired
 	ApplicationRepository applicationRepository;
-	
+
 	@Autowired
 	ApplicationValidatorService(ApplicationContext context, MDMSService mdmsService,
 			PropertyRepository propertyRepository, ObjectMapper objectMapper, OwnerValidator ownerValidator) {
@@ -92,17 +92,16 @@ public class ApplicationValidatorService {
 				Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
 				DocumentContext applicationObjectContext = JsonPath.using(conf).parse(applicationDetailsString);
 				Map<String, List<String>> errorMap;
-					errorMap = this.performValidationsFromMDMS(application.getMDMSModuleName(),
-							applicationObjectContext, request.getRequestInfo(), application.getTenantId(), propertyId);
-				
+				errorMap = this.performValidationsFromMDMS(application.getMDMSModuleName(), applicationObjectContext,
+						request.getRequestInfo(), application.getTenantId(), propertyId);
 
 				if (!errorMap.isEmpty()) {
 					throw new CustomException("INVALID_FIELDS", "Please enter the valid fields " + errorMap.toString());
 				}
 			} catch (JsonProcessingException e) {
-				log.error("Can not parse Json fie",e);
+				log.error("Can not parse Json fie", e);
 			} catch (Exception e) {
-				log.error("Exception",e);
+				log.error("Exception", e);
 			}
 
 		});
@@ -113,15 +112,16 @@ public class ApplicationValidatorService {
 		if (property == null) {
 			throw new CustomException("INVALID_PROPERTY", "Could not find property with the given id:" + propertyId);
 		}
-		if (!property.getState().contentEquals(PSConstants.PM_APPROVED) && !property.getState().contentEquals(PSConstants.ES_APPROVED) ) {
+		if (!property.getState().contentEquals(PSConstants.PM_APPROVED)
+				&& !property.getState().contentEquals(PSConstants.ES_APPROVED)) {
 			throw new CustomException("INVALID_PROPERTY", "Property with the given " + propertyId + " is not approved");
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<String, List<String>> performValidationsFromMDMS(final String applicationType,
-			DocumentContext applicationObject, RequestInfo RequestInfo, final String tenantId,
-			final String propertyId) throws JSONException {
+			DocumentContext applicationObject, RequestInfo RequestInfo, final String tenantId, final String propertyId)
+			throws JSONException {
 		List<Map<String, Object>> fieldConfigurations = this.mdmsService.getApplicationConfig(applicationType,
 				RequestInfo, tenantId);
 		Map<String, List<String>> errorsMap = new HashMap<String, List<String>>();
@@ -232,30 +232,19 @@ public class ApplicationValidatorService {
 				});
 	}
 
-	public List<Application> getApplications(ApplicationRequest applicationRequest) {
-		ApplicationCriteria criteria = getApplicationCriteria(applicationRequest);
+	public void validateUpdateRequest(ApplicationRequest applicationRequest) {
+		applicationRequest.getApplications().forEach(application -> {
+			validateApplicationIdExistsInDB(application.getId());
+		});
+	}
+
+	private void validateApplicationIdExistsInDB(String applicationId) {
+		ApplicationCriteria criteria = ApplicationCriteria.builder().applicationId(applicationId).build();
 		List<Application> applications = applicationRepository.getApplications(criteria);
-
-		boolean ifApplicationExists = ApplicationExists(applications);
-		if (!ifApplicationExists) {
-			throw new CustomException("APPLICATION NOT FOUND", "The application to be updated does not exist");
-		} else {
-			return null;
+		if (CollectionUtils.isEmpty(applications)) {
+			log.warn("The application id to be updated does not exist {}", applicationId);
+			throw new CustomException("APPLICATION NOT FOUND",
+					"The application id to be updated does not exist " + applicationId);
 		}
-	}
-
-	private boolean ApplicationExists(List<Application> applicationRequest) {
-		return (!CollectionUtils.isEmpty(applicationRequest) && applicationRequest.size() == 1);
-	}
-
-	private ApplicationCriteria getApplicationCriteria(ApplicationRequest request) {
-		ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-		if (!CollectionUtils.isEmpty(request.getApplications())) {
-			request.getApplications().forEach(application -> {
-				if (application.getId() != null)
-					applicationCriteria.setApplicationId(application.getId());
-			});
-		}
-		return applicationCriteria;
 	}
 }

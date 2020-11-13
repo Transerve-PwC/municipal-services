@@ -73,9 +73,9 @@ public class MDMSService {
 		List<Map<String, Object>> feesConfigurations = JsonPath.read(response, MDMSResponsePath);
 		return feesConfigurations;
 	}
-	
-	public List<Map<String, Object>> getApplicationGST(String applicationType, RequestInfo requestInfo,
-			String tenantId) throws JSONException {
+
+	public List<Map<String, Object>> getApplicationGST(String applicationType, RequestInfo requestInfo, String tenantId)
+			throws JSONException {
 		tenantId = tenantId.split("\\.")[0];
 		MdmsCriteriaReq mdmsCriteriaReq = util.prepareMdMsRequest(tenantId, PSConstants.MDMS_PS_MODULE_NAME,
 				Arrays.asList(applicationType), PSConstants.MDMS_PS_FEE_GST_FILTER, requestInfo);
@@ -131,7 +131,7 @@ public class MDMSService {
 		return fieldConfigurations;
 	}
 
-	@Cacheable(value = "branchRoles", key = "#tenantId, #applicationType")
+	@Cacheable(value = "branchRoles", key = "{#tenantId, #applicationType}")
 	public List<Map<String, Object>> getBranchRoles(String applicationType, RequestInfo requestInfo, String tenantId) {
 		tenantId = tenantId.split("\\.")[0];
 		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();

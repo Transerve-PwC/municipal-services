@@ -1,12 +1,10 @@
 package org.egov.ps.model;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.ps.model.calculation.Calculation;
-import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.ps.web.contracts.PaymentStatusEnum;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -29,7 +27,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-public class PropertyPenalty {
+public class PropertyPenalty implements Comparable<PropertyPenalty> {
 
 	@JsonProperty("id")
 	private String id;
@@ -37,26 +35,38 @@ public class PropertyPenalty {
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-	@JsonProperty("propertyId")
-	private String propertyId;
+	@JsonProperty("property")
+	private Property property;
 
 	@JsonProperty("branchType")
 	private String branchType;
 
-	@JsonProperty("penaltyAmount")
-	private BigDecimal penaltyAmount;
+	@JsonProperty("generationDate")
+	private Long generationDate;
 
 	@JsonProperty("violationType")
 	private String violationType;
 
+	@JsonProperty("penaltyAmount")
+	private Double penaltyAmount;
+
+	@JsonProperty("remainingPenaltyDue")
+	private Double remainingPenaltyDue;
+
 	@JsonProperty("isPaid")
 	private Boolean isPaid;
 
-	@JsonProperty("totalPenaltyDue")
-	private BigDecimal totalPenaltyDue;
+	@JsonProperty("status")
+	@Builder.Default
+	private PaymentStatusEnum status = PaymentStatusEnum.UNPAID;
 
-	@JsonProperty("penaltyNumber")
-	private String penaltyNumber;
+	public boolean isPaid() {
+		return this.status == PaymentStatusEnum.PAID;
+	}
+
+	public boolean isUnPaid() {
+		return !this.isPaid();
+	}
 
 	@JsonProperty("penaltyBusinessService")
 	private String penaltyBusinessService;
@@ -67,18 +77,9 @@ public class PropertyPenalty {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
-	public String getPenaltyBusinessService() {
-		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE, camelToSnake(this.getBranchType()),
-				PSConstants.PROPERTY_VIOLATION);
+	@Override
+	public int compareTo(PropertyPenalty other) {
+		return this.getGenerationDate().compareTo(other.getGenerationDate());
 	}
 
-	/**
-	 * Convert camel case string to snake case string and capitalise string.
-	 */
-	public static String camelToSnake(String str) {
-		String regex = "([a-z])([A-Z]+)";
-		String replacement = "$1_$2";
-		str = str.replaceAll(regex, replacement).toUpperCase();
-		return str;
-	}
 }

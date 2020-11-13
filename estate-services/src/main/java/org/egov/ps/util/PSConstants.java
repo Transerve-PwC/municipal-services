@@ -71,10 +71,18 @@ public class PSConstants {
 	public static final String BUSINESS_SERVICE_EB_RENT = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_BB_RENT = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_MB_RENT = "ESTATE_SERVICE_MANIMAJRA_BRANCH.PROPERTY_MASTER";
+	public static final String BUSINESS_SERVICE_EB_PENALTY = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION";
+	public static final String BUSINESS_SERVICE_BB_PENALTY = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_VIOLATION";
+	public static final String BUSINESS_SERVICE_MB_PENALTY = "ESTATE_SERVICE_MANIMAJRA_BRANCH.PROPERTY_VIOLATION";
 
 	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages";
 	public static final String LOCALIZATION_MODULE = "rainmaker-es";
 	public static final String LOCALIZATION_LOCALE = "en_IN";
 
 	public static final String PROPERTY_VIOLATION = "PROPERTY_VIOLATION";
+	
+	//User event
+	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String  USREVENTS_EVENT_NAME = "Estate Module";
+	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-EST";
 }

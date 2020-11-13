@@ -18,7 +18,10 @@ import org.egov.common.contract.request.User;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
+import org.egov.ps.model.NotificationsEvent;
 import org.egov.ps.model.NotificationsSms;
+import org.egov.ps.model.notification.uservevents.Event;
+import org.egov.ps.model.notification.uservevents.EventRequest;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
@@ -146,6 +149,15 @@ public class ApplicationsNotificationService {
                     log.warn("Notifications Invalid sms config found {}", smsConfig);
                 }
             }
+            /**
+             * Web notification
+             */
+            NotificationsEvent eventConfig = notification.getModes().getEvent();
+            if(eventConfig.isEnabled() && eventConfig.isValid()) {
+    				EventRequest eventRequest = getEventsForApplication(enrichedContent,requestInfo,application,eventConfig,applicationJsonString);
+    				if(null != eventRequest)
+    					util.sendEventNotification(eventRequest);
+    		}
         } catch (Exception e) {
             log.error("Could not convert enrichedApplication to JSON", e);
         }
@@ -199,4 +211,18 @@ public class ApplicationsNotificationService {
         }
         return list;
     }
+    
+    public EventRequest getEventsForApplication(String message,RequestInfo requestInfo, Application application, NotificationsEvent eventConfig, String applicationJsonString) {
+    	List<Event> events = new ArrayList<>();
+            if(message == null) return null;
+            String mobileNumber = enrichPathPatternsWithApplication(eventConfig.getTo(), applicationJsonString);
+            String uuid = enrichPathPatternsWithApplication(eventConfig.getTo(), applicationJsonString);
+            events = util.createEvent(message,mobileNumber,uuid,requestInfo,application.getTenantId(),application.getState(),application.getApplicationNumber(),eventConfig.isPayLink());
+            if(!CollectionUtils.isEmpty(events)) {
+    		return EventRequest.builder().requestInfo(requestInfo).events(events).build();
+        }else {
+        	return null;
+        }
+    }
+		
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.egov.assets.common.Pagination;
 import org.egov.assets.model.IndentSearch;
@@ -275,8 +277,12 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 		if (purchaseOrderSearch.getStatus() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =:status");
-			paramValues.put("status", purchaseOrderSearch.getStatus());
+//			params.append("status =:status");
+			List<String> list =
+					  Stream.of(purchaseOrderSearch.getStatus().split(","))
+					  .collect(Collectors.toList());
+			params.append("status in(:status)");
+			paramValues.put("status",list );
 		}
 
 		if (purchaseOrderSearch.getStateId() != null) {

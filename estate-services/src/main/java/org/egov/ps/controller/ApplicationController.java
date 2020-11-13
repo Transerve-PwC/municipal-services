@@ -60,7 +60,7 @@ public class ApplicationController {
 	@PostMapping("/_update")
 	public ResponseEntity<ApplicationResponse> update(@Valid @RequestBody ApplicationRequest applicationRequest) {
 
-		List<Application> applications = applicationService.updateApplication(applicationRequest);
+		List<Application> applications = applicationService.updateApplicationRequest(applicationRequest);
 		ResponseInfo resInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(applicationRequest.getRequestInfo(), true);
 		ApplicationResponse response = ApplicationResponse.builder().applications(applications).responseInfo(resInfo)

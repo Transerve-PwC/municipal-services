@@ -1,44 +1,34 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Document;
-import org.egov.ps.model.MortgageDetails;
-import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
-import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.model.calculation.Category;
 import org.egov.ps.model.calculation.TaxHeadEstimate;
-import org.egov.ps.model.idgen.IdResponse;
 import org.egov.ps.repository.ApplicationRepository;
-import org.egov.ps.repository.IdGenRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.AuditDetails;
-import org.egov.ps.web.contracts.PropertyRequest;
-import org.egov.tracer.model.CustomException;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,52 +37,46 @@ import lombok.extern.slf4j.Slf4j;
 public class ApplicationEnrichmentService {
 
 	@Autowired
-	Util util;
+	private Util util;
 
 	@Autowired
-	IdGenRepository idGenRepository;
+	private MDMSService mdmsService;
 
 	@Autowired
-	private Configuration config;
-
-	@Autowired
-	private MDMSService mdmsservice;
+	private IdGenService idGenService;
 
 	@Autowired
 	private PropertyRepository propertyRepository;
 
 	@Autowired
-	private ObjectMapper objectMapper;
-
-	MDMSService mdmsService;
-
-	@Autowired
 	ApplicationRepository applicationRepository;
 
-	/**
-	 * Application Related Enrich
-	 */
+	@Autowired
+	private Configuration config;
 
-	public void enrichCreateApplication(ApplicationRequest request) {
+	public void enrichCreateApplicationRequest(ApplicationRequest request) {
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Application> applications = request.getApplications();
 
 		if (!CollectionUtils.isEmpty(applications)) {
 			applications.forEach(application -> {
-				String gen_application_id = UUID.randomUUID().toString();
-				AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-				JsonNode applicationDetails = enrichApplicationDetails(application);
-				enrichPropertyDetails(application);
-
-				application.setId(gen_application_id);
-				application.setAuditDetails(auditDetails);
-				application.setApplicationDetails(applicationDetails);
+				enrichApplication(requestInfo, application);
 			});
-			setIdgenIds(request);
 		}
 	}
 
-	private JsonNode enrichApplicationDetails(Application application) {
+	public void enrichApplication(RequestInfo requestInfo, Application application) {
+		AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+		enrichApplicationDetails(application);
+		enrichPropertyDetails(application);
+
+		application.setId(UUID.randomUUID().toString());
+		application.setAuditDetails(auditDetails);
+		application.setApplicationNumber(
+				idGenService.getId(requestInfo, application.getTenantId(), config.getApplicationNumberIdgenNamePS()));
+	}
+
+	private void enrichApplicationDetails(Application application) {
 		JsonNode applicationDetails = application.getApplicationDetails();
 
 		JsonNode transferor = (applicationDetails.get("transferor") != null) ? applicationDetails.get("transferor")
@@ -108,21 +92,7 @@ public class ApplicationEnrichmentService {
 					((ObjectNode) transferor).put("serialNumber", owner.getSerialNumber());
 					((ObjectNode) transferor).put("share", owner.getShare());
 					((ObjectNode) transferor).put("cpNumber", owner.getCpNumber());
-
-					ObjectNode ownerDetails = objectMapper.createObjectNode();
-					ownerDetails.put("ownerName", owner.getOwnerDetails().getOwnerName());
-					ownerDetails.put("guardianName", owner.getOwnerDetails().getGuardianName());
-					ownerDetails.put("guardianRelation", owner.getOwnerDetails().getGuardianRelation());
-					ownerDetails.put("mobileNumber", owner.getOwnerDetails().getMobileNumber());
-					ownerDetails.put("allotmentNumber", owner.getOwnerDetails().getAllotmentNumber());
-					ownerDetails.put("dateOfAllotment", owner.getOwnerDetails().getDateOfAllotment());
-					ownerDetails.put("possesionDate", owner.getOwnerDetails().getPossesionDate());
-					ownerDetails.put("isApproved", owner.getOwnerDetails().getIsApproved());
-					ownerDetails.put("isCurrentOwner", owner.getOwnerDetails().getIsCurrentOwner());
-					ownerDetails.put("isMasterEntry", owner.getOwnerDetails().getIsMasterEntry());
-					ownerDetails.put("address", owner.getOwnerDetails().getAddress());
-
-					((ObjectNode) transferor).set("transferorDetails", ownerDetails);
+					((ObjectNode) transferor).set("transferorDetails", owner.getOwnerDetails().copyAsJsonNode());
 				}
 			});
 		}
@@ -145,99 +115,12 @@ public class ApplicationEnrichmentService {
 				});
 			}
 		}
-		return applicationDetails;
+		application.setApplicationDetails(applicationDetails);
 	}
 
 	private void enrichPropertyDetails(Application application) {
 		Property property = propertyRepository.findPropertyById(application.getProperty().getId());
-		Property propertyToEnrich = application.getProperty();
-
-		propertyToEnrich.setFileNumber(property.getFileNumber());
-		propertyToEnrich.setTenantId(property.getTenantId());
-		propertyToEnrich.setCategory(property.getCategory());
-		propertyToEnrich.setSubCategory(property.getSubCategory());
-		propertyToEnrich.setSiteNumber(property.getSiteNumber());
-		propertyToEnrich.setSectorNumber(property.getSectorNumber());
-
-		PropertyDetails propertyDetails = new PropertyDetails();
-		propertyDetails.setBranchType(property.getPropertyDetails().getBranchType());
-		propertyDetails.setPropertyType(property.getPropertyDetails().getBranchType());
-		propertyDetails.setTypeOfAllocation(property.getPropertyDetails().getBranchType());
-		propertyDetails.setEmdAmount(property.getPropertyDetails().getEmdAmount());
-		propertyDetails.setEmdDate(property.getPropertyDetails().getEmdDate());
-		propertyDetails.setModeOfAuction(property.getPropertyDetails().getModeOfAuction());
-		propertyDetails.setSchemeName(property.getPropertyDetails().getSchemeName());
-		propertyDetails.setDateOfAuction(property.getPropertyDetails().getDateOfAuction());
-		propertyDetails.setAreaSqft(property.getPropertyDetails().getAreaSqft());
-		propertyDetails.setRatePerSqft(property.getPropertyDetails().getRatePerSqft());
-		propertyDetails.setLastNocDate(property.getPropertyDetails().getLastNocDate());
-		propertyDetails.setServiceCategory(property.getPropertyDetails().getServiceCategory());
-		propertyDetails.setIsPropertyActive(property.getPropertyDetails().getIsPropertyActive());
-		propertyDetails.setTradeType(property.getPropertyDetails().getTradeType());
-		propertyDetails.setCompanyName(property.getPropertyDetails().getCompanyName());
-		propertyDetails.setCompanyAddress(property.getPropertyDetails().getCompanyAddress());
-		propertyDetails.setCompanyRegistrationNumber(property.getPropertyDetails().getCompanyRegistrationNumber());
-		propertyDetails.setCompanyType(property.getPropertyDetails().getCompanyType());
-
-		propertyToEnrich.setPropertyDetails(propertyDetails);
-	}
-
-	/**
-	 * Returns a list of numbers generated from idgen
-	 *
-	 * @param requestInfo RequestInfo from the request
-	 * @param tenantId    tenantId of the city
-	 * @param idKey       code of the field defined in application properties for
-	 *                    which ids are generated for
-	 * @param idformat    format in which ids are to be generated
-	 * @param count       Number of ids to be generated
-	 * @return List of ids generated using idGen service
-	 */
-	private List<String> getIdList(RequestInfo requestInfo, String tenantId, String idKey, int count) {
-		List<IdResponse> idResponses = idGenRepository.getId(requestInfo, tenantId, idKey, count).getIdResponses();
-
-		if (CollectionUtils.isEmpty(idResponses))
-			throw new CustomException("IDGEN ERROR", "No ids returned from idgen Service");
-
-		return idResponses.stream().map(IdResponse::getId).collect(Collectors.toList());
-	}
-
-	/**
-	 * Sets the ApplicationNumber for given EstateServiceApplicationRequest
-	 *
-	 * @param request EstateServiceApplicationRequest which is to be created
-	 */
-	private void setIdgenIds(ApplicationRequest request) {
-		RequestInfo requestInfo = request.getRequestInfo();
-		String tenantId = request.getApplications().get(0).getTenantId();
-		List<Application> applications = request.getApplications();
-		int size = request.getApplications().size();
-
-		List<String> applicationNumbers = setIdgenIds(requestInfo, tenantId, size,
-				config.getApplicationNumberIdgenNamePS());
-		ListIterator<String> itr = applicationNumbers.listIterator();
-
-		if (!CollectionUtils.isEmpty(applications)) {
-			applications.forEach(application -> {
-				application.setApplicationNumber(itr.next());
-			});
-		}
-	}
-
-	private List<String> setIdgenIds(RequestInfo requestInfo, String tenantId, int size, String idGenName) {
-		List<String> applicationNumbers = null;
-
-		applicationNumbers = getIdList(requestInfo, tenantId, idGenName, size);
-
-		Map<String, String> errorMap = new HashMap<>();
-		if (applicationNumbers.size() != size) {
-			errorMap.put("IDGEN ERROR ",
-					"The number of application number returned by idgen is not equal to number of Applications");
-		}
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-
-		return applicationNumbers;
+		application.setProperty(property);
 	}
 
 	public void enrichUpdateApplication(ApplicationRequest request) {
@@ -257,52 +140,15 @@ public class ApplicationEnrichmentService {
 				applicationDocuments.forEach(document -> {
 					if (document.getId() == null) {
 						document.setId(UUID.randomUUID().toString());
-						document.setTenantId(application.getTenantId());
-						document.setReferenceId(application.getId());
-						document.setPropertyId(application.getProperty().getId());
-						document.setAuditDetails(docAuditDetails);
 					}
+					document.setTenantId(application.getTenantId());
+					document.setReferenceId(application.getId());
+					document.setPropertyId(application.getProperty().getId());
+					document.setAuditDetails(docAuditDetails);
 				});
 				enrichGenerateDemand(application, request.getRequestInfo());
 			});
 		}
-	}
-
-	public void enrichMortgageDetailsRequest(PropertyRequest request) {
-		if (!CollectionUtils.isEmpty(request.getProperties())) {
-			request.getProperties().forEach(property -> {
-				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
-					property.getPropertyDetails().getOwners().forEach(owner -> {
-						// checking - owner is existing and mortgage details bound with user.
-						if (null != owner.getId() && !owner.getId().isEmpty() && null != owner.getMortgageDetails()) {
-							// validate mortgage details - documents
-							validateMortgageDetails(property, owner, request.getRequestInfo(), owner.getId());
-							owner.setMortgageDetails(
-									getMortgage(property, owner, request.getRequestInfo(), owner.getId()));
-						}
-					});
-				}
-			});
-		}
-	}
-
-	public void validateMortgageDetails(Property property, Owner owner, RequestInfo requestInfo, String id) {
-		MortgageDetails mortgage = owner.getMortgageDetails();
-		List<Map<String, Object>> fieldConfigurations = mdmsservice
-				.getMortgageDocumentConfig(mortgage.getMortgageType(), requestInfo, property.getTenantId());
-
-		// TODO :: write code to validate documents base on master json template.
-	}
-
-	private MortgageDetails getMortgage(Property property, Owner owner, RequestInfo requestInfo, String gen_owner_id) {
-		String gen_mortgage_id = UUID.randomUUID().toString();
-
-		MortgageDetails mortgage = owner.getMortgageDetails();
-		mortgage.setId(gen_mortgage_id);
-		mortgage.setTenantId(property.getTenantId());
-		mortgage.setOwnerId(gen_owner_id);
-
-		return mortgage;
 	}
 
 	private void enrichGenerateDemand(Application application, RequestInfo requestInfo) {
@@ -310,13 +156,12 @@ public class ApplicationEnrichmentService {
 
 		if (application.getState().contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
 
-			List<Map<String, Object>> feesConfigurations;
 			try {
-				feesConfigurations = mdmsservice.getApplicationFees(application.getMDMSModuleName(), requestInfo,
-						application.getTenantId());
+				List<Map<String, Object>> feesConfigurations = mdmsService
+						.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
 
-				TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 				BigDecimal estimateAmount = fetchEstimateAmountFromMDMSJson(feesConfigurations, application);
+				TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 				estimateDue.setEstimateAmount(estimateAmount);
 				estimateDue.setCategory(Category.FEE);
 				estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
@@ -350,7 +195,7 @@ public class ApplicationEnrichmentService {
 		BigDecimal responseGSTEstateAmount = new BigDecimal(0.0);
 		List<Map<String, Object>> feeGsts;
 		try {
-			feeGsts = mdmsservice.getApplicationGST(application.getMDMSModuleName(), requestInfo,
+			feeGsts = mdmsService.getApplicationGST(application.getMDMSModuleName(), requestInfo,
 					application.getTenantId());
 
 			if (!feeGsts.isEmpty()) {
@@ -398,24 +243,6 @@ public class ApplicationEnrichmentService {
 					: new BigDecimal("0");
 		}
 		return responseEstimateAmount;
-	}
-
-	// To be used in future
-	private void enrichUpdateDemand(Application application) {
-		List<TaxHeadEstimate> estimates = new LinkedList<>();
-
-		if (application.getAction().equalsIgnoreCase(PSConstants.EM_ACTION_APPROVE)) {
-
-			TaxHeadEstimate estimateDue = new TaxHeadEstimate();
-			estimateDue.setEstimateAmount(new BigDecimal(500.00));
-			estimateDue.setCategory(Category.FEE);
-			estimateDue.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
-					PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
-			estimates.add(estimateDue);
-		}
-		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
-				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();
-		application.setCalculation(calculation);
 	}
 
 	public String getTaxHeadCodeWithCharge(String billingBusService, String chargeFor, Category category) {

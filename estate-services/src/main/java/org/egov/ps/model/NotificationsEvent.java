@@ -22,4 +22,12 @@ public class NotificationsEvent {
 
 	@JsonProperty("to")
 	private String to;
+	
+	@JsonProperty("isPayLink")
+	@Builder.Default
+	private boolean isPayLink=false;
+	
+	public boolean isValid() {
+		return to != null;
+	}
 }

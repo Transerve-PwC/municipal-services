@@ -48,14 +48,14 @@ public class SmidShgGroup {
 	private StatusEnum status ;
 
 	public enum StatusEnum {
-		 DRAFTED("DRAFTED"),
-	    CREATED("CREATED"),
-	    APPROVED("APPROVED"),
-	    REJECTED("REJECTED"),
-	    DELETED("DELETED"),
-	    UPDATED("UPDATED"),
-	    AWAITINGFORAPPROVAL("AWAITINGFORAPPROVAL"),
-	    AWAITINGFORDELETION("AWAITINGFORDELETION");
+		DRAFTED("Drafted"),
+	    CREATED("Created"),
+	    APPROVED("Approved"),
+	    REJECTED("Rejected"),
+	    DELETED("Deleted"),
+	    UPDATED("Updated"),
+	    AWAITINGFORAPPROVAL("Awaiting for Approval"),
+	    AWAITINGFORDELETION("Awaiting for Deletion");
 
 	    private String value;
 
@@ -72,7 +72,7 @@ public class SmidShgGroup {
 	    @JsonCreator
 	    public static StatusEnum fromValue(String text) {
 	      for (StatusEnum b : StatusEnum.values()) {
-	        if (String.valueOf(b.value).equals(text)) {
+	        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
 	          return b;
 	        }
 	      }

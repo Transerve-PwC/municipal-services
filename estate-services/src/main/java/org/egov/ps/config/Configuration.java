@@ -63,6 +63,9 @@ public class Configuration {
 	@Value("${persister.save.penalty.topic}")
 	private String savePenaltyTopic;
 	
+	@Value("${persister.update.penalty.topic}")
+	private String updatePenaltyTopic;
+	
 	// Workflow
 
 	@Value("${is.workflow.enabled}")
@@ -170,4 +173,17 @@ public class Configuration {
 
 	@Value("${egov.localization.endpoint.search.path}")
 	private String localizationEndpoint;
+	
+	//Web notiifcation
+	@Value("${egov.usr.events.create.topic}")
+	private String saveUserEventsTopic;
+
+	@Value("${egov.usr.events.app.pay.link}")
+	private String payLinkForApplication;
+	
+	@Value("${egov.usr.events.pay.code}")
+	private String payCode;
+	
+	@Value("${egov.ui.app.host}")
+	private String uiAppHost;
 }

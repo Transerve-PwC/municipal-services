@@ -58,6 +58,11 @@ public class PaymentUpdateService {
 				case PSConstants.BUSINESS_SERVICE_MB_RENT:
 					log.info("Post enrichment need to do");
 					break;
+				case PSConstants.BUSINESS_SERVICE_EB_PENALTY:
+				case PSConstants.BUSINESS_SERVICE_BB_PENALTY:
+				case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
+					log.info("Post enrichment need to do");
+					break;
 				default: {
 					if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
 

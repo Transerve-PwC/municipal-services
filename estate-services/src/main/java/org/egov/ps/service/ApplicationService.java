@@ -11,7 +11,6 @@ import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.ApplicationRepository;
-import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.ApplicationValidatorService;
@@ -40,16 +39,13 @@ public class ApplicationService {
 	private Producer producer;
 
 	@Autowired
-	ApplicationValidatorService validator;
+	private ApplicationValidatorService validator;
 
 	@Autowired
-	PropertyRepository repository;
+	private ApplicationRepository applicationRepository;
 
 	@Autowired
-	ApplicationRepository applicationRepository;
-
-	@Autowired
-	WorkflowIntegrator wfIntegrator;
+	private WorkflowIntegrator wfIntegrator;
 
 	@Autowired
 	private DemandService demandService;
@@ -59,39 +55,40 @@ public class ApplicationService {
 
 	public List<Application> createApplication(ApplicationRequest request) {
 		validator.validateCreateRequest(request);
-		applicationEnrichmentService.enrichCreateApplication(request);
+		applicationEnrichmentService.enrichCreateApplicationRequest(request);
 		producer.push(config.getSaveApplicationTopic(), request);
 		return request.getApplications();
 	}
 
 	public List<Application> searchApplication(ApplicationCriteria criteria, RequestInfo requestInfo) {
-		if (criteria.getFileNumber() != null) {
-			criteria.setFileNumber(criteria.getFileNumber().trim().toUpperCase());
-		}
 		List<Application> applications = applicationRepository.getApplications(criteria);
-
 		if (CollectionUtils.isEmpty(applications)) {
 			return Collections.emptyList();
 		}
 		return applications;
 	}
 
-	public List<Application> updateApplication(ApplicationRequest applicationRequest) {
-		validator.getApplications(applicationRequest);
+	public List<Application> updateApplicationRequest(ApplicationRequest applicationRequest) {
+		validator.validateUpdateRequest(applicationRequest);
 		applicationEnrichmentService.enrichUpdateApplication(applicationRequest);
-		String action = applicationRequest.getApplications().get(0).getAction();
-		String state = applicationRequest.getApplications().get(0).getState();
-
-		if (state.contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
-			demandService.generateDemand(applicationRequest.getRequestInfo(), applicationRequest.getApplications());
-		}
-		if (config.getIsWorkflowEnabled() && !action.contentEquals("")) {
-			wfIntegrator.callApplicationWorkFlow(applicationRequest);
-		}
+		applicationRequest.getApplications().stream()
+				.forEach(application -> updateApplication(applicationRequest.getRequestInfo(), application));
 		producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 
 		applicationNotificationService.processNotifications(applicationRequest);
 		return applicationRequest.getApplications();
+	}
+
+	private void updateApplication(RequestInfo requestInfo, Application application) {
+		String action = application.getAction();
+		String state = application.getState();
+
+		if (state.contains(PSConstants.EM_STATE_PENDING_DA_FEE)) {
+			demandService.generateDemand(requestInfo, Collections.singletonList(application));
+		}
+		if (config.getIsWorkflowEnabled() && !action.contentEquals("")) {
+			wfIntegrator.callApplicationWorkFlow(requestInfo, application);
+		}
 	}
 
 	public List<State> getStates(RequestInfoMapper requestInfoWrapper) {
@@ -116,7 +113,9 @@ public class ApplicationService {
 		}
 
 		if (!CollectionUtils.isEmpty(applicationsForUpdate)) {
-			wfIntegrator.callApplicationWorkFlow(new ApplicationRequest(requestInfo, applicationsForUpdate));
+			applicationsForUpdate.forEach(application -> {
+				wfIntegrator.callApplicationWorkFlow(requestInfo, application);
+			});
 			producer.push(config.getUpdateApplicationTopic(),
 					new ApplicationRequest(requestInfo, applicationsForUpdate));
 		}

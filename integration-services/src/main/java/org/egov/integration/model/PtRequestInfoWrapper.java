@@ -23,4 +23,20 @@ public class PtRequestInfoWrapper {
 
 	@JsonProperty("uid")
 	private String uid;
+
+	@JsonProperty("otp")
+	private String otp;
+
+	@JsonProperty("mobileNo")
+	private String mobileNo;
+
+	@JsonProperty("tokenId")
+	private String tokenId;
+
+	@JsonProperty("houseNo")
+	private String houseNo;
+
+	@JsonProperty("sectorId")
+	private String sectorId;
+
 }
