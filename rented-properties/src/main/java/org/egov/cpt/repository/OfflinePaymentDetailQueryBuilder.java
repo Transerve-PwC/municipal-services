@@ -1,9 +1,11 @@
 package org.egov.cpt.repository;
 
+import java.util.List;
 import java.util.Map;
 
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.PropertyCriteria;
+import org.egov.cpt.util.PTConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -23,12 +25,14 @@ public class OfflinePaymentDetailQueryBuilder {
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
 	private static final String OPD_SEARCH_QUERY = SELECT + "opd.id as opdid, opd.property_id as opdproperty_id, opd.demand_id as opddemand_id, opd.amount as opdamount, "
-			+ "opd.bankname as opdbankname, opd.transactionnumber as opdtransactionnumber "
-			+ "FROM cs_pt_offline_payment_detail opd";
+			+ "opd.bankname as opdbankname, opd.transactionnumber as opdtransactionnumber, "
+			+ "opd.created_by as opdcreated_by, opd.created_date as opdcreated_date, opd.modified_by as opdmodified_by, opd.modified_date as opdmodified_date "
+			+ "FROM cs_pt_offline_payment_detail opd ";
 
 	public String getPropertyOfflinePaymentDetailSearchQuery(PropertyCriteria criteria, Map<String, Object> preparedStmtList) {
 
 		StringBuilder builder = new StringBuilder(OPD_SEARCH_QUERY);
+		List<String> relations = criteria.getRelations();
 
 		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
 			addClauseIfRequired(preparedStmtList, builder);
@@ -36,6 +40,10 @@ public class OfflinePaymentDetailQueryBuilder {
 			preparedStmtList.put("propId", criteria.getPropertyId());
 		}
 
+		if (relations == null || relations.contains(PTConstants.RELATION_OPD)) {
+			builder.append(" ORDER BY opd.modified_date desc ");
+		}
+ 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}
 

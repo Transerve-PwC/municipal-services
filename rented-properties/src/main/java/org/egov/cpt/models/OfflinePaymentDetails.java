@@ -41,4 +41,8 @@ public class OfflinePaymentDetails {
 	@Size(max = 100)
 	@JsonProperty("transactionNumber")
 	private String transactionNumber;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
 }
