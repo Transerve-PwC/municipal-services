@@ -26,7 +26,7 @@ import org.egov.ps.service.calculation.PenaltyCollectionService;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AccountStatementRequest;
 import org.egov.ps.web.contracts.PenaltyStatementResponse;
-import org.egov.ps.web.contracts.PenaltyStatementSummery;
+import org.egov.ps.web.contracts.PenaltyStatementSummary;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
@@ -196,7 +196,6 @@ public class PropertyViolationService {
 
 		List<PropertyPenalty> propertyPenalties = repository.getPenaltyDemandsForPropertyId(property.getId());
 		List<PropertyPenalty> filteredPropertyPenalties = propertyPenalties.stream()
-//				.filter(PropertyPenalty::isUnPaid)
 				.filter(propertyPenalty -> propertyPenalty.getGenerationDate() >= accountStatementCriteria.getFromDate()
 						&& propertyPenalty.getGenerationDate() <= accountStatementCriteria.getToDate())
 				.collect(Collectors.toList());
@@ -213,13 +212,13 @@ public class PropertyViolationService {
 				.filter(offlinePaymentDetail -> offlinePaymentDetail.getType().equals(OfflinePaymentType.PENALTY))
 				.map(OfflinePaymentDetails::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-		PenaltyStatementSummery penaltyStatementSummery = PenaltyStatementSummery.builder().totalPenalty(totalPenalty)
+		PenaltyStatementSummary penaltyStatementSummary = PenaltyStatementSummary.builder().totalPenalty(totalPenalty)
 				.totalPenaltyDue(totalPenaltyDue).totalPenaltyPaid(totalPenaltyPaid.doubleValue()).build();
 
 		PenaltyStatementResponse penaltyStatementResponse = PenaltyStatementResponse.builder()
 				.propertyPenalties(filteredPropertyPenalties)
-//				.offlinePaymentDetails(offlinePaymentDetails)
-				.penaltyStatementSummery(penaltyStatementSummery).build();
+				.offlinePaymentDetails(offlinePaymentDetails)
+				.penaltyStatementSummary(penaltyStatementSummary).build();
 
 		return penaltyStatementResponse;
 	}

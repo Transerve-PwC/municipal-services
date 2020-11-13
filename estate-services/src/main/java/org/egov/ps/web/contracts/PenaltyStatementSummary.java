@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PenaltyStatementSummery {
+public class PenaltyStatementSummary {
 
 	@JsonProperty("totalPenalty")
 	private Double totalPenalty;

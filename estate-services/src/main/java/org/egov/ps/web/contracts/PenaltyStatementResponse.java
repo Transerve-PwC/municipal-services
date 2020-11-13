@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.PropertyPenalty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,11 +24,11 @@ public class PenaltyStatementResponse {
 	@Valid
 	private List<PropertyPenalty> propertyPenalties;
 
-//	@JsonProperty("PaymentDetails")
-//	@Valid
-//	private List<OfflinePaymentDetails> offlinePaymentDetails;
+	@JsonProperty("PaymentDetails")
+	@Valid
+	private List<OfflinePaymentDetails> offlinePaymentDetails;
 
-	@JsonProperty("PenaltyStatementSummery")
-	private PenaltyStatementSummery penaltyStatementSummery;
+	@JsonProperty("PenaltyStatementSummary")
+	private PenaltyStatementSummary penaltyStatementSummary;
 
 }
