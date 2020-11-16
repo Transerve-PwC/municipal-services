@@ -55,7 +55,7 @@ public class ReadExcelController {
 			log.info("End controller method readExcel Demand data:" + data.getDemand().size() + " & Payment data:"
 					+ data.getPayment().size());
 			if (data.getDemand().size() == 0 || data.getPayment().size() == 0)
-				throw new CustomException("FILE_NOT_VALID", "Please upload valid file format");
+				throw new CustomException("FILE_TEMPLATE_NOT_VALID", "Invalid template uploaded,Please upload valid template");
 
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
