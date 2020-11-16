@@ -10,6 +10,8 @@ public class PSConstants {
 
 	public static final String ES_APPROVED = "ES_PM_APPROVED";
 
+	public static final String ES_PM_MM_APPROVED = "ES_PM_MM_APPROVED";
+
 	public static final String ES_WF_DOCS = "WF_DOCS";
 
 	public static final String ESTATE_BRANCH = "ESTATE_BRANCH";

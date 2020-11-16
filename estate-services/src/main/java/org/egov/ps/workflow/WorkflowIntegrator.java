@@ -125,6 +125,11 @@ public class WorkflowIntegrator {
 				obj.put(BUSINESSSERVICEKEY, config.getEbRoeBusinessServiceValue());
 				obj.put(BUSINESSIDKEY, property.getPropertyDetails().getBidders().get(0).getAuctionId());
 				obj.put(ACTIONKEY, property.getPropertyDetails().getBidders().get(0).getAction());
+			} else if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANIMAJRA_BRANCH)
+					&& !property.getState().contentEquals(PSConstants.ES_PM_MM_APPROVED)) {
+				obj.put(BUSINESSSERVICEKEY, config.getMmPmBusinessServiceValue());
+				obj.put(BUSINESSIDKEY, property.getFileNumber());
+				obj.put(ACTIONKEY, property.getAction());
 			}
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(AUDITDETAILSKEY, property.getAuditDetails());
