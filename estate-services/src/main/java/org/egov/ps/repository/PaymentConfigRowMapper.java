@@ -31,7 +31,7 @@ public class PaymentConfigRowMapper implements ResultSetExtractor<PaymentConfig>
 					.securityAmount(rs.getBigDecimal("pc_security_amount"))
 					.totalAmount(rs.getBigDecimal("pc_total_amount")).isGroundRent(rs.getBoolean("pc_is_ground_rent"))
 					.groundRentGenerationType(rs.getString("pc_ground_rent_generation_type"))
-					.groundRentGenerateDemand(rs.getString("pc_ground_rent_generate_demand"))
+					.groundRentGenerateDemand(rs.getLong("pc_ground_rent_generate_demand"))
 					.groundRentAdvanceRent(rs.getBigDecimal("pc_ground_rent_advance_rent"))
 					.groundRentBillStartDate(rs.getLong("pc_ground_rent_bill_start_date"))
 					.groundRentAdvanceRentDate(rs.getLong("pc_ground_rent_advance_rent_date"))
