@@ -1,5 +1,5 @@
 {
-  "business": "EstateServices",
+  "business": "EstateBranch",
   "businessService": "SaleGift",
   "businessServiceSla": 86400000,
   "states": [

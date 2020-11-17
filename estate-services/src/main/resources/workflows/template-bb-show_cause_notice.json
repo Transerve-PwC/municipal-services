@@ -1,7 +1,7 @@
 {
     "tenantId": "ch",
     "businessService": "BuildingIssuanceOfNotice",
-    "business": "EstateServices",
+    "business": "BuildingBranch",
     "businessServiceSla": 86400000,
     "states": [
         {

@@ -1,452 +1,390 @@
 {
-    "tenantId": "ch",
-    "businessService": "BuildingNoc",
-    "business": "EstateServices",
-    "businessServiceSla": 86400000,
-    "states": [
+  "tenantId": "ch",
+  "businessService": "BuildingNoc",
+  "business": "BuildingBranch",
+  "businessServiceSla": 86400000,
+  "states": [
+    {
+      "actions": [
         {
-            "actions": [
-                {
-                    "action": "SUBMIT",
-                    "currentState": "",
-                    "nextState": "PENDING_DS_VERIFICATION",
-                    "roles": [
-                        "CITIZEN"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "",
-            "applicationStatus": "",
-            "docUploadRequired": false,
-            "isStartState": true,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_DS_VERIFICATION",
-                    "nextState": "PENDING_DA_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DISPATCH_OFFICER"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_DS_VERIFICATION",
-                    "nextState": "PENDING_CLARIFICATION",
-                    "roles": [
-                        "ES_BB_DISPATCH_OFFICER"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_DS_VERIFICATION",
-            "applicationStatus": "ES_PENDING_DS_VERIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "SUBMIT",
-                    "currentState": "PENDING_CLARIFICATION",
-                    "nextState": "PENDING_DS_VERIFICATION",
-                    "roles": [
-                        "CITIZEN"
-                    ]
-                },
-                {
-                    "action": "MODIFY",
-                    "currentState": "PENDING_CLARIFICATION",
-                    "nextState": "PENDING_CLARIFICATION",
-                    "roles": [
-                        "CITIZEN"
-                    ]
-                }
-            ],
-            "sla": 86400000,
-            "state": "PENDING_CLARIFICATION",
-            "applicationStatus": "ES_PENDING_CLARIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_DA_VERIFICATION",
-                    "nextState": "PENDING_JE_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_DA_VERIFICATION",
-                    "nextState": "PENDING_DS_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_DA_VERIFICATION",
-            "applicationStatus": "ES_PENDING_DA_VERIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD_RESIDENTIAL",
-                    "currentState": "PENDING_JE_VERIFICATION",
-                    "nextState": "PENDING_DRAFSMAN_CALCULATION",
-                    "roles": [
-                        "ES_BB_JUNIOR_ENGINEER"
-                    ]
-                },
-                {
-                    "action": "FORWARD_COMMERCIAL",
-                    "currentState": "PENDING_JE_VERIFICATION",
-                    "nextState": "PENDING_SDE_VERIFICATION",
-                    "roles": [
-                        "ES_BB_JUNIOR_ENGINEER"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_JE_VERIFICATION",
-                    "nextState": "PENDING_DA_VERIFICATION",
-                    "roles": [
-                        "ES_BB_JUNIOR_ENGINEER"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_JE_VERIFICATION",
-            "applicationStatus": "ES_PENDING_JE_VERIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_SDE_VERIFICATION",
-                    "nextState": "PENDING_DRAFSMAN_CALCULATION",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_SDE_VERIFICATION",
-                    "nextState": "PENDING_JE_VERIFICATION",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_SDE_VERIFICATION",
-            "applicationStatus": "ES_PENDING_SDE_VERIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_DRAFSMAN_CALCULATION",
-                    "nextState": "PENDING_SDE_CALCULATION_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DRAFTSMAN"
-                    ]
-                },
-                {
-                    "action": "SENTBACK_RESIDENTIAL",
-                    "currentState": "PENDING_DRAFSMAN_CALCULATION",
-                    "nextState": "PENDING_JE_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DRAFTSMAN"
-                    ]
-                },
-                {
-                    "action": "SENTBACK_COMMERCIAL",
-                    "currentState": "PENDING_DRAFSMAN_CALCULATION",
-                    "nextState": "PENDING_SDE_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DRAFTSMAN"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_DRAFSMAN_CALCULATION",
-            "applicationStatus": "ES_PENDING_DRAFSMAN_CALCULATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_SDE_CALCULATION_VERIFICATION",
-                    "nextState": "PENDING_DA_PROPOSAL",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_SDE_CALCULATION_VERIFICATION",
-                    "nextState": "PENDING_DRAFSMAN_CALCULATION",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_SDE_CALCULATION_VERIFICATION",
-            "applicationStatus": "ES_PENDING_SDE_CALCULATION_VERIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_DA_PROPOSAL",
-                    "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_DA_PROPOSAL",
-                    "nextState": "PENDING_SDE_CALCULATION_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_DA_PROPOSAL",
-            "applicationStatus": "ES_PENDING_DA_PROPOSAL",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_SDE_PROPOSAL_VERIFICATION",
-                    "nextState": "PENDING_AC_APPROVAL",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_SDE_PROPOSAL_VERIFICATION",
-                    "nextState": "PENDING_DA_PROPOSAL",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_SDE_PROPOSAL_VERIFICATION",
-            "applicationStatus": "ES_PENDING_SDE_PROPOSAL_VERIFICATION",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_AC_APPROVAL",
-                    "nextState": "PENDING_SDE_PROPOSAL_APPROVAL",
-                    "roles": [
-                        "ES_ADDITIONAL_COMMISSIONER"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_AC_APPROVAL",
-                    "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
-                    "roles": [
-                        "ES_ADDITIONAL_COMMISSIONER"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_AC_APPROVAL",
-            "applicationStatus": "ES_PENDING_AC_APPROVAL",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_SDE_PROPOSAL_APPROVAL",
-                    "nextState": "PENDING_DA_FEE",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_SDE_PROPOSAL_APPROVAL",
-                    "nextState": "PENDING_AC_APPROVAL",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_SDE_PROPOSAL_APPROVAL",
-            "applicationStatus": "ES_PENDING_SDE_PROPOSAL_APPROVAL",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_DA_FEE",
-                    "nextState": "PENDING_PAYMENT",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_DA_FEE",
-                    "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_DA_FEE",
-            "applicationStatus": "ES_PENDING_DA_FEE",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "PAY",
-                    "currentState": "PENDING_PAYMENT",
-                    "nextState": "PENDING_DA_PREPARE_LETTER",
-                    "roles": [
-                        "CITIZEN", "ES_BB_FINANCIAL_OFFICER"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_PAYMENT",
-            "applicationStatus": "ES_PENDING_PAYMENT",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "FORWARD",
-                    "currentState": "PENDING_DA_PREPARE_LETTER",
-                    "nextState": "PENDING_SDE_APPROVAL",
-                    "roles": [
-                        "ES_BB_DEALING_ASSISTANT"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_DA_PREPARE_LETTER",
-            "applicationStatus": "ES_PENDING_DA_PREPARE_LETTER",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": [
-                {
-                    "action": "APPROVE",
-                    "currentState": "PENDING_SDE_APPROVAL",
-                    "nextState": "APPROVED",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                },
-                {
-                    "action": "SENTBACK",
-                    "currentState": "PENDING_SDE_APPROVAL",
-                    "nextState": "PENDING_DA_PREPARE_LETTER",
-                    "roles": [
-                        "ES_BB_SDE"
-                    ]
-                }
-            ],
-            "sla": 2,
-            "state": "PENDING_SDE_APPROVAL",
-            "applicationStatus": "ES_PENDING_SDE_APPROVAL",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": false,
-            "isStateUpdatable": true
-        },
-        {
-            "actions": null,
-            "sla": 2,
-            "state": "APPROVED",
-            "applicationStatus": "ES_APPROVED",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": true,
-            "isStateUpdatable": false
-        },
-        {
-            "actions": null,
-            "sla": 2,
-            "state": "REJECTED",
-            "applicationStatus": "ES_REJECTED",
-            "docUploadRequired": false,
-            "isStartState": false,
-            "isTerminateState": true,
-            "isStateUpdatable": false
+          "action": "SUBMIT",
+          "currentState": "",
+          "nextState": "PENDING_DS_VERIFICATION",
+          "roles": ["CITIZEN"]
         }
-    ]
+      ],
+      "sla": 2,
+      "state": "",
+      "applicationStatus": "",
+      "docUploadRequired": false,
+      "isStartState": true,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DS_VERIFICATION",
+          "nextState": "PENDING_DA_VERIFICATION",
+          "roles": ["ES_BB_DISPATCH_OFFICER"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DS_VERIFICATION",
+          "nextState": "PENDING_CLARIFICATION",
+          "roles": ["ES_BB_DISPATCH_OFFICER"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_DS_VERIFICATION",
+      "applicationStatus": "ES_PENDING_DS_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "SUBMIT",
+          "currentState": "PENDING_CLARIFICATION",
+          "nextState": "PENDING_DS_VERIFICATION",
+          "roles": ["CITIZEN"]
+        },
+        {
+          "action": "MODIFY",
+          "currentState": "PENDING_CLARIFICATION",
+          "nextState": "PENDING_CLARIFICATION",
+          "roles": ["CITIZEN"]
+        }
+      ],
+      "sla": 86400000,
+      "state": "PENDING_CLARIFICATION",
+      "applicationStatus": "ES_PENDING_CLARIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_VERIFICATION",
+          "nextState": "PENDING_JE_VERIFICATION",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DA_VERIFICATION",
+          "nextState": "PENDING_DS_VERIFICATION",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_DA_VERIFICATION",
+      "applicationStatus": "ES_PENDING_DA_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD_RESIDENTIAL",
+          "currentState": "PENDING_JE_VERIFICATION",
+          "nextState": "PENDING_DRAFSMAN_CALCULATION",
+          "roles": ["ES_BB_JUNIOR_ENGINEER"]
+        },
+        {
+          "action": "FORWARD_COMMERCIAL",
+          "currentState": "PENDING_JE_VERIFICATION",
+          "nextState": "PENDING_SDE_VERIFICATION",
+          "roles": ["ES_BB_JUNIOR_ENGINEER"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_JE_VERIFICATION",
+          "nextState": "PENDING_DA_VERIFICATION",
+          "roles": ["ES_BB_JUNIOR_ENGINEER"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_JE_VERIFICATION",
+      "applicationStatus": "ES_PENDING_JE_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_SDE_VERIFICATION",
+          "nextState": "PENDING_DRAFSMAN_CALCULATION",
+          "roles": ["ES_BB_SDE"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SDE_VERIFICATION",
+          "nextState": "PENDING_JE_VERIFICATION",
+          "roles": ["ES_BB_SDE"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_SDE_VERIFICATION",
+      "applicationStatus": "ES_PENDING_SDE_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DRAFSMAN_CALCULATION",
+          "nextState": "PENDING_SDE_CALCULATION_VERIFICATION",
+          "roles": ["ES_BB_DRAFTSMAN"]
+        },
+        {
+          "action": "SENTBACK_RESIDENTIAL",
+          "currentState": "PENDING_DRAFSMAN_CALCULATION",
+          "nextState": "PENDING_JE_VERIFICATION",
+          "roles": ["ES_BB_DRAFTSMAN"]
+        },
+        {
+          "action": "SENTBACK_COMMERCIAL",
+          "currentState": "PENDING_DRAFSMAN_CALCULATION",
+          "nextState": "PENDING_SDE_VERIFICATION",
+          "roles": ["ES_BB_DRAFTSMAN"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_DRAFSMAN_CALCULATION",
+      "applicationStatus": "ES_PENDING_DRAFSMAN_CALCULATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_SDE_CALCULATION_VERIFICATION",
+          "nextState": "PENDING_DA_PROPOSAL",
+          "roles": ["ES_BB_SDE"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SDE_CALCULATION_VERIFICATION",
+          "nextState": "PENDING_DRAFSMAN_CALCULATION",
+          "roles": ["ES_BB_SDE"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_SDE_CALCULATION_VERIFICATION",
+      "applicationStatus": "ES_PENDING_SDE_CALCULATION_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_PROPOSAL",
+          "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DA_PROPOSAL",
+          "nextState": "PENDING_SDE_CALCULATION_VERIFICATION",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_DA_PROPOSAL",
+      "applicationStatus": "ES_PENDING_DA_PROPOSAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_SDE_PROPOSAL_VERIFICATION",
+          "nextState": "PENDING_AC_APPROVAL",
+          "roles": ["ES_BB_SDE"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SDE_PROPOSAL_VERIFICATION",
+          "nextState": "PENDING_DA_PROPOSAL",
+          "roles": ["ES_BB_SDE"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_SDE_PROPOSAL_VERIFICATION",
+      "applicationStatus": "ES_PENDING_SDE_PROPOSAL_VERIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "PENDING_SDE_PROPOSAL_APPROVAL",
+          "roles": ["ES_ADDITIONAL_COMMISSIONER"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
+          "roles": ["ES_ADDITIONAL_COMMISSIONER"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_AC_APPROVAL",
+      "applicationStatus": "ES_PENDING_AC_APPROVAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_SDE_PROPOSAL_APPROVAL",
+          "nextState": "PENDING_DA_FEE",
+          "roles": ["ES_BB_SDE"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SDE_PROPOSAL_APPROVAL",
+          "nextState": "PENDING_AC_APPROVAL",
+          "roles": ["ES_BB_SDE"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_SDE_PROPOSAL_APPROVAL",
+      "applicationStatus": "ES_PENDING_SDE_PROPOSAL_APPROVAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_FEE",
+          "nextState": "PENDING_PAYMENT",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_DA_FEE",
+          "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_DA_FEE",
+      "applicationStatus": "ES_PENDING_DA_FEE",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "PAY",
+          "currentState": "PENDING_PAYMENT",
+          "nextState": "PENDING_DA_PREPARE_LETTER",
+          "roles": ["CITIZEN", "ES_BB_FINANCIAL_OFFICER"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_PAYMENT",
+      "applicationStatus": "ES_PENDING_PAYMENT",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "FORWARD",
+          "currentState": "PENDING_DA_PREPARE_LETTER",
+          "nextState": "PENDING_SDE_APPROVAL",
+          "roles": ["ES_BB_DEALING_ASSISTANT"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_DA_PREPARE_LETTER",
+      "applicationStatus": "ES_PENDING_DA_PREPARE_LETTER",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "APPROVE",
+          "currentState": "PENDING_SDE_APPROVAL",
+          "nextState": "APPROVED",
+          "roles": ["ES_BB_SDE"]
+        },
+        {
+          "action": "SENTBACK",
+          "currentState": "PENDING_SDE_APPROVAL",
+          "nextState": "PENDING_DA_PREPARE_LETTER",
+          "roles": ["ES_BB_SDE"]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_SDE_APPROVAL",
+      "applicationStatus": "ES_PENDING_SDE_APPROVAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": null,
+      "sla": 2,
+      "state": "APPROVED",
+      "applicationStatus": "ES_APPROVED",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": true,
+      "isStateUpdatable": false
+    },
+    {
+      "actions": null,
+      "sla": 2,
+      "state": "REJECTED",
+      "applicationStatus": "ES_REJECTED",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": true,
+      "isStateUpdatable": false
+    }
+  ]
 }
