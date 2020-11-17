@@ -85,4 +85,7 @@ public class PSConstants {
 	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
 	public static final String  USREVENTS_EVENT_NAME = "Estate Module";
 	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-EST";
+	
+	public static final String MONTHLY = "Monthly";
+	public static final String ANNUALLY = "Annually";
 }

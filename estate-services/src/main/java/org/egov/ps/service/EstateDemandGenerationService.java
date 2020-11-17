@@ -1,8 +1,11 @@
 package org.egov.ps.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -14,8 +17,10 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.egov.ps.config.Configuration;
 import org.egov.ps.model.EstateDemandCriteria;
-import org.egov.ps.model.ModeEnum;
+import org.egov.ps.model.PaymentConfig;
+import org.egov.ps.model.PaymentConfigItems;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.producer.Producer;
@@ -27,7 +32,6 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.PropertyRequest;
-import org.egov.ps.config.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -43,7 +47,7 @@ public class EstateDemandGenerationService {
 	private Configuration config;
 	private Producer producer;
 	
-	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("d/MM/yyyy");
+	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Autowired
 	public EstateDemandGenerationService(PropertyRepository propertyRepository, Producer producer,
@@ -57,8 +61,8 @@ public class EstateDemandGenerationService {
 	public AtomicInteger createDemand(EstateDemandCriteria demandCriteria) {
 		AtomicInteger counter = new AtomicInteger(0);
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
-		propertyCriteria.setRelations(Collections.singletonList("owner"));
-		propertyCriteria.setState(Arrays.asList(PSConstants.PM_APPROVED));
+		//propertyCriteria.setRelations(Collections.singletonList("owner"));
+		//propertyCriteria.setState(Arrays.asList(PSConstants.PM_APPROVED));
 		List<Property> propertyList = propertyRepository.getProperties(propertyCriteria);
 		
 		propertyList.forEach(property -> {
@@ -105,28 +109,18 @@ public class EstateDemandGenerationService {
 	}
 	
 	private void generateEstateDemand(Property property, EstateDemand firstDemand, Date date,
-			List<EstateDemand> estateDemandList, List<EstatePayment> estatePaymentList, EstateAccount estateAccount) {
-		
-		int oldYear = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-				.getYear();
-		int oldMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
-				.toLocalDate().getMonthValue();
-		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		int currentYear = localDate.getYear();
-		int currentMonth = localDate.getMonthValue();
+			List<EstateDemand> estateDemandList, List<EstatePayment> estatePaymentList, EstateAccount estateAccount) {		
 		
 		Double collectionPrincipal = firstDemand.getCollectionPrincipal();
-		/*oldYear = oldYear + property.getPropertyDetails().getEstateIncrementPeriod();
-		while (oldYear <= currentYear) {
-			if (oldYear == currentYear && currentMonth >= oldMonth) {
-				collectionPrincipal = (collectionPrincipal
-						* (100 + property.getPropertyDetails().getEstateIncrementPercentage())) / 100;
-			} else if (oldYear < currentYear) {
-				collectionPrincipal = (collectionPrincipal
-						* (100 + property.getPropertyDetails().getEstateIncrementPercentage())) / 100;
+		
+		if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
+			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
+			if(paymentConfig.getIsGroundRent() && paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
+				date = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand()));
 			}
-			oldYear = oldYear + property.getPropertyDetails().getEstateIncrementPeriod();
-		}*/
+		}
+		
+		Double calculatedRent = calculateRentAccordingtoMonth(property.getPropertyDetails().getPaymentConfigs(), date);
 		
 		AuditDetails auditDetails = AuditDetails.builder().createdBy("System").createdTime(new Date().getTime())
 				.lastModifiedBy("System").lastModifiedTime(new Date().getTime()).build();
@@ -134,7 +128,9 @@ public class EstateDemandGenerationService {
 		EstateDemand estateDemand = EstateDemand.builder().id(UUID.randomUUID().toString()).propertyDetailsId(property.getPropertyDetails().getId())
 				/*.mode(ModeEnum.GENERATED)*/.generationDate(date.getTime()).collectionPrincipal(collectionPrincipal)
 				.auditDetails(auditDetails).remainingPrincipal(collectionPrincipal).interestSince(date.getTime())
-				.build();
+				.rent(calculatedRent).build();
+		
+		property.getPropertyDetails().getEstateDemands().add(estateDemand);
 		
 		log.info("Generating Estate demand id '{}' of principal '{}' for property with file no {}", estateDemand.getId(),
 				collectionPrincipal, property.getFileNumber());
@@ -143,6 +139,7 @@ public class EstateDemandGenerationService {
 			property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
 					property.getPropertyDetails().getEstatePayments(),property.getPropertyDetails().getEstateAccount(), 
 					property.getPropertyDetails().getInterestRate(),true));
+			
 		}
 		PropertyRequest propertyRequest = new PropertyRequest();
 		propertyRequest.setProperties(Collections.singletonList(property));		
@@ -156,7 +153,31 @@ public class EstateDemandGenerationService {
 
 			});
 		}
+		
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+	}
+		
+	private Double calculateRentAccordingtoMonth(List<PaymentConfig> paymentConfigs, Date requestedDate) {
+		if(!CollectionUtils.isEmpty(paymentConfigs)) {
+			for(PaymentConfig paymentConfig : paymentConfigs) {
+				Date startDate = new Date(paymentConfig.getGroundRentBillStartDate());
+			    String startDateText = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
+			    String endDateText = new SimpleDateFormat("yyyy-MM-dd").format(requestedDate);
+				
+			    /* Check Months between both date */
+				long monthsBetween = ChronoUnit.MONTHS.between(
+				        LocalDate.parse(startDateText).withDayOfMonth(1),
+				        LocalDate.parse(endDateText).withDayOfMonth(1));
+				
+				for(PaymentConfigItems paymentConfigItem : paymentConfig.getPaymentConfigItems()) {
+					if(paymentConfigItem.getGroundRentStartMonth() >= monthsBetween 
+							&& monthsBetween <= paymentConfigItem.getGroundRentEndMonth()) {
+						return paymentConfigItem.getGroundRentAmount().doubleValue();
+					}
+				}
+			}
+		}
+		return 0.0;
 	}
 
 	private boolean isMonthIncluded(List<Long> dates, Date date) {
@@ -165,6 +186,17 @@ public class EstateDemandGenerationService {
 				.anyMatch(d -> getFirstDateOfMonth(d).getTime() == givenDate.getTime());
 	}
 
+	private Date setDateOfMonth(Date date,int value) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, value);
+		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
+		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
+		return cal.getTime();
+	}
+	
 	private Date getFirstDateOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
