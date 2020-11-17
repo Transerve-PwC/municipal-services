@@ -1,12 +1,13 @@
 package org.egov.ps.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -85,8 +86,34 @@ public class PaymentConfig {
 	@JsonProperty("premiumAmountConfigItems")
 	private List<PremiumAmountConfigItems> premiumAmountConfigItems;
 
+	public PaymentConfig addPremiumAmountConfigItem(PremiumAmountConfigItems premiumAmountConfigItem) {
+		if (this.premiumAmountConfigItems == null) {
+			this.premiumAmountConfigItems = new ArrayList<>();
+		}
+		for (PremiumAmountConfigItems paci : premiumAmountConfigItems) {
+			if (paci.getId().equalsIgnoreCase(premiumAmountConfigItem.getId())) {
+				return this;
+			}
+		}
+		this.premiumAmountConfigItems.add(premiumAmountConfigItem);
+		return this;
+	}
+
 	@JsonProperty("paymentConfigItems")
-	private List<PaymentConfigItems> paymentConfigItems;
+	private List<PaymentConfigItems> paymentConfigItems = new ArrayList<PaymentConfigItems>();
+
+	public PaymentConfig addPaymentConfigItem(PaymentConfigItems paymentConfigItem) {
+		if (this.paymentConfigItems == null) {
+			this.paymentConfigItems = new ArrayList<>();
+		}
+		for (PaymentConfigItems pci : paymentConfigItems) {
+			if (pci.getId().equalsIgnoreCase(paymentConfigItem.getId())) {
+				return this;
+			}
+		}
+		this.paymentConfigItems.add(paymentConfigItem);
+		return this;
+	}
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

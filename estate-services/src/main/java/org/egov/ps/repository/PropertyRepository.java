@@ -70,6 +70,9 @@ public class PropertyRepository {
 	@Autowired
 	private OfflinePaymentRowMapper offlinePaymentRowMapper;
 
+	@Autowired
+	private PaymentConfigRowMapper paymentConfigRowMapper;
+
 	public List<Property> getProperties(PropertyCriteria criteria) {
 
 		Map<String, Object> paramMap = new HashMap<>();
@@ -380,11 +383,11 @@ public class PropertyRepository {
 		String propertyPenaltyQuery = propertyQueryBuilder.getPropertyPenaltyQuery(propertyId, params);
 		return namedParameterJdbcTemplate.query(propertyPenaltyQuery, params, propertyPenaltyRowMapper);
 	}
-	
+
 	public PaymentConfig getPaymentConfigForPropertyDetailsIds(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String paymentConfigQuery = propertyQueryBuilder.getPaymentConfigQuery(propertyDetailsIds, params);
-		return namedParameterJdbcTemplate.query(paymentConfigQuery, params, estateAccountrowMapper);
+		return namedParameterJdbcTemplate.query(paymentConfigQuery, params, paymentConfigRowMapper);
 	}
 
 }
