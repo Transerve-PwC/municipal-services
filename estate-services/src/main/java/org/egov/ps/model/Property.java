@@ -64,9 +64,6 @@ public class Property {
 	@JsonProperty("sectorNumber")
 	private String sectorNumber;
 
-	@JsonProperty("houseNumber")
-	private String houseNumber;
-
 	@JsonProperty("propertyMasterOrAllotmentOfSite")
 	private String propertyMasterOrAllotmentOfSite;
 
