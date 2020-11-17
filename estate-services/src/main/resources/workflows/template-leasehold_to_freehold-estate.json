@@ -1,7 +1,7 @@
 {
   "tenantId": "ch",
   "businessService": "LeaseholdToFreehold",
-  "business": "EstateServices",
+  "business": "EstateBranch",
   "businessServiceSla": 86400000,
   "states": [
     {
