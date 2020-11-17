@@ -221,7 +221,10 @@ public class PaymentNotificationService {
 							String transitNumber = propertyUtil
 									.getTransitNumberFromConsumerCode(paymentDetail.getBill().getConsumerCode());
 							PropertyCriteria propertyCriteria = new PropertyCriteria();
-							propertyCriteria.setRelations(Collections.singletonList("owner"));
+							List<String> relations = new ArrayList<>();
+							relations.add("owner");
+							relations.add("offlinepayment");
+							propertyCriteria.setRelations(relations);
 							propertyCriteria.setTransitNumber(transitNumber);
 							List<Property> propertyList = propertyService.searchProperty(propertyCriteria, requestInfo);
 							propertyList.forEach(property -> {

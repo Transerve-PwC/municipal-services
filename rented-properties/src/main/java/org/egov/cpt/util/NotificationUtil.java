@@ -428,12 +428,13 @@ public class NotificationUtil {
 		String messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_PAYMENT_RECIEVED, localizationMessages);
 		if (paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) {
 			messageTemplate = messageTemplate.replace("<1>", owner.getOwnerDetails().getName());
+			messageTemplate = messageTemplate.replace("<4>", owner.getProperty().getOfflinePaymentDetails().get(0).getTransactionNumber());
 		} else {
 			messageTemplate = messageTemplate.replace("<1>", paymentDetail.getBill().getPayerName());
+			messageTemplate = messageTemplate.replace("<4>", paymentRequest.getPayment().getTransactionNumber());
 		}
 		messageTemplate = messageTemplate.replace("<2>", paymentDetail.getTotalAmountPaid().toString());
 		messageTemplate = messageTemplate.replace("<3>", transitNumber);
-		messageTemplate = messageTemplate.replace("<4>", paymentRequest.getPayment().getTransactionNumber());
 		messageTemplate = messageTemplate.replace("<5>", paymentDetail.getReceiptNumber());
 		return messageTemplate;
 	}
