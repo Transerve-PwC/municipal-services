@@ -1,8 +1,10 @@
 package org.egov.ps.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 
 import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -40,8 +42,8 @@ public class PremiumAmountConfigItems {
 	private String paymentConfigId;
 
 	@JsonProperty("premiumAmount")
-	private String premiumAmount;
+	private BigDecimal premiumAmount;
 
 	@JsonProperty("premiumAmountDate")
-	private String premiumAmountDate;
+	private Long premiumAmountDate;
 }

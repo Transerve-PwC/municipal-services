@@ -130,6 +130,25 @@ public class PropertyQueryBuilder {
 			+ " penalty.created_by as penalty_created_by, penalty.last_modified_by as penalty_last_modified_by, "
 			+ " penalty.created_time as penalty_created_time, penalty.last_modified_time as penalty_last_modified_time ";
 
+	private static final String PROPERTY_PAYMENT_CONFIG_COLUMNS = " pc.id as pc_id, "
+			+ " pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
+			+ " pc.is_intrest_applicable as pc_is_intrest_applicable, pc.due_date_of_payment as pc_due_date_of_payment, "
+			+ " pc.no_of_months as pc_no_of_months, pc.rate_of_interest as pc_rate_of_interest, "
+			+ " pc.security_amount as pc_security_amount, pc.total_amount as pc_total_amount, "
+			+ " pc.is_ground_rent as pc_is_ground_rent, pc.ground_rent_generation_type as pc_ground_rent_generation_type, "
+			+ " pc.ground_rent_generate_demand as pc_ground_rent_generate_demand, pc.ground_rent_advance_rent as pc_ground_rent_advance_rent, "
+			+ " pc.ground_rent_bill_start_date as pc_ground_rent_bill_start_date, pc.ground_rent_advance_rent_date as pc_ground_rent_advance_rent_date, "
+			+ " pc.created_by as pc_created_by, pc.last_modified_by as pc_last_modified_by, "
+			+ " pc.created_time as pc_created_time, pc.last_modified_time as pc_last_modified_time, "
+
+			+ " pci.id as pci_id, pci.tenant_id as pci_tenant_id, "
+			+ " pci.payment_config_id as pci_payment_config_id, pci.ground_rent_amount as pci_ground_rent_amount, "
+			+ " pci.ground_rent_start_month as pci_ground_rent_start_month, pci.ground_rent_end_month as pci_ground_rent_end_month, "
+
+			+ " paci.id as paci_id, paci.tenant_id as paci_tenant_id, "
+			+ " paci.payment_config_id as paci_payment_config_id, paci.premium_amount as paci_premium_amount, "
+			+ " paci.premiumamountdate as paci_premiumamountdate ";
+
 	// + LEFT_JOIN
 	// + " cs_ep_payment_v1 payment ON ptdl.id=payment.property_details_id ";
 
@@ -147,6 +166,10 @@ public class PropertyQueryBuilder {
 
 	private static final String PROPERTY_PENALTY_TABLE = " cs_ep_property_penalty_v1 penalty ";
 
+	private static final String PROPERTY_PAYMENT_CONFIG_TABLE = " cs_ep_payment_config_v1 pc " + LEFT_JOIN
+			+ " cs_ep_payment_config_items_v1 pci ON pc.id = pci.payment_config_id " + LEFT_JOIN
+			+ " cs_ep_premium_amount_config_items_v1 paci ON pc.id = paci.payment_config_id ";
+
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
@@ -157,6 +180,7 @@ public class PropertyQueryBuilder {
 	public static final String RELATION_BIDDER = "bidder";
 	public static final String RELATION_ESTATE_FINANCE = "finance";
 	public static final String RELATION_OFFLINE_PAYMENT = "offline";
+	public static final String RELATION_PAYMENT_CONFIG = "paymentconfig";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
 
@@ -340,5 +364,14 @@ public class PropertyQueryBuilder {
 		sb.append(" where penalty.property_id IN (:propertyId)");
 		params.put("propertyId", propertyId);
 		return sb.toString();
+	}
+
+	public String getPaymentConfigQuery(List<String> propertyDetailsIds, Map<String, Object> params) {
+		StringBuilder builder = new StringBuilder(SELECT);
+		builder.append(PROPERTY_PAYMENT_CONFIG_COLUMNS);
+		builder.append(" FROM " + PROPERTY_PAYMENT_CONFIG_TABLE);
+		builder.append(" where pc.property_details_id IN (:propertyDetailsIds)");
+		params.put("propertyDetailsIds", propertyDetailsIds);
+		return builder.toString();
 	}
 }
