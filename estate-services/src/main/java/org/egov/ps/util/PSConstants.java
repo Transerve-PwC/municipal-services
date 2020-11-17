@@ -18,7 +18,7 @@ public class PSConstants {
 
 	public static final String BUILDING_BRANCH = "BUILDING_BRANCH";
 
-	public static final String MANIMAJRA_BRANCH = "MANIMAJRA_BRANCH";
+	public static final String MANI_MAJRA = "MANI_MAJRA";
 
 	public static final String JSONPATH_PROPERTY_SERVICE = "$.MdmsRes.OwnershipTransferSaleDeed";
 
