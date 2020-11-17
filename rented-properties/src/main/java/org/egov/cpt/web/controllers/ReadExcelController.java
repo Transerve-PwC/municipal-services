@@ -60,7 +60,7 @@ public class ReadExcelController {
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("Error occurred during readExcel():" + e.getMessage(), e);
-			throw new CustomException("FILE_NOT_VALID", "Please upload valid file format");
+			throw new CustomException("FILE_TEMPLATE_NOT_VALID", "Invalid template uploaded. Please upload a valid rent history excel file.");
 		}
 	}
 }
