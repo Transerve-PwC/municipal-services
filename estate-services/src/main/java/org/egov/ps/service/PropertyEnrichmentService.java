@@ -175,30 +175,32 @@ public class PropertyEnrichmentService {
 	private void enrichPaymentConfig(Property property, RequestInfo requestInfo) {
 
 		PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
-		AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
-				paymentConfig.getId() == null);
-		if (paymentConfig.getId() == null || paymentConfig.getId().isEmpty()) {
-			paymentConfig.setId(UUID.randomUUID().toString());
-			paymentConfig.setTenantId(property.getTenantId());
-			paymentConfig.setPropertyDetailsId(property.getPropertyDetails().getId());
+		if (paymentConfig != null) {
+			AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+					paymentConfig.getId() == null);
+			if (paymentConfig.getId() == null || paymentConfig.getId().isEmpty()) {
+				paymentConfig.setId(UUID.randomUUID().toString());
+				paymentConfig.setTenantId(property.getTenantId());
+				paymentConfig.setPropertyDetailsId(property.getPropertyDetails().getId());
+			}
+			paymentConfig.setAuditDetails(paymentAuditDetails);
+
+			paymentConfig.getPaymentConfigItems().forEach(paymentConfigItem -> {
+				if (paymentConfigItem.getId() == null || paymentConfigItem.getId().isEmpty()) {
+					paymentConfigItem.setId(UUID.randomUUID().toString());
+					paymentConfigItem.setTenantId(property.getTenantId());
+					paymentConfigItem.setPaymentConfigId(paymentConfig.getId());
+				}
+			});
+
+			paymentConfig.getPremiumAmountConfigItems().forEach(premiumAmountConfigItem -> {
+				if (premiumAmountConfigItem.getId() == null || premiumAmountConfigItem.getId().isEmpty()) {
+					premiumAmountConfigItem.setId(UUID.randomUUID().toString());
+					premiumAmountConfigItem.setTenantId(property.getTenantId());
+					premiumAmountConfigItem.setPaymentConfigId(paymentConfig.getId());
+				}
+			});
 		}
-		paymentConfig.setAuditDetails(paymentAuditDetails);
-
-		paymentConfig.getPaymentConfigItems().forEach(paymentConfigItem -> {
-			if (paymentConfigItem.getId() == null || paymentConfigItem.getId().isEmpty()) {
-				paymentConfigItem.setId(UUID.randomUUID().toString());
-				paymentConfigItem.setTenantId(property.getTenantId());
-				paymentConfigItem.setPaymentConfigId(paymentConfig.getId());
-			}
-		});
-
-		paymentConfig.getPremiumAmountConfigItems().forEach(premiumAmountConfigItem -> {
-			if (premiumAmountConfigItem.getId() == null || premiumAmountConfigItem.getId().isEmpty()) {
-				premiumAmountConfigItem.setId(UUID.randomUUID().toString());
-				premiumAmountConfigItem.setTenantId(property.getTenantId());
-				premiumAmountConfigItem.setPaymentConfigId(paymentConfig.getId());
-			}
-		});
 	}
 
 	private void enrichBidders(Property property, RequestInfo requestInfo) {
