@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.EstateDemandCriteria;
@@ -84,13 +85,12 @@ public class EstateDemandGenerationService {
 							.getAccountDetailsForPropertyDetailsIds(propertyDetailsId);
 					property.getPropertyDetails().setEstateAccount(estateAccount);
 					
-					Comparator<EstateDemand> compare = Comparator.comparing(EstateDemand::getGenerationDate);
-					Optional<EstateDemand> firstDemand = estateDemandList.stream().min(compare);
-
-					List<Long> dateList = estateDemandList.stream().map(r -> r.getGenerationDate())
-							.collect(Collectors.toList());
 					Date date = demandCriteria.isEmpty() ? new Date() : FORMATTER.parse(demandCriteria.getDate());
 					Date generateDemandDate = getFirstDateOfMonth(new Date());
+					
+					List<EstateDemand> excistingDemands = estateDemandList.stream()
+							.filter(demand -> DateTimeComparator.getDateOnlyInstance().compare(demand.getGenerationDate(), date) == 0)
+							.collect(Collectors.toList());
 					
 					if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
 						PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
@@ -98,12 +98,11 @@ public class EstateDemandGenerationService {
 							generateDemandDate = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand()));
 						}
 					}
-					DateTimeComparator.getDateOnlyInstance().compare(date, generateDemandDate);
-					if (!isMonthIncluded(dateList, date) && 
-							DateTimeComparator.getDateOnlyInstance().compare(date, generateDemandDate) == 0) {
+					
+					if (excistingDemands.isEmpty() && DateTimeComparator.getDateOnlyInstance().compare(date, generateDemandDate) == 0) {
 						// generate demand
 						counter.getAndIncrement();
-						generateEstateDemand(property, firstDemand.get(), getFirstDateOfMonth(date), estateDemandList,
+						generateEstateDemand(property, getFirstDateOfMonth(date), estateDemandList,
 								estatePaymentList, estateAccount);
 					}
 				} else {
@@ -119,10 +118,9 @@ public class EstateDemandGenerationService {
 		return counter;
 	}
 	
-	private void generateEstateDemand(Property property, EstateDemand firstDemand, Date date,
+	private void generateEstateDemand(Property property, Date date,
 			List<EstateDemand> estateDemandList, List<EstatePayment> estatePaymentList, EstateAccount estateAccount) {		
 		
-		Double collectionPrincipal = firstDemand.getCollectionPrincipal();
 		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 		if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
 			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
@@ -135,13 +133,16 @@ public class EstateDemandGenerationService {
 				.lastModifiedBy("System").lastModifiedTime(new Date().getTime()).build();
 		
 		EstateDemand estateDemand = EstateDemand.builder().id(UUID.randomUUID().toString()).propertyDetailsId(property.getPropertyDetails().getId())
-				/*.mode(ModeEnum.GENERATED)*/.generationDate(date.getTime()).collectionPrincipal(collectionPrincipal)
-				.auditDetails(auditDetails).remainingPrincipal(collectionPrincipal).interestSince(date.getTime())
-				.rent(calculatedRent).build();
+				.generationDate(date.getTime()).collectionPrincipal(0.0).remainingPrincipal(calculatedRent).interestSince(date.getTime())
+				.isPrevious(false).rent(calculatedRent).penaltyInterest(0.0).gstInterest(0.0).gst(calculatedRent*18/100).noOfDays(0.0).paid(0.0)
+				.remainingRent(calculatedRent).remainingGST(calculatedRent*18/100).remainingRentPenalty(0.0).remainingGSTPenalty(0.0)
+				.auditDetails(auditDetails).build();
+		
 		property.getPropertyDetails().getEstateDemands().add(estateDemand);
 		
 		log.info("Generating Estate demand id '{}' of principal '{}' for property with file no {}", estateDemand.getId(),
-				collectionPrincipal, property.getFileNumber());
+				property.getFileNumber());
+		
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments()) && property.getPropertyDetails().getEstateAccount() != null) {
 
 			property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
@@ -186,19 +187,13 @@ public class EstateDemandGenerationService {
 						return paymentConfigItem.getGroundRentAmount().doubleValue();
 					}
 				}
+				if(checkLoopIf.get() == 0) {
+					int paymentConfigCount = paymentConfig.getPaymentConfigItems().size()-1;
+					return paymentConfig.getPaymentConfigItems().get(paymentConfigCount).getGroundRentAmount().doubleValue();
+				}
 			}
 		}
-		if(checkLoopIf.get() == 0) {
-			log.error("exception occured becasue of no paymentconfig is avaliable provided date:"+new SimpleDateFormat("yyyy-MM-dd").format(requestedDate)
-					+" for property id: " + property.getId());
-		}
 		return 0.0;
-	}
-
-	private boolean isMonthIncluded(List<Long> dates, Date date) {
-		final Date givenDate = getFirstDateOfMonth(date);
-		return dates.stream().map(d -> new Date(d))
-				.anyMatch(d -> getFirstDateOfMonth(d).getTime() == givenDate.getTime());
 	}
 
 	private Date setDateOfMonth(Date date,int value) {
