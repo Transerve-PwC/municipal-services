@@ -28,6 +28,8 @@ public class ApplicationQueryBuilder {
 			+ " app.bank_name as appbank_name, app.transaction_number as apptransaction_number, "
 			+ " app.amount as appamount,  app.payment_type as apppayment_type, app.date_of_payment as appdate_of_payment, "
 
+			+ "  pt.id, pt.file_number, "
+
 			+ " doc.id as docid, doc.reference_id as docapplication_id, doc.tenantid as doctenantid,"
 			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
 			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, "
@@ -44,7 +46,8 @@ public class ApplicationQueryBuilder {
 			+ " od.due_amount as oddue_amount, od.address as odaddress ";
 
 	private static final String APP_TABLE = " FROM cs_ep_application_v1 app " + LEFT_JOIN
-			+ " cs_ep_documents_v1 doc ON app.id=doc.reference_id ";
+			+ " cs_ep_documents_v1 doc ON app.id = doc.reference_id " + LEFT_JOIN
+			+ " cs_ep_property_v1 pt ON pt.id = app.property_id ";
 
 	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
