@@ -92,10 +92,10 @@ public class EstateDemandGenerationService {
 							.filter(demand -> DateTimeComparator.getDateOnlyInstance().compare(demand.getGenerationDate(), date) == 0)
 							.collect(Collectors.toList());
 					
-					if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
-						PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
+					if(property.getPropertyDetails().getPaymentConfig() != null) {
+						PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 						if(paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
-							generateDemandDate = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand()));
+							generateDemandDate = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand().toString()));
 						}
 					}
 					
@@ -122,10 +122,10 @@ public class EstateDemandGenerationService {
 			List<EstateDemand> estateDemandList, List<EstatePayment> estatePaymentList, EstateAccount estateAccount) {		
 		
 		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
-		if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
-			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
+		if(property.getPropertyDetails().getPaymentConfig() != null) {
+			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 			if(paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
-				date = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand()));
+				date = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand().toString()));
 			}
 		}
 		
@@ -167,10 +167,9 @@ public class EstateDemandGenerationService {
 	}
 		
 	private Double calculateRentAccordingtoMonth(Property property, Date requestedDate) {
-		List<PaymentConfig> paymentConfigs = property.getPropertyDetails().getPaymentConfigs();
+		PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 		AtomicInteger checkLoopIf = new AtomicInteger();
-		if(!CollectionUtils.isEmpty(paymentConfigs)) {
-			for(PaymentConfig paymentConfig : paymentConfigs) {
+		if(paymentConfig != null) {
 				Date startDate = new Date(paymentConfig.getGroundRentBillStartDate());
 			    String startDateText = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
 			    String endDateText = new SimpleDateFormat("yyyy-MM-dd").format(requestedDate);
@@ -191,7 +190,6 @@ public class EstateDemandGenerationService {
 					int paymentConfigCount = paymentConfig.getPaymentConfigItems().size()-1;
 					return paymentConfig.getPaymentConfigItems().get(paymentConfigCount).getGroundRentAmount().doubleValue();
 				}
-			}
 		}
 		return 0.0;
 	}

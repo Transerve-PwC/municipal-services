@@ -170,7 +170,7 @@ public class EstateDemandGenerationServiceTests {
 				.propertyDetailsId(UUID.randomUUID().toString())
 				.paymentConfigItems(Arrays.asList(paymentConfigItems,paymentConfigItems2))
 				.isGroundRent(true)
-				.groundRentGenerateDemand("18")
+				.groundRentGenerateDemand(Long.parseLong("19"))
 				.groundRentGenerationType(PSConstants.MONTHLY)
 				.build();
 		
@@ -179,7 +179,7 @@ public class EstateDemandGenerationServiceTests {
 				.estateDemands(estateDemandDummyList)
 				.estatePayments(estatePaymentDummyList)
 				.estateAccount(estateDummyAccount)
-				.paymentConfigs(Arrays.asList(paymentConfig))
+				.paymentConfig(paymentConfig)
 				.id(UUID.randomUUID().toString())
 				.build();
 		
