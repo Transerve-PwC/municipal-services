@@ -12,7 +12,7 @@ import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
-import org.egov.ps.model.Payment;
+import org.egov.ps.model.PaymentConfig;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.model.PropertyPenalty;
@@ -83,7 +83,7 @@ public class PropertyEnrichmentService {
 
 		enrichOwners(property, requestInfo);
 		enrichCourtCases(property, requestInfo);
-		enrichPaymentDetails(property, requestInfo);
+		enrichPaymentConfig(property, requestInfo);
 		enrichBidders(property, requestInfo);
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
@@ -172,29 +172,32 @@ public class PropertyEnrichmentService {
 		}
 	}
 
-	private void enrichPaymentDetails(Property property, RequestInfo requestInfo) {
+	private void enrichPaymentConfig(Property property, RequestInfo requestInfo) {
 
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
-			property.getPropertyDetails().getOwners().forEach(owner -> {
+		PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
+		if (paymentConfig != null) {
+			AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+					paymentConfig.getId() == null);
+			if (paymentConfig.getId() == null || paymentConfig.getId().isEmpty()) {
+				paymentConfig.setId(UUID.randomUUID().toString());
+				paymentConfig.setTenantId(property.getTenantId());
+				paymentConfig.setPropertyDetailsId(property.getPropertyDetails().getId());
+			}
+			paymentConfig.setAuditDetails(paymentAuditDetails);
 
-				List<Payment> payments = property.getPropertyDetails().getPaymentDetails();
-				if (!CollectionUtils.isEmpty(payments)) {
+			paymentConfig.getPaymentConfigItems().forEach(paymentConfigItem -> {
+				if (paymentConfigItem.getId() == null || paymentConfigItem.getId().isEmpty()) {
+					paymentConfigItem.setId(UUID.randomUUID().toString());
+					paymentConfigItem.setTenantId(property.getTenantId());
+					paymentConfigItem.setPaymentConfigId(paymentConfig.getId());
+				}
+			});
 
-					payments.forEach(payment -> {
-						if (payment.getId() == null || payment.getId().isEmpty()) {
-							AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
-									true);
-							String gen_payment_detail_id = UUID.randomUUID().toString();
-							payment.setId(gen_payment_detail_id);
-							payment.setTenantId(property.getTenantId());
-							payment.setPropertyDetailsId(property.getPropertyDetails().getId());
-							payment.setAuditDetails(paymentAuditDetails);
-						} else {
-							AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
-									true);
-							payment.setAuditDetails(paymentAuditDetails);
-						}
-					});
+			paymentConfig.getPremiumAmountConfigItems().forEach(premiumAmountConfigItem -> {
+				if (premiumAmountConfigItem.getId() == null || premiumAmountConfigItem.getId().isEmpty()) {
+					premiumAmountConfigItem.setId(UUID.randomUUID().toString());
+					premiumAmountConfigItem.setTenantId(property.getTenantId());
+					premiumAmountConfigItem.setPaymentConfigId(paymentConfig.getId());
 				}
 			});
 		}

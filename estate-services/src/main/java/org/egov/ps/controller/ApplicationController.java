@@ -69,8 +69,9 @@ public class ApplicationController {
 	}
 
 	@PostMapping("/states")
-	public ResponseEntity<ApplicationStatesResponse> states(@Valid @RequestBody RequestInfoMapper requestInfoWrapper) {
-		List<State> states = applicationService.getStates(requestInfoWrapper);
+	public ResponseEntity<ApplicationStatesResponse> states(@Valid @RequestBody RequestInfoMapper requestInfoWrapper,
+			@Valid @ModelAttribute ApplicationCriteria applicationCriteria) {
+		List<State> states = applicationService.getStates(requestInfoWrapper, applicationCriteria);
 		HashSet<String> appStatus = new HashSet<>();
 		states.forEach(state -> {
 			if (state.getApplicationStatus() != null

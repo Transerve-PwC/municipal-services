@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.util.Util;
@@ -20,8 +22,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -70,13 +70,17 @@ public class WorkflowCreationService {
 				Arrays.asList(ApplicationType.builder().name("ES-EB-IS-RefundOfEmd").prefix("ES_EB_ROE_").build()));
 		templateMapping.put("template-allotment_of_site-estate",
 				Arrays.asList(ApplicationType.builder().name("ES-EB-AllotmentOfSite").prefix("ES_").build()));
-		
-		templateMapping.put("template-bb-property_master", Arrays
-				.asList(ApplicationType.builder().name("ES-BB-PropertyMaster").prefix("ES_BB_PM_").build()));
+		// Building Branch
+		templateMapping.put("template-bb-property_master",
+				Arrays.asList(ApplicationType.builder().name("ES-BB-PropertyMaster").prefix("ES_BB_PM_").build()));
 		templateMapping.put("template-bb-show_cause_notice", Arrays
 				.asList(ApplicationType.builder().name("ES-BB-CS-IssuanceOfNotice").prefix("ES_BB_ION_").build()));
-		templateMapping.put("template-bb_noc", Arrays
-				.asList(ApplicationType.builder().name("ES-BB-CS-NOC").prefix("ES_BB_NOC_").build()));
+		templateMapping.put("template-bb_noc",
+				Arrays.asList(ApplicationType.builder().name("ES-BB-CS-NOC").prefix("ES_BB_NOC_").build()));
+		// Mani Majra
+		templateMapping.put("template-mm-property_master",
+		Arrays.asList(ApplicationType.builder().name("ES-MM-PropertyMaster").prefix("ES_MM_PM_").build()));
+
 	}
 
 	public List<WorkFlowResponseDetails> createWorkflows(RequestInfo requestInfo) throws Exception {

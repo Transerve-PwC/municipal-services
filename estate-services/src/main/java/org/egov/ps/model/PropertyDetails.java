@@ -8,8 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
@@ -17,6 +15,8 @@ import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -183,22 +183,8 @@ public class PropertyDetails {
 
 	}
 
-	@JsonProperty("paymentDetails")
-	@Builder.Default
-	private List<Payment> paymentDetails = new ArrayList<Payment>();
-
-	public PropertyDetails addPaymentItem(Payment paymentItem) {
-		if (this.paymentDetails == null) {
-			this.paymentDetails = new ArrayList<>();
-		}
-		for (Payment paymentDetail : paymentDetails) {
-			if (paymentDetail.getId().equalsIgnoreCase(paymentItem.getId())) {
-				return this;
-			}
-		}
-		this.paymentDetails.add(paymentItem);
-		return this;
-	}
+	@JsonProperty("paymentConfig")
+	private PaymentConfig paymentConfig;
 
 	@JsonProperty("bidders")
 	@Builder.Default

@@ -12,6 +12,7 @@ import org.egov.ps.model.CourtCase;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
+import org.egov.ps.model.PaymentConfig;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.model.PropertyPenalty;
@@ -69,6 +70,9 @@ public class PropertyRepository {
 	@Autowired
 	private OfflinePaymentRowMapper offlinePaymentRowMapper;
 
+	@Autowired
+	private PaymentConfigRowMapper paymentConfigRowMapper;
+
 	public List<Property> getProperties(PropertyCriteria criteria) {
 
 		Map<String, Object> paramMap = new HashMap<>();
@@ -89,6 +93,7 @@ public class PropertyRepository {
 				relations.add(PropertyQueryBuilder.RELATION_BIDDER);
 				relations.add(PropertyQueryBuilder.RELATION_ESTATE_FINANCE);
 				relations.add(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT);
+				relations.add(PropertyQueryBuilder.RELATION_PAYMENT_CONFIG);
 			}
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_OWNER)) {
@@ -109,6 +114,9 @@ public class PropertyRepository {
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT)) {
 			this.addOfflinePaymentToProperties(properties);
+		}
+		if (relations.contains(PropertyQueryBuilder.RELATION_PAYMENT_CONFIG)) {
+			this.addPaymentConfigToProperties(properties);
 		}
 		return properties;
 	}
@@ -292,6 +300,27 @@ public class PropertyRepository {
 		});
 	}
 
+	private void addPaymentConfigToProperties(List<Property> properties) {
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch bidders from database
+		 */
+		PaymentConfig paymentConfig = this.getPaymentConfigForPropertyDetailsIds(propertyDetailsIds);
+
+		/**
+		 * Assign court cases to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
+			property.getPropertyDetails().setPaymentConfig(paymentConfig);
+			;
+		});
+	}
+
 	public List<AuctionBidder> getBiddersForPropertyDetailsIds(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String biddersQuery = propertyQueryBuilder.getBiddersQuery(propertyDetailsIds, params);
@@ -369,5 +398,11 @@ public class PropertyRepository {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String propertyPenaltyQuery = propertyQueryBuilder.getPropertyPenaltyQuery(propertyId, params);
 		return namedParameterJdbcTemplate.query(propertyPenaltyQuery, params, propertyPenaltyRowMapper);
-  }
+	}
+
+	public PaymentConfig getPaymentConfigForPropertyDetailsIds(List<String> propertyDetailsIds) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String paymentConfigQuery = propertyQueryBuilder.getPaymentConfigQuery(propertyDetailsIds, params);
+		return namedParameterJdbcTemplate.query(paymentConfigQuery, params, paymentConfigRowMapper);
+	}
 }
