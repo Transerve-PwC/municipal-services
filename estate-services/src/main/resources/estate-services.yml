@@ -1026,3 +1026,54 @@ serviceMaps:
             - jsonPath: $.PropertyPenalties.*.auditDetails.lastModifiedTime
 
             - jsonPath: $.PropertyPenalties.*.id
+            
+    - version: 1.0
+      description: Rent Due amount details
+      fromTopic: es-save-due-details
+      isTransaction: true
+      queryMaps:
+	    - query: INSERT INTO cs_pt_dueamount (property_id,file_number, tenantid, property_type,branch_type, owner_name, mobile_number, balance_rent,balance_rent_penalty,balance_gst,balance_gst_penalty, balance_interest, balance_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (property_id) DO UPDATE SET owner_name=?, mobile_number=?, balance_rent=?,balance_rent_penalty=?,balance_gst=?,balance_gst_penalty=?, balance_interest=?, balance_amount=?;
+	      basePath: PropertyDueAmounts.*
+	      jsonMaps:
+	
+	      - jsonPath: $.PropertyDueAmounts.*.propertyId
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.fileNumber
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.tenantId 
+	
+	      - jsonPath: $.PropertyDueAmounts.*.propertyType
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.branchType
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.ownerName
+	
+	      - jsonPath: $.PropertyDueAmounts.*.mobileNumber
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceRent
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceRentPenalty
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceGST
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceGSTPenalty
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceInterest
+	
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceAmount
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.ownerName
+	
+	      - jsonPath: $.PropertyDueAmounts.*.mobileNumber
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceRent
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceRentPenalty
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceGST
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceGSTPenalty
+	      
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceInterest
+	
+	      - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceAmount

@@ -15,6 +15,7 @@ import org.egov.ps.service.PropertyService;
 import org.egov.ps.util.ResponseInfoFactory;
 import org.egov.ps.web.contracts.AccountStatementRequest;
 import org.egov.ps.web.contracts.AccountStatementResponse;
+import org.egov.ps.web.contracts.DueAmountResponse;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.PropertyResponse;
 import org.egov.ps.web.contracts.RequestInfoMapper;
@@ -112,6 +113,15 @@ public class PropertyController {
 		AccountStatementCriteria accountStatementCriteria = request.getCriteria();
 		List<HashMap<String, String>> response = accountStatementExcelGenerationService
 				.generateAccountStatementExcel(accountStatementCriteria, request.getRequestInfo());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PostMapping("/_update_dues")
+	public ResponseEntity<DueAmountResponse> dueamount(@Valid @RequestBody RequestInfoMapper requestInfoWrapper) {
+		propertyService.getDueAmount(requestInfoWrapper.getRequestInfo());
+		DueAmountResponse response = DueAmountResponse.builder().responseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
+				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -13,9 +14,12 @@ import org.egov.ps.model.AccountStatementCriteria;
 import org.egov.ps.model.BillV2;
 import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
+import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
+import org.egov.ps.model.PropertyDueAmount;
 import org.egov.ps.producer.Producer;
+import org.egov.ps.repository.PropertyQueryBuilder;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
@@ -29,6 +33,7 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
+import org.egov.ps.web.contracts.PropertyDueRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
@@ -334,6 +339,43 @@ public class PropertyService {
 			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 		}
 		return Collections.singletonList(property);
+	}
+
+	public void getDueAmount(RequestInfo requestInfo) {
+		PropertyCriteria criteria = PropertyCriteria.builder()
+				.state(Arrays.asList(PSConstants.PM_APPROVED))
+				.relations(Arrays.asList(PropertyQueryBuilder.RELATION_OWNER))
+				.build();
+		List<Property> properties = repository.getProperties(criteria);
+		if (CollectionUtils.isEmpty(properties))
+			throw new CustomException("NO_PROPERTY_FOUND","No approved property found");
+			
+		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
+		properties.stream().forEach(property -> {
+			Optional<OwnerDetails> currentOwnerDetails =property.getPropertyDetails().getOwners().stream().map(owner-> owner.getOwnerDetails()).filter(ownerDetail -> ownerDetail.getIsCurrentOwner()==true).findFirst();
+			PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(property.getId())
+					.fileNumber(property.getFileNumber())
+					.tenantId(property.getTenantId())
+					.propertyType(property.getPropertyDetails().getPropertyType())
+					.sectorNumber(property.getSectorNumber())
+					.ownerName(currentOwnerDetails.get().getOwnerName())
+					.mobileNumber(currentOwnerDetails.get().getMobileNumber())
+					.build();
+			List<String> propertyDetailsIds = new ArrayList<>();
+			propertyDetailsIds.add(property.getPropertyDetails().getId());
+			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
+//			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
+			EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
+
+			if (!CollectionUtils.isEmpty(demands)) {
+				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
+						estateAccount, property.getPropertyDetails().getInterestRate()));
+			}
+			PropertyDueAmounts.add(propertyDueAmount);
+		});
+		PropertyDueRequest propertyDueRequest =  PropertyDueRequest.builder().requestInfo(requestInfo)
+				.propertyDueAmounts(PropertyDueAmounts).build();
+		producer.push(config.getDueAmountTopic(), propertyDueRequest);	
 	}
 
 }
