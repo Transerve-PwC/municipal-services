@@ -94,7 +94,7 @@ public class EstateDemandGenerationService {
 					
 					if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
 						PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
-						if(paymentConfig.getIsGroundRent() && paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
+						if(paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 							generateDemandDate = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand()));
 						}
 					}
@@ -124,7 +124,7 @@ public class EstateDemandGenerationService {
 		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 		if(!CollectionUtils.isEmpty(property.getPropertyDetails().getPaymentConfigs())) {
 			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfigs().get(0);
-			if(paymentConfig.getIsGroundRent() && paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
+			if(paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 				date = setDateOfMonth(date,Integer.parseInt(paymentConfig.getGroundRentGenerateDemand()));
 			}
 		}
