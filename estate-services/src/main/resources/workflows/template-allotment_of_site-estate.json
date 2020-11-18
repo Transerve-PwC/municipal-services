@@ -1,7 +1,7 @@
 {
   "tenantId": "ch",
   "businessService": "ES-EB-AllotmentOfSite",
-  "business": "EstateServices",
+  "business": "EstateBranch",
   "businessServiceSla": 86400000,
   "states": [
     {

@@ -27,6 +27,8 @@ public class ApplicationCriteria {
 
 	private String applicationNumber;
 
+	private String businessName;
+
 	private List<String> state;
 
 	private Long offset;

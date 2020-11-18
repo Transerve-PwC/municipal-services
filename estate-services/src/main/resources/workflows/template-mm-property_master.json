@@ -1,7 +1,7 @@
 {
   "tenantId": "ch",
-  "businessService": "ES-BB-PropertyMaster",
-  "business": "BuildingBranch",
+  "businessService": "ES-MM-PropertyMaster",
+  "business": "ManiMajra",
   "businessServiceSla": 86400000,
   "states": [
     {
@@ -9,8 +9,8 @@
         {
           "action": "SUBMIT",
           "currentState": "",
-          "nextState": "ES_PM_PENDING_DA_VERIFICATION",
-          "roles": ["ES_BB_DISPATCH_OFFICER"]
+          "nextState": "PENDING_DA_VERIFICATION",
+          "roles": ["ES_MM_DISPATCH_OFFICER"]
         }
       ],
       "sla": 2,
@@ -25,20 +25,20 @@
       "actions": [
         {
           "action": "SUBMIT",
-          "currentState": "ES_PM_PENDING_CLARIFICATION",
-          "nextState": "ES_PM_PENDING_DA_VERIFICATION",
-          "roles": ["ES_BB_DISPATCH_OFFICER"]
+          "currentState": "PENDING_CLARIFICATION",
+          "nextState": "PENDING_DA_VERIFICATION",
+          "roles": ["ES_MM_DISPATCH_OFFICER"]
         },
         {
           "action": "MODIFY",
-          "currentState": "ES_PM_PENDING_CLARIFICATION",
-          "nextState": "ES_PM_PENDING_CLARIFICATION",
-          "roles": ["ES_BB_DISPATCH_OFFICER"]
+          "currentState": "PENDING_CLARIFICATION",
+          "nextState": "PENDING_CLARIFICATION",
+          "roles": ["ES_MM_DISPATCH_OFFICER"]
         }
       ],
       "sla": 86400000,
-      "state": "ES_PM_PENDING_CLARIFICATION",
-      "applicationStatus": "ES_PM_PENDING_CLARIFICATION",
+      "state": "PENDING_CLARIFICATION",
+      "applicationStatus": "ES_PM_MM_PENDING_CLARIFICATION",
       "docUploadRequired": false,
       "isStartState": false,
       "isTerminateState": false,
@@ -47,8 +47,8 @@
     {
       "actions": null,
       "sla": 2,
-      "state": "ES_PM_REJECTED",
-      "applicationStatus": "ES_PM_REJECTED",
+      "state": "REJECTED",
+      "applicationStatus": "ES_PM_MM_REJECTED",
       "docUploadRequired": false,
       "isStartState": false,
       "isTerminateState": true,
@@ -58,20 +58,20 @@
       "actions": [
         {
           "action": "FORWARD",
-          "currentState": "ES_PM_PENDING_DA_VERIFICATION",
-          "nextState": "ES_PM_PENDING_APPROVAL",
-          "roles": ["ES_BB_DEALING_ASSISTANT"]
+          "currentState": "PENDING_DA_VERIFICATION",
+          "nextState": "PENDING_APPROVAL",
+          "roles": ["ES_MM_DEALING_ASSISTANT"]
         },
         {
           "action": "SENDBACK",
-          "currentState": "ES_PM_PENDING_DA_VERIFICATION",
-          "nextState": "ES_PM_PENDING_CLARIFICATION",
-          "roles": ["ES_BB_DEALING_ASSISTANT"]
+          "currentState": "PENDING_DA_VERIFICATION",
+          "nextState": "PENDING_CLARIFICATION",
+          "roles": ["ES_MM_DEALING_ASSISTANT"]
         }
       ],
       "sla": 2,
-      "state": "ES_PM_PENDING_DA_VERIFICATION",
-      "applicationStatus": "ES_PM_PENDING_DA_VERIFICATION",
+      "state": "PENDING_DA_VERIFICATION",
+      "applicationStatus": "ES_PM_MM_PENDING_DA_VERIFICATION",
       "docUploadRequired": false,
       "isStartState": false,
       "isTerminateState": false,
@@ -81,26 +81,26 @@
       "actions": [
         {
           "action": "REJECT",
-          "currentState": "ES_PM_PENDING_APPROVAL",
-          "nextState": "ES_PM_REJECTED",
+          "currentState": "PENDING_APPROVAL",
+          "nextState": "REJECTED",
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         },
         {
           "action": "APPROVE",
-          "currentState": "ES_PM_PENDING_APPROVAL",
-          "nextState": "ES_PM_APPROVED",
+          "currentState": "PENDING_APPROVAL",
+          "nextState": "APPROVED",
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         },
         {
           "action": "SENDBACK",
-          "currentState": "ES_PM_PENDING_APPROVAL",
-          "nextState": "ES_PM_PENDING_DA_VERIFICATION",
+          "currentState": "PENDING_APPROVAL",
+          "nextState": "PENDING_DA_VERIFICATION",
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         }
       ],
       "sla": 2,
-      "state": "ES_PM_PENDING_APPROVAL",
-      "applicationStatus": "ES_PM_PENDING_APPROVAL",
+      "state": "PENDING_APPROVAL",
+      "applicationStatus": "ES_PM_MM_PENDING_APPROVAL",
       "docUploadRequired": false,
       "isStartState": false,
       "isTerminateState": false,
@@ -109,8 +109,8 @@
     {
       "actions": null,
       "sla": 2,
-      "state": "ES_PM_APPROVED",
-      "applicationStatus": "ES_PM_APPROVED",
+      "state": "APPROVED",
+      "applicationStatus": "ES_PM_MM_APPROVED",
       "docUploadRequired": false,
       "isStartState": false,
       "isTerminateState": true,
