@@ -35,8 +35,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class EstateDemandGenerationServiceTests {
@@ -75,6 +73,7 @@ public class EstateDemandGenerationServiceTests {
     public void createDemandTest() {
     	
     	AtomicInteger dummayResult = estateDemandGenerationService.createDemand(EstateDemandCriteria.builder().build());
+    	System.out.println(dummayResult);
     	assertTrue("Error, can't update more than one record", 1 >= dummayResult.get());
     }
     

@@ -51,7 +51,7 @@ public class EstateRentCollectionUtils {
 					+ "|%13.2f |%15.2f |%5s |%5s",
 					item.getIsPrevious() ?"Previous Balance":dateFormat.format(new Date(item.getDate())), item.getAmount(),
 					item.getType() == EstateAccountStatement.Type.C ? "Payment" : "Rent", 
-							item.getRemainingPrincipal(),
+							item.getRemainingPrincipal(),  
 							item.getRemainingGST(),
 							item.getRemainingRentPenalty(),
 							item.getRemainingGSTPenalty(),
