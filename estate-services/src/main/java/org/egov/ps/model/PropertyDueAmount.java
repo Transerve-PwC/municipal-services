@@ -42,6 +42,10 @@ public class PropertyDueAmount {
 	@Size(max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId;
+	
+	@Size(max = 256)
+	@JsonProperty("branchType")
+	private String branchType;
 
 	@Size(max = 256)
 	@JsonProperty("propertyType")

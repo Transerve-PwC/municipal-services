@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+
 @Service
 public class PropertyService {
 
@@ -81,6 +83,9 @@ public class PropertyService {
 
 	@Autowired
 	private DemandRepository demandRepository;
+	
+	@Autowired
+	private MDMSService mdmsservice;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
@@ -353,18 +358,30 @@ public class PropertyService {
 		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
 		properties.stream().forEach(property -> {
 			Optional<OwnerDetails> currentOwnerDetails =property.getPropertyDetails().getOwners().stream().map(owner-> owner.getOwnerDetails()).filter(ownerDetail -> ownerDetail.getIsCurrentOwner()==true).findFirst();
+			List<Map<String, Object>> propertyTypeConfigurations = mdmsservice.getBranchRoles("propertyType",
+					requestInfo, property.getTenantId());
+			
+			List<Map<String, Object>> sectorConfigurations = mdmsservice.getBranchRoles("sector",
+					requestInfo, property.getTenantId());
+			
 			PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(property.getId())
 					.fileNumber(property.getFileNumber())
 					.tenantId(property.getTenantId())
-					.propertyType(property.getPropertyDetails().getPropertyType())
-					.sectorNumber(property.getSectorNumber())
+					.branchType(property.getPropertyDetails().getBranchType())
 					.ownerName(currentOwnerDetails.get().getOwnerName())
 					.mobileNumber(currentOwnerDetails.get().getMobileNumber())
 					.build();
+			
+			propertyTypeConfigurations.stream().filter(propertyType-> property.getPropertyDetails().getPropertyType().equalsIgnoreCase(propertyType.get("code").toString()))
+			.forEach(propertyType->propertyDueAmount.setPropertyType(propertyType.get("name").toString()));
+				
+			sectorConfigurations.stream().filter(sector-> property.getSectorNumber().equalsIgnoreCase(sector.get("code").toString()))
+			.forEach(sector->propertyDueAmount.setSectorNumber(sector.get("name").toString()));
+				
+			
 			List<String> propertyDetailsIds = new ArrayList<>();
 			propertyDetailsIds.add(property.getPropertyDetails().getId());
 			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
-//			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 			EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
 			if (!CollectionUtils.isEmpty(demands)) {
