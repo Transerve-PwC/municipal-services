@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class EstateRentCollectionService implements IEstateRentCollectionService{
 	
 	
-	private List<EstateRentCollection> settlePayment( List<EstateDemand> demandsToBeSettled, final EstatePayment payment,
+	private List<EstateRentCollection> settlePayment( final List<EstateDemand> demandsToBeSettled, final EstatePayment payment,
 			final EstateAccount account, double interestRate,boolean isFixGST){
 		
 		/**
@@ -562,6 +562,7 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 					LocalDate demandGenerationDate = getLocalDate(demand.getGenerationDate());
 					 calculatedInterest = 0D;
 					 calculateRentInterest=0D;
+					 if(demand.getRemainingRent()>0 || demand.getRemainingGST()>0) {
 					long noOfDaysBetweenGenerationAndPayment = 1
 							+ ChronoUnit.DAYS.between(demandGenerationDate, atDate);
 					if (noOfDaysBetweenGenerationAndPayment > demand.getInitialGracePeriod()) {
@@ -571,27 +572,43 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 						//for testing TODO
 						long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(demandInterestSinceDate, atDate);
 						if(noOfDaysForInterestCalculation>10) {
-								calculatedInterest = demand.getGst() * (interestRate/100)
+								calculatedInterest = demand.getRemainingGST() * (interestRate/100)
 									* noOfDaysForInterestCalculation / 365 ;
 	//						demand.setGstInterest(calculatedInterest);
 	//						demand.setRemainingGSTPenalty(calculatedInterest);
 							
 							if(isFixGST) {
 								
-									calculateRentInterest=demand.getRent()*0.10;
+									calculateRentInterest=demand.getRemainingRent()*0.10;
 								//demand.setPenaltyInterest(demand.getRent()*0.10);
 							//	demand.setRemainingRentPenalty(demand.getRent()*0.10);
 							}else {
-								calculateRentInterest=demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365;
+								calculateRentInterest=demand.getRemainingRent()*(0.10)* noOfDaysForInterestCalculation/365;
 	//							demand.setPenaltyInterest(demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365);
 	//							demand.setRemainingRentPenalty(demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365);
 							}
+							
+							
+							
 						}
 						else {
+							if(!demand.getIsPrevious()) {
+							calculateRentInterest+=demand.getRemainingRentPenalty();
+							calculatedInterest+=demand.getRemainingGSTPenalty();
+							}
+						}
+					}else  {
+						if(!demand.getIsPrevious()) {
 							calculateRentInterest+=demand.getRemainingRentPenalty();
 							calculatedInterest+=demand.getRemainingGSTPenalty();
 						}
 					}
+				}else {
+					if(!demand.getIsPrevious()) {
+					calculateRentInterest+=demand.getRemainingRentPenalty();
+					calculatedInterest+=demand.getRemainingGSTPenalty();
+					}
+				}
 					
 					
 						
