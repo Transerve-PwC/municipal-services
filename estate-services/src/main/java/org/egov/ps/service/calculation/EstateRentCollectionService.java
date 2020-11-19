@@ -137,8 +137,7 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 			demand.setGstInterest(GSTinterest);
 			demand.setRemainingRentPenalty(RentInterest);
 			demand.setRemainingGSTPenalty(GSTinterest);
-				
-			
+						
 			
 			
 		}
@@ -214,8 +213,7 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 			RentInterest=demand.getRemainingRentPenalty();
 			GSTinterest=demand.getRemainingGSTPenalty();
 		if (RentInterest + GSTinterest <= paymentAmount) {
-			
-			rentPenaltyToBePaid=RentInterest;
+					rentPenaltyToBePaid=RentInterest;
 			gstPenaltyToBePaid=GSTinterest;
 			
 		} else {
@@ -547,6 +545,7 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 			if(demands==null)
 				demands=Collections.emptyList();
 		
+
 		return demands.stream().filter(EstateDemand::isUnPaid).reduce(
 				EstateRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(), (summary, demand) -> {
 					double calculatedInterest = 0D;
@@ -607,6 +606,7 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 					if(demand.getIsPrevious()) {
 						calculatedInterest+=demand.getRemainingGSTPenalty();
 						calculateRentInterest+=demand.getRemainingRentPenalty();
+
 					}
 					return EstateRentSummary.builder()
 							.rent(demand.getRent())
@@ -642,6 +642,7 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 	
 			if(demands==null)
 				demands=Collections.emptyList();
+
 		return demands.stream().filter(EstateDemand::isUnPaid).reduce(
 				EstateRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(), (summary, demand) -> {
 				

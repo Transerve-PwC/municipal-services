@@ -290,6 +290,7 @@ List<EstateRentCollection> collections = this.estateRentCollectionService.settle
                 DEFAULT_INTEREST_RATE, getEpochFromDateString(JUN_1_2000));
         
 
+
         System.out.println(rentSummary);
         assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
 
@@ -572,6 +573,7 @@ List<EstatePayment> payments = null;
 	        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
 	    }
  
+
 @Test
 
 public void testSimpleInterestSettlementStatement_Latest1() throws ParseException {
@@ -582,6 +584,7 @@ public void testSimpleInterestSettlementStatement_Latest1() throws ParseExceptio
             getDemand(1000D, 180 ,MAR_1_1999,"103",0,0,0,0,0,0,false),
             getDemand(1000D, 180 ,APR_1_1999,"104",0,0,0,0,0,0,false),
 		    getDemand(1000D,180 ,MAY_1_1999,"105",0,0,0,0,0,0,false), 
+
             getDemand(1000D, 180 ,JUN_1_1999,"106",0,0,0,0,0,0,false),
             getDemand(1000D, 180 ,JUL_1_1999,"107",0,0,0,0,0,0,false),
             getDemand(1000D, 180 ,AUG_1_1999,"108",0,0,0,0,0,0,false));
