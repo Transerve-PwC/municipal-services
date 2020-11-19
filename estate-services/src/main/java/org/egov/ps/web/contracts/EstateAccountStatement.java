@@ -89,7 +89,7 @@ public class EstateAccountStatement {
 
 
     public double getDueAmount() {
-        return Math.max(0, this.remainingPrincipal + this.remainingInterest+this.remainingGST+this.remainingGSTPenalty - this.remainingBalance);
+    	return Math.max(0, this.remainingPrincipal + this.remainingGST+this.remainingRentPenalty+this.remainingGSTPenalty - this.remainingBalance);
     }
 
     public enum Type {

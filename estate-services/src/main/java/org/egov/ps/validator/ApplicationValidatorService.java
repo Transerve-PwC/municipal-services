@@ -6,14 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.annotation.ApplicationValidator;
 import org.egov.ps.model.Application;
@@ -22,15 +14,27 @@ import org.egov.ps.model.Property;
 import org.egov.ps.repository.ApplicationRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.MDMSService;
+import org.egov.ps.service.calculation.IEstateRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.application.OwnerValidator;
 import org.egov.ps.web.contracts.ApplicationRequest;
+import org.egov.ps.web.contracts.EstateAccount;
+import org.egov.ps.web.contracts.EstateDemand;
+import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -60,6 +64,9 @@ public class ApplicationValidatorService {
 	ApplicationRepository applicationRepository;
 
 	@Autowired
+	private IEstateRentCollectionService estateRentCollectionService;
+
+	@Autowired
 	ApplicationValidatorService(ApplicationContext context, MDMSService mdmsService,
 			PropertyRepository propertyRepository, ObjectMapper objectMapper, OwnerValidator ownerValidator) {
 		this.context = context;
@@ -85,7 +92,7 @@ public class ApplicationValidatorService {
 		List<Application> applications = request.getApplications();
 		applications.stream().forEach(application -> {
 			String propertyId = application.getProperty().getId();
-			validatePropertyExists(request.getRequestInfo(), propertyId);
+			validatePropertyExists(request.getRequestInfo(), propertyId, application);
 			JsonNode applicationDetails = application.getApplicationDetails();
 			try {
 				String applicationDetailsString = this.objectMapper.writeValueAsString(applicationDetails);
@@ -107,7 +114,7 @@ public class ApplicationValidatorService {
 		});
 	}
 
-	private void validatePropertyExists(RequestInfo requestInfo, String propertyId) {
+	private void validatePropertyExists(RequestInfo requestInfo, String propertyId, Application application) {
 		Property property = propertyRepository.findPropertyById(propertyId);
 		if (property == null) {
 			throw new CustomException("INVALID_PROPERTY", "Could not find property with the given id:" + propertyId);
@@ -116,6 +123,23 @@ public class ApplicationValidatorService {
 				&& !property.getState().contentEquals(PSConstants.ES_APPROVED)) {
 			throw new CustomException("INVALID_PROPERTY", "Property with the given " + propertyId + " is not approved");
 		}
+
+		Double rentDue = getRentDue(property);
+		if (rentDue > 0) {
+			throw new CustomException("PROPERTY_PENDING_DUE", String.format(
+					"Property has pending due of Rs: %s, so you can not apply for %s, please clear the due before applying.",
+					rentDue, application.getApplicationType()));
+		}
+	}
+
+	private Double getRentDue(Property property) {
+		List<String> propertyDetailsIds = new ArrayList<String>();
+		propertyDetailsIds.add(property.getPropertyDetails().getId());
+		List<EstateDemand> demands = propertyRepository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
+		EstateAccount estateAccount = propertyRepository.getPropertyEstateAccountDetails(propertyDetailsIds);
+		EstateRentSummary estateRentSummary = estateRentCollectionService.calculateRentSummary(demands, estateAccount,
+				property.getPropertyDetails().getInterestRate());
+		return estateRentSummary.getBalanceRent();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -235,6 +259,17 @@ public class ApplicationValidatorService {
 	public void validateUpdateRequest(ApplicationRequest applicationRequest) {
 		applicationRequest.getApplications().forEach(application -> {
 			validateApplicationIdExistsInDB(application.getId());
+
+			if (application.getApplicationType().contains(PSConstants.APPLICATION_TYPE_NDC)
+					&& application.getState().contains(PSConstants.PENDING_SO_APPROVAL)) {
+
+				Property property = propertyRepository.findPropertyById(application.getProperty().getId());
+				Double rentDue = getRentDue(property);
+				if (rentDue > 0) {
+					throw new CustomException("PROPERTY_RENT_DUE",
+							String.format("Property has rent due: %s, so can not approve for NDC", rentDue));
+				}
+			}
 		});
 	}
 

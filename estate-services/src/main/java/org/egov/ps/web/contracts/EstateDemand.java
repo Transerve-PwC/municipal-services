@@ -64,9 +64,9 @@ public class EstateDemand implements Comparable<EstateDemand> {
   @JsonProperty("interestSince")
   private Long interestSince;
 
-  
+  @Builder.Default
   @JsonProperty("isPrevious")
-  private Boolean isPrevious;
+  private Boolean isPrevious = false;
 
   /**
    * Rent of demand.
@@ -144,9 +144,9 @@ public class EstateDemand implements Comparable<EstateDemand> {
     return !this.isPaid();
   }
 
-  public void setRemainingPrincipalAndUpdatePaymentStatus(Double d) {
-    this.setRemainingPrincipal(d);
-    if (this.remainingPrincipal == 0) {
+  public void setRemainingPrincipalAndUpdatePaymentStatus(Double remainingGSTPenalty,Double remainingRentPenalty) {
+    //this.setRemainingPrincipal(d);
+    if (remainingGSTPenalty == 0 && remainingRentPenalty==0) {
       this.status = PaymentStatusEnum.PAID;
     } else {
       this.status = PaymentStatusEnum.UNPAID;

@@ -293,7 +293,7 @@ public class PropertyEnrichmentService {
 				estateDemand.setRemainingGST(estateDemand.getGstInterest());
 				estateDemand.setRemainingRent(estateDemand.getRent());
 				estateDemand.setInterestSince(estateDemand.getGenerationDate());
-				estateDemand.setIsPrevious(false);
+				estateDemand.setIsPrevious(estateDemand.getIsPrevious());
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				estateDemand.setAuditDetails(estateDemandAuditDetails);
 
