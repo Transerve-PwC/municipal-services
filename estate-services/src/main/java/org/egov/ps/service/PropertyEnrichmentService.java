@@ -176,8 +176,7 @@ public class PropertyEnrichmentService {
 
 		PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 		if (paymentConfig != null) {
-			AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
-					paymentConfig.getId() == null);
+			AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 			if (paymentConfig.getId() == null || paymentConfig.getId().isEmpty()) {
 				paymentConfig.setId(UUID.randomUUID().toString());
 				paymentConfig.setTenantId(property.getTenantId());

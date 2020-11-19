@@ -3,17 +3,15 @@ package org.egov.ps.service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.EstateDemandCriteria;
@@ -61,9 +59,12 @@ public class EstateDemandGenerationService {
 	}
 
 	public AtomicInteger createDemand(EstateDemandCriteria demandCriteria) {
+		List<String> relations = new ArrayList<String>();
+		relations.add("owner");
+		relations.add("paymentconfig");
 		AtomicInteger counter = new AtomicInteger(0);
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
-		propertyCriteria.setRelations(Collections.singletonList("owner"));
+		propertyCriteria.setRelations(relations);
 		propertyCriteria.setState(Arrays.asList(PSConstants.PM_APPROVED));
 		List<Property> propertyList = propertyRepository.getProperties(propertyCriteria);
 		
