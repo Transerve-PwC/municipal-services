@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class EstateRentCollectionService implements IEstateRentCollectionService{
 	
 	
-	private List<EstateRentCollection> settlePayment(final List<EstateDemand> demandsToBeSettled, final EstatePayment payment,
+	private List<EstateRentCollection> settlePayment( List<EstateDemand> demandsToBeSettled, final EstatePayment payment,
 			final EstateAccount account, double interestRate,boolean isFixGST){
 		
 		/**
@@ -314,8 +314,11 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 		return Instant.ofEpochMilli(atTimestamp).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 	@Override
-	public List<EstateRentCollection> settle(final List<EstateDemand> demandsToBeSettled, final List<EstatePayment> payments,
+	public List<EstateRentCollection> settle(final List<EstateDemand> demandsToBeSettled, List<EstatePayment> payments,
 			final EstateAccount account, double interestRate,boolean isFixGST) {
+		if(null==payments)
+			 payments = Collections.emptyList();
+		
 		Collections.sort(demandsToBeSettled);
 		Collections.sort(payments);
 		/**
@@ -403,14 +406,20 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 	@Override
 	public List<EstateAccountStatement> getAccountStatement(List<EstateDemand> demands, List<EstatePayment> payments,
 			double interestRate, Long fromDateTimestamp, Long toDateTimestamp) {
+		if(null==payments)
+		 payments = Collections.emptyList();
+		if(demands==null)
+			demands=Collections.emptyList();
 		
 		long endTimestamp = toDateTimestamp == null ? System.currentTimeMillis() : toDateTimestamp.longValue();
 		demands = demands.stream().filter(demand -> demand.getGenerationDate() <= endTimestamp)
 				.collect(Collectors.toList());
+		
 		payments = payments.stream().filter(payment -> payment.getRentReceived() > 0)
 				.filter(p -> p.getPaymentDate() <= endTimestamp).collect(Collectors.toList());
 		Collections.sort(demands);
-		Collections.sort(payments);
+		
+			Collections.sort(payments);
 		List<EstateAccountStatement> accountStatementItems = new ArrayList<EstateAccountStatement>();
 		EstateAccount rentAccount = EstateAccount.builder().remainingAmount(0D).build();
 		List<EstateDemand> demandsToBeSettled = new ArrayList<EstateDemand>(demands.size());
@@ -512,6 +521,9 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 
 	@Override
 	public EstateRentSummary calculateRentSummary(List<EstateDemand> demands, EstateAccount rentAccount, double interestRate) {
+		
+			if(demands==null)
+				demands=Collections.emptyList();
 		return this.calculateRentSummaryAt(demands, rentAccount, interestRate, System.currentTimeMillis());
 	}
 
@@ -531,6 +543,9 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 			long atTimestamp ) {
 		boolean isFixGST=true;
 		final LocalDate atDate = getLocalDate(atTimestamp);
+		
+			if(demands==null)
+				demands=Collections.emptyList();
 		
 		return demands.stream().filter(EstateDemand::isUnPaid).reduce(
 				EstateRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(), (summary, demand) -> {
@@ -555,21 +570,26 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 						LocalDate demandInterestSinceDate = getLocalDate(demand.getInterestSince());
 						//for testing TODO
 						long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(demandInterestSinceDate, atDate);
-						if(noOfDaysForInterestCalculation>10)
-							calculatedInterest = demand.getGst() * (interestRate/100)
-								* noOfDaysForInterestCalculation / 365 ;
-//						demand.setGstInterest(calculatedInterest);
-//						demand.setRemainingGSTPenalty(calculatedInterest);
-						
-						if(isFixGST) {
-							if(noOfDaysForInterestCalculation>10)
-								calculateRentInterest=demand.getRent()*0.10;
-							//demand.setPenaltyInterest(demand.getRent()*0.10);
-						//	demand.setRemainingRentPenalty(demand.getRent()*0.10);
-						}else {
-							calculateRentInterest=demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365;
-//							demand.setPenaltyInterest(demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365);
-//							demand.setRemainingRentPenalty(demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365);
+						if(noOfDaysForInterestCalculation>10) {
+								calculatedInterest = demand.getGst() * (interestRate/100)
+									* noOfDaysForInterestCalculation / 365 ;
+	//						demand.setGstInterest(calculatedInterest);
+	//						demand.setRemainingGSTPenalty(calculatedInterest);
+							
+							if(isFixGST) {
+								
+									calculateRentInterest=demand.getRent()*0.10;
+								//demand.setPenaltyInterest(demand.getRent()*0.10);
+							//	demand.setRemainingRentPenalty(demand.getRent()*0.10);
+							}else {
+								calculateRentInterest=demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365;
+	//							demand.setPenaltyInterest(demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365);
+	//							demand.setRemainingRentPenalty(demand.getRent()*(0.10)* noOfDaysForInterestCalculation/365);
+							}
+						}
+						else {
+							calculateRentInterest+=demand.getRemainingRentPenalty();
+							calculatedInterest+=demand.getRemainingGSTPenalty();
 						}
 					}
 					
@@ -585,8 +605,8 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 //						
 					//}
 					if(demand.getIsPrevious()) {
-						calculatedInterest+=demand.getGstInterest();
-						calculateRentInterest+=demand.getPenaltyInterest();
+						calculatedInterest+=demand.getRemainingGSTPenalty();
+						calculateRentInterest+=demand.getRemainingRentPenalty();
 					}
 					return EstateRentSummary.builder()
 							.rent(demand.getRent())
@@ -619,6 +639,9 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 		final LocalDate atDate = getLocalDate(atTimestamp);
 		double dueInterestPenalty = 0D;
 		double dueGSTPenalty=0D;
+	
+			if(demands==null)
+				demands=Collections.emptyList();
 		return demands.stream().filter(EstateDemand::isUnPaid).reduce(
 				EstateRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(), (summary, demand) -> {
 				
