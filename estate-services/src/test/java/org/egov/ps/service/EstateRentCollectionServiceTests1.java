@@ -69,6 +69,9 @@ public class EstateRentCollectionServiceTests1 {
     private static final String AUG_19_1999="19 08 1999";
     private static final String MAY_15_1999="15 05 1999";
     
+    private static final String NOV_15_2020="15 11 2020";
+    private static final String NOV_30_2020="30 11 2020";
+    
     
     public static final double DEFAULT_INTEREST_RATE = 18D;
  //   private static final double ZERO_INTEREST_RATE = 0D;
@@ -276,23 +279,37 @@ EstateAccount account = getAccount(0D);
   	
 	  @Test
     public void testAdditionalBalanceUsecase1Summary() throws ParseException {
-		  List<EstateDemand> demands = Arrays.asList( 
-	    			 getDemand(650D,100 ,FEB_1_1999,"101",100,3,0,0,0,0,true),
-	    			 getDemand(1000D,180 ,FEB_1_1999,"102",0,0,0,0,0,0,false), 
-                    getDemand(1000D, 180 ,MAR_1_1999,"103",0,0,0,0,0,0,false),
-                    getDemand(1000D, 180 ,APR_1_1999,"104",0,0,0,0,0,0,false));
+		  List<EstateDemand> demands =null;
+				  
+//				  Arrays.asList( 
+//  	 			getDemand(3500D,630 ,JAN_1_1999,"101",350,10,0,0,0,0,true), 
+//  	 			 getDemand(1000D,180 ,FEB_1_1999,"102",0,0,0,0,0,0,false), 
+//  	 			                                     getDemand(1000D, 180 ,MAR_1_1999,"103",0,0,0,0,0,0,false),
+//  	 			                                     getDemand(1000D, 180 ,APR_1_1999,"104",0,0,0,0,0,0,false),
+//  	 	 									      	 getDemand(1000D,180 ,MAY_1_1999,"105",0,0,0,0,0,0,false) 
+//  										             //getDemand(1000D, 180 ,JUN_1_1999,"106",0,0,0,0,0,0,false),
+//  										             //getDemand(1000D, 180 ,JUL_1_1999,"107",0,0,0,0,0,0,false),
+//  										             //getDemand(1000D, 180 ,AUG_1_1999,"108",0,0,0,0,0,0,false)
+//  										             );
+//  	 	 
+  	 	 		
+  	 	 
+  	 	List<EstatePayment> payments =
+  	 			
+  	 			Arrays.asList( getPayment(5500, MAR_27_1999,MAR_27_1999),
+  				   getPayment(6500D, MAY_15_1999,MAY_15_1999)
+  	);
 
-List<EstatePayment> payments = Arrays.asList( getPayment(1200D, MAR_27_1999,MAR_27_1999),
-						                      getPayment(2500D, APR_15_1999,APR_15_1999)	
-);        EstateAccount rentAccount = getAccount(0.0);
+EstateAccount rentAccount = getAccount(0.0);
 
 List<EstateRentCollection> collections = this.estateRentCollectionService.settle(demands, payments, rentAccount,
 		DEFAULT_INTEREST_RATE,true);
-        EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummaryAt(demands, rentAccount,
-                DEFAULT_INTEREST_RATE, getEpochFromDateString(JUN_1_2000));
+        EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummary(demands, rentAccount,
+                DEFAULT_INTEREST_RATE);
         
 
         System.out.println(rentSummary);
+        System.out.println(rentAccount.getRemainingAmount());
         assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
 
 
@@ -542,12 +559,12 @@ List<EstateRentCollection> collections = this.estateRentCollectionService.settle
 	    	 	 		
 	    	 	 
 	    	 	List<EstatePayment> payments = Arrays.asList( getPayment(5500, MAR_27_1999,MAR_27_1999),
-	    				   getPayment(6500D, MAY_15_1999,MAY_15_1999)
+	    				   getPayment(500D, MAY_15_1999,MAY_15_1999)
 	    	);
 
 	          utils=new EstateRentCollectionUtils();
 	        List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
-	                payments, DEFAULT_INTEREST_RATE, null, null);
+	                payments, DEFAULT_INTEREST_RATE, null, getEpochFromDateString(NOV_30_2020));
 	        utils.printStatement(accountStatementItems);
 	        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
 	    }
