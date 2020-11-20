@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.Document;
+import org.egov.ps.model.ExtensionFee;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.PaymentConfig;
@@ -28,6 +29,7 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
+import org.egov.ps.web.contracts.ExtensionFeeRequest;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -470,6 +472,28 @@ public class PropertyEnrichmentService {
 		Calculation calculation = Calculation.builder().applicationNumber(consumerCode).taxHeadEstimates(estimates)
 				.tenantId(property.getTenantId()).build();
 		return calculation;
+	}
+
+	public void enrichExtensionFeeRequest(ExtensionFeeRequest extensionFeeRequest) {
+		extensionFeeRequest.getExtensionFees().forEach(extensionFee -> {
+			enrichExtensionFee(extensionFeeRequest.getRequestInfo(), extensionFee);
+		});
+	}
+
+	private void enrichExtensionFee(RequestInfo requestInfo, ExtensionFee extensionFee) {
+		Property property = propertyRepository.findPropertyById(extensionFee.getProperty().getId());
+		AuditDetails extensionFeeAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+				extensionFee.getId() == null);
+		if (null == extensionFee.getId()) {
+			extensionFee.setId(UUID.randomUUID().toString());
+			extensionFee.setRemainingDue(extensionFee.getAmount());
+			extensionFee.setIsPaid(false);
+			extensionFee.setStatus(PaymentStatusEnum.UNPAID);
+			extensionFee.setGenerationDate(new Date().getTime());
+		}
+		extensionFee.setTenantId(property.getTenantId());
+		extensionFee.setBranchType(property.getPropertyDetails().getBranchType());
+		extensionFee.setAuditDetails(extensionFeeAuditDetails);
 	}
 
 }

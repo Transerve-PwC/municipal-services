@@ -187,6 +187,10 @@ public class PropertyViolationService {
 		if (null == accountStatementCriteria.getPropertyid()) {
 			throw new CustomException(Collections.singletonMap("NO_PROPERTY_ID", "Property id should not be null"));
 		}
+		if (accountStatementCriteria.getToDate() <= accountStatementCriteria.getFromDate()) {
+			throw new CustomException(
+					Collections.singletonMap("NO_PROPER_DATE", "Statement from date should be greater than to date"));
+		}
 
 		Property property = repository.findPropertyById(accountStatementCriteria.getPropertyid());
 		if (null == property) {
@@ -204,20 +208,22 @@ public class PropertyViolationService {
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
 		List<OfflinePaymentDetails> offlinePaymentDetails = repository
 				.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+		List<OfflinePaymentDetails> filteredOfflinePaymentDetails = offlinePaymentDetails.stream()
+				.filter(offlinePaymentDetail -> null != offlinePaymentDetail.getType()
+						&& offlinePaymentDetail.getType().equals(OfflinePaymentType.PENALTY))
+				.collect(Collectors.toList());
 
 		double totalPenalty = filteredPropertyPenalties.stream().mapToDouble(PropertyPenalty::getPenaltyAmount).sum();
 		double totalPenaltyDue = filteredPropertyPenalties.stream().mapToDouble(PropertyPenalty::getRemainingPenaltyDue)
 				.sum();
-		BigDecimal totalPenaltyPaid = offlinePaymentDetails.stream()
-				.filter(offlinePaymentDetail -> offlinePaymentDetail.getType().equals(OfflinePaymentType.PENALTY))
-				.map(OfflinePaymentDetails::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+		BigDecimal totalPenaltyPaid = filteredOfflinePaymentDetails.stream().map(OfflinePaymentDetails::getAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		PenaltyStatementSummary penaltyStatementSummary = PenaltyStatementSummary.builder().totalPenalty(totalPenalty)
 				.totalPenaltyDue(totalPenaltyDue).totalPenaltyPaid(totalPenaltyPaid.doubleValue()).build();
 
 		PenaltyStatementResponse penaltyStatementResponse = PenaltyStatementResponse.builder()
-				.propertyPenalties(filteredPropertyPenalties)
-				.offlinePaymentDetails(offlinePaymentDetails)
+				.propertyPenalties(filteredPropertyPenalties).offlinePaymentDetails(filteredOfflinePaymentDetails)
 				.penaltyStatementSummary(penaltyStatementSummary).build();
 
 		return penaltyStatementResponse;
