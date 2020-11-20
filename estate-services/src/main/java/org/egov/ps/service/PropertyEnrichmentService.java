@@ -184,21 +184,26 @@ public class PropertyEnrichmentService {
 			}
 			paymentConfig.setAuditDetails(paymentAuditDetails);
 
-			paymentConfig.getPaymentConfigItems().forEach(paymentConfigItem -> {
-				if (paymentConfigItem.getId() == null || paymentConfigItem.getId().isEmpty()) {
-					paymentConfigItem.setId(UUID.randomUUID().toString());
-					paymentConfigItem.setTenantId(property.getTenantId());
-					paymentConfigItem.setPaymentConfigId(paymentConfig.getId());
-				}
-			});
+			if (!CollectionUtils.isEmpty(paymentConfig.getPaymentConfigItems())) {
+				paymentConfig.getPaymentConfigItems().forEach(paymentConfigItem -> {
+					if (paymentConfigItem.getId() == null || paymentConfigItem.getId().isEmpty()) {
+						paymentConfigItem.setId(UUID.randomUUID().toString());
+						paymentConfigItem.setTenantId(property.getTenantId());
+						paymentConfigItem.setPaymentConfigId(paymentConfig.getId());
+					}
+				});
+			}
 
-			paymentConfig.getPremiumAmountConfigItems().forEach(premiumAmountConfigItem -> {
-				if (premiumAmountConfigItem.getId() == null || premiumAmountConfigItem.getId().isEmpty()) {
-					premiumAmountConfigItem.setId(UUID.randomUUID().toString());
-					premiumAmountConfigItem.setTenantId(property.getTenantId());
-					premiumAmountConfigItem.setPaymentConfigId(paymentConfig.getId());
-				}
-			});
+			if (!CollectionUtils.isEmpty(paymentConfig.getPremiumAmountConfigItems())) {
+				paymentConfig.getPremiumAmountConfigItems().forEach(premiumAmountConfigItem -> {
+					if (premiumAmountConfigItem.getId() == null || premiumAmountConfigItem.getId().isEmpty()) {
+						premiumAmountConfigItem.setId(UUID.randomUUID().toString());
+						premiumAmountConfigItem.setTenantId(property.getTenantId());
+						premiumAmountConfigItem.setPaymentConfigId(paymentConfig.getId());
+					}
+				});
+			}
+
 		}
 	}
 
