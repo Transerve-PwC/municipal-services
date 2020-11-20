@@ -72,7 +72,6 @@ public class EstateRentCollectionServiceTests1 {
     private static final String NOV_15_2020="15 11 2020";
     private static final String NOV_30_2020="30 11 2020";
     
-    
     public static final double DEFAULT_INTEREST_RATE = 18D;
  //   private static final double ZERO_INTEREST_RATE = 0D;
 
@@ -565,6 +564,7 @@ List<EstateRentCollection> collections = this.estateRentCollectionService.settle
 	          utils=new EstateRentCollectionUtils();
 	        List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
 	                payments, DEFAULT_INTEREST_RATE, null, getEpochFromDateString(NOV_30_2020));
+
 	        utils.printStatement(accountStatementItems);
 	        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
 	    }
@@ -594,6 +594,7 @@ List<EstatePayment> payments = null;
 	        utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
 	    }
  
+
 @Test
 
 public void testSimpleInterestSettlementStatement_Latest1() throws ParseException {
@@ -604,11 +605,11 @@ public void testSimpleInterestSettlementStatement_Latest1() throws ParseExceptio
             getDemand(1000D, 180 ,MAR_1_1999,"103",0,0,0,0,0,0,false),
             getDemand(1000D, 180 ,APR_1_1999,"104",0,0,0,0,0,0,false),
 		    getDemand(1000D,180 ,MAY_1_1999,"105",0,0,0,0,0,0,false), 
+
             getDemand(1000D, 180 ,JUN_1_1999,"106",0,0,0,0,0,0,false),
             getDemand(1000D, 180 ,JUL_1_1999,"107",0,0,0,0,0,0,false),
             getDemand(1000D, 180 ,AUG_1_1999,"108",0,0,0,0,0,0,false));
 
-	
 
 List<EstatePayment> payments = null;
 
@@ -659,7 +660,6 @@ public void testPenaltiesPartiallyPaidWithNoPayment() throws ParseException {
 }
 
 
-
 @Test
 public void testPenaltiesPartiallyPaidWithIsPrevious() throws ParseException {
  	 List<EstateDemand> demands = Arrays.asList( 
@@ -705,8 +705,6 @@ public void testPenaltiesPartiallyPaidWithIsPrevious() throws ParseException {
    verifyRemainingBalance(account, 5318.44);
    
 }
-
-
 
 }
 

@@ -176,8 +176,7 @@ public class PropertyEnrichmentService {
 
 		PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 		if (paymentConfig != null) {
-			AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
-					paymentConfig.getId() == null);
+			AuditDetails paymentAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 			if (paymentConfig.getId() == null || paymentConfig.getId().isEmpty()) {
 				paymentConfig.setId(UUID.randomUUID().toString());
 				paymentConfig.setTenantId(property.getTenantId());
@@ -293,7 +292,7 @@ public class PropertyEnrichmentService {
 				estateDemand.setRemainingGST(estateDemand.getGstInterest());
 				estateDemand.setRemainingRent(estateDemand.getRent());
 				estateDemand.setInterestSince(estateDemand.getGenerationDate());
-				estateDemand.setIsPrevious(false);
+				estateDemand.setIsPrevious(estateDemand.getIsPrevious());
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				estateDemand.setAuditDetails(estateDemandAuditDetails);
 
