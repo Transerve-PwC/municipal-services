@@ -92,7 +92,11 @@ public class PropertyService {
 						&& property.getPropertyDetails().getEstatePayments() != null
 						&& property.getPropertyDetails().getEstateAccount() != null)
 				.forEach(property -> {
-					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(
+					estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(), property.getPropertyDetails().getEstateAccount(),
+							18,true);
+					property.setEstateRentSummary(
+							
+							estateRentCollectionService.calculateRentSummary(
 							property.getPropertyDetails().getEstateDemands(),
 							property.getPropertyDetails().getEstateAccount(),
 							property.getPropertyDetails().getInterestRate()));
@@ -191,6 +195,8 @@ public class PropertyService {
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
 				if (!CollectionUtils.isEmpty(demands)) {
+					estateRentCollectionService.settle(demands, payments, estateAccount,
+							18,true);
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
 							estateAccount, property.getPropertyDetails().getInterestRate()));
 					property.getPropertyDetails().setEstateDemands(demands);
@@ -282,6 +288,9 @@ public class PropertyService {
 		EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
 
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
+			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
+			estateRentCollectionService.settle(demands, payments, account,
+					18,true);
 			EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
 					property.getPropertyDetails().getInterestRate());
 			property.getPropertyDetails()

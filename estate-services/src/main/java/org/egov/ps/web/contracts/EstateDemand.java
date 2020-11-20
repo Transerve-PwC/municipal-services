@@ -64,9 +64,9 @@ public class EstateDemand implements Comparable<EstateDemand> {
   @JsonProperty("interestSince")
   private Long interestSince;
 
-  
+  @Builder.Default
   @JsonProperty("isPrevious")
-  private Boolean isPrevious;
+  private Boolean isPrevious = false;
 
   /**
    * Rent of demand.
