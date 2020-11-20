@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -200,5 +202,29 @@ public class Util {
 	public void sendEventNotification(EventRequest request) {
 		log.info("userList:" + request.getEvents().get(0).getRecepient().getToUsers());
 		producer.push(config.getSaveUserEventsTopic(), request);
+	}
+
+	/**
+	 * Extracts transit site number from consumer code.
+	 * 
+	 * @param consumerCode
+	 * @return
+	 */
+	public String getFileNumberFromConsumerCode(String consumerCode) {
+		try {
+			Pattern pattern = Pattern.compile("^SITE-\\d{1,4}?-");
+			Matcher matcher = pattern.matcher(consumerCode);
+			if (matcher.find()) {
+				String formatted = matcher.group();
+				String[] tokens = formatted.split("-");
+				return tokens[1];
+			}
+			log.error("Could not match rent consumer code pattern {}", consumerCode);
+		} catch (Exception e) {
+			log.error("Failed during parsing transit number from consumer code", e);
+			throw new CustomException(Collections.singletonMap("INVALID_RENT_CONSUMER_CODE",
+					"File number could not be extracted from consumer code " + consumerCode));
+		}
+		return null;
 	}
 }
