@@ -82,7 +82,7 @@ public class EstateDemandGenerationService {
 					Date date = demandCriteria.isEmpty() ? new Date() : FORMATTER.parse(demandCriteria.getDate());
 					Date generateDemandDate = getFirstDateOfMonth(new Date());
 
-					List<EstateDemand> excistingDemands = estateDemandList.stream().filter(demand -> DateTimeComparator
+					List<EstateDemand> existingDemands = estateDemandList.stream().filter(demand -> DateTimeComparator
 							.getDateOnlyInstance().compare(demand.getGenerationDate(), date) == 0)
 							.collect(Collectors.toList());
 
@@ -94,7 +94,7 @@ public class EstateDemandGenerationService {
 						}
 					}
 
-					if (excistingDemands.isEmpty()
+					if (existingDemands.isEmpty()
 							&& DateTimeComparator.getDateOnlyInstance().compare(date, generateDemandDate) == 0) {
 						// generate demand
 						counter.getAndIncrement();

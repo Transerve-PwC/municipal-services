@@ -51,14 +51,18 @@ public class PaymentConfigRowMapper implements ResultSetExtractor<PaymentConfig>
 					.groundRentStartMonth(rs.getLong("pci_ground_rent_start_month"))
 					.groundRentEndMonth(rs.getLong("pci_ground_rent_end_month")).build();
 
-			PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
-					.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
-					.paymentConfigId(rs.getString("paci_payment_config_id"))
-					.premiumAmount(rs.getBigDecimal("paci_premium_amount"))
-					.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
-
 			paymentConfig.addPaymentConfigItem(paymentConfigItems);
-			paymentConfig.addPremiumAmountConfigItem(premiumAmountConfigItems);
+
+			if (rs.getString("paci_id") != null) {
+				PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
+						.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
+						.paymentConfigId(rs.getString("paci_payment_config_id"))
+						.premiumAmount(rs.getBigDecimal("paci_premium_amount"))
+						.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
+
+				paymentConfig.addPremiumAmountConfigItem(premiumAmountConfigItems);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
