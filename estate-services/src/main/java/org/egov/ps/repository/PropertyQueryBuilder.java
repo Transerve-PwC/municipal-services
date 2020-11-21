@@ -384,12 +384,14 @@ public class PropertyQueryBuilder {
 		return sb.toString();
 	}
 
-	public String getPaymentConfigQuery(List<String> propertyDetailsIds, Map<String, Object> params) {
+	public String getPaymentConfigQuery(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder builder = new StringBuilder(SELECT);
 		builder.append(PROPERTY_PAYMENT_CONFIG_COLUMNS);
 		builder.append(" FROM " + PROPERTY_PAYMENT_CONFIG_TABLE);
-		builder.append(" where pc.property_details_id IN (:propertyDetailsIds)");
-		params.put("propertyDetailsIds", propertyDetailsIds);
+		if (!ObjectUtils.isEmpty(propertyDetailIds)) {
+			builder.append(" where pc.property_details_id IN (:propertyDetailsIds)");
+			params.put("propertyDetailsIds", propertyDetailIds);
+		}
 		return builder.toString();
 	}
 

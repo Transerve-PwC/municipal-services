@@ -306,22 +306,16 @@ public class PropertyRepository {
 
 	private void addPaymentConfigToProperties(List<Property> properties) {
 		/**
-		 * Extract property detail ids.
-		 */
-		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
-				.collect(Collectors.toList());
-
-		/**
-		 * Fetch bidders from database
-		 */
-		PaymentConfig paymentConfig = this.getPaymentConfigForPropertyDetailsIds(propertyDetailsIds);
-
-		/**
 		 * Assign court cases to corresponding properties
 		 */
 		properties.stream().forEach(property -> {
+			List<String> propertyDetailsIds = new ArrayList<>();
+			propertyDetailsIds.add(property.getPropertyDetails().getId());
+			/**
+			 * Fetch bidders from database
+			 */
+			PaymentConfig paymentConfig = this.getPaymentConfigForPropertyDetailsIds(propertyDetailsIds);
 			property.getPropertyDetails().setPaymentConfig(paymentConfig);
-			;
 		});
 	}
 
@@ -360,13 +354,16 @@ public class PropertyRepository {
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, estateAccountrowMapper);
 	}
 
-//	public RentAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
-//		Map<String, Object> preparedStmtList = new HashMap<>();
-//		String query = propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria, preparedStmtList);
-//		log.debug("query:" + query);
-//		log.debug("preparedStmtList:" + preparedStmtList);
-//		return namedParameterJdbcTemplate.query(query, preparedStmtList, rentAccountRowMapper);
-//	}
+	// public RentAccount getPropertyRentAccountDetails(PropertyCriteria criteria) {
+	// Map<String, Object> preparedStmtList = new HashMap<>();
+	// String query =
+	// propertyQueryBuilder.getPropertyRentAccountSearchQuery(criteria,
+	// preparedStmtList);
+	// log.debug("query:" + query);
+	// log.debug("preparedStmtList:" + preparedStmtList);
+	// return namedParameterJdbcTemplate.query(query, preparedStmtList,
+	// rentAccountRowMapper);
+	// }
 
 	public List<OfflinePaymentDetails> getOfflinePaymentsForPropertyDetailsIds(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
@@ -395,8 +392,10 @@ public class PropertyRepository {
 	}
 
 	public PaymentConfig getPaymentConfigForPropertyDetailsIds(List<String> propertyDetailsIds) {
-		Map<String, Object> params = new HashMap<String, Object>(1);
+		Map<String, Object> params = new HashMap<>();
 		String paymentConfigQuery = propertyQueryBuilder.getPaymentConfigQuery(propertyDetailsIds, params);
+		log.debug("query:" + paymentConfigQuery);
+		log.debug("preparedStmtList:" + params);
 		return namedParameterJdbcTemplate.query(paymentConfigQuery, params, paymentConfigRowMapper);
 	}
 
