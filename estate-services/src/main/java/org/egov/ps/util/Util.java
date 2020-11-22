@@ -1,5 +1,6 @@
 package org.egov.ps.util;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -212,12 +213,23 @@ public class Util {
 	 */
 	public String getFileNumberFromConsumerCode(String consumerCode) {
 		try {
-			Pattern pattern = Pattern.compile("^SITE-\\d{1,4}?-");
+			Pattern pattern = Pattern.compile("^SITE-");
 			Matcher matcher = pattern.matcher(consumerCode);
 			if (matcher.find()) {
-				String formatted = matcher.group();
-				String[] tokens = formatted.split("-");
-				return tokens[1];
+				// String formatted = consumerCode;
+				String[] tokens = consumerCode.split("-");
+				String fileNumber = "";
+				int length = Array.getLength(tokens) - 7;
+				for (int i = 1; i < length + 1; i++) {
+					if (i == 1) {
+						fileNumber = fileNumber.concat(tokens[i]);
+					}
+					if (i > 1) {
+						String x = "-" + tokens[i];
+						fileNumber = fileNumber.concat(x);
+					}
+				}
+				return fileNumber;
 			}
 			log.error("Could not match rent consumer code pattern {}", consumerCode);
 		} catch (Exception e) {

@@ -8,7 +8,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.ModeEnum;
 import org.egov.ps.model.Property;
-import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.model.calculation.PaymentDetail;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
@@ -76,6 +75,8 @@ public class RentEnrichmentService {
 				.id(UUID.randomUUID().toString()).amountPaid(paymentDetail.getTotalAmountPaid().doubleValue())
 				.propertyDetailsId(property.getPropertyDetails().getId()).dateOfPayment(System.currentTimeMillis())
 				.mode(ModeEnum.fromValue(PSConstants.MODE_GENERATED)).processed(false)
+				.paymentDate(System.currentTimeMillis())
+				.receiptDate(System.currentTimeMillis()).rentReceived(paymentDetail.getTotalAmountPaid().doubleValue())
 				.receiptNo(paymentDetail.getReceiptNumber()).auditDetails(paymentAuditDetails).build());
 
 		if (CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())) {
@@ -88,8 +89,8 @@ public class RentEnrichmentService {
 				&& null != property.getPropertyDetails().getEstateAccount()) {
 			property.getPropertyDetails().setEstateRentCollections(rentCollectionService.settle(
 					property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(),
-					property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getInterestRate(),
-					true));
+					property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue(),
+					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable()));
 		}
 
 		// Save everything back to database
