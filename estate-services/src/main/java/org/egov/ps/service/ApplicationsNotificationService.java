@@ -1,6 +1,8 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +18,22 @@ import com.jayway.jsonpath.JsonPath;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.ps.model.Application;
+import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Notifications;
 import org.egov.ps.model.NotificationsEmail;
 import org.egov.ps.model.NotificationsEvent;
 import org.egov.ps.model.NotificationsSms;
+import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.model.notification.uservevents.Event;
 import org.egov.ps.model.notification.uservevents.EventRequest;
+import org.egov.ps.repository.ApplicationQueryBuilder;
+import org.egov.ps.repository.ApplicationRepository;
+import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
+import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,9 +55,15 @@ public class ApplicationsNotificationService {
 
     @Autowired
     private LocalisationService localisationService;
+    
+    @Autowired
+	PropertyRepository repository;
 
     @Autowired
     Util util;
+    
+    @Autowired
+    private ApplicationEnrichmentService applicationEnrichmentService;
 
     /**
      * Invoke process notification on each application in the request
@@ -113,7 +128,21 @@ public class ApplicationsNotificationService {
             String creatorUUID = application.getAuditDetails().getCreatedBy();
             User createdBy = userService.getUserByUUID(creatorUUID, requestInfo);
             application.setCreatedBy(createdBy);
+            
+            List<Map<String, Object>> feesConfigurations = mdmsservice
+					.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
 
+			BigDecimal estimateAmount = applicationEnrichmentService.fetchEstimateAmountFromMDMSJson(feesConfigurations, application);
+			application.setTotalDue(estimateAmount);
+			
+			if(!CollectionUtils.isEmpty(application.getProperty().getPropertyDetails().getOwners())){
+				application.setOwner(application.getProperty().getPropertyDetails().getOwners().get(0));
+			}
+			/*else{
+				PropertyCriteria criteria = PropertyCriteria.builder().propertyId(application.getProperty().getId())
+						.relations(Collections.singletonList(ApplicationQueryBuilder.RELATION_OWNER)).build();
+				List<Property> properties = repository.getProperties(criteria);
+			}*/
             /**
              * Enrich content by replacing paths like {createdBy.name}
              */
