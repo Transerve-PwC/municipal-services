@@ -90,7 +90,8 @@ public class PropertyService {
 		request.getProperties().stream()
 				.filter(property -> property.getPropertyDetails().getEstateDemands() != null
 						&& property.getPropertyDetails().getEstatePayments() != null
-						&& property.getPropertyDetails().getEstateAccount() != null)
+						&& property.getPropertyDetails().getEstateAccount() != null
+						&& property.getPropertyDetails().getPaymentConfig() != null)
 				.forEach(property -> {
 					estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
 							property.getPropertyDetails().getEstatePayments(),
@@ -114,7 +115,8 @@ public class PropertyService {
 			request.getProperties().stream()
 					.filter(property -> property.getPropertyDetails().getEstateDemands() != null
 							&& property.getPropertyDetails().getEstatePayments() != null
-							&& property.getPropertyDetails().getEstateAccount() != null)
+							&& property.getPropertyDetails().getEstateAccount() != null
+							&& property.getPropertyDetails().getPaymentConfig() != null)
 					.forEach(property -> {
 						property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
 								property.getPropertyDetails().getEstateDemands(),
@@ -200,7 +202,8 @@ public class PropertyService {
 
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-				if (!CollectionUtils.isEmpty(demands)) {
+				if (!CollectionUtils.isEmpty(demands)
+					&& property.getPropertyDetails().getPaymentConfig() != null) {
 					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
