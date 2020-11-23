@@ -52,7 +52,7 @@ public class OfflinePaymentDetails {
 	private OfflinePaymentType type;
 
 	public enum OfflinePaymentType {
-		RENT("rent"), PENALTY("penalty"), SECURITY("security_deposit");
+		RENT("rent"), PENALTY("penalty"), SECURITY("security_deposit"), EXTENSION("extension_fee");
 
 		private String value;
 

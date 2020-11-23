@@ -20,6 +20,7 @@ import org.egov.ps.validator.application.OwnerValidator;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
+import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONException;
@@ -137,6 +138,9 @@ public class ApplicationValidatorService {
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
 		List<EstateDemand> demands = propertyRepository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 		EstateAccount estateAccount = propertyRepository.getPropertyEstateAccountDetails(propertyDetailsIds);
+		List<EstatePayment> payments = propertyRepository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
+
+		estateRentCollectionService.settle(demands, payments, estateAccount, 18, true);
 		EstateRentSummary estateRentSummary = estateRentCollectionService.calculateRentSummary(demands, estateAccount,
 				property.getPropertyDetails().getInterestRate());
 		return estateRentSummary.getBalanceRent();

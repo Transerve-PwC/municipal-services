@@ -94,4 +94,5 @@ public class PSConstants {
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";
 
+	public static final String MODE_GENERATED = "Generated";
 }

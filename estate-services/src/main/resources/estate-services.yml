@@ -1079,3 +1079,58 @@ serviceMaps:
             - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceInterest
 
             - jsonPath: $.PropertyDueAmounts.*.estateRentSummary.balanceAmount
+            
+    - version: 1.0
+      description: Persists Extension Fee details in cs_ep_extension_fee_v1 table
+      fromTopic: em-save-extensionfee-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO cs_ep_extension_fee_v1 (id, tenantid, property_id, branch_type, amount, remaining_due, paid, status, generation_date, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: ExtensionFees.*
+          jsonMaps:
+            - jsonPath: $.ExtensionFees.*.id
+
+            - jsonPath: $.ExtensionFees.*.tenantId
+
+            - jsonPath: $.ExtensionFees.*.property.id
+
+            - jsonPath: $.ExtensionFees.*.branchType
+
+            - jsonPath: $.ExtensionFees.*.amount
+
+            - jsonPath: $.ExtensionFees.*.remainingDue
+            
+            - jsonPath: $.ExtensionFees.*.isPaid
+
+            - jsonPath: $.ExtensionFees.*.status
+            
+            - jsonPath: $.ExtensionFees.*.generationDate
+
+            - jsonPath: $.ExtensionFees.*.auditDetails.createdBy
+
+            - jsonPath: $.ExtensionFees.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.ExtensionFees.*.auditDetails.createdTime
+
+            - jsonPath: $.ExtensionFees.*.auditDetails.lastModifiedTime
+
+    - version: 1.0
+      description: Update Extension Fee details in cs_ep_extension_fee_v1 table
+      fromTopic: em-update-extensionfee-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE cs_ep_extension_fee_v1 SET remaining_due=?, paid=?, status=?, last_modified_by=?, last_modified_time=? WHERE id=?;
+          basePath: ExtensionFees.*
+          jsonMaps:
+            - jsonPath: $.ExtensionFees.*.remainingDue
+            
+            - jsonPath: $.ExtensionFees.*.isPaid
+
+            - jsonPath: $.ExtensionFees.*.status
+
+            - jsonPath: $.ExtensionFees.*.auditDetails.lastModifiedBy
+
+            - jsonPath: $.ExtensionFees.*.auditDetails.lastModifiedTime
+
+            - jsonPath: $.ExtensionFees.*.id
+

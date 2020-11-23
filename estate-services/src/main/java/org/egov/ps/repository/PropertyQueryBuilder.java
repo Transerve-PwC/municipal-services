@@ -100,7 +100,7 @@ public class PropertyQueryBuilder {
 
 	private static final String ESTATE_PAYMENT_COLUMNS = " estp.id as estpid, estp.property_details_id as estpproperty_details_id, "
 			+ " estp.receipt_date as estpreceipt_date, estp.rent_received as estprent_received, estp.receipt_no as estpreceipt_no, "
-			+ " estp.created_by as estpcreated_by, estp.last_modified_by as estplast_modified_by, "
+			+ " estp.payment_date as estpayment_date, estp.created_by as estpcreated_by, estp.last_modified_by as estplast_modified_by, "
 			+ " estp.created_time as estpcreated_time, estp.last_modified_time as estplast_modified_time ";
 
 	private static final String PT_TABLE = " FROM cs_ep_property_v1 pt " + INNER_JOIN
@@ -129,6 +129,13 @@ public class PropertyQueryBuilder {
 			+ " penalty.remaining_penalty_due as penalty_remaining_penalty_due, penalty.status as penalty_status, "
 			+ " penalty.created_by as penalty_created_by, penalty.last_modified_by as penalty_last_modified_by, "
 			+ " penalty.created_time as penalty_created_time, penalty.last_modified_time as penalty_last_modified_time ";
+
+	private static final String EXTENSION_FEE_COLUMN = " ef.id as ef_id, ef.tenantid as ef_tenantid, "
+			+ " ef.property_id as ef_property_id, ef.branch_type as ef_branch_type, "
+			+ " ef.amount as ef_amount, ef.remaining_due as ef_remaining_due, "
+			+ " ef.paid as ef_paid, ef.status as ef_status, ef.generation_date as ef_generation_date, "
+			+ " ef.created_by as ef_created_by, ef.last_modified_by as ef_last_modified_by, "
+			+ " ef.created_time as ef_created_time, ef.last_modified_time as ef_last_modified_time ";
 
 	private static final String PROPERTY_PAYMENT_CONFIG_COLUMNS = " pc.id as pc_id, "
 			+ " pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
@@ -165,6 +172,8 @@ public class PropertyQueryBuilder {
 	private static final String ESTATE_ACCOUNT_COLUMN = " cs_ep_account account ";
 
 	private static final String PROPERTY_PENALTY_TABLE = " cs_ep_property_penalty_v1 penalty ";
+
+	private static final String EXTENSION_FEE_TABLE = " cs_ep_extension_fee_v1 ef ";
 
 	private static final String PROPERTY_PAYMENT_CONFIG_TABLE = " cs_ep_payment_config_v1 pc " + LEFT_JOIN
 			+ " cs_ep_payment_config_items_v1 pci ON pc.id = pci.payment_config_id " + LEFT_JOIN
@@ -366,15 +375,26 @@ public class PropertyQueryBuilder {
 		return sb.toString();
 	}
 
-	public String getPaymentConfigQuery(List<String> propertyDetailsIds, Map<String, Object> params) {
+	public String getExtensionFeeQuery(String propertyId, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(EXTENSION_FEE_COLUMN);
+		sb.append(" FROM " + EXTENSION_FEE_TABLE);
+		sb.append(" where ef.property_id IN (:propertyId)");
+		params.put("propertyId", propertyId);
+		return sb.toString();
+	}
+
+	public String getPaymentConfigQuery(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder builder = new StringBuilder(SELECT);
 		builder.append(PROPERTY_PAYMENT_CONFIG_COLUMNS);
 		builder.append(" FROM " + PROPERTY_PAYMENT_CONFIG_TABLE);
-		builder.append(" where pc.property_details_id IN (:propertyDetailsIds)");
-		params.put("propertyDetailsIds", propertyDetailsIds);
+		if (!ObjectUtils.isEmpty(propertyDetailIds)) {
+			builder.append(" where pc.property_details_id IN (:propertyDetailsIds)");
+			params.put("propertyDetailsIds", propertyDetailIds);
+		}
 		return builder.toString();
 	}
-	
+
 	public String getEstateDemandQueryWithDateASC(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(ESTATE_DEMAND_COLUMNS);
@@ -384,7 +404,7 @@ public class PropertyQueryBuilder {
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
-	
+
 	public String getEstatePaymentQueryWithDateASC(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(ESTATE_PAYMENT_COLUMNS);

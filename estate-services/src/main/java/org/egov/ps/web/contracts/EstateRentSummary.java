@@ -92,8 +92,8 @@ public class EstateRentSummary {
 	  private Boolean isPrevious=false;
 	
 	public String toString() {
-		return String.format("Principal : %.2f, Interest: %.2f, Amount: %.2f", this.getBalanceRent(),
-				this.getBalanceInterest(), this.getBalanceAmount());
+		return String.format("Due Rent : %.2f, Due GST: %.2f, Due GST penalty: %.2f,Due Rent penalty: %.2f", this.getBalanceRent(),
+				this.getBalanceGST(), this.getBalanceGSTPenalty(),this.getBalanceRentPenalty());
 	}
 }
 
