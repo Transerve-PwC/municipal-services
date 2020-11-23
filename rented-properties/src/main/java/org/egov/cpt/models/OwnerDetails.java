@@ -67,7 +67,7 @@ public class OwnerDetails {
 	private Long dateOfBirth;
 
 	@JsonProperty("aadhaarNumber")
-	@Size(max = 12, min = 12, message = "Aadhaar number must be 12 characters in length")
+	@Size(max = 12, min = 0, message = "Aadhaar number must be 12 characters in length")
 	private String aadhaarNumber;
 
 	@JsonProperty("allotmentStartdate")
