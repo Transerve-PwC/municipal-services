@@ -11,6 +11,9 @@ import org.egov.ps.model.CourtCase;
 import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
+import org.egov.ps.model.PaymentConfig;
+import org.egov.ps.model.PaymentConfigItems;
+import org.egov.ps.model.PremiumAmountConfigItems;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.web.contracts.AuditDetails;
@@ -48,8 +51,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 					final PropertyDetails propertyDetails = PropertyDetails.builder().id(propertyDetailId)
 							.propertyId(rs.getString("pdproperty_id")).propertyType(rs.getString("pdproperty_type"))
-							.branchType(rs.getString("branch_type"))
-							.tenantId(tenantId).typeOfAllocation(rs.getString("type_of_allocation"))
+							.branchType(rs.getString("branch_type")).tenantId(tenantId)
+							.typeOfAllocation(rs.getString("type_of_allocation"))
 							.modeOfAuction(rs.getString("mode_of_auction")).schemeName(rs.getString("scheme_name"))
 							.areaSqft(rs.getInt("area_sqft")).dateOfAuction(rs.getLong("date_of_auction"))
 							.ratePerSqft(rs.getBigDecimal("rate_per_sqft")).lastNocDate(rs.getLong("last_noc_date"))
@@ -64,8 +67,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.entityType(rs.getString("entity_type")).houseNumber(rs.getString("house_number"))
 							.village(rs.getString("village")).mohalla(rs.getString("mohalla"))
 							.propertyRegisteredTo(rs.getString("property_registered_to"))
-							.companyOrFirm(rs.getString("company_or_firm"))
-							.interestRate(rs.getDouble("interest_rate")).auditDetails(pdAuditdetails).build();
+							.companyOrFirm(rs.getString("company_or_firm")).interestRate(rs.getDouble("interest_rate"))
+							.auditDetails(pdAuditdetails).build();
 
 					currentProperty = Property.builder().id(propertyId).fileNumber(rs.getString("file_number"))
 							.tenantId(tenantId).category(rs.getString("category"))
@@ -75,6 +78,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.isCancelationOfSite(rs.getBoolean("is_cancelation_of_site"))
 							.action(rs.getString("paction")).propertyDetails(propertyDetails).auditDetails(auditdetails)
 							.build();
+
 					propertyMap.put(propertyId, currentProperty);
 				}
 			}
@@ -160,57 +164,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			}
 		}
 
-		// if (hasColumn(rs, "payid")) {
-		// String payId = rs.getString("payid");
-		// String payTenentId = rs.getString("paytenantid");
-		// String payOwnerDetailId = rs.getString("payowner_details_id");
-		//
-		// try {
-		// if (payId != null &&
-		// payOwnerDetailId.equals(property.getPropertyDetails().getId())) {
-		//
-		// AuditDetails payAuditdetails =
-		// AuditDetails.builder().createdBy(rs.getString("paycreated_by"))
-		// .createdTime(rs.getLong("paycreated_time")).lastModifiedBy(rs.getString("paymodified_by"))
-		// .lastModifiedTime(rs.getLong("paymodified_time")).build();
-		//
-		// Payment paymentItem = Payment.builder().id(payId).tenantId(payTenentId)
-		// .ownerDetailsId(payOwnerDetailId).paymentType(rs.getString("payment_type"))
-		// .dueDateOfPayment(rs.getLong("due_date_of_payment")).payable(rs.getBigDecimal("payable"))
-		// .amount(rs.getBigDecimal("amount")).total(rs.getBigDecimal("total"))
-		// .dateOfDeposit(rs.getLong("date_of_deposit"))
-		// .delayInPayment(rs.getBigDecimal("delay_in_payment"))
-		// .interestForDelay(rs.getBigDecimal("interest_for_delay"))
-		// .totalAmountDueWithInterest(rs.getBigDecimal("total_amount_due_with_interest"))
-		// .amountDeposited(rs.getBigDecimal("amount_deposited"))
-		// .amountDepositedIntt(rs.getBigDecimal("amount_deposited_intt"))
-		// .balance(rs.getBigDecimal("balance")).balanceIntt(rs.getBigDecimal("balance_intt"))
-		// .totalDue(rs.getBigDecimal("total_due")).receiptNumber(rs.getString("receipt_number"))
-		// .receiptDate(rs.getLong("receipt_date"))
-		// .stRateOfStGst(rs.getBigDecimal("st_rate_of_st_gst"))
-		// .stAmountOfGst(rs.getBigDecimal("st_amount_of_gst"))
-		// .stPaymentMadeBy(rs.getString("st_payment_made_by")).bankName(rs.getString("bank_name"))
-		// .chequeNumber(rs.getString("cheque_number"))
-		// .installmentOne(rs.getBigDecimal("installment_one"))
-		// .installmentTwo(rs.getBigDecimal("installment_two"))
-		// .installmentThree(rs.getBigDecimal("installment_three"))
-		// .installmentTwoDueDate(rs.getLong("installment_two_due_date"))
-		// .installmentThreeDueDate(rs.getLong("installment_three_due_date"))
-		// .monthlyOrAnnually(rs.getString("monthly_or_annually"))
-		// .groundRentStartDate(rs.getLong("ground_rent_start_date"))
-		// .rentRevision(rs.getInt("rent_revision")).leasePeriod(rs.getInt("lease_period"))
-		// .licenseFee(rs.getBigDecimal("license_fee_of_year"))
-		// .licenseFee(rs.getBigDecimal("license_fee"))
-		// .securityAmount(rs.getBigDecimal("security_amount"))
-		// .securityDate(rs.getLong("security_date")).auditDetails(payAuditdetails).build();
-		//
-		// property.getPropertyDetails().addPaymentItem(paymentItem);
-		// }
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// }
-		// }
-
 		if (hasColumn(rs, "ccid")) {
 			final String courtCasePropertDetailId = rs.getString("ccproperty_details_id");
 
@@ -242,6 +195,66 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			}
 
 		}
+
+		if (hasColumn(rs, "pc_id")) {
+
+			final String paymentConfigId = rs.getString("pc_id");
+
+			AuditDetails accountAuditDetails = AuditDetails.builder().createdBy(rs.getString("pc_created_by"))
+					.createdTime(rs.getLong("pc_created_time")).lastModifiedBy(rs.getString("pc_last_modified_by"))
+					.lastModifiedTime(rs.getLong("pc_last_modified_time")).build();
+
+			if (paymentConfigId != null) {
+				PaymentConfig paymentConfig = PaymentConfig.builder().id(rs.getString("pc_id"))
+						.tenantId(rs.getString("pc_tenant_id"))
+						.propertyDetailsId(rs.getString("pc_property_details_id"))
+						.isIntrestApplicable(rs.getBoolean("pc_is_intrest_applicable"))
+						.dueDateOfPayment(rs.getLong("pc_due_date_of_payment"))
+						.noOfMonths(rs.getLong("pc_no_of_months"))
+						.rateOfInterest(rs.getBigDecimal("pc_rate_of_interest"))
+						.securityAmount(rs.getBigDecimal("pc_security_amount"))
+						.totalAmount(rs.getBigDecimal("pc_total_amount"))
+						.isGroundRent(rs.getBoolean("pc_is_ground_rent"))
+						.groundRentGenerationType(rs.getString("pc_ground_rent_generation_type"))
+						.groundRentGenerateDemand(rs.getLong("pc_ground_rent_generate_demand"))
+						.groundRentAdvanceRent(rs.getBigDecimal("pc_ground_rent_advance_rent"))
+						.groundRentBillStartDate(rs.getLong("pc_ground_rent_bill_start_date"))
+						.groundRentAdvanceRentDate(rs.getLong("pc_ground_rent_advance_rent_date"))
+						.auditDetails(accountAuditDetails).build();
+
+				property.getPropertyDetails().setPaymentConfig(paymentConfig);
+
+				addChildrenToPaymentConfig(rs, paymentConfig);
+			}
+		}
+	}
+
+	private void addChildrenToPaymentConfig(ResultSet rs, PaymentConfig paymentConfig) {
+
+		try {
+			final String premiumAmountId = rs.getString("paci_id");
+			PaymentConfigItems paymentConfigItems = PaymentConfigItems.builder().id(rs.getString("pci_id"))
+					.tenantId(rs.getString("pci_tenant_id")).paymentConfigId(rs.getString("pci_payment_config_id"))
+					.groundRentAmount(rs.getBigDecimal("pci_ground_rent_amount"))
+					.groundRentStartMonth(rs.getLong("pci_ground_rent_start_month"))
+					.groundRentEndMonth(rs.getLong("pci_ground_rent_end_month")).build();
+
+			paymentConfig.addPaymentConfigItem(paymentConfigItems);
+
+			if (premiumAmountId != null) {
+				PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
+						.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
+						.paymentConfigId(rs.getString("paci_payment_config_id"))
+						.premiumAmount(rs.getBigDecimal("paci_premium_amount"))
+						.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
+
+				paymentConfig.addPremiumAmountConfigItem(premiumAmountConfigItems);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static boolean hasColumn(final ResultSet rs, final String columnName) throws SQLException {

@@ -144,10 +144,12 @@ public class EstateDemandGenerationService {
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())
 				&& property.getPropertyDetails().getEstateAccount() != null) {
 
+			// Replace the 4th line 18 with the MDMS data
 			property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
 					property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(),
-					property.getPropertyDetails().getEstateAccount(), property.getPropertyDetails().getInterestRate(),
-					true));
+					property.getPropertyDetails().getEstateAccount(), 18,
+					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 
 		}
 		PropertyRequest propertyRequest = new PropertyRequest();

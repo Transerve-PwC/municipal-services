@@ -140,9 +140,13 @@ public class ApplicationValidatorService {
 		EstateAccount estateAccount = propertyRepository.getPropertyEstateAccountDetails(propertyDetailsIds);
 		List<EstatePayment> payments = propertyRepository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 
-		estateRentCollectionService.settle(demands, payments, estateAccount, 18, true);
+		estateRentCollectionService.settle(demands, payments, estateAccount, 18,
+		property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+		property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 		EstateRentSummary estateRentSummary = estateRentCollectionService.calculateRentSummary(demands, estateAccount,
-				property.getPropertyDetails().getInterestRate());
+				property.getPropertyDetails().getInterestRate(),
+				property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+				property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 		return estateRentSummary.getBalanceRent();
 	}
 

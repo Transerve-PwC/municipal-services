@@ -94,13 +94,18 @@ public class PropertyService {
 				.forEach(property -> {
 					estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
 							property.getPropertyDetails().getEstatePayments(),
-							property.getPropertyDetails().getEstateAccount(), 18, true);
+							property.getPropertyDetails().getEstateAccount(), 18,
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 					property.setEstateRentSummary(
 
 							estateRentCollectionService.calculateRentSummary(
 									property.getPropertyDetails().getEstateDemands(),
 									property.getPropertyDetails().getEstateAccount(),
-									property.getPropertyDetails().getInterestRate()));
+									property.getPropertyDetails().getInterestRate(),
+									property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+									property.getPropertyDetails().getPaymentConfig().getRateOfInterest()
+											.doubleValue()));
 				});
 	}
 
@@ -111,12 +116,12 @@ public class PropertyService {
 							&& property.getPropertyDetails().getEstatePayments() != null
 							&& property.getPropertyDetails().getEstateAccount() != null)
 					.forEach(property -> {
-						property.getPropertyDetails()
-								.setEstateRentCollections(estateRentCollectionService.settle(
-										property.getPropertyDetails().getEstateDemands(),
-										property.getPropertyDetails().getEstatePayments(),
-										property.getPropertyDetails().getEstateAccount(),
-										property.getPropertyDetails().getInterestRate(), true));
+						property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
+								property.getPropertyDetails().getEstateDemands(),
+								property.getPropertyDetails().getEstatePayments(),
+								property.getPropertyDetails().getEstateAccount(), 18,
+								property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+								property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 					});
 		}
 		enrichmentService.enrichCollection(request);
@@ -196,9 +201,13 @@ public class PropertyService {
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
 				if (!CollectionUtils.isEmpty(demands)) {
-					estateRentCollectionService.settle(demands, payments, estateAccount, 18, true);
+					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-							estateAccount, property.getPropertyDetails().getInterestRate()));
+							estateAccount, property.getPropertyDetails().getInterestRate(),
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 					property.getPropertyDetails().setEstateDemands(demands);
 					property.getPropertyDetails().setEstatePayments(payments);
 
@@ -231,7 +240,9 @@ public class PropertyService {
 
 		return AccountStatementResponse.builder()
 				.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments, 18.00,
-						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
+						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
+						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
 				.build();
 	}
 
@@ -289,9 +300,13 @@ public class PropertyService {
 
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
 			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
-			estateRentCollectionService.settle(demands, payments, account, 18, true);
+			estateRentCollectionService.settle(demands, payments, account, 18,
+					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 			EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
-					property.getPropertyDetails().getInterestRate());
+					property.getPropertyDetails().getInterestRate(),
+					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 			property.getPropertyDetails()
 					.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
 			enrichmentService.enrichRentDemand(property, rentSummary);
