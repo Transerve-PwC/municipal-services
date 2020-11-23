@@ -54,7 +54,7 @@ public class MortgageApplicant {
 	@JsonProperty("relationship")
 	private String relationship;
 
-	@Size(max = 12, min = 0, message = "Aadhaar number must be 12 characters in length")
+	@Size(max = 12, min = 0, message = "Aadhaar number must be 12 digits in length")
 	@JsonProperty("adhaarNumber")
 	private String adhaarNumber;
 	
