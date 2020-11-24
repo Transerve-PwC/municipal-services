@@ -11,9 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -46,6 +43,9 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -287,11 +287,21 @@ public class DemandService {
 				/**
 				 * create an offline payment.
 				 */
-				createCashPayment(applicationRequest.getRequestInfo(), application.getPaymentAmount(),
-						bills.get(0).getId(), application, application.getBillingBusinessService());
 
-				applicationRequest.setApplications(Collections.singletonList(application));
-				producer.push(config.getUpdateApplicationTopic(), applicationRequest);
+				bills.forEach(bill -> {
+					BigDecimal payableAount;
+					if (null != application.getGst()) {
+						payableAount = application.getPaymentAmount().add(application.getGst());
+					} else {
+						payableAount = application.getPaymentAmount();
+					}
+					createCashPayment(applicationRequest.getRequestInfo(), payableAount, bill.getId(), application,
+							application.getBillingBusinessService());
+
+					applicationRequest.setApplications(Collections.singletonList(application));
+					producer.push(config.getUpdateApplicationTopic(), applicationRequest);
+				});
+
 			}
 		}
 		;
