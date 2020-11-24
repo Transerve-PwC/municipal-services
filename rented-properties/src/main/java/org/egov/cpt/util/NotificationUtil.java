@@ -211,7 +211,6 @@ public class NotificationUtil {
 	 * @param request
 	 */
 	public void sendEventNotification(EventRequest request) {
-		log.info("userList:" + request.getEvents().get(0).getRecepient().getToUsers());
 		producer.push(config.getSaveUserEventsTopic(), request);
 	}
 
@@ -460,6 +459,8 @@ public class NotificationUtil {
 			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
 			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
 			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
+			log.debug("applicationStatus : "+applicationStatus);
+			log.debug("payTriggerList : "+payTriggerList);
 			Action action = null;
 			if (payTriggerList.contains(applicationStatus)) {
 				action = generateAction(applicationStatus, mobile, applicationNumber, tenantId);
