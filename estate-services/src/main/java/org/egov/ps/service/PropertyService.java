@@ -44,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-
 @Service
 public class PropertyService {
 
@@ -83,7 +82,7 @@ public class PropertyService {
 
 	@Autowired
 	private DemandRepository demandRepository;
-	
+
 	@Autowired
 	private MDMSService mdmsservice;
 
@@ -212,8 +211,7 @@ public class PropertyService {
 
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-				if (!CollectionUtils.isEmpty(demands)
-					&& property.getPropertyDetails().getPaymentConfig() != null) {
+				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null) {
 					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
@@ -311,7 +309,8 @@ public class PropertyService {
 		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 		EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
 
-		if (!CollectionUtils.isEmpty(demands) && null != account) {
+		if (!CollectionUtils.isEmpty(demands) && null != account
+				&& property.getPropertyDetails().getPaymentConfig() != null) {
 			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 			estateRentCollectionService.settle(demands, payments, account, 18,
 					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
@@ -410,9 +409,11 @@ public class PropertyService {
 			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 			EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-			if (!CollectionUtils.isEmpty(demands)) {
+			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null) {
 				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-						estateAccount, property.getPropertyDetails().getInterestRate()));
+						estateAccount, property.getPropertyDetails().getInterestRate(),
+						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 			}
 			PropertyDueAmounts.add(propertyDueAmount);
 		});

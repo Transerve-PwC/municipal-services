@@ -32,6 +32,7 @@ import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -142,7 +143,8 @@ public class EstateDemandGenerationService {
 				estateDemand.getId(), property.getFileNumber());
 
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())
-				&& property.getPropertyDetails().getEstateAccount() != null) {
+				&& property.getPropertyDetails().getEstateAccount() != null
+				&& property.getPropertyDetails().getPaymentConfig() != null) {
 
 			// Replace the 4th line 18 with the MDMS data
 			property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
