@@ -212,6 +212,9 @@ public class Application {
 	@JsonProperty("owner")
 	private Owner owner;
 	
+	@JsonProperty("payer")
+	private User payer;
+	
 	@JsonIgnore
 	public String getMDMSModuleName() {
 		return String.format("%s_%s_%s", this.getBranchType(), this.getModuleType(), this.getApplicationType());
