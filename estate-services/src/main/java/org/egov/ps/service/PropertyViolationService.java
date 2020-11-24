@@ -23,6 +23,7 @@ import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.service.calculation.PenaltyCollectionService;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AccountStatementRequest;
 import org.egov.ps.web.contracts.PenaltyStatementResponse;
@@ -138,12 +139,12 @@ public class PropertyViolationService {
 		 * Enrich an actual finance demand
 		 */
 		Calculation calculation = propertyEnrichmentService.enrichGenerateDemand(requestInfo, paymentAmount,
-				consumerCode, propertyDb);
+				consumerCode, propertyDb, PSConstants.PROPERTY_VIOLATION);
 
 		/**
 		 * Generate an actual finance demand
 		 */
-		demandService.createPenaltyDemand(requestInfo, propertyDb, consumerCode, calculation);
+		demandService.createPenaltyExtensionFeeDemand(requestInfo, propertyDb, consumerCode, calculation, PSConstants.PROPERTY_VIOLATION);
 
 		/**
 		 * Get the bill generated.

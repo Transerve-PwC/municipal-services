@@ -146,6 +146,10 @@ public class Util {
 	public String getPropertyPenaltyConsumerCode(String fileNumber) {
 		return String.format("ES-PN-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
 	}
+	
+	public String getExtensionFeeConsumerCode(String fileNumber) {
+		return String.format("ES-EF-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
+	}
 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD-HH-MM-SS");
 

@@ -83,6 +83,8 @@ public class PSConstants {
 
 	public static final String PROPERTY_VIOLATION = "PROPERTY_VIOLATION";
 	
+	public static final String EXTENSION_FEE = "EXTENSION_FEE";
+	
 	//User event
 	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
 	public static final String  USREVENTS_EVENT_NAME = "Estate Module";

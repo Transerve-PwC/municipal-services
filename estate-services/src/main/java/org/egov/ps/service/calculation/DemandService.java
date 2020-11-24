@@ -517,8 +517,8 @@ public class DemandService {
 				.roles(requestUser.getRoles()).tenantId(requestUser.getTenantId()).uuid(requestUser.getUuid()).build();
 	}
 
-	public List<Demand> createPenaltyDemand(RequestInfo requestInfo, Property property, String consumerCode,
-			Calculation calculation) {
+	public List<Demand> createPenaltyExtensionFeeDemand(RequestInfo requestInfo, Property property, String consumerCode,
+			Calculation calculation, String demandFor) {
 		Owner owner = utils.getCurrentOwnerFromProperty(property);
 
 		String url = config.getUserHost().concat(config.getUserSearchEndpoint());
@@ -553,11 +553,18 @@ public class DemandService {
 		Long taxPeriodFrom = System.currentTimeMillis();
 		Long taxPeriodTo = System.currentTimeMillis();
 
+		String businesssService = "";
+
+		if (demandFor.equals(PSConstants.EXTENSION_FEE)) {
+			businesssService = property.getExtensionFeeBusinessService();
+		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
+			businesssService = property.getPenaltyBusinessService();
+		}
 		Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)
 				.demandDetails(demandDetails).payer(user).minimumAmountPayable(config.getMinimumPayableAmount())
 				.tenantId(tenantId).taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo)
-				.consumerType(PSConstants.ESTATE_SERVICE).businessService(property.getPenaltyBusinessService())
-				.additionalDetails(null).build();
+				.consumerType(PSConstants.ESTATE_SERVICE).businessService(businesssService).additionalDetails(null)
+				.build();
 
 		return demandRepository.saveDemand(requestInfo, Collections.singletonList(singleDemand));
 	}

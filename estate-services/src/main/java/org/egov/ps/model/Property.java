@@ -5,14 +5,14 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -110,5 +110,13 @@ public class Property {
 		}
 		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE,
 				Util.camelToSnake(this.getPropertyDetails().getBranchType()), PSConstants.PROPERTY_VIOLATION);
+	}
+	
+	public String getExtensionFeeBusinessService() {
+		if (null == this.getPropertyDetails()) {
+			return "";
+		}
+		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE,
+				Util.camelToSnake(this.getPropertyDetails().getBranchType()), PSConstants.EXTENSION_FEE);
 	}
 }

@@ -464,14 +464,20 @@ public class PropertyEnrichmentService {
 	}
 
 	public Calculation enrichGenerateDemand(RequestInfo requestInfo, double paymentAmount, String consumerCode,
-			Property property) {
+			Property property, String demandFor) {
 
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 		estimateDue.setEstimateAmount(new BigDecimal(paymentAmount));
-		estimateDue.setCategory(Category.PENALTY);
-		estimateDue.setTaxHeadCode(getTaxHeadCode(property.getPenaltyBusinessService(), Category.PENALTY));
+		if (demandFor.equals(PSConstants.EXTENSION_FEE)) {
+//			TODO: Is Category.FEE okay or we need to create Category.EXTENSIONFEE
+			estimateDue.setCategory(Category.FEE);
+			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getExtensionFeeBusinessService(), Category.FEE));
+		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
+			estimateDue.setCategory(Category.PENALTY);
+			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getPenaltyBusinessService(), Category.PENALTY));
+		}
 		estimates.add(estimateDue);
 
 		Calculation calculation = Calculation.builder().applicationNumber(consumerCode).taxHeadEstimates(estimates)
