@@ -30,7 +30,7 @@
           "roles": ["ES_BB_DISPATCH_OFFICER"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DS_VERIFICATION",
           "nextState": "PENDING_CLARIFICATION",
           "roles": ["ES_BB_DISPATCH_OFFICER"]
@@ -76,7 +76,7 @@
           "roles": ["ES_BB_DEALING_ASSISTANT"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_VERIFICATION",
           "nextState": "PENDING_DS_VERIFICATION",
           "roles": ["ES_BB_DEALING_ASSISTANT"]
@@ -105,7 +105,7 @@
           "roles": ["ES_BB_JUNIOR_ENGINEER"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_JE_VERIFICATION",
           "nextState": "PENDING_DA_VERIFICATION",
           "roles": ["ES_BB_JUNIOR_ENGINEER"]
@@ -128,7 +128,7 @@
           "roles": ["ES_BB_SDE"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SDE_VERIFICATION",
           "nextState": "PENDING_JE_VERIFICATION",
           "roles": ["ES_BB_SDE"]
@@ -151,13 +151,13 @@
           "roles": ["ES_BB_DRAFTSMAN"]
         },
         {
-          "action": "SENTBACK_RESIDENTIAL",
+          "action": "SENDBACK_RESIDENTIAL",
           "currentState": "PENDING_DRAFSMAN_CALCULATION",
           "nextState": "PENDING_JE_VERIFICATION",
           "roles": ["ES_BB_DRAFTSMAN"]
         },
         {
-          "action": "SENTBACK_COMMERCIAL",
+          "action": "SENDBACK_COMMERCIAL",
           "currentState": "PENDING_DRAFSMAN_CALCULATION",
           "nextState": "PENDING_SDE_VERIFICATION",
           "roles": ["ES_BB_DRAFTSMAN"]
@@ -180,7 +180,7 @@
           "roles": ["ES_BB_SDE"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SDE_CALCULATION_VERIFICATION",
           "nextState": "PENDING_DRAFSMAN_CALCULATION",
           "roles": ["ES_BB_SDE"]
@@ -203,7 +203,7 @@
           "roles": ["ES_BB_DEALING_ASSISTANT"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_PROPOSAL",
           "nextState": "PENDING_SDE_CALCULATION_VERIFICATION",
           "roles": ["ES_BB_DEALING_ASSISTANT"]
@@ -226,7 +226,7 @@
           "roles": ["ES_BB_SDE"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SDE_PROPOSAL_VERIFICATION",
           "nextState": "PENDING_DA_PROPOSAL",
           "roles": ["ES_BB_SDE"]
@@ -249,7 +249,7 @@
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
@@ -257,7 +257,7 @@
         {
           "action": "REJECT",
           "currentState": "PENDING_AC_APPROVAL",
-          "nextState": "ES_REJECTED",
+          "nextState": "REJECTED",
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         }
       ],
@@ -278,7 +278,7 @@
           "roles": ["ES_BB_SDE"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SDE_PROPOSAL_APPROVAL",
           "nextState": "PENDING_AC_APPROVAL",
           "roles": ["ES_BB_SDE"]
@@ -301,7 +301,7 @@
           "roles": ["ES_BB_DEALING_ASSISTANT"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_FEE",
           "nextState": "PENDING_SDE_PROPOSAL_VERIFICATION",
           "roles": ["ES_BB_DEALING_ASSISTANT"]
@@ -358,7 +358,7 @@
           "roles": ["ES_BB_SDE"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SDE_APPROVAL",
           "nextState": "PENDING_DA_PREPARE_LETTER",
           "roles": ["ES_BB_SDE"]

@@ -1,6 +1,6 @@
 package org.egov.ps.web.contracts;
 
-import java.util.HashSet;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -24,5 +24,5 @@ public class ApplicationStatesResponse {
 
 	@JsonProperty("States")
 	@Valid
-	private HashSet<String> status;
+	private List<String> states;
 }

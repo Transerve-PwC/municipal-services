@@ -214,7 +214,7 @@
           "roles": ["ES_MM_SECTION_OFFICER"]
         },
         {
-          "action": "SENDBACK", //CLARIFY that sentback can be also for sra or only for citizen directly
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_VERIFICATION",
           "nextState": "PENDING_CLARIFICATION",
           "roles": ["ES_MM_SECTION_OFFICER"]

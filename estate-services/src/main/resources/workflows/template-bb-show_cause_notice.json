@@ -71,7 +71,7 @@
                     ]
                 },
                 {
-                    "action": "SENTBACK",
+                    "action": "SENDBACK",
                     "currentState": "PENDING_SDE_VERIFICATION",
                     "nextState": "PENDING_CLARIFICATION",
                     "roles": [
@@ -106,7 +106,7 @@
                     ]
                 },
                 {
-                    "action": "SENTBACK",
+                    "action": "SENDBACK",
                     "currentState": "PENDING_AC_APPROVAL",
                     "nextState": "PENDING_SDE_VERIFICATION",
                     "roles": [

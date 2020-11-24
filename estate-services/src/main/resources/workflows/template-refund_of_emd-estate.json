@@ -69,7 +69,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_CLARIFICATION",
           "roles": [
@@ -96,7 +96,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_LAO_VERIFICATION",
           "nextState": "PENDING_AC_APPROVAL",
           "roles": [
@@ -123,7 +123,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_CAO_APPROVAL",
           "nextState": "PENDING_LAO_VERIFICATION",
           "roles": [

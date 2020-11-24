@@ -1,6 +1,5 @@
 package org.egov.ps.controller;
 
-import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -9,13 +8,11 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.service.ApplicationService;
-import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.ResponseInfoFactory;
 import org.egov.ps.web.contracts.ApplicationRequest;
 import org.egov.ps.web.contracts.ApplicationResponse;
 import org.egov.ps.web.contracts.ApplicationStatesResponse;
 import org.egov.ps.web.contracts.RequestInfoMapper;
-import org.egov.ps.web.contracts.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,18 +68,11 @@ public class ApplicationController {
 	@PostMapping("/states")
 	public ResponseEntity<ApplicationStatesResponse> states(@Valid @RequestBody RequestInfoMapper requestInfoWrapper,
 			@Valid @ModelAttribute ApplicationCriteria applicationCriteria) {
-		List<State> states = applicationService.getStates(requestInfoWrapper, applicationCriteria);
-		HashSet<String> appStatus = new HashSet<>();
-		states.forEach(state -> {
-			if (state.getApplicationStatus() != null
-					&& state.getApplicationStatus().startsWith(PSConstants.ES_MODULE_PREFIX)) {
-				appStatus.add(state.getApplicationStatus());
-			}
-		});
-		ApplicationStatesResponse response = ApplicationStatesResponse.builder().status(appStatus).responseInfo(
+
+		List<String> states = applicationService.getStates(requestInfoWrapper, applicationCriteria);
+		ApplicationStatesResponse response = ApplicationStatesResponse.builder().states(states).responseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();
-
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}

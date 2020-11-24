@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
@@ -91,8 +92,14 @@ public class ApplicationService {
 		}
 	}
 
-	public List<State> getStates(RequestInfoMapper requestInfoWrapper, ApplicationCriteria applicationCriteria) {
-		return wfService.getApplicationStatus(applicationCriteria, requestInfoWrapper);
+	public List<String> getStates(RequestInfoMapper requestInfoWrapper, ApplicationCriteria applicationCriteria) {
+
+		String tenantId = applicationCriteria.getTenantId();
+		tenantId = tenantId.split("\\.")[0];
+
+		List<State> states = wfService.getApplicationStatus(tenantId, applicationCriteria.getBusinessName(), requestInfoWrapper);
+		return states.stream().map(State::getApplicationStatus).distinct()
+		.filter(state -> !state.equalsIgnoreCase("")).collect(Collectors.toList());
 	}
 
 	public void collectPayment(ApplicationRequest applicationRequest) {

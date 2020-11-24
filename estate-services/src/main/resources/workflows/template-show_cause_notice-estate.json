@@ -61,7 +61,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_VERIFICATION",
           "nextState": "PENDING_CLARIFICATION",
           "roles": [
@@ -88,7 +88,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_VERIFICATION",
           "nextState": "PENDING_SRA_VERIFICATION",
           "roles": [
@@ -123,7 +123,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_VERIFICATION",
           "roles": [
@@ -150,7 +150,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_NOTICE_CREATION",
           "nextState": "PENDING_AC_APPROVAL",
           "roles": [
@@ -177,7 +177,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_NOTICE_VERIFICATION",
           "nextState": "PENDING_DA_NOTICE_CREATION",
           "roles": [
@@ -204,7 +204,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_NOTICE_VERIFICATION",
           "nextState": "PENDING_SRA_NOTICE_VERIFICATION",
           "roles": [
@@ -239,7 +239,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_NOTICE_APPROVAL",
           "nextState": "PENDING_SO_NOTICE_VERIFICATION",
           "roles": [
@@ -266,7 +266,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_HEARING_APPROVAL",
           "nextState": "PENDING_AC_NOTICE_APPROVAL",
           "roles": [
@@ -301,7 +301,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_HEARING_APPROVAL",
           "nextState": "PENDING_DA_HEARING_APPROVAL",
           "roles": [
@@ -328,7 +328,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_PENALTY",
           "nextState": "PENDING_AC_HEARING_APPROVAL",
           "roles": [
@@ -355,7 +355,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_PENALTY_VERIFICATION",
           "nextState": "PENDING_DA_PENALTY",
           "roles": [
@@ -382,7 +382,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_PENALTY_VERIFICATION",
           "nextState": "PENDING_SRA_PENALTY_VERIFICATION",
           "roles": [
@@ -417,7 +417,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_PENALTY_APPROVAL",
           "nextState": "PENDING_SO_PENALTY_VERIFICATION",
           "roles": [
@@ -444,7 +444,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_PENALTY_APPROVAL",
           "nextState": "PENDING_AC_PENALTY_APPROVAL",
           "roles": [
