@@ -54,7 +54,7 @@ public class Applicant {
 	private String relationship;
 
 	@JsonProperty("adhaarNumber")
-	@Size(min = 12, max = 0, message = "Aadhaar number must be 12 digits in length")
+	@Size(min = 0, max = 12, message = "Aadhaar number must be 12 digits in length")
 	private String adhaarNumber;
 
 	@JsonProperty("auditDetails")
