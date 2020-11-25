@@ -220,6 +220,9 @@ public class ExtensionFeeService {
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.EXTENSIONFEE);
 			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
+			ofpd.setTenantId(propertyDb.getTenantId());
+			ofpd.setFileNumber(propertyDb.getFileNumber());
+			ofpd.setConsumerCode(consumerCode);
 		});
 
 		List<ExtensionFee> unpaidExtensionFees = extensionFeeCollectionService.settle(extensionFees, paymentAmount);

@@ -164,6 +164,9 @@ public class PropertyViolationService {
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.PENALTY);
 			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
+			ofpd.setTenantId(propertyDb.getTenantId());
+			ofpd.setFileNumber(propertyDb.getFileNumber());
+			ofpd.setConsumerCode(consumerCode);
 		});
 
 		List<PropertyPenalty> updatedPenalties = penaltyCollectionService.settle(penalties, paymentAmount);
