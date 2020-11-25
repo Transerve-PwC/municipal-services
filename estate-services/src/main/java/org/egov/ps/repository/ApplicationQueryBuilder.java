@@ -169,6 +169,11 @@ public class ApplicationQueryBuilder {
 			builder.append("app.branch_type IN (:branchType)");
 			preparedStmtList.put("branchType", criteria.getBranchType());
 		}
+		if (null != criteria.getCreatedBy()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("app.created_by = :createdBy");
+			preparedStmtList.put("createdBy", criteria.getCreatedBy());
+		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}

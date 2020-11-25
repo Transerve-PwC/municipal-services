@@ -77,4 +77,13 @@ public class OfflinePaymentDetails {
 		}
 	}
 
+	@JsonProperty("tenantId")
+	private String tenantId;
+
+	@JsonProperty("fileNumber")
+	private String fileNumber;
+
+	@JsonProperty("consumerCode")
+	private String consumerCode;
+
 }
