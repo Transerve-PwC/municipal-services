@@ -81,7 +81,7 @@ public class EstateDemandGenerationServiceTests {
 	@Test
 	public void createMissingDemandTest() {
 
-		AtomicInteger dummyResult = estateDemandGenerationService.craeteMissingDemands(propertyDummyList.get(0));
+		AtomicInteger dummyResult = estateDemandGenerationService.createMissingDemands(propertyDummyList.get(0));
 		assertTrue("Error, can't update more than one record",
 				getAllRemainingDates(propertyDummyList.get(0)) == dummyResult.get());
 	}
