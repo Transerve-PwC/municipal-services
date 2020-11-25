@@ -20,10 +20,14 @@ import org.egov.ps.web.contracts.RequestInfoMapper;
 import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
 import org.egov.ps.workflow.WorkflowService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ApplicationService {
 
@@ -53,7 +57,7 @@ public class ApplicationService {
 
 	@Autowired
 	private WorkflowService wfService;
-
+	
 	public List<Application> createApplication(ApplicationRequest request) {
 		validator.validateCreateRequest(request);
 		applicationEnrichmentService.enrichCreateApplicationRequest(request);
@@ -62,9 +66,29 @@ public class ApplicationService {
 	}
 
 	public List<Application> searchApplication(ApplicationCriteria criteria, RequestInfo requestInfo) {
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)) {
+			criteria.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		}
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)
+				&& CollectionUtils.isEmpty(criteria.getState())) {
+			RequestInfoMapper requestInfoMapper = RequestInfoMapper.builder().requestInfo(requestInfo).build();
+			criteria.setBusinessName(criteria.getBranchType().get(0));
+			criteria.setTenantId(PSConstants.TENANT_ID);
+			List<String> states = getStates(requestInfoMapper,criteria);
+			/*BusinessService businessService =workflowService.getBusinessService(PSConstants.TENANT_ID, requestInfo,
+					config.getAosBusinessServiceValue());
+			List<String> states = businessService.getStates().stream().map(State::getState)
+					.filter(s -> s != null && s.length() != 0).collect(Collectors.toList());
+			*/
+			log.info("states:" + states);
+			criteria.setState(states);
+		}
 		List<Application> applications = applicationRepository.getApplications(criteria);
 		if (CollectionUtils.isEmpty(applications)) {
-			return Collections.emptyList();
+			if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)&& criteria.getApplicationNumber()!=null)
+				throw new CustomException("INVALID ACCESS", "You can not access this application.");
+			else
+				return Collections.emptyList();
 		}
 		return applications;
 	}
