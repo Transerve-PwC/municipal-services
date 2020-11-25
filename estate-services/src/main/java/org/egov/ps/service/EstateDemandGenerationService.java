@@ -165,7 +165,7 @@ public class EstateDemandGenerationService {
 
 	private void generateEstateDemand(Property property, Date date, List<EstateDemand> estateDemandList,
 			List<EstatePayment> estatePaymentList, EstateAccount estateAccount) {
-		System.out.println(new SimpleDateFormat("MMM-yyyy").format(date));
+		
 		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 		if (property.getPropertyDetails().getPaymentConfig() != null) {
 			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
