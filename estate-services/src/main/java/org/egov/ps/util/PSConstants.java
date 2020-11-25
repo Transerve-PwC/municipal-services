@@ -65,6 +65,8 @@ public class PSConstants {
 	public static final String ES_APPROVE = "APPROVE";
 
 	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+	
+	public static final String ROLE_CITIZEN = "CITIZEN";
 
 	public static final String ACTION_PAY = "PAY";
 

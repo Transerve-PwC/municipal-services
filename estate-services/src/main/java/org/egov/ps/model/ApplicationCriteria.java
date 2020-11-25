@@ -43,4 +43,6 @@ public class ApplicationCriteria {
 
 	private List<String> branchType;
 	
+	private String createdBy;
+	
 }
