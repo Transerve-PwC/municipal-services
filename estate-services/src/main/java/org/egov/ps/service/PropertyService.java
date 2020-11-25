@@ -354,6 +354,7 @@ public class PropertyService {
 					.bankName(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getBankName())
 					.transactionNumber(
 							property.getPropertyDetails().getOfflinePaymentDetails().get(0).getTransactionNumber())
+					.dateOfPayment(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getDateOfPayment())
 					.build();
 			property.getPropertyDetails().setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
 
