@@ -223,24 +223,36 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		}
 
-		if (hasColumn(rs, "pci_id")) {
-			PaymentConfigItems paymentConfigItems = PaymentConfigItems.builder().id(rs.getString("pci_id"))
-					.tenantId(rs.getString("pci_tenant_id")).paymentConfigId(rs.getString("pci_payment_config_id"))
-					.groundRentAmount(rs.getBigDecimal("pci_ground_rent_amount"))
-					.groundRentStartMonth(rs.getLong("pci_ground_rent_start_month"))
-					.groundRentEndMonth(rs.getLong("pci_ground_rent_end_month")).build();
+		if (null != property.getPropertyDetails().getPaymentConfig()) {
+			if (hasColumn(rs, "pci_id")) {
 
-			property.getPropertyDetails().getPaymentConfig().addPaymentConfigItem(paymentConfigItems);
-		}
+				String paymentConfigId = rs.getString("pci_payment_config_id");
+				if (null != paymentConfigId
+						&& paymentConfigId.equals(property.getPropertyDetails().getPaymentConfig().getId())) {
+					PaymentConfigItems paymentConfigItems = PaymentConfigItems.builder().id(rs.getString("pci_id"))
+							.tenantId(rs.getString("pci_tenant_id")).paymentConfigId(paymentConfigId)
+							.groundRentAmount(rs.getBigDecimal("pci_ground_rent_amount"))
+							.groundRentStartMonth(rs.getLong("pci_ground_rent_start_month"))
+							.groundRentEndMonth(rs.getLong("pci_ground_rent_end_month")).build();
 
-		if (hasColumn(rs, "paci_id")) {
-			PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
-					.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
-					.paymentConfigId(rs.getString("paci_payment_config_id"))
-					.premiumAmount(rs.getBigDecimal("paci_premium_amount"))
-					.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
+					property.getPropertyDetails().getPaymentConfig().addPaymentConfigItem(paymentConfigItems);
+				}
+			}
 
-			property.getPropertyDetails().getPaymentConfig().addPremiumAmountConfigItem(premiumAmountConfigItems);
+			if (hasColumn(rs, "paci_id")) {
+
+				String paymentConfigId = rs.getString("paci_payment_config_id");
+				if (null != paymentConfigId
+						&& paymentConfigId.equals(property.getPropertyDetails().getPaymentConfig().getId())) {
+					PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
+							.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
+							.paymentConfigId(paymentConfigId).premiumAmount(rs.getBigDecimal("paci_premium_amount"))
+							.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
+
+					property.getPropertyDetails().getPaymentConfig()
+							.addPremiumAmountConfigItem(premiumAmountConfigItems);
+				}
+			}
 		}
 	}
 
