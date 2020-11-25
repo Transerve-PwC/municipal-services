@@ -150,6 +150,10 @@ public class Util {
 	public String getExtensionFeeConsumerCode(String fileNumber) {
 		return String.format("ES-EF-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
 	}
+	
+	public String getSecurityFeeConsumerCode(String fileNumber) {
+		return String.format("ES-SF-%s-%s", fileNumber.toUpperCase(), dateFormat.format(new Date()));
+	}
 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD-HH-MM-SS");
 
