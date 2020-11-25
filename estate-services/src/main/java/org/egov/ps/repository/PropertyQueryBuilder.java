@@ -224,6 +224,16 @@ public class PropertyQueryBuilder {
 			builder.append("pt.category = :category");
 			preparedStmtList.put("category", criteria.getCategory());
 		}
+		if (null != criteria.getSubCategory()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.sub_category = :subCategory");
+			preparedStmtList.put("subCategory", criteria.getSubCategory());
+		}
+		if (null != criteria.getSiteNumber()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.site_number = :siteNumber");
+			preparedStmtList.put("siteNumber", criteria.getSiteNumber());
+		}
 
 		if (null != criteria.getPropertyId()) {
 			addClauseIfRequired(preparedStmtList, builder);
