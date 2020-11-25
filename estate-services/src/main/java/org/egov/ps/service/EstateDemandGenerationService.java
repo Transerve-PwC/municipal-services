@@ -55,6 +55,54 @@ public class EstateDemandGenerationService {
 		this.config = config;
 	}
 
+	public AtomicInteger craeteMissingDemands(Property property) {
+		AtomicInteger counter = new AtomicInteger(0);
+		/* Fetch demands of this requested property */
+		List<String> propertyDetailsId = Arrays.asList(property.getPropertyDetails().getId());
+		List<EstateDemand> estateDemandList = propertyRepository
+				.getPropertyDetailsEstateDemandDetails(propertyDetailsId);
+		property.getPropertyDetails().setEstateDemands(estateDemandList);
+
+		if (!CollectionUtils.isEmpty(estateDemandList)) {
+
+			/* Fetch Payments of this requested property */
+			List<EstatePayment> estatePaymentList = propertyRepository
+					.getPropertyDetailsEstatePaymentDetails(propertyDetailsId);
+			property.getPropertyDetails().setEstatePayments(estatePaymentList);
+
+			/* Fetch EstateAccount of this requested property */
+			EstateAccount estateAccount = propertyRepository.getAccountDetailsForPropertyDetailsIds(propertyDetailsId);
+			property.getPropertyDetails().setEstateAccount(estateAccount);
+
+			/* Fetch billing date of the property */
+			Date propertyBillingDate = getFirstDateOfMonth(
+					new Date(property.getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate()));
+
+			List<Date> allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
+
+			for (Date demandDate : allMonthDemandDatesTillCurrentMonth) {
+
+				Date propertyDemandDate = setDateOfMonth(demandDate, Integer.parseInt(
+						property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));
+
+				/* Here checking demand date is already created or not */
+				List<EstateDemand> existingDemands = estateDemandList
+						.stream().filter(demand -> DateTimeComparator.getDateOnlyInstance()
+								.compare(demand.getGenerationDate(), propertyDemandDate) == 0)
+						.collect(Collectors.toList());
+
+				if (existingDemands.isEmpty()) {
+					// generate demand
+					counter.getAndIncrement();
+					generateEstateDemand(property, getFirstDateOfMonth(propertyDemandDate), estateDemandList,
+							estatePaymentList, estateAccount);
+				}
+			}
+
+		}
+		return counter;
+	}
+
 	public AtomicInteger createDemand(EstateDemandCriteria demandCriteria) {
 		List<String> relations = new ArrayList<String>();
 		relations.add("owner");
@@ -117,7 +165,7 @@ public class EstateDemandGenerationService {
 
 	private void generateEstateDemand(Property property, Date date, List<EstateDemand> estateDemandList,
 			List<EstatePayment> estatePaymentList, EstateAccount estateAccount) {
-
+		System.out.println(new SimpleDateFormat("MMM-yyyy").format(date));
 		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 		if (property.getPropertyDetails().getPaymentConfig() != null) {
 			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
@@ -216,6 +264,22 @@ public class EstateDemandGenerationService {
 		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
 		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
 		return cal.getTime();
+	}
+	
+	private List<Date> getAllRemainingDates(Date propertyBillingDate) {
+		List<Date> allMonthDemandDatesTillCurrentMonth = new ArrayList<>();
+		Calendar beginCalendar = Calendar.getInstance();
+		Calendar finishCalendar = Calendar.getInstance();
+
+		beginCalendar.setTime(propertyBillingDate);
+		finishCalendar.setTime(new Date());
+
+		while (beginCalendar.before(finishCalendar)) {
+			// add one month to date per loop
+			allMonthDemandDatesTillCurrentMonth.add(beginCalendar.getTime());
+			beginCalendar.add(Calendar.MONTH, 1);
+		}
+		return allMonthDemandDatesTillCurrentMonth;
 	}
 
 }
