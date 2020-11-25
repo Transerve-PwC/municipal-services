@@ -459,11 +459,12 @@ public class NotificationUtil {
 			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
 			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
 			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
-			log.debug("applicationStatus : "+applicationStatus);
-			log.debug("payTriggerList : "+payTriggerList);
+			log.info("applicationStatus : "+applicationStatus);
+			log.info("payTriggerList : "+payTriggerList);
 			Action action = null;
 			if (payTriggerList.contains(applicationStatus)) {
 				action = generateAction(applicationStatus, mobile, applicationNumber, tenantId);
+				log.info("Action generated with action item : "+action.getActionUrls());
 			}
 			events.add(Event.builder().tenantId(tenantId).description(mobileNumberToMsg.get(mobile))
 					.eventType(PTConstants.USREVENTS_EVENT_TYPE).name(PTConstants.USREVENTS_EVENT_NAME)
