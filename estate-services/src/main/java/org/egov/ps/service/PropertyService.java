@@ -29,6 +29,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
+import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -85,9 +86,13 @@ public class PropertyService {
 
 	@Autowired
 	private MDMSService mdmsservice;
+	
+	@Autowired
+	private EstateDemandGenerationService estateDemandGenerationService;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
+		//bifurcate demand 
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		producer.push(config.getSavePropertyTopic(), request);
@@ -147,6 +152,16 @@ public class PropertyService {
 	 */
 	public List<Property> updateProperty(PropertyRequest request) {
 		propertyValidator.validateUpdateRequest(request);
+		
+		//bifurcate demand
+		if(null != request.getProperties().get(0).getState() && PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(request.getProperties().get(0).getState())) {
+		
+			if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getEstateDemands())) {
+		    	estateDemandGenerationService.bifurcateDemand(request.getProperties().get(0));					
+		    }
+			estateDemandGenerationService.craeteMissingDemands(request.getProperties().get(0));
+		}
+		
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		String action = request.getProperties().get(0).getAction();
