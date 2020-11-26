@@ -151,30 +151,33 @@ public class PropertyService {
 	 */
 	public List<Property> updateProperty(PropertyRequest request) {
 		propertyValidator.validateUpdateRequest(request);
+		Property property = request.getProperties().get(0);
 		// bifurcate demand
-		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getEstateDemands())) {
+		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
+				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)) {
 			estateDemandGenerationService.bifurcateDemand(request.getProperties().get(0));
 		}
 		/* Approved Property Missing Demands */
 		if (null != request.getProperties().get(0).getState()
-				&& PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(request.getProperties().get(0).getState())) {
+				&& PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(property.getState())
+				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)) {
 			estateDemandGenerationService.createMissingDemands(request.getProperties().get(0));
 		}
 
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
-		String action = request.getProperties().get(0).getAction();
-		String state = request.getProperties().get(0).getState();
+		String action = property.getAction();
+		String state = property.getState();
 		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)
 				&& !state.contentEquals(PSConstants.PM_APPROVED)) {
 			wfIntegrator.callWorkFlow(request);
 		}
 		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
 			String roeAction = request.getProperties().get(0).getPropertyDetails().getBidders().get(0).getAction();
-			// if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
-			// && state.contentEquals(PSConstants.PM_APPROVED)) {
-			// wfIntegrator.callWorkFlow(request);
-			// }
+			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
+					&& state.contentEquals(PSConstants.PM_APPROVED)) {
+				wfIntegrator.callWorkFlow(request);
+			}
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), request);

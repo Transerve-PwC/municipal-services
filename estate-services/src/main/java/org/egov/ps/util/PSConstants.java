@@ -93,7 +93,7 @@ public class PSConstants {
 	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-EST";
 	
 	public static final String  APPLICATION_TYPE_NDC = "NDC";
-	public static final String  PENDING_SO_APPROVAL = "PENDING_SO_APPROVAL";
+	public static final String  PENDING_SO_APPROVAL = "ES_PENDING_SO_APPROVAL";
 	
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";
