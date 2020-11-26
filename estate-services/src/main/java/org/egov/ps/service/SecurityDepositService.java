@@ -22,6 +22,8 @@ import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.PropertyRequest;
+import org.egov.ps.web.contracts.SecurityDepositStatementResponse;
+import org.egov.ps.web.contracts.SecurityDepositStatementSummary;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,15 +93,22 @@ public class SecurityDepositService {
 		}
 
 		BigDecimal paymentAmount = offlinePaymentDetails.get(0).getAmount();
+		if (paymentAmount.doubleValue() <= 0) {
+			throw new CustomException("Invalid Amount", "Payable amount should not less than or equals 0");
+		}
 
 		/**
-		 * Calculate remaining due.
+		 * Calculate remaining due from statement.
 		 */
-		BigDecimal totalDue = propertyDb.getPropertyDetails().getPaymentConfig().getSecurityAmount();
-
-		if (paymentAmount.compareTo(totalDue) == 1) {
-			throw new CustomException("DUE OVERFLOW", String.format(
-					"Total security fee due is only Rs%.2f. Please don't collect more amount than that.", totalDue));
+		SecurityDepositStatementResponse securityDepositStatementResponse = createSecurityDepositStatement(
+				property.getId());
+		double totalSecurityDepositDue = securityDepositStatementResponse.getSecurityDepositStatementSummary()
+				.getTotalSecurityDepositDue();
+		if (paymentAmount.doubleValue() > totalSecurityDepositDue) {
+			throw new CustomException("DUE OVERFLOW",
+					String.format(
+							"Total security deposit due is only Rs%.2f. Please don't collect more amount than that.",
+							totalSecurityDepositDue));
 		}
 
 		/**
@@ -156,6 +165,48 @@ public class SecurityDepositService {
 
 		producer.push(config.getUpdatePropertyTopic(), new PropertyRequest(requestInfo, properties));
 		return offlinePaymentDetails;
+	}
+
+	public SecurityDepositStatementResponse createSecurityDepositStatement(String propertyId) {
+
+		Property property = repository.findPropertyById(propertyId);
+		if (null == property) {
+			throw new CustomException(Collections.singletonMap("NO_PROPERTY_FOUND",
+					"Property not found for the given property id: " + propertyId));
+		}
+
+		List<String> propertyDetailsIds = new ArrayList<String>();
+		propertyDetailsIds.add(property.getPropertyDetails().getId());
+		List<OfflinePaymentDetails> offlinePaymentDetails = repository
+				.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+		List<OfflinePaymentDetails> filteredOfflinePaymentDetails = offlinePaymentDetails.stream()
+				.filter(offlinePaymentDetail -> null != offlinePaymentDetail.getType()
+						&& offlinePaymentDetail.getType().equals(OfflinePaymentType.SECURITY))
+				.collect(Collectors.toList());
+
+		double totalSecurityDeposit = property.getPropertyDetails().getPaymentConfig().getSecurityAmount()
+				.doubleValue();
+
+		BigDecimal securityDepositPaid = filteredOfflinePaymentDetails.stream().map(OfflinePaymentDetails::getAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		double totalSecurityDepositPaid = securityDepositPaid.doubleValue();
+
+		double totalSecurityDepositDue = totalSecurityDeposit - totalSecurityDepositPaid;
+
+		if (totalSecurityDepositDue < 0) {
+			totalSecurityDepositDue = 0;
+		}
+
+		SecurityDepositStatementSummary securityDepositStatementSummary = SecurityDepositStatementSummary.builder()
+				.totalSecurityDeposit(totalSecurityDeposit).totalSecurityDepositDue(totalSecurityDepositDue)
+				.totalSecurityDepositPaid(totalSecurityDepositPaid).build();
+
+		SecurityDepositStatementResponse securityDepositStatementResponse = SecurityDepositStatementResponse.builder()
+				.offlinePaymentDetails(filteredOfflinePaymentDetails)
+				.securityDepositStatementSummary(securityDepositStatementSummary).build();
+
+		return securityDepositStatementResponse;
 	}
 
 }

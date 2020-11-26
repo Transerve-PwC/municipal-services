@@ -165,6 +165,10 @@ public class ExtensionFeeService {
 
 		double paymentAmount = offlinePaymentDetails.get(0).getAmount().doubleValue();
 
+		if (paymentAmount <= 0) {
+			throw new CustomException("Invalid Amount", "Payable amount should not less than or equals 0");
+		}
+
 		/**
 		 * Calculate remaining due.
 		 */
