@@ -470,7 +470,7 @@ public class PropertyEnrichmentService {
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 		estimateDue.setEstimateAmount(new BigDecimal(paymentAmount));
-		if (demandFor.equals(PSConstants.EXTENSION_FEE) || demandFor.equals(PSConstants.SECURITY_FEE)) {
+		if (demandFor.equals(PSConstants.EXTENSION_FEE) || demandFor.equals(PSConstants.SECURITY_DEPOSIT)) {
 //			TODO: Is Category.FEE okay or we need to create Category.EXTENSIONFEE
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getExtensionFeeBusinessService(), Category.FEE));

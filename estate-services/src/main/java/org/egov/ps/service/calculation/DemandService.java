@@ -559,8 +559,8 @@ public class DemandService {
 			businesssService = property.getExtensionFeeBusinessService();
 		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
 			businesssService = property.getPenaltyBusinessService();
-		} else if (demandFor.equals(PSConstants.SECURITY_FEE)) {
-			businesssService = property.getSecuritynFeeBusinessService();
+		} else if (demandFor.equals(PSConstants.SECURITY_DEPOSIT)) {
+			businesssService = property.getSecuritynDepositBusinessService();
 		}
 
 		Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)

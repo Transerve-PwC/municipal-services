@@ -87,7 +87,7 @@ public class PSConstants {
 	
 	public static final String EXTENSION_FEE = "EXTENSION_FEE";
 	
-	public static final String SECURITY_FEE = "SECURITY_FEE";
+	public static final String SECURITY_DEPOSIT = "SECURITY_DEPOSIT";
 	
 	//User event
 	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";

@@ -6,7 +6,7 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ps.model.OfflinePaymentDetails;
-import org.egov.ps.service.SecurityFeeService;
+import org.egov.ps.service.SecurityDepositService;
 import org.egov.ps.util.ResponseInfoFactory;
 import org.egov.ps.web.contracts.PropertyOfflinePaymentResponse;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -19,24 +19,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/security-fee")
-public class SecurityFeeController {
+@RequestMapping("/security_deposit")
+public class SecurityDepositController {
 	
 	@Autowired
-	SecurityFeeService securityFeeService;
+	SecurityDepositService securityDepositService;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("/_payment")
-	public ResponseEntity<PropertyOfflinePaymentResponse> extensionFeePayment(
+	public ResponseEntity<PropertyOfflinePaymentResponse> securityDepositPayment(
 			@Valid @RequestBody PropertyRequest propertyRequest) {
-		List<OfflinePaymentDetails> offlinePaymentDetails = securityFeeService
-				.processSecurityFeePaymentRequest(propertyRequest);
+		List<OfflinePaymentDetails> offlinePaymentDetails = securityDepositService
+				.processSecurityDepositPaymentRequest(propertyRequest);
 		ResponseInfo resInfo = responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(),
 				true);
 		PropertyOfflinePaymentResponse response = PropertyOfflinePaymentResponse.builder()
 				.offlinePaymentDetails(offlinePaymentDetails).responseInfo(resInfo).build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+//	@PostMapping("/_statement")
+//	public ResponseEntity<PenaltyStatementResponse> penaltyStatement(
+//			@Valid @RequestBody AccountStatementRequest accountStatementRequest) {
+//		PenaltyStatementResponse penaltyStatementResponse = securityDepositService
+//				.createPenaltyStatement(accountStatementRequest);
+//		return new ResponseEntity<>(penaltyStatementResponse, HttpStatus.OK);
+//	}
 }
