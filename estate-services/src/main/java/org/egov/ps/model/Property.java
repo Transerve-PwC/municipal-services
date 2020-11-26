@@ -120,7 +120,7 @@ public class Property {
 				Util.camelToSnake(this.getPropertyDetails().getBranchType()), PSConstants.EXTENSION_FEE);
 	}
 	
-	public String getSecuritynDepositBusinessService() {
+	public String getSecurityDepositBusinessService() {
 		if (null == this.getPropertyDetails()) {
 			return "";
 		}

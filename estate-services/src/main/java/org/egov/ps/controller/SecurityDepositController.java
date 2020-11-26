@@ -39,12 +39,5 @@ public class SecurityDepositController {
 				.offlinePaymentDetails(offlinePaymentDetails).responseInfo(resInfo).build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
-//	@PostMapping("/_statement")
-//	public ResponseEntity<PenaltyStatementResponse> penaltyStatement(
-//			@Valid @RequestBody AccountStatementRequest accountStatementRequest) {
-//		PenaltyStatementResponse penaltyStatementResponse = securityDepositService
-//				.createPenaltyStatement(accountStatementRequest);
-//		return new ResponseEntity<>(penaltyStatementResponse, HttpStatus.OK);
-//	}
+
 }

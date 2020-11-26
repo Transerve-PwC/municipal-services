@@ -470,13 +470,15 @@ public class PropertyEnrichmentService {
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 		estimateDue.setEstimateAmount(new BigDecimal(paymentAmount));
-		if (demandFor.equals(PSConstants.EXTENSION_FEE) || demandFor.equals(PSConstants.SECURITY_DEPOSIT)) {
-//			TODO: Is Category.FEE okay or we need to create Category.EXTENSIONFEE
+		if (demandFor.equals(PSConstants.EXTENSION_FEE)) {
 			estimateDue.setCategory(Category.FEE);
 			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getExtensionFeeBusinessService(), Category.FEE));
 		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
 			estimateDue.setCategory(Category.PENALTY);
 			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getPenaltyBusinessService(), Category.PENALTY));
+		} else if (demandFor.equals(PSConstants.SECURITY_DEPOSIT)) {
+			estimateDue.setCategory(Category.FEE);
+			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getSecurityDepositBusinessService(), Category.FEE));
 		}
 		estimates.add(estimateDue);
 

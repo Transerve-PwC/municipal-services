@@ -560,7 +560,7 @@ public class DemandService {
 		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
 			businesssService = property.getPenaltyBusinessService();
 		} else if (demandFor.equals(PSConstants.SECURITY_DEPOSIT)) {
-			businesssService = property.getSecuritynDepositBusinessService();
+			businesssService = property.getSecurityDepositBusinessService();
 		}
 
 		Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)

@@ -130,20 +130,24 @@ public class SecurityDepositService {
 		 * Get the bill generated.
 		 */
 		List<BillV2> bills = demandRepository.fetchBill(requestInfo, propertyDb.getTenantId(), consumerCode,
-				propertyDb.getSecuritynDepositBusinessService());
+				propertyDb.getSecurityDepositBusinessService());
 		if (CollectionUtils.isEmpty(bills)) {
 			throw new CustomException("BILL_NOT_GENERATED",
-					"No bills were found for the consumer code " + propertyDb.getSecuritynDepositBusinessService());
+					"No bills were found for the consumer code " + propertyDb.getSecurityDepositBusinessService());
 		}
 
 		demandService.createCashPaymentProperty(requestInfo, paymentAmount, bills.get(0).getId(), owner,
-				propertyDb.getSecuritynDepositBusinessService());
+				propertyDb.getSecurityDepositBusinessService());
 
 		offlinePaymentDetails.forEach(ofpd -> {
 			ofpd.setId(UUID.randomUUID().toString());
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.SECURITY);
 			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
+			ofpd.setTenantId(propertyDb.getTenantId());
+			ofpd.setFileNumber(propertyDb.getFileNumber());
+			ofpd.setConsumerCode(consumerCode);
+			ofpd.setBillingBusinessService(propertyDb.getSecurityDepositBusinessService());
 		});
 
 //		propertyDb.getPropertyDetails().getPaymentConfig().setSecurityAmount(totalDue.subtract(paymentAmount));
