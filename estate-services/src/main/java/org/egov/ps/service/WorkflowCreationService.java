@@ -69,7 +69,7 @@ public class WorkflowCreationService {
 		templateMapping.put("template-refund_of_emd-estate",
 				Arrays.asList(ApplicationType.builder().name("ES-EB-IS-RefundOfEmd").prefix("ES_EB_ROE_").build()));
 		templateMapping.put("template-allotment_of_site-estate",
-				Arrays.asList(ApplicationType.builder().name("ES-EB-AllotmentOfSite").prefix("ES_").build()));
+				Arrays.asList(ApplicationType.builder().name("ES-EB-AllotmentOfSite").prefix("ES_EB_AOS_").build()));
 		// Building Branch
 		templateMapping.put("template-bb-property_master",
 				Arrays.asList(ApplicationType.builder().name("ES-BB-PropertyMaster").prefix("ES_BB_PM_").build()));
@@ -79,8 +79,14 @@ public class WorkflowCreationService {
 				Arrays.asList(ApplicationType.builder().name("ES-BB-CS-NOC").prefix("ES_BB_NOC_").build()));
 		// Mani Majra
 		templateMapping.put("template-mm-property_master",
-		Arrays.asList(ApplicationType.builder().name("ES-MM-PropertyMaster").prefix("ES_MM_PM_").build()));
-
+				Arrays.asList(ApplicationType.builder().name("ES-MM-PropertyMaster").prefix("ES_MM_PM_").build()));
+		templateMapping.put("template-mm-sale_gift", Arrays.asList(
+					ApplicationType.builder().name("ES-MM-CS-SaleGift").prefix("ES_MM_SG_").build(),
+					ApplicationType.builder().name("ES-MM-CS-RegisteredWill").prefix("ES_MM_RW_").build(),
+					ApplicationType.builder().name("ES-MM-CS-FamilySettlement").prefix("ES_MM_FS_").build(),
+					ApplicationType.builder().name("ES-MM-OCS-AllotmentOfNewHouse").prefix("ES_MM_AONH_").build(),
+					ApplicationType.builder().name("ES-MM-OCS-NDC").prefix("ES_MM_NDC_").build(),
+					ApplicationType.builder().name("ES-MM-OCS-NOC").prefix("ES_MM_NOC_").build()));
 	}
 
 	public List<WorkFlowResponseDetails> createWorkflows(RequestInfo requestInfo) throws Exception {

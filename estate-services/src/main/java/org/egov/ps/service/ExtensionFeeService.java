@@ -223,6 +223,7 @@ public class ExtensionFeeService {
 			ofpd.setTenantId(propertyDb.getTenantId());
 			ofpd.setFileNumber(propertyDb.getFileNumber());
 			ofpd.setConsumerCode(consumerCode);
+			ofpd.setBillingBusinessService(propertyDb.getExtensionFeeBusinessService());
 		});
 
 		List<ExtensionFee> unpaidExtensionFees = extensionFeeCollectionService.settle(extensionFees, paymentAmount);

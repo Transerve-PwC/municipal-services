@@ -37,12 +37,12 @@ public class ApplicationCriteria {
 
 	private List<String> relations;
 
-	private List<String> applicationType;
+	private String applicationType;
 
-	private List<String> moduleType;
+	private String moduleType;
 
-	private List<String> branchType;
-	
+	private String branchType;
+
 	private String createdBy;
-	
+
 }

@@ -86,4 +86,7 @@ public class OfflinePaymentDetails {
 	@JsonProperty("consumerCode")
 	private String consumerCode;
 
+	@JsonProperty("billingBusinessService")
+	private String billingBusinessService;
+
 }

@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,7 +57,6 @@ public class EstateDemandGenerationServiceTests {
 	List<EstatePayment> estatePaymentDummyList = new ArrayList<>();
 	EstateAccount estateDummyAccount = EstateAccount.builder().build();
 
-
 	/* In Setup Functions */
 	@Before
 	@SuppressWarnings("unchecked")
@@ -73,8 +74,34 @@ public class EstateDemandGenerationServiceTests {
 	@Test
 	public void createDemandTest() {
 
-		AtomicInteger dummayResult = estateDemandGenerationService.createDemand(EstateDemandCriteria.builder().build());
-		assertTrue("Error, can't update more than one record", 1 >= dummayResult.get());
+		AtomicInteger dummyResult = estateDemandGenerationService.createDemand(EstateDemandCriteria.builder().build());
+		assertTrue("Error, can't update more than one record", 1 >= dummyResult.get());
+	}
+
+	@Test
+	public void createMissingDemandTest() {
+
+		AtomicInteger dummyResult = estateDemandGenerationService.createMissingDemands(propertyDummyList.get(0));
+		assertTrue("Error, can't update more than one record",
+				getAllRemainingDates(propertyDummyList.get(0)) == dummyResult.get());
+	}
+
+	public int getAllRemainingDates(Property dummyProperty) {
+		Date date = new Date(
+				propertyDummyList.get(0).getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate());
+		List<Date> allMonthDatesTillCurrentMonth = new ArrayList<>();
+		Calendar beginCalendar = Calendar.getInstance();
+		Calendar finishCalendar = Calendar.getInstance();
+
+		beginCalendar.setTime(date);
+		finishCalendar.setTime(new Date());
+
+		while (beginCalendar.before(finishCalendar)) {
+			// add one month to date per loop
+			allMonthDatesTillCurrentMonth.add(beginCalendar.getTime());
+			beginCalendar.add(Calendar.MONTH, 1);
+		}
+		return allMonthDatesTillCurrentMonth.size();
 	}
 
 	private void setDummydata() {
@@ -131,6 +158,7 @@ public class EstateDemandGenerationServiceTests {
 		PaymentConfig paymentConfig = PaymentConfig.builder().groundRentBillStartDate(Long.parseLong("1566671400000"))
 				.id(UUID.randomUUID().toString()).propertyDetailsId(UUID.randomUUID().toString())
 				.paymentConfigItems(Arrays.asList(paymentConfigItems, paymentConfigItems2)).isGroundRent(true)
+				.isIntrestApplicable(true).rateOfInterest(new BigDecimal(5356))
 				.groundRentGenerateDemand(Long.parseLong("19")).groundRentGenerationType(PSConstants.MONTHLY).build();
 
 		/* Set Dummy data for PropertyDetails */
