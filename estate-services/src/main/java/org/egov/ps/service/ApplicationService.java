@@ -20,6 +20,7 @@ import org.egov.ps.web.contracts.RequestInfoMapper;
 import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
 import org.egov.ps.workflow.WorkflowService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -62,9 +63,24 @@ public class ApplicationService {
 	}
 
 	public List<Application> searchApplication(ApplicationCriteria criteria, RequestInfo requestInfo) {
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)) {
+			criteria.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		}
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)
+				&& CollectionUtils.isEmpty(criteria.getState())) {
+			RequestInfoMapper requestInfoMapper = RequestInfoMapper.builder().requestInfo(requestInfo).build();
+			criteria.setBusinessName(criteria.getBranchType());
+			criteria.setTenantId(PSConstants.TENANT_ID);
+			List<String> states = getStates(requestInfoMapper, criteria);
+			criteria.setState(states);
+		}
 		List<Application> applications = applicationRepository.getApplications(criteria);
 		if (CollectionUtils.isEmpty(applications)) {
-			return Collections.emptyList();
+			if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)
+					&& criteria.getApplicationNumber() != null)
+				throw new CustomException("INVALID ACCESS", "You can not access this application.");
+			else
+				return Collections.emptyList();
 		}
 		return applications;
 	}
@@ -97,9 +113,10 @@ public class ApplicationService {
 		String tenantId = applicationCriteria.getTenantId();
 		tenantId = tenantId.split("\\.")[0];
 
-		List<State> states = wfService.getApplicationStatus(tenantId, applicationCriteria.getBusinessName(), requestInfoWrapper);
-		return states.stream().map(State::getApplicationStatus).distinct()
-		.filter(state -> !state.equalsIgnoreCase("")).collect(Collectors.toList());
+		List<State> states = wfService.getApplicationStatus(tenantId, applicationCriteria.getBusinessName(),
+				requestInfoWrapper);
+		return states.stream().map(State::getApplicationStatus).distinct().filter(state -> !state.equalsIgnoreCase(""))
+				.collect(Collectors.toList());
 	}
 
 	public void collectPayment(ApplicationRequest applicationRequest) {

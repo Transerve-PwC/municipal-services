@@ -90,6 +90,9 @@ public class PropertyService {
 	@Autowired
 	private EstateDemandGenerationService estateDemandGenerationService;
 
+	@Autowired
+	private EstateDemandGenerationService estateDemandGenerationService;
+
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
 		//bifurcate demand 
@@ -161,7 +164,6 @@ public class PropertyService {
 		 	estateDemandGenerationService.createMissingDemands(request.getProperties().get(0));
 		 	estateDemandGenerationService.addCredit(request.getProperties().get(0));
 		}
-		
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		String action = request.getProperties().get(0).getAction();
@@ -172,10 +174,10 @@ public class PropertyService {
 		}
 		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
 			String roeAction = request.getProperties().get(0).getPropertyDetails().getBidders().get(0).getAction();
-			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
-					&& state.contentEquals(PSConstants.PM_APPROVED)) {
-				wfIntegrator.callWorkFlow(request);
-			}
+			// if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
+			// && state.contentEquals(PSConstants.PM_APPROVED)) {
+			// wfIntegrator.callWorkFlow(request);
+			// }
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), request);
@@ -369,6 +371,7 @@ public class PropertyService {
 					.bankName(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getBankName())
 					.transactionNumber(
 							property.getPropertyDetails().getOfflinePaymentDetails().get(0).getTransactionNumber())
+					.dateOfPayment(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getDateOfPayment())
 					.build();
 			property.getPropertyDetails().setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
 
@@ -387,38 +390,38 @@ public class PropertyService {
 	}
 
 	public void getDueAmount(RequestInfo requestInfo) {
-		PropertyCriteria criteria = PropertyCriteria.builder()
-				.state(Arrays.asList(PSConstants.PM_APPROVED))
-				.relations(Arrays.asList(PropertyQueryBuilder.RELATION_OWNER))
-				.build();
+		PropertyCriteria criteria = PropertyCriteria.builder().state(Arrays.asList(PSConstants.PM_APPROVED))
+				.relations(Arrays.asList(PropertyQueryBuilder.RELATION_OWNER)).build();
 		List<Property> properties = repository.getProperties(criteria);
 		if (CollectionUtils.isEmpty(properties))
-			throw new CustomException("NO_PROPERTY_FOUND","No approved property found");
-			
-		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
+			throw new CustomException("NO_PROPERTY_FOUND", "No approved property found");
+
+		List<PropertyDueAmount> PropertyDueAmounts = new ArrayList<>();
 		properties.stream().forEach(property -> {
-			Optional<OwnerDetails> currentOwnerDetails =property.getPropertyDetails().getOwners().stream().map(owner-> owner.getOwnerDetails()).filter(ownerDetail -> ownerDetail.getIsCurrentOwner()==true).findFirst();
+			Optional<OwnerDetails> currentOwnerDetails = property.getPropertyDetails().getOwners().stream()
+					.map(owner -> owner.getOwnerDetails())
+					.filter(ownerDetail -> ownerDetail.getIsCurrentOwner() == true).findFirst();
 			List<Map<String, Object>> propertyTypeConfigurations = mdmsservice.getBranchRoles("propertyType",
 					requestInfo, property.getTenantId());
-			
-			List<Map<String, Object>> sectorConfigurations = mdmsservice.getBranchRoles("sector",
-					requestInfo, property.getTenantId());
-			
+
+			List<Map<String, Object>> sectorConfigurations = mdmsservice.getBranchRoles("sector", requestInfo,
+					property.getTenantId());
+
 			PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(property.getId())
-					.fileNumber(property.getFileNumber())
-					.tenantId(property.getTenantId())
+					.fileNumber(property.getFileNumber()).tenantId(property.getTenantId())
 					.branchType(property.getPropertyDetails().getBranchType())
 					.ownerName(currentOwnerDetails.get().getOwnerName())
-					.mobileNumber(currentOwnerDetails.get().getMobileNumber())
-					.build();
-			
-			propertyTypeConfigurations.stream().filter(propertyType-> property.getPropertyDetails().getPropertyType().equalsIgnoreCase(propertyType.get("code").toString()))
-			.forEach(propertyType->propertyDueAmount.setPropertyType(propertyType.get("name").toString()));
-				
-			sectorConfigurations.stream().filter(sector-> property.getSectorNumber().equalsIgnoreCase(sector.get("code").toString()))
-			.forEach(sector->propertyDueAmount.setSectorNumber(sector.get("name").toString()));
-				
-			
+					.mobileNumber(currentOwnerDetails.get().getMobileNumber()).build();
+
+			propertyTypeConfigurations.stream()
+					.filter(propertyType -> property.getPropertyDetails().getPropertyType()
+							.equalsIgnoreCase(propertyType.get("code").toString()))
+					.forEach(propertyType -> propertyDueAmount.setPropertyType(propertyType.get("name").toString()));
+
+			sectorConfigurations.stream()
+					.filter(sector -> property.getSectorNumber().equalsIgnoreCase(sector.get("code").toString()))
+					.forEach(sector -> propertyDueAmount.setSectorNumber(sector.get("name").toString()));
+
 			List<String> propertyDetailsIds = new ArrayList<>();
 			propertyDetailsIds.add(property.getPropertyDetails().getId());
 			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
@@ -432,9 +435,9 @@ public class PropertyService {
 			}
 			PropertyDueAmounts.add(propertyDueAmount);
 		});
-		PropertyDueRequest propertyDueRequest =  PropertyDueRequest.builder().requestInfo(requestInfo)
+		PropertyDueRequest propertyDueRequest = PropertyDueRequest.builder().requestInfo(requestInfo)
 				.propertyDueAmounts(PropertyDueAmounts).build();
-		producer.push(config.getDueAmountTopic(), propertyDueRequest);	
+		producer.push(config.getDueAmountTopic(), propertyDueRequest);
 	}
 
 }
