@@ -86,9 +86,6 @@ public class PropertyService {
 
 	@Autowired
 	private MDMSService mdmsservice;
-	
-	@Autowired
-	private EstateDemandGenerationService estateDemandGenerationService;
 
 	@Autowired
 	private EstateDemandGenerationService estateDemandGenerationService;
