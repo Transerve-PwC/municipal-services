@@ -159,6 +159,7 @@ public class PropertyService {
 		/* Approved Property Missing Demands */
 		if(null != request.getProperties().get(0).getState() && PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(request.getProperties().get(0).getState())) {
 		 	estateDemandGenerationService.createMissingDemands(request.getProperties().get(0));
+		 	estateDemandGenerationService.addCredit(request.getProperties().get(0));
 		}
 		
 		enrichmentService.enrichPropertyRequest(request);
@@ -171,10 +172,10 @@ public class PropertyService {
 		}
 		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
 			String roeAction = request.getProperties().get(0).getPropertyDetails().getBidders().get(0).getAction();
-//			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
-//					&& state.contentEquals(PSConstants.PM_APPROVED)) {
-//				wfIntegrator.callWorkFlow(request);
-//			}
+			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
+					&& state.contentEquals(PSConstants.PM_APPROVED)) {
+				wfIntegrator.callWorkFlow(request);
+			}
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), request);

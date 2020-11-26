@@ -58,19 +58,19 @@ public class EstateDemandGenerationService {
 		this.producer = producer;
 		this.config = config;
 	}
-	
+
 	public boolean checkSameDay(Date date1, Date date2) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
 		cal1.setTime(date1);
 		cal2.setTime(date2);
-		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
-                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+				&& cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
 	}
 
 	public AtomicInteger createMissingDemands(Property property) {
 		AtomicInteger counter = new AtomicInteger(0);
-				
+
 		/* Fetch billing date of the property */
 		Date propertyBillingDate = getFirstDateOfMonth(
 				new Date(property.getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate()));
@@ -80,17 +80,20 @@ public class EstateDemandGenerationService {
 
 			Date propertyDemandDate = setDateOfMonth(demandDate, Integer.parseInt(
 					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));
-			
+
 			/* Here checking demand date is already created or not */
-			List<EstateDemand> inRequestDemands = property.getPropertyDetails().getEstateDemands()
-					.stream().filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), propertyDemandDate))
+			List<EstateDemand> inRequestDemands = property.getPropertyDetails().getEstateDemands().stream()
+					.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), propertyDemandDate))
 					.collect(Collectors.toList());
-			if (inRequestDemands.isEmpty()) {
+			Date currentDate = new Date();
+
+			if (inRequestDemands.isEmpty() && propertyDemandDate.compareTo(currentDate) < 0
+					&& propertyDemandDate.compareTo(currentDate) == 0) {
 				// generate demand
 				counter.getAndIncrement();
 				generateEstateDemand(property, getFirstDateOfMonth(propertyDemandDate));
 			}
-		}	
+		}
 		return counter;
 	}
 
@@ -219,7 +222,7 @@ public class EstateDemandGenerationService {
 			long monthsBetween = ChronoUnit.MONTHS.between(LocalDate.parse(startDateText).withDayOfMonth(1),
 					LocalDate.parse(endDateText).withDayOfMonth(1));
 
-			for (PaymentConfigItems paymentConfigItem : paymentConfig.getPaymentConfigItems()) {				
+			for (PaymentConfigItems paymentConfigItem : paymentConfig.getPaymentConfigItems()) {
 				if (paymentConfigItem.getGroundRentStartMonth() <= monthsBetween
 						&& monthsBetween <= paymentConfigItem.getGroundRentEndMonth()) {
 					checkLoopIf.incrementAndGet();
@@ -309,7 +312,7 @@ public class EstateDemandGenerationService {
 					Calendar consolidateDemandCal = Calendar.getInstance();
 					consolidateDemandCal.setTime(new Date(estateDemand.getGenerationDate()));
 					long consolidateDemandDay = consolidateDemandCal.get(Calendar.DATE);
-					long consolidateDemandMonth = consolidateDemandCal.get(Calendar.MONTH)+1;
+					long consolidateDemandMonth = consolidateDemandCal.get(Calendar.MONTH) + 1;
 					long consolidateDemandYear = consolidateDemandCal.get(Calendar.YEAR);
 
 					if (consolidateDemandDay < property.getPropertyDetails().getPaymentConfig()
@@ -319,11 +322,13 @@ public class EstateDemandGenerationService {
 						prevDemandDateCal.setTime(new Date());
 						prevDemandDateCal.set(Calendar.DATE, property.getPropertyDetails().getPaymentConfig()
 								.getGroundRentGenerateDemand().intValue());
-						prevDemandDateCal.set(Calendar.MONTH,consolidateDemandMonth == 1 ? 12 : (int) consolidateDemandMonth - 2);
-						prevDemandDateCal.set(Calendar.YEAR, consolidateDemandMonth == 1 ? (int) consolidateDemandYear - 1
-								: (int) consolidateDemandYear);
+						prevDemandDateCal.set(Calendar.MONTH,
+								consolidateDemandMonth == 1 ? 12 : (int) consolidateDemandMonth - 2);
+						prevDemandDateCal.set(Calendar.YEAR,
+								consolidateDemandMonth == 1 ? (int) consolidateDemandYear - 1
+										: (int) consolidateDemandYear);
 						Date prevDemandDate = prevDemandDateCal.getTime();
-						
+
 						demandRent.set(calculateRentAccordingtoMonth(property, prevDemandDate));
 						if (demandRent.get() < estateDemand.getRent()) {
 
@@ -334,7 +339,7 @@ public class EstateDemandGenerationService {
 							prevDemand.setGstInterest(0D);
 
 							prevDemand.setGenerationDate(prevDemandDate.getTime());
-						
+
 							LocalDate prevDemandDateLocal = getLocalDate(prevDemandDate.getTime());
 							LocalDate estateDemandLocal = getLocalDate(estateDemand.getGenerationDate());
 							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,
@@ -347,7 +352,7 @@ public class EstateDemandGenerationService {
 									/ 100);
 							estateDemand.setGstInterest(estateDemand.getGstInterest()
 									- prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365);
-							
+
 							newDemands.add(prevDemand);
 						} else if (demandRent.get() > estateDemand.getRent()) {
 
@@ -380,6 +385,58 @@ public class EstateDemandGenerationService {
 						}
 					}
 
+					/**
+					 * Consolidated date is greater than demand generation date and consolidated
+					 * demand rent amount is more than demand rent
+					 */
+					else if (consolidateDemandDay > property.getPropertyDetails().getPaymentConfig()
+							.getGroundRentGenerateDemand()) {
+
+						Calendar prevDemandDateCal = Calendar.getInstance();
+						prevDemandDateCal.setTime(new Date());
+						prevDemandDateCal.set(Calendar.DATE, property.getPropertyDetails().getPaymentConfig()
+								.getGroundRentGenerateDemand().intValue());
+						prevDemandDateCal.set(Calendar.MONTH, (int) consolidateDemandMonth - 1);
+						prevDemandDateCal.set(Calendar.YEAR, (int) consolidateDemandYear);
+						Date prevDemandDate = prevDemandDateCal.getTime();
+
+						demandRent.set(calculateRentAccordingtoMonth(property, prevDemandDate));
+
+						/**
+						 * consolidated demand rent amount is more than demand rent
+						 */
+						if (demandRent.get() < estateDemand.getRent()) {
+
+							EstateDemand prevDemand = new EstateDemand();
+							prevDemand.setRent(demandRent.get());
+							prevDemand.setGst(demandRent.get() * 0.18);
+							prevDemand.setPenaltyInterest(0D);
+							prevDemand.setGstInterest(0D);
+
+							prevDemand.setGenerationDate(prevDemandDate.getTime());
+
+							LocalDate prevDemandDateLocal = getLocalDate(prevDemandDate.getTime());
+							LocalDate estateDemandLocal = getLocalDate(estateDemand.getGenerationDate());
+							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,estateDemandLocal);
+
+							estateDemand.setRent(estateDemand.getRent() - prevDemand.getRent());
+							estateDemand.setGst(estateDemand.getGst() - prevDemand.getGst());
+							estateDemand.setPenaltyInterest(estateDemand.getPenaltyInterest() - prevDemand.getRent()
+									* property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()
+									/ 100);
+							estateDemand.setGstInterest(estateDemand.getGstInterest()
+									- prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365);
+
+							newDemands.add(prevDemand);
+						} else if (demandRent.get() > estateDemand.getRent()) {
+
+							estateDemand.setIsPrevious(false);
+							estateDemand.setGenerationDate(prevDemandDate.getTime());
+							estateDemand.setPenaltyInterest(0D);
+							estateDemand.setGstInterest(0D);
+						}
+					}
+
 				}
 			});
 			property.getPropertyDetails().getEstateDemands().addAll(newDemands);
@@ -389,5 +446,18 @@ public class EstateDemandGenerationService {
 
 	private LocalDate getLocalDate(long atTimestamp) {
 		return Instant.ofEpochMilli(atTimestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+
+	public void addCredit(Property property) {
+		/*
+		 * Payment config advance rent amount insert in estate-account remaining amount
+		 */
+		if (property.getPropertyDetails().getPaymentConfig().getGroundRentAdvanceRent() != null) {
+			Double currentRemainingAmount = property.getPropertyDetails().getEstateAccount().getRemainingAmount();
+			property.getPropertyDetails().getEstateAccount().setRemainingAmount(currentRemainingAmount
+					+ property.getPropertyDetails().getPaymentConfig().getGroundRentAdvanceRent().doubleValue());
+			property.getPropertyDetails().getEstateAccount()
+					.setRemainingSince(property.getPropertyDetails().getPaymentConfig().getGroundRentAdvanceRentDate());
+		}
 	}
 }
