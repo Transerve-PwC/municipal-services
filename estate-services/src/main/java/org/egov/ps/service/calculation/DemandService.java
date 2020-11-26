@@ -11,9 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -46,6 +43,9 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -287,11 +287,21 @@ public class DemandService {
 				/**
 				 * create an offline payment.
 				 */
-				createCashPayment(applicationRequest.getRequestInfo(), application.getPaymentAmount(),
-						bills.get(0).getId(), application, application.getBillingBusinessService());
 
-				applicationRequest.setApplications(Collections.singletonList(application));
-				producer.push(config.getUpdateApplicationTopic(), applicationRequest);
+				bills.forEach(bill -> {
+					BigDecimal payableAount;
+					if (null != application.getGst()) {
+						payableAount = application.getPaymentAmount().add(application.getGst());
+					} else {
+						payableAount = application.getPaymentAmount();
+					}
+					createCashPayment(applicationRequest.getRequestInfo(), payableAount, bill.getId(), application,
+							application.getBillingBusinessService());
+
+					applicationRequest.setApplications(Collections.singletonList(application));
+					producer.push(config.getUpdateApplicationTopic(), applicationRequest);
+				});
+
 			}
 		}
 		;
@@ -507,8 +517,8 @@ public class DemandService {
 				.roles(requestUser.getRoles()).tenantId(requestUser.getTenantId()).uuid(requestUser.getUuid()).build();
 	}
 
-	public List<Demand> createPenaltyDemand(RequestInfo requestInfo, Property property, String consumerCode,
-			Calculation calculation) {
+	public List<Demand> createPenaltyExtensionFeeDemand(RequestInfo requestInfo, Property property, String consumerCode,
+			Calculation calculation, String demandFor) {
 		Owner owner = utils.getCurrentOwnerFromProperty(property);
 
 		String url = config.getUserHost().concat(config.getUserSearchEndpoint());
@@ -543,11 +553,18 @@ public class DemandService {
 		Long taxPeriodFrom = System.currentTimeMillis();
 		Long taxPeriodTo = System.currentTimeMillis();
 
+		String businesssService = "";
+
+		if (demandFor.equals(PSConstants.EXTENSION_FEE)) {
+			businesssService = property.getExtensionFeeBusinessService();
+		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
+			businesssService = property.getPenaltyBusinessService();
+		}
 		Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE).consumerCode(consumerCode)
 				.demandDetails(demandDetails).payer(user).minimumAmountPayable(config.getMinimumPayableAmount())
 				.tenantId(tenantId).taxPeriodFrom(taxPeriodFrom).taxPeriodTo(taxPeriodTo)
-				.consumerType(PSConstants.ESTATE_SERVICE).businessService(property.getPenaltyBusinessService())
-				.additionalDetails(null).build();
+				.consumerType(PSConstants.ESTATE_SERVICE).businessService(businesssService).additionalDetails(null)
+				.build();
 
 		return demandRepository.saveDemand(requestInfo, Collections.singletonList(singleDemand));
 	}

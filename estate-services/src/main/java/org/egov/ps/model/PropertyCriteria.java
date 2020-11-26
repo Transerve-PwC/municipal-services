@@ -25,6 +25,10 @@ public class PropertyCriteria {
 	private String fileNumber;
 
 	private String category;
+	
+	private String subCategory;
+	
+	private String siteNumber;
 
 	private List<String> state;
 

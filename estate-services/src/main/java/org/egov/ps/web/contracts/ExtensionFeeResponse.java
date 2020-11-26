@@ -4,9 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.ps.model.ExtensionFee;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +18,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ApplicationStatesResponse {
+public class ExtensionFeeResponse {
 
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("States")
+	@JsonProperty("ExtensionFees")
 	@Valid
-	private List<String> states;
+	private List<ExtensionFee> extensionFees;
 }

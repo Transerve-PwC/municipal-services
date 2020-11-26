@@ -1,9 +1,5 @@
 package org.egov.ps.web.contracts;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.common.contract.response.ResponseInfo;
@@ -17,12 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ApplicationStatesResponse {
+public class DueAmountResponse {
 
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("States")
-	@Valid
-	private List<String> states;
 }

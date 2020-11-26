@@ -2,11 +2,10 @@ package org.egov.ps.web.contracts;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.ps.model.ExtensionFee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.egov.common.contract.response.ResponseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +16,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ApplicationStatesResponse {
+public class ExtensionFeeRequest {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	@JsonProperty("States")
-	@Valid
-	private List<String> states;
+	@JsonProperty("ExtensionFees")
+	private List<ExtensionFee> extensionFees;
 }

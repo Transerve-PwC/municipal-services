@@ -2,6 +2,8 @@ package org.egov.ps.web.contracts;
 
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,23 +23,26 @@ import lombok.Setter;
  */
 public class EstateRentSummary {
 
+	@JsonProperty("balanceRent")
 	@Builder.Default
 	private double balanceRent = 0D;
 	
+	@JsonProperty("balanceGST")
 	@Builder.Default
 	private double balanceGST = 0D;
 	
+	@JsonProperty("balanceGSTPenalty")
 	@Builder.Default
 	private double balanceGSTPenalty = 0D;
 
-
+	@JsonProperty("balanceRentPenalty")
 	@Builder.Default
 	private double balanceRentPenalty = 0D;
 
 	// public double getBalancePrincipal() {
 	// return this.balancePrincipal;
 	// }
-
+	@JsonProperty("balanceInterest")
 	@Builder.Default
 	private double balanceInterest = 0D;
 	
@@ -71,7 +76,8 @@ public class EstateRentSummary {
 		}
 		return this.balanceInterest;
 	}
-
+	
+	@JsonProperty("balanceAmount")
 	@Builder.Default
 	private double balanceAmount = 0D;
 

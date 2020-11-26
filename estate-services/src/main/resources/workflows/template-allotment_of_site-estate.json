@@ -30,7 +30,7 @@
           "roles": ["ES_EB_SR_ASSISTANT"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_VERIFICATION",
           "nextState": "PENDING_CLARIFICATION",
           "roles": ["ES_EB_SR_ASSISTANT"]
@@ -82,7 +82,7 @@
           "roles": ["ES_EB_DEALING_ASSISTANT"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_VERIFICATION",
           "nextState": "PENDING_SRA_VERIFICATION",
           "roles": ["ES_EB_DEALING_ASSISTANT"]
@@ -105,7 +105,7 @@
           "roles": ["ES_EB_SR_ASSISTANT"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_PAYMENT_VERIFICATION",
           "nextState": "PENDING_DA_VERIFICATION",
           "roles": ["ES_EB_SR_ASSISTANT"]
@@ -128,7 +128,7 @@
           "roles": ["ES_EB_SECTION_OFFICER"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_VERIFICATION",
           "nextState": "PENDING_SRA_PAYMENT_VERIFICATION",
           "roles": ["ES_EB_SECTION_OFFICER"]
@@ -157,7 +157,7 @@
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_VERIFICATION",
           "roles": ["ES_ADDITIONAL_COMMISSIONER"]
@@ -197,7 +197,7 @@
           "roles": ["ES_EB_SECTION_OFFICER"]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_APPROVAL",
           "nextState": "PENDING_DA_PREPARE_LETTER",
           "roles": ["ES_EB_SECTION_OFFICER"]

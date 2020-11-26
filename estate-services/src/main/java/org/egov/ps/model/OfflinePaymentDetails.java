@@ -52,7 +52,7 @@ public class OfflinePaymentDetails {
 	private OfflinePaymentType type;
 
 	public enum OfflinePaymentType {
-		RENT("rent"), PENALTY("penalty"), SECURITY("security_deposit");
+		RENT("rent"), PENALTY("penalty"), SECURITY("security_deposit"), EXTENSIONFEE("extension_fee");
 
 		private String value;
 
@@ -76,5 +76,14 @@ public class OfflinePaymentDetails {
 			return null;
 		}
 	}
+
+	@JsonProperty("tenantId")
+	private String tenantId;
+
+	@JsonProperty("fileNumber")
+	private String fileNumber;
+
+	@JsonProperty("consumerCode")
+	private String consumerCode;
 
 }

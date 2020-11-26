@@ -65,6 +65,8 @@ public class PSConstants {
 	public static final String ES_APPROVE = "APPROVE";
 
 	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+	
+	public static final String ROLE_CITIZEN = "CITIZEN";
 
 	public static final String ACTION_PAY = "PAY";
 
@@ -83,6 +85,8 @@ public class PSConstants {
 
 	public static final String PROPERTY_VIOLATION = "PROPERTY_VIOLATION";
 	
+	public static final String EXTENSION_FEE = "EXTENSION_FEE";
+	
 	//User event
 	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
 	public static final String  USREVENTS_EVENT_NAME = "Estate Module";
@@ -94,4 +98,5 @@ public class PSConstants {
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";
 
+	public static final String MODE_GENERATED = "Generated";
 }

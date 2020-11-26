@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.model.AuctionBidder;
 import org.egov.ps.model.Document;
+import org.egov.ps.model.ExtensionFee;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.PaymentConfig;
@@ -28,6 +29,7 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
+import org.egov.ps.web.contracts.ExtensionFeeRequest;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -294,7 +296,8 @@ public class PropertyEnrichmentService {
 
 				}
 				estateDemand.setRemainingRentPenalty(estateDemand.getPenaltyInterest());
-				estateDemand.setRemainingGST(estateDemand.getGstInterest());
+				estateDemand.setRemainingGST(estateDemand.getGst());
+				estateDemand.setRemainingGSTPenalty(estateDemand.getGstInterest());
 				estateDemand.setRemainingRent(estateDemand.getRent());
 				estateDemand.setInterestSince(estateDemand.getGenerationDate());
 				estateDemand.setIsPrevious(estateDemand.getIsPrevious());
@@ -461,19 +464,47 @@ public class PropertyEnrichmentService {
 	}
 
 	public Calculation enrichGenerateDemand(RequestInfo requestInfo, double paymentAmount, String consumerCode,
-			Property property) {
+			Property property, String demandFor) {
 
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
 		TaxHeadEstimate estimateDue = new TaxHeadEstimate();
 		estimateDue.setEstimateAmount(new BigDecimal(paymentAmount));
-		estimateDue.setCategory(Category.PENALTY);
-		estimateDue.setTaxHeadCode(getTaxHeadCode(property.getPenaltyBusinessService(), Category.PENALTY));
+		if (demandFor.equals(PSConstants.EXTENSION_FEE)) {
+//			TODO: Is Category.FEE okay or we need to create Category.EXTENSIONFEE
+			estimateDue.setCategory(Category.FEE);
+			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getExtensionFeeBusinessService(), Category.FEE));
+		} else if (demandFor.equals(PSConstants.PROPERTY_VIOLATION)) {
+			estimateDue.setCategory(Category.PENALTY);
+			estimateDue.setTaxHeadCode(getTaxHeadCode(property.getPenaltyBusinessService(), Category.PENALTY));
+		}
 		estimates.add(estimateDue);
 
 		Calculation calculation = Calculation.builder().applicationNumber(consumerCode).taxHeadEstimates(estimates)
 				.tenantId(property.getTenantId()).build();
 		return calculation;
+	}
+
+	public void enrichExtensionFeeRequest(ExtensionFeeRequest extensionFeeRequest) {
+		extensionFeeRequest.getExtensionFees().forEach(extensionFee -> {
+			enrichExtensionFee(extensionFeeRequest.getRequestInfo(), extensionFee);
+		});
+	}
+
+	private void enrichExtensionFee(RequestInfo requestInfo, ExtensionFee extensionFee) {
+		Property property = propertyRepository.findPropertyById(extensionFee.getProperty().getId());
+		AuditDetails extensionFeeAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),
+				extensionFee.getId() == null);
+		if (null == extensionFee.getId()) {
+			extensionFee.setId(UUID.randomUUID().toString());
+			extensionFee.setRemainingDue(extensionFee.getAmount());
+			extensionFee.setIsPaid(false);
+			extensionFee.setStatus(PaymentStatusEnum.UNPAID);
+			extensionFee.setGenerationDate(new Date().getTime());
+		}
+		extensionFee.setTenantId(property.getTenantId());
+		extensionFee.setBranchType(property.getPropertyDetails().getBranchType());
+		extensionFee.setAuditDetails(extensionFeeAuditDetails);
 	}
 
 }

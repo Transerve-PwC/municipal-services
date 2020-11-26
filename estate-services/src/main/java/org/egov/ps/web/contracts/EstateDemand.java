@@ -77,14 +77,16 @@ public class EstateDemand implements Comparable<EstateDemand> {
   /**
    * Penalty Interest of demand.
    */
+  @Builder.Default
   @JsonProperty("penaltyInterest")
-  private Double penaltyInterest;
+  private Double penaltyInterest = 0.0;
 
   /**
    * Gst Interest of demand.
    */
+  @Builder.Default
   @JsonProperty("gstInterest")
-  private Double gstInterest;
+  private Double gstInterest = 0.0;
 
   /**
    * GST of demand.

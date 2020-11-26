@@ -35,7 +35,26 @@ public class PropertyQueryBuilder {
 			+ " ptdl.is_property_active, ptdl.trade_type, ptdl.company_name, ptdl.company_address, ptdl.company_registration_number, "
 			+ " ptdl.company_registration_date, ptdl.decree_date, ptdl.court_details, ptdl.civil_titled_as, ptdl.company_or_firm, "
 			+ " ptdl.company_type, ptdl.emd_amount, ptdl.emd_date , ptdl.property_registered_to, ptdl.entity_type, "
-			+ " ptdl.house_number, ptdl.mohalla, ptdl.village, ptdl.interest_rate ";
+			+ " ptdl.house_number, ptdl.mohalla, ptdl.village, ptdl.interest_rate, "
+
+			+ " pc.id as pc_id, "
+			+ " pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
+			+ " pc.is_intrest_applicable as pc_is_intrest_applicable, pc.due_date_of_payment as pc_due_date_of_payment, "
+			+ " pc.no_of_months as pc_no_of_months, pc.rate_of_interest as pc_rate_of_interest, "
+			+ " pc.security_amount as pc_security_amount, pc.total_amount as pc_total_amount, "
+			+ " pc.is_ground_rent as pc_is_ground_rent, pc.ground_rent_generation_type as pc_ground_rent_generation_type, "
+			+ " pc.ground_rent_generate_demand as pc_ground_rent_generate_demand, pc.ground_rent_advance_rent as pc_ground_rent_advance_rent, "
+			+ " pc.ground_rent_bill_start_date as pc_ground_rent_bill_start_date, pc.ground_rent_advance_rent_date as pc_ground_rent_advance_rent_date, "
+			+ " pc.created_by as pc_created_by, pc.last_modified_by as pc_last_modified_by, "
+			+ " pc.created_time as pc_created_time, pc.last_modified_time as pc_last_modified_time, "
+
+			+ " pci.id as pci_id, pci.tenant_id as pci_tenant_id, "
+			+ " pci.payment_config_id as pci_payment_config_id, pci.ground_rent_amount as pci_ground_rent_amount, "
+			+ " pci.ground_rent_start_month as pci_ground_rent_start_month, pci.ground_rent_end_month as pci_ground_rent_end_month, "
+
+			+ " paci.id as paci_id, paci.tenant_id as paci_tenant_id, "
+			+ " paci.payment_config_id as paci_payment_config_id, paci.premium_amount as paci_premium_amount, "
+			+ " paci.premiumamountdate as paci_premiumamountdate ";
 
 	private static final String OWNER_COLUMNS = " ownership.id as oid, ownership.property_details_id as oproperty_details_id, "
 			+ " ownership.tenantid as otenantid, ownership.serial_number as oserial_number, "
@@ -49,29 +68,6 @@ public class PropertyQueryBuilder {
 			+ " od.allotment_number, od.date_of_allotment, od.possesion_date, od.is_approved, "
 			+ " od.is_current_owner, od.is_master_entry, od.address, od.is_director, od.is_previous_owner_required, "
 			+ " od.seller_name, od.seller_guardian_name, od.seller_relation, od.mode_of_transfer, od.dob ";
-
-	// + " payment.id as payid, payment.tenantid as paytenantid,
-	// payment.property_details_id as payproperty_details_id, "
-	// + " payment.payment_type, payment.due_date_of_payment, payment.payable,
-	// payment.amount, "
-	// + " payment.total, payment.date_of_deposit, payment.delay_in_payment, "
-	// + " payment.interest_for_delay, payment.total_amount_due_with_interest,
-	// payment.amount_deposited, "
-	// + " payment.amount_deposited_intt, payment.balance, payment.balance_intt, "
-	// + " payment.total_due, payment.receipt_number, payment.receipt_date, "
-	// + " payment.st_rate_of_st_gst, payment.st_amount_of_gst,
-	// payment.st_payment_made_by, "
-	// + " payment.bank_name, payment.cheque_number, "
-	// + " payment.installment_one, payment.installment_two,
-	// payment.installment_two_due_date, payment.installment_three,
-	// payment.installment_three_due_date, "
-	// + " payment.monthly_or_annually, payment.ground_rent_start_date,
-	// payment.rent_revision, "
-	// + " payment.lease_period, payment.license_fee_of_year, payment.license_fee,
-	// payment.security_amount, payment.security_date, "
-	// + " payment.created_by as paycreated_by, payment.created_time as
-	// paycreated_time, payment.last_modified_by as paymodified_by,
-	// payment.last_modified_time as paymodified_time ";
 
 	private static final String CC_COLUMNS = " cc.id as ccid, cc.property_details_id as ccproperty_details_id,"
 			+ " cc.tenantid as cctenantid, cc.estate_officer_court as ccestate_officer_court,"
@@ -104,7 +100,10 @@ public class PropertyQueryBuilder {
 			+ " estp.created_time as estpcreated_time, estp.last_modified_time as estplast_modified_time ";
 
 	private static final String PT_TABLE = " FROM cs_ep_property_v1 pt " + INNER_JOIN
-			+ " cs_ep_property_details_v1 ptdl  ON pt.id =ptdl.property_id ";
+			+ " cs_ep_property_details_v1 ptdl  ON pt.id = ptdl.property_id " + LEFT_JOIN
+			+ " cs_ep_payment_config_v1 pc ON pc.property_details_id = ptdl.id " + LEFT_JOIN
+			+ " cs_ep_payment_config_items_v1 pci ON pc.id = pci.payment_config_id " + LEFT_JOIN
+			+ " cs_ep_premium_amount_config_items_v1 paci ON pc.id = paci.payment_config_id ";
 
 	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
@@ -130,27 +129,12 @@ public class PropertyQueryBuilder {
 			+ " penalty.created_by as penalty_created_by, penalty.last_modified_by as penalty_last_modified_by, "
 			+ " penalty.created_time as penalty_created_time, penalty.last_modified_time as penalty_last_modified_time ";
 
-	private static final String PROPERTY_PAYMENT_CONFIG_COLUMNS = " pc.id as pc_id, "
-			+ " pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
-			+ " pc.is_intrest_applicable as pc_is_intrest_applicable, pc.due_date_of_payment as pc_due_date_of_payment, "
-			+ " pc.no_of_months as pc_no_of_months, pc.rate_of_interest as pc_rate_of_interest, "
-			+ " pc.security_amount as pc_security_amount, pc.total_amount as pc_total_amount, "
-			+ " pc.is_ground_rent as pc_is_ground_rent, pc.ground_rent_generation_type as pc_ground_rent_generation_type, "
-			+ " pc.ground_rent_generate_demand as pc_ground_rent_generate_demand, pc.ground_rent_advance_rent as pc_ground_rent_advance_rent, "
-			+ " pc.ground_rent_bill_start_date as pc_ground_rent_bill_start_date, pc.ground_rent_advance_rent_date as pc_ground_rent_advance_rent_date, "
-			+ " pc.created_by as pc_created_by, pc.last_modified_by as pc_last_modified_by, "
-			+ " pc.created_time as pc_created_time, pc.last_modified_time as pc_last_modified_time, "
-
-			+ " pci.id as pci_id, pci.tenant_id as pci_tenant_id, "
-			+ " pci.payment_config_id as pci_payment_config_id, pci.ground_rent_amount as pci_ground_rent_amount, "
-			+ " pci.ground_rent_start_month as pci_ground_rent_start_month, pci.ground_rent_end_month as pci_ground_rent_end_month, "
-
-			+ " paci.id as paci_id, paci.tenant_id as paci_tenant_id, "
-			+ " paci.payment_config_id as paci_payment_config_id, paci.premium_amount as paci_premium_amount, "
-			+ " paci.premiumamountdate as paci_premiumamountdate ";
-
-	// + LEFT_JOIN
-	// + " cs_ep_payment_v1 payment ON ptdl.id=payment.property_details_id ";
+	private static final String EXTENSION_FEE_COLUMN = " ef.id as ef_id, ef.tenantid as ef_tenantid, "
+			+ " ef.property_id as ef_property_id, ef.branch_type as ef_branch_type, "
+			+ " ef.amount as ef_amount, ef.remaining_due as ef_remaining_due, "
+			+ " ef.paid as ef_paid, ef.status as ef_status, ef.generation_date as ef_generation_date, "
+			+ " ef.created_by as ef_created_by, ef.last_modified_by as ef_last_modified_by, "
+			+ " ef.created_time as ef_created_time, ef.last_modified_time as ef_last_modified_time ";
 
 	private static final String CC_TABLE = " cs_ep_court_case_v1 cc ";
 
@@ -166,9 +150,7 @@ public class PropertyQueryBuilder {
 
 	private static final String PROPERTY_PENALTY_TABLE = " cs_ep_property_penalty_v1 penalty ";
 
-	private static final String PROPERTY_PAYMENT_CONFIG_TABLE = " cs_ep_payment_config_v1 pc " + LEFT_JOIN
-			+ " cs_ep_payment_config_items_v1 pci ON pc.id = pci.payment_config_id " + LEFT_JOIN
-			+ " cs_ep_premium_amount_config_items_v1 paci ON pc.id = paci.payment_config_id ";
+	private static final String EXTENSION_FEE_TABLE = " cs_ep_extension_fee_v1 ef ";
 
 	private final String paginationWrapper = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY pmodified_time desc) offset_ FROM " + "({})"
@@ -180,7 +162,6 @@ public class PropertyQueryBuilder {
 	public static final String RELATION_BIDDER = "bidder";
 	public static final String RELATION_ESTATE_FINANCE = "finance";
 	public static final String RELATION_OFFLINE_PAYMENT = "offline";
-	public static final String RELATION_PAYMENT_CONFIG = "paymentconfig";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
 
@@ -242,6 +223,16 @@ public class PropertyQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.category = :category");
 			preparedStmtList.put("category", criteria.getCategory());
+		}
+		if (null != criteria.getSubCategory()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.sub_category = :subCategory");
+			preparedStmtList.put("subCategory", criteria.getSubCategory());
+		}
+		if (null != criteria.getSiteNumber()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("pt.site_number = :siteNumber");
+			preparedStmtList.put("siteNumber", criteria.getSiteNumber());
 		}
 
 		if (null != criteria.getPropertyId()) {
@@ -366,15 +357,15 @@ public class PropertyQueryBuilder {
 		return sb.toString();
 	}
 
-	public String getPaymentConfigQuery(List<String> propertyDetailsIds, Map<String, Object> params) {
-		StringBuilder builder = new StringBuilder(SELECT);
-		builder.append(PROPERTY_PAYMENT_CONFIG_COLUMNS);
-		builder.append(" FROM " + PROPERTY_PAYMENT_CONFIG_TABLE);
-		builder.append(" where pc.property_details_id IN (:propertyDetailsIds)");
-		params.put("propertyDetailsIds", propertyDetailsIds);
-		return builder.toString();
+	public String getExtensionFeeQuery(String propertyId, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(EXTENSION_FEE_COLUMN);
+		sb.append(" FROM " + EXTENSION_FEE_TABLE);
+		sb.append(" where ef.property_id IN (:propertyId)");
+		params.put("propertyId", propertyId);
+		return sb.toString();
 	}
-	
+
 	public String getEstateDemandQueryWithDateASC(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(ESTATE_DEMAND_COLUMNS);
@@ -384,7 +375,7 @@ public class PropertyQueryBuilder {
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
-	
+
 	public String getEstatePaymentQueryWithDateASC(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(ESTATE_PAYMENT_COLUMNS);

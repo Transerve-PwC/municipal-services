@@ -34,7 +34,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DS_VERIFICATION",
           "nextState": "PENDING_CLARIFICATION",
           "roles": [
@@ -88,7 +88,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_VERIFICATION",
           "nextState": "PENDING_DS_VERIFICATION",
           "roles": [
@@ -115,7 +115,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_VERIFICATION",
           "nextState": "PENDING_DA_VERIFICATION",
           "roles": [
@@ -142,7 +142,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_TEMPLATE_CREATION",
           "nextState": "PENDING_SRA_VERIFICATION",
           "roles": [
@@ -188,7 +188,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DS_TEMPLATE_VERIFICATION",
           "nextState": "PENDING_CITIZEN_TEMPLATE_SUBMISSION",
           "roles": [
@@ -215,7 +215,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_TEMPLATE_VERIFICATION",
           "nextState": "PENDING_DS_TEMPLATE_VERIFICATION",
           "roles": [
@@ -242,7 +242,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SRA_TEMPLATE_VERIFICATION",
           "nextState": "PENDING_DA_TEMPLATE_VERIFICATION",
           "roles": [
@@ -269,7 +269,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_TEMPLATE_VERIFICATION",
           "nextState": "PENDING_SRA_TEMPLATE_VERIFICATION",
           "roles": [
@@ -304,7 +304,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_TEMPLATE_VERIFICATION",
           "roles": [
@@ -331,7 +331,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_DA_FEE",
           "nextState": "PENDING_AC_APPROVAL",
           "roles": [
@@ -396,7 +396,7 @@
           ]
         },
         {
-          "action": "SENTBACK",
+          "action": "SENDBACK",
           "currentState": "PENDING_SO_APPROVAL",
           "nextState": "PENDING_DA_PREPARE_LETTER",
           "roles": [

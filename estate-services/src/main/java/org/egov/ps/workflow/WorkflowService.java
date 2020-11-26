@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
-import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.repository.ServiceRequestRepository;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.BusinessServiceRequest;
@@ -87,12 +86,10 @@ public class WorkflowService {
 	 * @param requestInfo         The RequestInfo object of the request
 	 * @return ApplicationStates for the the given tenantId
 	 */
-	@Cacheable(value = "businessService", key = "{#tenantId, #businessServiceName}")
-	public List<State> getApplicationStatus(ApplicationCriteria applicationCriteria,
+	@Cacheable(value = "businessService", key = "{#tenantId, #businessName}")
+	public List<State> getApplicationStatus(String tenantId, String businessName,
 			RequestInfoMapper requestInfoWrapper) {
 
-		String tenantId = applicationCriteria.getTenantId();
-		tenantId = tenantId.split("\\.")[0];
 		log.info("Fetching states for application states {} for tenant {}", tenantId);
 		try {
 			StringBuilder allBusinessServicesSearchURL = getSearchURLWithApplicationStatusParams(tenantId);
@@ -104,8 +101,11 @@ public class WorkflowService {
 			}
 			return response.getBusinessServices().stream()
 					.filter(businessService -> businessService.getBusiness()
-							.equalsIgnoreCase(applicationCriteria.getBusinessName()))
-					.map(BusinessService::getStates).flatMap(Collection::stream).collect(Collectors.toList());
+							.equalsIgnoreCase(businessName))
+					.map(BusinessService::getStates).flatMap(Collection::stream)
+					.filter(state -> state.getApplicationStatus() != null)
+					.filter(state -> !state.getApplicationStatus().startsWith("ES_PM_"))
+					.collect(Collectors.toList());
 		} catch (IllegalArgumentException e) {
 			throw new CustomException("PARSING ERROR", "Failed to parse response of getBusinessService");
 		}

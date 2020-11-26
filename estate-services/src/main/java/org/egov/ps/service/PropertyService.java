@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,12 @@ import org.egov.ps.model.AccountStatementCriteria;
 import org.egov.ps.model.BillV2;
 import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.Owner;
+import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
+import org.egov.ps.model.PropertyDueAmount;
 import org.egov.ps.producer.Producer;
+import org.egov.ps.repository.PropertyQueryBuilder;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
@@ -24,11 +29,13 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
+import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
+import org.egov.ps.web.contracts.PropertyDueRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.State;
 import org.egov.ps.workflow.WorkflowIntegrator;
@@ -77,8 +84,15 @@ public class PropertyService {
 	@Autowired
 	private DemandRepository demandRepository;
 
+	@Autowired
+	private MDMSService mdmsservice;
+	
+	@Autowired
+	private EstateDemandGenerationService estateDemandGenerationService;
+
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
+		//bifurcate demand 
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		producer.push(config.getSavePropertyTopic(), request);
@@ -90,16 +104,23 @@ public class PropertyService {
 		request.getProperties().stream()
 				.filter(property -> property.getPropertyDetails().getEstateDemands() != null
 						&& property.getPropertyDetails().getEstatePayments() != null
-						&& property.getPropertyDetails().getEstateAccount() != null)
+						&& property.getPropertyDetails().getEstateAccount() != null
+						&& property.getPropertyDetails().getPaymentConfig() != null)
 				.forEach(property -> {
-					estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(), property.getPropertyDetails().getEstateAccount(),
-							18,true);
+					estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
+							property.getPropertyDetails().getEstatePayments(),
+							property.getPropertyDetails().getEstateAccount(), 18,
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 					property.setEstateRentSummary(
-							
+
 							estateRentCollectionService.calculateRentSummary(
-							property.getPropertyDetails().getEstateDemands(),
-							property.getPropertyDetails().getEstateAccount(),
-							property.getPropertyDetails().getInterestRate()));
+									property.getPropertyDetails().getEstateDemands(),
+									property.getPropertyDetails().getEstateAccount(),
+									property.getPropertyDetails().getInterestRate(),
+									property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+									property.getPropertyDetails().getPaymentConfig().getRateOfInterest()
+											.doubleValue()));
 				});
 	}
 
@@ -108,14 +129,15 @@ public class PropertyService {
 			request.getProperties().stream()
 					.filter(property -> property.getPropertyDetails().getEstateDemands() != null
 							&& property.getPropertyDetails().getEstatePayments() != null
-							&& property.getPropertyDetails().getEstateAccount() != null)
+							&& property.getPropertyDetails().getEstateAccount() != null
+							&& property.getPropertyDetails().getPaymentConfig() != null)
 					.forEach(property -> {
-						property.getPropertyDetails()
-								.setEstateRentCollections(estateRentCollectionService.settle(
-										property.getPropertyDetails().getEstateDemands(),
-										property.getPropertyDetails().getEstatePayments(),
-										property.getPropertyDetails().getEstateAccount(),
-										property.getPropertyDetails().getInterestRate(), true));
+						property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
+								property.getPropertyDetails().getEstateDemands(),
+								property.getPropertyDetails().getEstatePayments(),
+								property.getPropertyDetails().getEstateAccount(), 18,
+								property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+								property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 					});
 		}
 		enrichmentService.enrichCollection(request);
@@ -130,6 +152,15 @@ public class PropertyService {
 	 */
 	public List<Property> updateProperty(PropertyRequest request) {
 		propertyValidator.validateUpdateRequest(request);
+		//bifurcate demand
+		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getEstateDemands())) {
+	    	estateDemandGenerationService.bifurcateDemand(request.getProperties().get(0));					
+	    }
+		/* Approved Property Missing Demands */
+		if(null != request.getProperties().get(0).getState() && PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(request.getProperties().get(0).getState())) {
+		 	estateDemandGenerationService.createMissingDemands(request.getProperties().get(0));
+		}
+		
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		String action = request.getProperties().get(0).getAction();
@@ -140,10 +171,10 @@ public class PropertyService {
 		}
 		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
 			String roeAction = request.getProperties().get(0).getPropertyDetails().getBidders().get(0).getAction();
-			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
-					&& state.contentEquals(PSConstants.PM_APPROVED)) {
-				wfIntegrator.callWorkFlow(request);
-			}
+//			if (config.getIsWorkflowEnabled() && !roeAction.contentEquals("")
+//					&& state.contentEquals(PSConstants.PM_APPROVED)) {
+//				wfIntegrator.callWorkFlow(request);
+//			}
 		}
 
 		producer.push(config.getUpdatePropertyTopic(), request);
@@ -194,11 +225,14 @@ public class PropertyService {
 
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-				if (!CollectionUtils.isEmpty(demands)) {
-					estateRentCollectionService.settle(demands, payments, estateAccount,
-							18,true);
+				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null) {
+					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-							estateAccount, property.getPropertyDetails().getInterestRate()));
+							estateAccount, property.getPropertyDetails().getInterestRate(),
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 					property.getPropertyDetails().setEstateDemands(demands);
 					property.getPropertyDetails().setEstatePayments(payments);
 
@@ -231,7 +265,9 @@ public class PropertyService {
 
 		return AccountStatementResponse.builder()
 				.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments, 18.00,
-						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
+						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
+						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
 				.build();
 	}
 
@@ -287,12 +323,16 @@ public class PropertyService {
 		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 		EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
 
-		if (!CollectionUtils.isEmpty(demands) && null != account) {
+		if (!CollectionUtils.isEmpty(demands) && null != account
+				&& property.getPropertyDetails().getPaymentConfig() != null) {
 			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
-			estateRentCollectionService.settle(demands, payments, account,
-					18,true);
+			estateRentCollectionService.settle(demands, payments, account, 18,
+					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 			EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
-					property.getPropertyDetails().getInterestRate());
+					property.getPropertyDetails().getInterestRate(),
+					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 			property.getPropertyDetails()
 					.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
 			enrichmentService.enrichRentDemand(property, rentSummary);
@@ -328,6 +368,7 @@ public class PropertyService {
 					.bankName(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getBankName())
 					.transactionNumber(
 							property.getPropertyDetails().getOfflinePaymentDetails().get(0).getTransactionNumber())
+					.dateOfPayment(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getDateOfPayment())
 					.build();
 			property.getPropertyDetails().setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
 
@@ -343,6 +384,57 @@ public class PropertyService {
 			producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 		}
 		return Collections.singletonList(property);
+	}
+
+	public void getDueAmount(RequestInfo requestInfo) {
+		PropertyCriteria criteria = PropertyCriteria.builder()
+				.state(Arrays.asList(PSConstants.PM_APPROVED))
+				.relations(Arrays.asList(PropertyQueryBuilder.RELATION_OWNER))
+				.build();
+		List<Property> properties = repository.getProperties(criteria);
+		if (CollectionUtils.isEmpty(properties))
+			throw new CustomException("NO_PROPERTY_FOUND","No approved property found");
+			
+		List<PropertyDueAmount> PropertyDueAmounts=new ArrayList<>();
+		properties.stream().forEach(property -> {
+			Optional<OwnerDetails> currentOwnerDetails =property.getPropertyDetails().getOwners().stream().map(owner-> owner.getOwnerDetails()).filter(ownerDetail -> ownerDetail.getIsCurrentOwner()==true).findFirst();
+			List<Map<String, Object>> propertyTypeConfigurations = mdmsservice.getBranchRoles("propertyType",
+					requestInfo, property.getTenantId());
+			
+			List<Map<String, Object>> sectorConfigurations = mdmsservice.getBranchRoles("sector",
+					requestInfo, property.getTenantId());
+			
+			PropertyDueAmount propertyDueAmount = PropertyDueAmount.builder().propertyId(property.getId())
+					.fileNumber(property.getFileNumber())
+					.tenantId(property.getTenantId())
+					.branchType(property.getPropertyDetails().getBranchType())
+					.ownerName(currentOwnerDetails.get().getOwnerName())
+					.mobileNumber(currentOwnerDetails.get().getMobileNumber())
+					.build();
+			
+			propertyTypeConfigurations.stream().filter(propertyType-> property.getPropertyDetails().getPropertyType().equalsIgnoreCase(propertyType.get("code").toString()))
+			.forEach(propertyType->propertyDueAmount.setPropertyType(propertyType.get("name").toString()));
+				
+			sectorConfigurations.stream().filter(sector-> property.getSectorNumber().equalsIgnoreCase(sector.get("code").toString()))
+			.forEach(sector->propertyDueAmount.setSectorNumber(sector.get("name").toString()));
+				
+			
+			List<String> propertyDetailsIds = new ArrayList<>();
+			propertyDetailsIds.add(property.getPropertyDetails().getId());
+			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
+			EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
+
+			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null) {
+				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
+						estateAccount, property.getPropertyDetails().getInterestRate(),
+						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
+			}
+			PropertyDueAmounts.add(propertyDueAmount);
+		});
+		PropertyDueRequest propertyDueRequest =  PropertyDueRequest.builder().requestInfo(requestInfo)
+				.propertyDueAmounts(PropertyDueAmounts).build();
+		producer.push(config.getDueAmountTopic(), propertyDueRequest);	
 	}
 
 }

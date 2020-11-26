@@ -23,6 +23,7 @@ import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.service.calculation.PenaltyCollectionService;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AccountStatementRequest;
 import org.egov.ps.web.contracts.PenaltyStatementResponse;
@@ -138,12 +139,12 @@ public class PropertyViolationService {
 		 * Enrich an actual finance demand
 		 */
 		Calculation calculation = propertyEnrichmentService.enrichGenerateDemand(requestInfo, paymentAmount,
-				consumerCode, propertyDb);
+				consumerCode, propertyDb, PSConstants.PROPERTY_VIOLATION);
 
 		/**
 		 * Generate an actual finance demand
 		 */
-		demandService.createPenaltyDemand(requestInfo, propertyDb, consumerCode, calculation);
+		demandService.createPenaltyExtensionFeeDemand(requestInfo, propertyDb, consumerCode, calculation, PSConstants.PROPERTY_VIOLATION);
 
 		/**
 		 * Get the bill generated.
@@ -163,6 +164,9 @@ public class PropertyViolationService {
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.PENALTY);
 			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
+			ofpd.setTenantId(propertyDb.getTenantId());
+			ofpd.setFileNumber(propertyDb.getFileNumber());
+			ofpd.setConsumerCode(consumerCode);
 		});
 
 		List<PropertyPenalty> updatedPenalties = penaltyCollectionService.settle(penalties, paymentAmount);
@@ -187,6 +191,10 @@ public class PropertyViolationService {
 		if (null == accountStatementCriteria.getPropertyid()) {
 			throw new CustomException(Collections.singletonMap("NO_PROPERTY_ID", "Property id should not be null"));
 		}
+		if (accountStatementCriteria.getToDate() <= accountStatementCriteria.getFromDate()) {
+			throw new CustomException(
+					Collections.singletonMap("NO_PROPER_DATE", "Statement from date should be greater than to date"));
+		}
 
 		Property property = repository.findPropertyById(accountStatementCriteria.getPropertyid());
 		if (null == property) {
@@ -204,20 +212,22 @@ public class PropertyViolationService {
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
 		List<OfflinePaymentDetails> offlinePaymentDetails = repository
 				.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+		List<OfflinePaymentDetails> filteredOfflinePaymentDetails = offlinePaymentDetails.stream()
+				.filter(offlinePaymentDetail -> null != offlinePaymentDetail.getType()
+						&& offlinePaymentDetail.getType().equals(OfflinePaymentType.PENALTY))
+				.collect(Collectors.toList());
 
 		double totalPenalty = filteredPropertyPenalties.stream().mapToDouble(PropertyPenalty::getPenaltyAmount).sum();
 		double totalPenaltyDue = filteredPropertyPenalties.stream().mapToDouble(PropertyPenalty::getRemainingPenaltyDue)
 				.sum();
-		BigDecimal totalPenaltyPaid = offlinePaymentDetails.stream()
-				.filter(offlinePaymentDetail -> offlinePaymentDetail.getType().equals(OfflinePaymentType.PENALTY))
-				.map(OfflinePaymentDetails::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+		BigDecimal totalPenaltyPaid = filteredOfflinePaymentDetails.stream().map(OfflinePaymentDetails::getAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		PenaltyStatementSummary penaltyStatementSummary = PenaltyStatementSummary.builder().totalPenalty(totalPenalty)
 				.totalPenaltyDue(totalPenaltyDue).totalPenaltyPaid(totalPenaltyPaid.doubleValue()).build();
 
 		PenaltyStatementResponse penaltyStatementResponse = PenaltyStatementResponse.builder()
-				.propertyPenalties(filteredPropertyPenalties)
-				.offlinePaymentDetails(offlinePaymentDetails)
+				.propertyPenalties(filteredPropertyPenalties).offlinePaymentDetails(filteredOfflinePaymentDetails)
 				.penaltyStatementSummary(penaltyStatementSummary).build();
 
 		return penaltyStatementResponse;
