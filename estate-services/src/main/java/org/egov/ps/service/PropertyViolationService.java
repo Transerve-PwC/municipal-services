@@ -144,7 +144,8 @@ public class PropertyViolationService {
 		/**
 		 * Generate an actual finance demand
 		 */
-		demandService.createPenaltyExtensionFeeDemand(requestInfo, propertyDb, consumerCode, calculation, PSConstants.PROPERTY_VIOLATION);
+		demandService.createPenaltyExtensionFeeDemand(requestInfo, propertyDb, consumerCode, calculation,
+				PSConstants.PROPERTY_VIOLATION);
 
 		/**
 		 * Get the bill generated.
@@ -167,6 +168,7 @@ public class PropertyViolationService {
 			ofpd.setTenantId(propertyDb.getTenantId());
 			ofpd.setFileNumber(propertyDb.getFileNumber());
 			ofpd.setConsumerCode(consumerCode);
+			ofpd.setBillingBusinessService(propertyDb.getPenaltyBusinessService());
 		});
 
 		List<PropertyPenalty> updatedPenalties = penaltyCollectionService.settle(penalties, paymentAmount);
