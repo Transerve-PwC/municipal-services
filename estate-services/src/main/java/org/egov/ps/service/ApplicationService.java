@@ -78,8 +78,8 @@ public class ApplicationService {
 			/*BusinessService businessService =workflowService.getBusinessService(PSConstants.TENANT_ID, requestInfo,
 					config.getAosBusinessServiceValue());
 			List<String> states = businessService.getStates().stream().map(State::getState)
-					.filter(s -> s != null && s.length() != 0).collect(Collectors.toList());
-			*/
+					.filter(s -> s != null && s.length() != 0).collect(Collectors.toList());*/
+			
 			log.info("states:" + states);
 			criteria.setState(states);
 		}

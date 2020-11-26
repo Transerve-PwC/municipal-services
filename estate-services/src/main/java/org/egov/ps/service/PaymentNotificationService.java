@@ -1,39 +1,25 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
-import org.egov.ps.model.Notifications;
-import org.egov.ps.model.NotificationsEmail;
-import org.egov.ps.model.NotificationsEvent;
-import org.egov.ps.model.NotificationsSms;
 import org.egov.ps.model.calculation.PaymentDetail;
 import org.egov.ps.model.calculation.PaymentRequest;
-import org.egov.ps.model.notification.uservevents.EventRequest;
 import org.egov.ps.repository.ApplicationRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -148,12 +134,13 @@ public class PaymentNotificationService {
 										application.setPayer(payer);
 										application.setState(application.getState()+"_PAYER");
 										application.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
-										application.setTransactionId(valMap.get(receiptNumberKey));
+										application.setRecieptNumber(valMap.get(receiptNumberKey));
 										applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
 									}
 									/**
 									 * Process the notification config
 									 */
+									application.setState(application.getState());
 									applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
 	
 								});
