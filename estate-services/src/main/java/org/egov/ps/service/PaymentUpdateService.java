@@ -84,6 +84,19 @@ public class PaymentUpdateService {
 				case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
 					log.info("Post enrichment need to do");
 					break;
+
+				case PSConstants.BUSINESS_SERVICE_EB_EXTENSION_FEE:
+				case PSConstants.BUSINESS_SERVICE_BB_EXTENSION_FEE:
+				case PSConstants.BUSINESS_SERVICE_MB_EXTENSION_FEE:
+					log.info("Post enrichment need to do");
+					break;
+
+				case PSConstants.BUSINESS_SERVICE_EB_SECURITY_DEPOSIT:
+				case PSConstants.BUSINESS_SERVICE_BB_SECURITY_DEPOSIT:
+				case PSConstants.BUSINESS_SERVICE_MB_SECURITY_DEPOSIT:
+					log.info("Post enrichment need to do");
+					break;
+
 				default: {
 					if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
 

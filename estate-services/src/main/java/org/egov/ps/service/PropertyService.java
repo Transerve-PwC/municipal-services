@@ -29,6 +29,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
+import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -85,13 +86,16 @@ public class PropertyService {
 
 	@Autowired
 	private MDMSService mdmsservice;
+	
+	@Autowired
+	private EstateDemandGenerationService estateDemandGenerationService;
 
 	@Autowired
 	private EstateDemandGenerationService estateDemandGenerationService;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
-		// bifurcate demand
+		//bifurcate demand 
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		producer.push(config.getSavePropertyTopic(), request);
@@ -155,15 +159,15 @@ public class PropertyService {
 		// bifurcate demand
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)) {
-			estateDemandGenerationService.bifurcateDemand(request.getProperties().get(0));
+			estateDemandGenerationService.bifurcateDemand(property);
 		}
 		/* Approved Property Missing Demands */
 		if (null != request.getProperties().get(0).getState()
 				&& PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(property.getState())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)) {
-			estateDemandGenerationService.createMissingDemands(request.getProperties().get(0));
+			estateDemandGenerationService.createMissingDemands(property);
+			estateDemandGenerationService.addCredit(property);
 		}
-
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		String action = property.getAction();
