@@ -124,8 +124,13 @@ public class ApplicationValidatorService {
 				&& !property.getState().contentEquals(PSConstants.ES_APPROVED)) {
 			throw new CustomException("INVALID_PROPERTY", "Property with the given " + propertyId + " is not approved");
 		}
-
-		Double rentDue = getRentDue(property);
+		Double rentDue = 0.0;
+		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())
+				&& property.getPropertyDetails().getEstateAccount() != null
+				&& property.getPropertyDetails().getPaymentConfig() != null
+				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+			rentDue = getRentDue(property);
+		}
 		if (rentDue > 0) {
 			throw new CustomException("PROPERTY_PENDING_DUE", String.format(
 					"Property has pending due of Rs: %s, so you can not apply for %s, please clear the due before applying.",
@@ -271,7 +276,14 @@ public class ApplicationValidatorService {
 					&& application.getState().contains(PSConstants.PENDING_SO_APPROVAL)) {
 
 				Property property = propertyRepository.findPropertyById(application.getProperty().getId());
-				Double rentDue = getRentDue(property);
+				Double rentDue = 0.0;
+				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())
+						&& property.getPropertyDetails().getEstateAccount() != null
+						&& property.getPropertyDetails().getPaymentConfig() != null && property.getPropertyDetails()
+								.getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+					rentDue = getRentDue(property);
+				}
+
 				if (rentDue > 0) {
 					throw new CustomException("PROPERTY_RENT_DUE",
 							String.format("Property has rent due: %s, so can not approve for NDC", rentDue));
