@@ -102,12 +102,13 @@ public class PaymentUpdateService {
 
 						ApplicationCriteria searchCriteria = new ApplicationCriteria();
 						searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
+						
 						if(paymentDetail.getBusinessService().contains(PSConstants.ESTATE_BRANCH)){
-							searchCriteria.setBranchType("EstateBranch");
+							searchCriteria.setBranchType(PSConstants.APPLICATION_ESTATE_BRANCH);
 						}else if(paymentDetail.getBusinessService().contains(PSConstants.BUILDING_BRANCH)){
-							searchCriteria.setBranchType("BuildingBranch");
+							searchCriteria.setBranchType(PSConstants.APPLICATION_BUILDING_BRANCH);
 						}else{
-							searchCriteria.setBranchType("ManiMajra");
+							searchCriteria.setBranchType(PSConstants.APPLICATION_MANI_MAJRA);
 						}
 						List<Application> applications = applicationService.searchApplication(searchCriteria,
 								requestInfo);
