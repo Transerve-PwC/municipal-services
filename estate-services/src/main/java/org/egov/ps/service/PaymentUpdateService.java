@@ -107,7 +107,7 @@ public class PaymentUpdateService {
 						}else if(paymentDetail.getBusinessService().contains(PSConstants.BUILDING_BRANCH)){
 							searchCriteria.setBranchType("BuildingBranch");
 						}else{
-							searchCriteria.setBranchType("ManimajraBranch");
+							searchCriteria.setBranchType("ManiMajra");
 						}
 						List<Application> applications = applicationService.searchApplication(searchCriteria,
 								requestInfo);
