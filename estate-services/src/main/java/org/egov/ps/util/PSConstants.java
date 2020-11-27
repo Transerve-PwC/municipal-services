@@ -19,6 +19,12 @@ public class PSConstants {
 	public static final String BUILDING_BRANCH = "BUILDING_BRANCH";
 
 	public static final String MANI_MAJRA = "MANI_MAJRA";
+	
+	public static final String APPLICATION_ESTATE_BRANCH = "EstateBranch";
+
+	public static final String APPLICATION_BUILDING_BRANCH = "BuildingBranch";
+
+	public static final String APPLICATION_MANI_MAJRA = "ManiMajra";
 
 	public static final String JSONPATH_PROPERTY_SERVICE = "$.MdmsRes.OwnershipTransferSaleDeed";
 
@@ -75,9 +81,18 @@ public class PSConstants {
 	public static final String BUSINESS_SERVICE_EB_RENT = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_BB_RENT = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_MB_RENT = "ESTATE_SERVICE_MANIMAJRA_BRANCH.PROPERTY_MASTER";
+	
 	public static final String BUSINESS_SERVICE_EB_PENALTY = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION";
 	public static final String BUSINESS_SERVICE_BB_PENALTY = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_VIOLATION";
 	public static final String BUSINESS_SERVICE_MB_PENALTY = "ESTATE_SERVICE_MANIMAJRA_BRANCH.PROPERTY_VIOLATION";
+	
+	public static final String BUSINESS_SERVICE_EB_EXTENSION_FEE = "ESTATE_SERVICE_ESTATE_BRANCH.EXTENSION_FEE";
+	public static final String BUSINESS_SERVICE_BB_EXTENSION_FEE = "ESTATE_SERVICE_BUILDING_BRANCH.EXTENSION_FEE";
+	public static final String BUSINESS_SERVICE_MB_EXTENSION_FEE = "ESTATE_SERVICE_MANIMAJRA_BRANCH.EXTENSION_FEE";
+	
+	public static final String BUSINESS_SERVICE_EB_SECURITY_DEPOSIT = "ESTATE_SERVICE_ESTATE_BRANCH.SECURITY_DEPOSIT";
+	public static final String BUSINESS_SERVICE_BB_SECURITY_DEPOSIT = "ESTATE_SERVICE_BUILDING_BRANCH.SECURITY_DEPOSIT";
+	public static final String BUSINESS_SERVICE_MB_SECURITY_DEPOSIT = "ESTATE_SERVICE_MANIMAJRA_BRANCH.SECURITY_DEPOSIT";
 
 	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages";
 	public static final String LOCALIZATION_MODULE = "rainmaker-es";
@@ -87,13 +102,15 @@ public class PSConstants {
 	
 	public static final String EXTENSION_FEE = "EXTENSION_FEE";
 	
+	public static final String SECURITY_DEPOSIT = "SECURITY_DEPOSIT";
+	
 	//User event
 	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
 	public static final String  USREVENTS_EVENT_NAME = "Estate Module";
 	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-EST";
 	
 	public static final String  APPLICATION_TYPE_NDC = "NDC";
-	public static final String  PENDING_SO_APPROVAL = "PENDING_SO_APPROVAL";
+	public static final String  PENDING_SO_APPROVAL = "ES_PENDING_SO_APPROVAL";
 	
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";

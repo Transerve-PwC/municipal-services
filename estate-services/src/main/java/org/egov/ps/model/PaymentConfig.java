@@ -75,7 +75,7 @@ public class PaymentConfig {
 	private Long groundRentGenerateDemand;
 
 	@JsonProperty("groundRentAdvanceRent")
-	private BigDecimal groundRentAdvanceRent;
+	private BigDecimal groundRentAdvanceRent = new BigDecimal(0);
 
 	@JsonProperty("groundRentBillStartDate")
 	private Long groundRentBillStartDate;
