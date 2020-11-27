@@ -209,9 +209,6 @@ public class Application {
 	@JsonProperty("totalDue")
 	private BigDecimal totalDue;
 	
-	@JsonProperty("owner")
-	private Owner owner;
-	
 	@JsonProperty("payer")
 	private User payer;
 	

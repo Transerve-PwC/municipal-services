@@ -128,14 +128,6 @@ public class ApplicationsNotificationService {
 			BigDecimal estimateAmount = applicationEnrichmentService.fetchEstimateAmountFromMDMSJson(feesConfigurations, application);
 			application.setTotalDue(estimateAmount);
 			
-			if(!CollectionUtils.isEmpty(application.getProperty().getPropertyDetails().getOwners())){
-				application.setOwner(application.getProperty().getPropertyDetails().getOwners().get(0));
-			}
-			/*else{
-				PropertyCriteria criteria = PropertyCriteria.builder().propertyId(application.getProperty().getId())
-						.relations(Collections.singletonList(ApplicationQueryBuilder.RELATION_OWNER)).build();
-				List<Property> properties = repository.getProperties(criteria);
-			}*/
             /**
              * Enrich content by replacing paths like {createdBy.name}
              */
