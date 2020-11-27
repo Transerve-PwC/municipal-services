@@ -132,7 +132,7 @@ public class PaymentNotificationService {
 												.name(valMap.get(payerName))
 												.build();
 										application.setPayer(payer);
-										application.setState(application.getState()+"_PAYER");
+										application.setState(application.getState()+"_PAID_PAYER");
 										application.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
 										application.setRecieptNumber(valMap.get(receiptNumberKey));
 										applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
@@ -140,7 +140,7 @@ public class PaymentNotificationService {
 									/**
 									 * Process the notification config
 									 */
-									application.setState(application.getState());
+									application.setState(application.getState().replace("_PAYER", ""));
 									applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
 	
 								});
