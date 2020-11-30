@@ -95,17 +95,19 @@ public class PropertyEnrichmentService {
 	}
 
 	private void enrichAccountStatementDoc(Property property, RequestInfo requestInfo) {
-		if(property.getPropertyDetails().getAccountStatementDocument()!=null){
-			Document accountStatementDoc = property.getPropertyDetails().getAccountStatementDocument();
-			if (accountStatementDoc.getId() == null || accountStatementDoc.getId().isEmpty()) {
-				accountStatementDoc.setId(UUID.randomUUID().toString());
+			List<Document> accountStatementDoc = property.getPropertyDetails().getAccountStatementDocument();
+			if (!CollectionUtils.isEmpty(accountStatementDoc)) {
+				accountStatementDoc.forEach(document -> {
+					if (document.getId() == null || document.getId().isEmpty()) {
+						document.setId(UUID.randomUUID().toString());
+					}
+					document.setTenantId(property.getTenantId());
+					document.setReferenceId(property.getPropertyDetails().getId());
+					document.setPropertyId(property.getId());
+					AuditDetails docAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+					document.setAuditDetails(docAuditDetails);
+				});
 			}
-			accountStatementDoc.setTenantId(property.getTenantId());
-			accountStatementDoc.setReferenceId(property.getPropertyDetails().getId());
-			accountStatementDoc.setPropertyId(property.getId());
-			AuditDetails docAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-			accountStatementDoc.setAuditDetails(docAuditDetails);
-		}
 	}
 
 	private void enrichOwners(Property property, RequestInfo requestInfo) {
