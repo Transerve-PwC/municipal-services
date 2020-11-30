@@ -330,7 +330,7 @@ public class EstateDemandGenerationService {
 					long consolidateDemandMonth = consolidateDemandCal.get(Calendar.MONTH) + 1;
 					long consolidateDemandYear = consolidateDemandCal.get(Calendar.YEAR);
 
-					if (consolidateDemandDay < property.getPropertyDetails().getPaymentConfig()
+					if (consolidateDemandDay <= property.getPropertyDetails().getPaymentConfig()
 							.getGroundRentGenerateDemand()) {
 						// rent=1000 consolidateRent=3500
 						Calendar prevDemandDateCal = Calendar.getInstance();
@@ -377,29 +377,7 @@ public class EstateDemandGenerationService {
 							estateDemand.setGstInterest(0D);
 						}
 
-					} else if (property.getPropertyDetails().getPaymentConfig()
-							.getGroundRentGenerateDemand() == consolidateDemandDay) {
-
-						java.util.Date prevDemandDate = new java.util.Date();
-						prevDemandDate.setDate(property.getPropertyDetails().getPaymentConfig()
-								.getGroundRentGenerateDemand().intValue());
-						prevDemandDate.setMonth(consolidateDemandMonth == 1 ? 12 : (int) consolidateDemandMonth - 1);
-						prevDemandDate.setYear(consolidateDemandMonth == 1 ? (int) consolidateDemandYear - 1
-								: (int) consolidateDemandYear);
-						demandRent.set(calculateRentAccordingtoMonth(property, prevDemandDate));
-						if (demandRent.get() < estateDemand.getRent()) {
-
-							EstateDemand prevDemand = new EstateDemand();
-							prevDemand.setRent(demandRent.get());
-							prevDemand.setGst(demandRent.get() * 0.18);
-							prevDemand.setPenaltyInterest(0D);
-							prevDemand.setGstInterest(0D);
-
-							prevDemand.setGenerationDate(prevDemandDate.getTime());
-							newDemands.add(prevDemand);
-						}
-					}
-
+					} 
 					/**
 					 * Consolidated date is greater than demand generation date and consolidated
 					 * demand rent amount is more than demand rent
