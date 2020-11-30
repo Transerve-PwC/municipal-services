@@ -31,7 +31,6 @@ public class PaymentNotificationService {
 	@Autowired
 	private ObjectMapper mapper;
 
-	
 	@Autowired
 	private ApplicationRepository applicationRepository;
 	
@@ -130,12 +129,12 @@ public class PaymentNotificationService {
 										application.setRecieptNumber(valMap.get(receiptNumberKey));
 										
 										/**
-										 * Process the notification config
+										 * Process the notification config for payer
 										 */
 										applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
 									}
 									/**
-									 * Process the notification config
+									 * Process the notification config for Owner
 									 */
 									application.setState("PAYMENT_NOTIFICATION");
 									applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
