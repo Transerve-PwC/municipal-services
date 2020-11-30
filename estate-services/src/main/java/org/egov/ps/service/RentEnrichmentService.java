@@ -87,7 +87,8 @@ public class RentEnrichmentService {
 		// Settle the payment
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
 				&& null != property.getPropertyDetails().getEstateAccount()
-				&& property.getPropertyDetails().getPaymentConfig() != null) {
+				&& property.getPropertyDetails().getPaymentConfig() != null
+				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 			property.getPropertyDetails().setEstateRentCollections(rentCollectionService.settle(
 					property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(),
 					property.getPropertyDetails().getEstateAccount(), 18,

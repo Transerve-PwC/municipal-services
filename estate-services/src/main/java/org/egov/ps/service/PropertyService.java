@@ -29,7 +29,6 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
-import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -92,7 +91,7 @@ public class PropertyService {
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
-		//bifurcate demand 
+		// bifurcate demand
 		enrichmentService.enrichPropertyRequest(request);
 		processRentHistory(request);
 		producer.push(config.getSavePropertyTopic(), request);
@@ -101,11 +100,11 @@ public class PropertyService {
 	}
 
 	private void processRentSummary(PropertyRequest request) {
-		request.getProperties().stream()
-				.filter(property -> property.getPropertyDetails().getEstateDemands() != null
-						&& property.getPropertyDetails().getEstatePayments() != null
-						&& property.getPropertyDetails().getEstateAccount() != null
-						&& property.getPropertyDetails().getPaymentConfig() != null)
+		request.getProperties().stream().filter(property -> property.getPropertyDetails().getEstateDemands() != null
+				&& property.getPropertyDetails().getEstatePayments() != null
+				&& property.getPropertyDetails().getEstateAccount() != null
+				&& property.getPropertyDetails().getPaymentConfig() != null
+				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD))
 				.forEach(property -> {
 					estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
 							property.getPropertyDetails().getEstatePayments(),
@@ -130,7 +129,8 @@ public class PropertyService {
 					.filter(property -> property.getPropertyDetails().getEstateDemands() != null
 							&& property.getPropertyDetails().getEstatePayments() != null
 							&& property.getPropertyDetails().getEstateAccount() != null
-							&& property.getPropertyDetails().getPaymentConfig() != null)
+							&& property.getPropertyDetails().getPaymentConfig() != null && property.getPropertyDetails()
+									.getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD))
 					.forEach(property -> {
 						property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
 								property.getPropertyDetails().getEstateDemands(),
@@ -229,7 +229,9 @@ public class PropertyService {
 
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null) {
+				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
+						&& property.getPropertyDetails().getPropertyType()
+								.equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
@@ -266,13 +268,19 @@ public class PropertyService {
 
 		List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(
 				Collections.singletonList(property.getPropertyDetails().getId()));
+		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
+				&& null != property.getPropertyDetails().getEstateAccount()
+				&& property.getPropertyDetails().getPaymentConfig() != null
+				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 
-		return AccountStatementResponse.builder()
-				.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments, 18.00,
-						accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
-						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
-				.build();
+			return AccountStatementResponse.builder()
+					.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments, 18.00,
+							accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
+					.build();
+		}
+		return AccountStatementResponse.builder().estateAccountStatements(Collections.emptyList()).build();
 	}
 
 	public List<Property> generateFinanceDemand(PropertyRequest propertyRequest) {
@@ -328,7 +336,8 @@ public class PropertyService {
 		EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
 
 		if (!CollectionUtils.isEmpty(demands) && null != account
-				&& property.getPropertyDetails().getPaymentConfig() != null) {
+				&& property.getPropertyDetails().getPaymentConfig() != null
+				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
 			estateRentCollectionService.settle(demands, payments, account, 18,
 					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
@@ -428,7 +437,8 @@ public class PropertyService {
 			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 			EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null) {
+			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
+					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
 						estateAccount, property.getPropertyDetails().getInterestRate(),
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
