@@ -150,6 +150,9 @@ public class PropertyDetails {
 	@JsonProperty("owners")
 	@Builder.Default
 	private List<Owner> owners = new ArrayList<Owner>();
+	
+	@JsonProperty("accountStatementDocument")
+	private Document accountStatementDocument;
 
 	public PropertyDetails addOwnerItem(Owner newOwnerItem) {
 		if (this.owners == null) {
