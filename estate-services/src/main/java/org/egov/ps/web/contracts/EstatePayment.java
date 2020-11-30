@@ -1,13 +1,10 @@
 package org.egov.ps.web.contracts;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import javax.validation.constraints.Size;
 
-import org.egov.ps.model.ModeEnum;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.egov.ps.model.ModeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -93,10 +90,10 @@ public class EstatePayment implements Comparable<EstatePayment> {
 	@Builder.Default
 	private boolean processed = false;
 
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
+	// private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
 
 	public String toString() {
-		return String.format("Amount: %.2f, paidOn: %s", this.amountPaid, DATE_FORMAT.format(this.dateOfPayment));
+		return String.format("Amount: %.2f", this.amountPaid);
 
 	}
 }
