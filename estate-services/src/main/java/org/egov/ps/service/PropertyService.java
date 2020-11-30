@@ -88,10 +88,7 @@ public class PropertyService {
 	private MDMSService mdmsservice;
 	
 	@Autowired
-	private EstateDemandGenerationService estateDemandGenerationService;
-
-	@Autowired
-	private EstateDemandGenerationService estateDemandGenerationService;
+	private EstateDemandGenerationService estateDemandGenerationService;	
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
