@@ -77,37 +77,34 @@ public class EstateDemandGenerationService {
 		Date propertyBillingDate = getFirstDateOfMonth(
 				new Date(property.getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate()));
 
+		/*
+		 * fetch the consolidated demand, if consolidated demand present , take the date of consolidated demand and created demand from that date
+		 */
+		
+		List<EstateDemand> demands = property.getPropertyDetails().getEstateDemands()
+				.stream().filter(demand -> demand.getIsPrevious())
+				.collect(Collectors.toList());
+		Collections.sort(demands);
+		if(demands.size()>0) {
+			for(EstateDemand demand:demands) {
+				propertyBillingDate = new Date(demand.getGenerationDate());
+			}				
+		}
+		
 		List<Date> allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
 		for (Date demandDate : allMonthDemandDatesTillCurrentMonth) {
-
 			Date demandGenerationStartDate = setDateOfMonth(demandDate, Integer.parseInt(
 					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));
 			
-			/*
-			 * fetch the consolidated demand, if consolidated demand present , take the date of consolidated demand and created demand from that date
-			 */
-			
-			List<EstateDemand> demands = property.getPropertyDetails().getEstateDemands()
-					.stream().filter(demand -> demand.getIsPrevious())
-					.collect(Collectors.toList());
-			Collections.sort(demands);
-			if(demands.size()>0) {
-				for(EstateDemand demand:demands) {
-					demandGenerationStartDate=new Date(demand.getGenerationDate());
-				}				
-			}
-			Date propertyDemandDate = demandGenerationStartDate;
-
-
 			/* Here checking demand date is already created or not */
 			List<EstateDemand> inRequestDemands = property.getPropertyDetails().getEstateDemands().stream()
-					.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), propertyDemandDate))
+					.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), demandGenerationStartDate))
 					.collect(Collectors.toList());
 			if (inRequestDemands.isEmpty()
 					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 				// generate demand
 				counter.getAndIncrement();
-				generateEstateDemand(property, getFirstDateOfMonth(propertyDemandDate));
+				generateEstateDemand(property, getFirstDateOfMonth(demandGenerationStartDate));
 			}
 		}
 		return counter;
