@@ -43,14 +43,6 @@ public class PaymentNotificationService {
 	
 	@Autowired
 	private ApplicationsNotificationService applicationNotificationService;
-	
-	private final static String CASH = "cash";
-
-	/*@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
-	private Boolean pickWFServiceNameFromPropertyTypeOnly;
-
-	@Value("${egov.allowed.businessServices}")
-	private String allowedBusinessServices;*/
 
 
 	final String tenantId = "tenantId";
@@ -136,6 +128,10 @@ public class PaymentNotificationService {
 										application.setState("PAYMENT_NOTIFICATION_PAYER");
 										application.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
 										application.setRecieptNumber(valMap.get(receiptNumberKey));
+										
+										/**
+										 * Process the notification config
+										 */
 										applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
 									}
 									/**
