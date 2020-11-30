@@ -89,6 +89,7 @@ public class ApplicationEnrichmentService {
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
 			property.getPropertyDetails().getOwners().forEach(owner -> {
 				if (owner.getId().equals(transferorId)) {
+					((ObjectNode) transferor).put("name", owner.getOwnerDetails().getOwnerName());
 					((ObjectNode) transferor).put("serialNumber", owner.getSerialNumber());
 					((ObjectNode) transferor).put("share", owner.getShare());
 					((ObjectNode) transferor).put("cpNumber", owner.getCpNumber());

@@ -109,6 +109,10 @@ public class PropertyViolationService {
 
 		double paymentAmount = offlinePaymentDetails.get(0).getAmount().doubleValue();
 
+		if (paymentAmount <= 0) {
+			throw new CustomException("Invalid Amount", "Payable amount should not less than or equals 0");
+		}
+
 		/**
 		 * Calculate remaining due.
 		 */
@@ -144,7 +148,8 @@ public class PropertyViolationService {
 		/**
 		 * Generate an actual finance demand
 		 */
-		demandService.createPenaltyExtensionFeeDemand(requestInfo, propertyDb, consumerCode, calculation, PSConstants.PROPERTY_VIOLATION);
+		demandService.createPenaltyExtensionFeeDemand(requestInfo, propertyDb, consumerCode, calculation,
+				PSConstants.PROPERTY_VIOLATION);
 
 		/**
 		 * Get the bill generated.
@@ -164,6 +169,10 @@ public class PropertyViolationService {
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.PENALTY);
 			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
+			ofpd.setTenantId(propertyDb.getTenantId());
+			ofpd.setFileNumber(propertyDb.getFileNumber());
+			ofpd.setConsumerCode(consumerCode);
+			ofpd.setBillingBusinessService(propertyDb.getPenaltyBusinessService());
 		});
 
 		List<PropertyPenalty> updatedPenalties = penaltyCollectionService.settle(penalties, paymentAmount);

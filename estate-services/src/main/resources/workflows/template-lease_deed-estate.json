@@ -172,7 +172,7 @@
       "sla": 2,
       "state": "PENDING_CITIZEN_TEMPLATE_SUBMISSION",
       "applicationStatus": "ES_PENDING_CITIZEN_TEMPLATE_SUBMISSION",
-      "docUploadRequired": true,
+      "docUploadRequired": false,
       "isStartState": false,
       "isTerminateState": false,
       "isStateUpdatable": true

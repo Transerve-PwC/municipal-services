@@ -165,6 +165,10 @@ public class ExtensionFeeService {
 
 		double paymentAmount = offlinePaymentDetails.get(0).getAmount().doubleValue();
 
+		if (paymentAmount <= 0) {
+			throw new CustomException("Invalid Amount", "Payable amount should not less than or equals 0");
+		}
+
 		/**
 		 * Calculate remaining due.
 		 */
@@ -220,6 +224,10 @@ public class ExtensionFeeService {
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
 			ofpd.setType(OfflinePaymentType.EXTENSIONFEE);
 			ofpd.setPropertyDetailsId(propertyDb.getPropertyDetails().getId());
+			ofpd.setTenantId(propertyDb.getTenantId());
+			ofpd.setFileNumber(propertyDb.getFileNumber());
+			ofpd.setConsumerCode(consumerCode);
+			ofpd.setBillingBusinessService(propertyDb.getExtensionFeeBusinessService());
 		});
 
 		List<ExtensionFee> unpaidExtensionFees = extensionFeeCollectionService.settle(extensionFees, paymentAmount);

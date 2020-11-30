@@ -119,4 +119,12 @@ public class Property {
 		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE,
 				Util.camelToSnake(this.getPropertyDetails().getBranchType()), PSConstants.EXTENSION_FEE);
 	}
+	
+	public String getSecurityDepositBusinessService() {
+		if (null == this.getPropertyDetails()) {
+			return "";
+		}
+		return String.format("%s_%s.%s", PSConstants.ESTATE_SERVICE,
+				Util.camelToSnake(this.getPropertyDetails().getBranchType()), PSConstants.SECURITY_DEPOSIT);
+	}
 }

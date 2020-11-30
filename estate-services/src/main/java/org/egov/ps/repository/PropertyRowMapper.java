@@ -49,31 +49,34 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.createdTime(rs.getLong("pcreated_time")).lastModifiedBy(rs.getString("pmodified_by"))
 							.lastModifiedTime(rs.getLong("pmodified_time")).build();
 
-					PaymentConfig paymentConfig = new PaymentConfig();
+					PaymentConfig paymentConfig = null;
+
 					if (hasColumn(rs, "pc_id")) {
+						String paymentConfigId = rs.getString("pc_id");
+						if (paymentConfigId != null) {
+							final String pcPropertyDetailsId = rs.getString("pc_property_details_id");
 
-						final String pcPropertyDetailsId = rs.getString("pc_property_details_id");
+							AuditDetails accountAuditDetails = AuditDetails.builder()
+									.createdBy(rs.getString("pc_created_by")).createdTime(rs.getLong("pc_created_time"))
+									.lastModifiedBy(rs.getString("pc_last_modified_by"))
+									.lastModifiedTime(rs.getLong("pc_last_modified_time")).build();
 
-						AuditDetails accountAuditDetails = AuditDetails.builder()
-								.createdBy(rs.getString("pc_created_by")).createdTime(rs.getLong("pc_created_time"))
-								.lastModifiedBy(rs.getString("pc_last_modified_by"))
-								.lastModifiedTime(rs.getLong("pc_last_modified_time")).build();
-
-						paymentConfig = PaymentConfig.builder().id(rs.getString("pc_id"))
-								.tenantId(rs.getString("pc_tenant_id")).propertyDetailsId(pcPropertyDetailsId)
-								.isIntrestApplicable(rs.getBoolean("pc_is_intrest_applicable"))
-								.dueDateOfPayment(rs.getLong("pc_due_date_of_payment"))
-								.noOfMonths(rs.getLong("pc_no_of_months"))
-								.rateOfInterest(rs.getBigDecimal("pc_rate_of_interest"))
-								.securityAmount(rs.getBigDecimal("pc_security_amount"))
-								.totalAmount(rs.getBigDecimal("pc_total_amount"))
-								.isGroundRent(rs.getBoolean("pc_is_ground_rent"))
-								.groundRentGenerationType(rs.getString("pc_ground_rent_generation_type"))
-								.groundRentGenerateDemand(rs.getLong("pc_ground_rent_generate_demand"))
-								.groundRentAdvanceRent(rs.getBigDecimal("pc_ground_rent_advance_rent"))
-								.groundRentBillStartDate(rs.getLong("pc_ground_rent_bill_start_date"))
-								.groundRentAdvanceRentDate(rs.getLong("pc_ground_rent_advance_rent_date"))
-								.auditDetails(accountAuditDetails).build();
+							paymentConfig = PaymentConfig.builder().id(rs.getString("pc_id"))
+									.tenantId(rs.getString("pc_tenant_id")).propertyDetailsId(pcPropertyDetailsId)
+									.isIntrestApplicable(rs.getBoolean("pc_is_intrest_applicable"))
+									.dueDateOfPayment(rs.getLong("pc_due_date_of_payment"))
+									.noOfMonths(rs.getLong("pc_no_of_months"))
+									.rateOfInterest(rs.getBigDecimal("pc_rate_of_interest"))
+									.securityAmount(rs.getBigDecimal("pc_security_amount"))
+									.totalAmount(rs.getBigDecimal("pc_total_amount"))
+									.isGroundRent(rs.getBoolean("pc_is_ground_rent"))
+									.groundRentGenerationType(rs.getString("pc_ground_rent_generation_type"))
+									.groundRentGenerateDemand(rs.getLong("pc_ground_rent_generate_demand"))
+									.groundRentAdvanceRent(rs.getBigDecimal("pc_ground_rent_advance_rent"))
+									.groundRentBillStartDate(rs.getLong("pc_ground_rent_bill_start_date"))
+									.groundRentAdvanceRentDate(rs.getLong("pc_ground_rent_advance_rent_date"))
+									.auditDetails(accountAuditDetails).build();
+						}
 					}
 
 					final PropertyDetails propertyDetails = PropertyDetails.builder().id(propertyDetailId)
@@ -223,24 +226,34 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		}
 
-		if (hasColumn(rs, "pci_id")) {
-			PaymentConfigItems paymentConfigItems = PaymentConfigItems.builder().id(rs.getString("pci_id"))
-					.tenantId(rs.getString("pci_tenant_id")).paymentConfigId(rs.getString("pci_payment_config_id"))
-					.groundRentAmount(rs.getBigDecimal("pci_ground_rent_amount"))
-					.groundRentStartMonth(rs.getLong("pci_ground_rent_start_month"))
-					.groundRentEndMonth(rs.getLong("pci_ground_rent_end_month")).build();
+		if (null != property.getPropertyDetails().getPaymentConfig()) {
+			if (hasColumn(rs, "pci_id")) {
 
-			property.getPropertyDetails().getPaymentConfig().addPaymentConfigItem(paymentConfigItems);
-		}
+				String paymentConfigItemsId = rs.getString("pci_id");
+				if (null != paymentConfigItemsId) {
+					PaymentConfigItems paymentConfigItems = PaymentConfigItems.builder().id(rs.getString("pci_id"))
+							.tenantId(rs.getString("pci_tenant_id")).paymentConfigId("pci_payment_config_id")
+							.groundRentAmount(rs.getBigDecimal("pci_ground_rent_amount"))
+							.groundRentStartMonth(rs.getLong("pci_ground_rent_start_month"))
+							.groundRentEndMonth(rs.getLong("pci_ground_rent_end_month")).build();
 
-		if (hasColumn(rs, "paci_id")) {
-			PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
-					.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
-					.paymentConfigId(rs.getString("paci_payment_config_id"))
-					.premiumAmount(rs.getBigDecimal("paci_premium_amount"))
-					.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
+					property.getPropertyDetails().getPaymentConfig().addPaymentConfigItem(paymentConfigItems);
+				}
+			}
 
-			property.getPropertyDetails().getPaymentConfig().addPremiumAmountConfigItem(premiumAmountConfigItems);
+			if (hasColumn(rs, "paci_id")) {
+
+				String permiumAmountId = rs.getString("paci_id");
+				if (null != permiumAmountId) {
+					PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
+							.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
+							.paymentConfigId("paci_payment_config_id").premiumAmount(rs.getBigDecimal("paci_premium_amount"))
+							.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
+
+					property.getPropertyDetails().getPaymentConfig()
+							.addPremiumAmountConfigItem(premiumAmountConfigItems);
+				}
+			}
 		}
 	}
 

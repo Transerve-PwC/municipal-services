@@ -84,12 +84,32 @@ public class PaymentUpdateService {
 				case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
 					log.info("Post enrichment need to do");
 					break;
+
+				case PSConstants.BUSINESS_SERVICE_EB_EXTENSION_FEE:
+				case PSConstants.BUSINESS_SERVICE_BB_EXTENSION_FEE:
+				case PSConstants.BUSINESS_SERVICE_MB_EXTENSION_FEE:
+					log.info("Post enrichment need to do");
+					break;
+
+				case PSConstants.BUSINESS_SERVICE_EB_SECURITY_DEPOSIT:
+				case PSConstants.BUSINESS_SERVICE_BB_SECURITY_DEPOSIT:
+				case PSConstants.BUSINESS_SERVICE_MB_SECURITY_DEPOSIT:
+					log.info("Post enrichment need to do");
+					break;
+
 				default: {
 					if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
 
 						ApplicationCriteria searchCriteria = new ApplicationCriteria();
 						searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
-
+						
+						if(paymentDetail.getBusinessService().contains(PSConstants.ESTATE_BRANCH)){
+							searchCriteria.setBranchType(PSConstants.APPLICATION_ESTATE_BRANCH);
+						}else if(paymentDetail.getBusinessService().contains(PSConstants.BUILDING_BRANCH)){
+							searchCriteria.setBranchType(PSConstants.APPLICATION_BUILDING_BRANCH);
+						}else{
+							searchCriteria.setBranchType(PSConstants.APPLICATION_MANI_MAJRA);
+						}
 						List<Application> applications = applicationService.searchApplication(searchCriteria,
 								requestInfo);
 
