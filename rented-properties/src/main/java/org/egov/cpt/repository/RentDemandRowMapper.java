@@ -31,7 +31,7 @@ public class RentDemandRowMapper implements ResultSetExtractor<List<RentDemand>>
 						.createdTime(rs.getLong("demand_created_date"))
 						.lastModifiedBy(rs.getString("demand_modified_by"))
 						.lastModifiedTime(rs.getLong("demand_modified_date")).build();
-				RentDemand rentDemand = RentDemand.builder().id(rs.getString("demand_id")).propertyId("demand_pid")
+				RentDemand rentDemand = RentDemand.builder().id(rs.getString("demand_id")).propertyId(rs.getString("demand_pid"))
 						.initialGracePeriod(rs.getInt("demand_IniGracePeriod"))
 						.generationDate(rs.getLong("demand_genDate"))
 						.collectionPrincipal(rs.getDouble("demand_colPrincipal"))
