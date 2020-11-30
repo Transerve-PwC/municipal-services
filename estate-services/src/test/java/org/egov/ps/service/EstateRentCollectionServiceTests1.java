@@ -348,6 +348,17 @@ public class EstateRentCollectionServiceTests1 {
 				.collectedRentPenalty(collectedRentPenalty).collectedRent(collectedRent)
 				.interestSince(getEpochFromDateString(date)).isPrevious(isPrevious).build();
 	}
+	
+	private EstateDemand getDemand(double amount, double gst, String date, String demandId, double penaltyInterest,
+			double gstInterest, double collectedRent, double collectedGST, double collectedRentPenalty,
+			double collectedGSTPenaty, boolean isPrevious,String sinceDate) throws ParseException {
+		return EstateDemand.builder().rent(amount).gst(gst).penaltyInterest(penaltyInterest).gstInterest(gstInterest)
+				.generationDate(getEpochFromDateString(date)).id(demandId).remainingRent(amount)
+				.remainingGST(new Double(gst)).remainingRentPenalty(penaltyInterest).remainingGSTPenalty(gstInterest)
+				.collectedGST(collectedGST).collectedGSTPenalty(collectedGSTPenaty)
+				.collectedRentPenalty(collectedRentPenalty).collectedRent(collectedRent)
+				.interestSince(getEpochFromDateString(sinceDate)).isPrevious(isPrevious).build();
+	}
 
 	private EstateDemand getDemand(double amount, double gst, String date, String demandId, double penaltyInterest,
 			double gstInterest, boolean isPrevious, String interestSince) throws ParseException {
@@ -709,13 +720,14 @@ public class EstateRentCollectionServiceTests1 {
 
 	}
 	
-	private static final String OCT_01_2020="01 10 2019";
-	private static final String SEP_10_2020="10 09 2019";
-	private static final String OCT_10_2020="10 10 2019";
-	private static final String NOV_10_2020="10 11 2019";
+	private static final String OCT_01_2020="01 10 2020";
+	private static final String SEP_10_2020="10 09 2020";
+	private static final String OCT_10_2020="10 10 2020";
+	private static final String NOV_10_2020="10 11 2020";
 
-	private static final String NOV_15_2019="15 11 2019";
-	private static final String NOV_30_2019="30 11 2019";
+	private static final String NOV_15_2019="15 11 2020";
+	private static final String NOV_30_2019="30 11 2020";
+	
 
 	@Test
 
@@ -723,7 +735,7 @@ public class EstateRentCollectionServiceTests1 {
 		
 		 
 		List<EstateDemand> demands = Arrays.asList(
-				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false),
+				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false,OCT_01_2020),
 				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
 				 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
 				getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
@@ -731,7 +743,7 @@ public class EstateRentCollectionServiceTests1 {
 				 
 				 );
 	   List<EstatePayment> payments = 
-	   		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019),getPayment(6000D, NOV_30_2019,NOV_30_2019));
+	   		Arrays.asList( getPayment(6000D, NOV_15_2019,NOV_15_2019));
 
 	   	
 	      utils=new EstateRentCollectionUtils();
