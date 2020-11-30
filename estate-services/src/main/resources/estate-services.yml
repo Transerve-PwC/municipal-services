@@ -463,39 +463,39 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.owners.*.ownerDetails.ownerDocuments.*.auditDetails.lastModifiedTime
             
         - query: INSERT INTO cs_ep_documents_v1 (id, tenantid, reference_id, is_active, document_type, file_store_id, property_id, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET is_active = ?, document_type = ?, file_store_id = ?, last_modified_by = ?, last_modified_time = ?;
-          basePath: $.Properties.*.propertyDetails.accountStatementDocument
+          basePath: $.Properties.*.propertyDetails.accountStatementDocument.*
           jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.id
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.id
 
             - jsonPath: $.Properties.*.tenantId
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.referenceId
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.referenceId
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.isActive
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.isActive
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.documentType
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.documentType
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.fileStoreId
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.fileStoreId
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.propertyId
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.propertyId
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.createdBy
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.auditDetails.createdBy
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.createdTime
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.auditDetails.createdTime
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.auditDetails.lastModifiedTime
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.isActive
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.isActive
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.documentType
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.documentType
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.fileStoreId
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.fileStoreId
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.accountStatementDocument.*.auditDetails.lastModifiedTime
 
         - query: INSERT INTO cs_ep_court_case_v1 (id, property_details_id, tenantid, estate_officer_court, commissioners_court, chief_administartors_court, advisor_to_admin_court, honorable_district_court, honorable_high_court, honorable_supreme_court, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET estate_officer_court = ?, commissioners_court = ?, chief_administartors_court = ?, advisor_to_admin_court = ?, honorable_district_court = ?, honorable_high_court = ?, honorable_supreme_court = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.courtCases.*

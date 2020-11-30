@@ -152,7 +152,7 @@ public class PropertyDetails {
 	private List<Owner> owners = new ArrayList<Owner>();
 	
 	@JsonProperty("accountStatementDocument")
-	private Document accountStatementDocument;
+	private List<Document> accountStatementDocument;
 
 	public PropertyDetails addOwnerItem(Owner newOwnerItem) {
 		if (this.owners == null) {
