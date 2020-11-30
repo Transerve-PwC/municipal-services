@@ -205,7 +205,16 @@ public class Application {
 
 	@JsonProperty("createdBy")
 	private User createdBy;
-
+	
+	@JsonProperty("totalDue")
+	private BigDecimal totalDue;
+	
+	@JsonProperty("payer")
+	private User payer;
+	
+	@JsonProperty("recieptNumber")
+	private String recieptNumber;
+	
 	@JsonIgnore
 	public String getMDMSModuleName() {
 		return String.format("%s_%s_%s", this.getBranchType(), this.getModuleType(), this.getApplicationType());

@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.egov.ps.model.NotificationsEvent;
 import org.egov.ps.model.NotificationsSms;
 import org.egov.ps.model.notification.uservevents.Event;
 import org.egov.ps.model.notification.uservevents.EventRequest;
+import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.ApplicationRequest;
@@ -46,9 +48,15 @@ public class ApplicationsNotificationService {
 
     @Autowired
     private LocalisationService localisationService;
+    
+    @Autowired
+	PropertyRepository repository;
 
     @Autowired
     Util util;
+    
+    @Autowired
+    private ApplicationEnrichmentService applicationEnrichmentService;
 
     /**
      * Invoke process notification on each application in the request
@@ -113,7 +121,13 @@ public class ApplicationsNotificationService {
             String creatorUUID = application.getAuditDetails().getCreatedBy();
             User createdBy = userService.getUserByUUID(creatorUUID, requestInfo);
             application.setCreatedBy(createdBy);
+            
+            List<Map<String, Object>> feesConfigurations = mdmsservice
+					.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
 
+			BigDecimal estimateAmount = applicationEnrichmentService.fetchEstimateAmountFromMDMSJson(feesConfigurations, application);
+			application.setTotalDue(estimateAmount);
+			
             /**
              * Enrich content by replacing paths like {createdBy.name}
              */

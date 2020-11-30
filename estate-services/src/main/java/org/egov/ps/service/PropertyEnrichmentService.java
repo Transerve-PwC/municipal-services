@@ -90,7 +90,22 @@ public class PropertyEnrichmentService {
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
 		enrichEstateAccount(property, requestInfo);
+		enrichAccountStatementDoc(property,requestInfo);
 
+	}
+
+	private void enrichAccountStatementDoc(Property property, RequestInfo requestInfo) {
+		if(property.getPropertyDetails().getAccountStatementDocument()!=null){
+			Document accountStatementDoc = property.getPropertyDetails().getAccountStatementDocument();
+			if (accountStatementDoc.getId() == null || accountStatementDoc.getId().isEmpty()) {
+				accountStatementDoc.setId(UUID.randomUUID().toString());
+			}
+			accountStatementDoc.setTenantId(property.getTenantId());
+			accountStatementDoc.setReferenceId(property.getPropertyDetails().getId());
+			accountStatementDoc.setPropertyId(property.getId());
+			AuditDetails docAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+			accountStatementDoc.setAuditDetails(docAuditDetails);
+		}
 	}
 
 	private void enrichOwners(Property property, RequestInfo requestInfo) {

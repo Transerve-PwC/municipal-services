@@ -94,8 +94,8 @@ public class EstateDemandGenerationService {
 		List<Date> allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
 		for (Date demandDate : allMonthDemandDatesTillCurrentMonth) {
 			Date demandGenerationStartDate = setDateOfMonth(demandDate, Integer.parseInt(
-					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));
-			
+					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));			
+
 			/* Here checking demand date is already created or not */
 			List<EstateDemand> inRequestDemands = property.getPropertyDetails().getEstateDemands().stream()
 					.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), demandGenerationStartDate))

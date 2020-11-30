@@ -264,13 +264,19 @@ public class PropertyService {
 		}
 
 		Property property = properties.get(0);
+
+		List<String> propertyDetailsIds = new ArrayList<String>();
+		propertyDetailsIds.add(property.getPropertyDetails().getId());
+
 		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(
 				Collections.singletonList(property.getPropertyDetails().getId()));
 
 		List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(
 				Collections.singletonList(property.getPropertyDetails().getId()));
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
-				&& null != property.getPropertyDetails().getEstateAccount()
+
+		EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
+
+		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands()) && null != estateAccount
 				&& property.getPropertyDetails().getPaymentConfig() != null
 				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 
