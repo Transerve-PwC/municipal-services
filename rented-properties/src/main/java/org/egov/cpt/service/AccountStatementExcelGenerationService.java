@@ -46,8 +46,6 @@ public class AccountStatementExcelGenerationService {
 
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	private static String[] columns = { "Date", "Amount(in Rs)", "Type(Payment)", "Type(Rent)", "Principal Due",
-			"Interest Due", "Total Due", "Account Balance", "Receipt Number" };
 	private static String[] propertyColumns = { "Name", "Date of Allotment As Per Lease Deed", "Transit Site No.",
 			"Area", "Rent per sq yd", "Security Advance Taken By o/o BDPO U.T.Interest",
 			"Yr. Rent (increase as per Clause 4 of Lease Deed)", "Montly Rent", "Interest" };
@@ -151,6 +149,13 @@ public class AccountStatementExcelGenerationService {
 			}
 
 			Row headerRow1 = sheet.createRow(13);
+
+			String rupees = "\u20B9";
+			byte[] utf8 = rupees.getBytes("UTF-8");
+			rupees = new String(utf8, "UTF-8");
+			String[] columns = { "Date", "Amount(" + rupees + ")", "Type(Payment)", "Type(Rent)",
+					"Principal Due(" + rupees + ")", "Interest Due(" + rupees + ")", "Total Due(" + rupees + ")",
+					"Account Balance(" + rupees + ")", "Receipt Number" };
 			for (int i = 0; i < columns.length; i++) {
 				cell = headerRow1.createCell(i);
 				cell.setCellValue(columns[i]);

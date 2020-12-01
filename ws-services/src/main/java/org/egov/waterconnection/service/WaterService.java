@@ -15,4 +15,8 @@ public interface WaterService {
 	
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest);
 
+	public List<WaterConnection> deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest);
+
+	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest);
+
 }

@@ -12,27 +12,27 @@ import org.springframework.util.Base64Utils;
 
 public class TestHRMSRestAPI {
 	
-//	public static void main(String[] args) {
-//		String secretKey = "Adfhj#$@56677745";
-//		AES128Bit aes = new AES128Bit();
-//		
-//		String encryptedEmpCode = aes.doEncryptedAES("1975010001Z", secretKey);
-//		System.out.println("encryptedEmpCode :: " + encryptedEmpCode);
-//		String encryptedMonth = aes.doEncryptedAES("03", secretKey);
-//		System.out.println("encryptedMonth :: " + encryptedMonth);
-//		String encryptedYear = aes.doEncryptedAES("2018", secretKey);
-//		System.out.println("encryptedYear :: " + encryptedYear);
-//		
-//		String dycriptedEmpCode = aes.doDecryptedAES(encryptedEmpCode, secretKey);
-//		System.out.println("dycriptedEmpCode :: " + dycriptedEmpCode);
-//		String dycriptedMonth = aes.doDecryptedAES(encryptedMonth, secretKey);
-//		System.out.println("dycriptedMonth :: " + dycriptedMonth);
-//		String dycriptedYear = aes.doDecryptedAES(encryptedYear, secretKey);
-//		System.out.println("dycriptedYear :: " + dycriptedYear);
-//		
-//		//String dycriptedEmpCode = aes.doDecryptedAES("BNDrqEza8Iu7cGURFHEXF4EOKtqHtuB+xXnVSMa0HTw=", secretKey);
-//		//System.out.println("dycriptedEmpCode :: " + dycriptedEmpCode);
-//	}
+	//	public static void main(String[] args) {
+	//		String secretKey = "Adfhj#$@56677745";
+	//		AES128Bit aes = new AES128Bit();
+	//		
+	//		String encryptedEmpCode = aes.doEncryptedAES("1975010001Z", secretKey);
+	//		System.out.println("encryptedEmpCode :: " + encryptedEmpCode);
+	//		String encryptedMonth = aes.doEncryptedAES("03", secretKey);
+	//		System.out.println("encryptedMonth :: " + encryptedMonth);
+	//		String encryptedYear = aes.doEncryptedAES("2018", secretKey);
+	//		System.out.println("encryptedYear :: " + encryptedYear);
+	//		
+	//		String dycriptedEmpCode = aes.doDecryptedAES(encryptedEmpCode, secretKey);
+	//		System.out.println("dycriptedEmpCode :: " + dycriptedEmpCode);
+	//		String dycriptedMonth = aes.doDecryptedAES(encryptedMonth, secretKey);
+	//		System.out.println("dycriptedMonth :: " + dycriptedMonth);
+	//		String dycriptedYear = aes.doDecryptedAES(encryptedYear, secretKey);
+	//		System.out.println("dycriptedYear :: " + dycriptedYear);
+	//		
+	//		//String dycriptedEmpCode = aes.doDecryptedAES("BNDrqEza8Iu7cGURFHEXF4EOKtqHtuB+xXnVSMa0HTw=", secretKey);
+	//		//System.out.println("dycriptedEmpCode :: " + dycriptedEmpCode);
+	//	}
 	
 	//	public String Encrypt(String InputText) {
 	//		MemoryStream memoryStream = null;

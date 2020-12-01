@@ -336,4 +336,14 @@ public class PTConstants {
 	public static final String FATHERNAME = "FatherName";
 	
 	public static final String DEFAULTOWNER = "INDIVIDUAL.SINGLEOWNER";
+	
+	public static final String PROPERTY_TYPEID = "PROPERTYTypeId";
+	
+	public static final String PROPERTY_DOMESTIC = "DOMESTIC";
+	
+	public static final String PROPERTY_COMMERCIAL = "COMMERCIAL";
+			
+	public static final String PROPERTY_INDUSTRIAL = "INDUSTRIAL";
+			
+	public static final String PROPERTY_INSTITUTIONAL = "INSTITUTIONAL";
 }

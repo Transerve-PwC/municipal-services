@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AccountStatementCriteria;
+import org.egov.cpt.models.AuditDetails;
 import org.egov.cpt.models.BillV2;
 import org.egov.cpt.models.OfflinePaymentDetails;
 import org.egov.cpt.models.Owner;
@@ -305,11 +306,13 @@ public class PropertyService {
 			demandService.createCashPayment(propertyRequest.getRequestInfo(), property.getPaymentAmount(),
 					bills.get(0).getId(), owner,property.getBillingBusinessService());
 
+			AuditDetails auditDetails = utils.getAuditDetails(propertyRequest.getRequestInfo().getUserInfo().getUuid(),
+					true);
 			OfflinePaymentDetails offlinePaymentDetails = OfflinePaymentDetails.builder()
 					.id(UUID.randomUUID().toString()).propertyId(property.getId())
-					.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
-					.amount(property.getPaymentAmount())
-					.bankName(property.getBankName()).transactionNumber(property.getTransactionId()).build();
+					.demandId(bills.get(0).getBillDetails().get(0).getDemandId()).amount(property.getPaymentAmount())
+					.bankName(property.getBankName()).transactionNumber(property.getTransactionId())
+					.auditDetails(auditDetails).build();
 			property.setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
 			propertyRequest.setProperties(Collections.singletonList(property));
 			producer.push(config.getUpdatePropertyTopic(), propertyRequest);

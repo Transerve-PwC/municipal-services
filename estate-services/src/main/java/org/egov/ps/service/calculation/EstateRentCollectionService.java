@@ -31,9 +31,9 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 		
 		
 		
-//		List<EstateDemand> consolidatedDemands = demandsToBeSettled.stream()
-//				.filter(demand -> demand.getIsPrevious())
-//				.collect(Collectors.toList());
+		List<EstateDemand> consolidatedDemands = demandsToBeSettled.stream()
+				.filter(demand -> demand.getIsPrevious())
+				.collect(Collectors.toList());
 		
 		
 		/**
@@ -44,9 +44,9 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 				.filter(demand -> demand.isUnPaid() && demand.getGenerationDate() <= payment.getPaymentDate())
 				.collect(Collectors.toList());
 		
-//		demands.removeAll(consolidatedDemands);
-//		demands.addAll(0,consolidatedDemands);
-//		
+		demands.removeAll(consolidatedDemands);
+		demands.addAll(0,consolidatedDemands);
+		
 		/**
 		 * Effective amount to be settled = paidAmount + accountBalance
 		 */
@@ -437,12 +437,12 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 		Collections.sort(demands);
 		Collections.sort(payments);
 		
-//		List<EstateDemand> consolidatedDemands = demands.stream()
-//				.filter(demand -> demand.getIsPrevious())
-//				.collect(Collectors.toList());
-//		
-//		demands.removeAll(consolidatedDemands);
-//		demands.addAll(0,consolidatedDemands);
+		List<EstateDemand> consolidatedDemands = demands.stream()
+				.filter(demand -> demand.getIsPrevious())
+				.collect(Collectors.toList());
+		
+		demands.removeAll(consolidatedDemands);
+		demands.addAll(0,consolidatedDemands);
 		
 		List<EstateAccountStatement> accountStatementItems = new ArrayList<EstateAccountStatement>();
 		EstateAccount rentAccount = EstateAccount.builder().remainingAmount(0D).build();
@@ -571,11 +571,11 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 			if(demands==null)
 				demands=Collections.emptyList();
 			
-//			List<EstateDemand> consolidatedDemands = demands.stream()
-//					.filter(demand -> demand.getIsPrevious())
-//					.collect(Collectors.toList());
-//			demands.removeAll(consolidatedDemands);
-//			demands.addAll(0,consolidatedDemands);
+			List<EstateDemand> consolidatedDemands = demands.stream()
+					.filter(demand -> demand.getIsPrevious())
+					.collect(Collectors.toList());
+			demands.removeAll(consolidatedDemands);
+			demands.addAll(0,consolidatedDemands);
 		
 		return demands.stream().filter(EstateDemand::isUnPaid).reduce(
 				EstateRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(), (summary, demand) -> {
@@ -689,12 +689,12 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 		
 			if(demands==null)
 				demands=Collections.emptyList();
-//			List<EstateDemand> consolidatedDemands = demands.stream()
-//					.filter(demand -> demand.getIsPrevious())
-//					.collect(Collectors.toList());
-//					
-//					demands.removeAll(consolidatedDemands);
-		//	demands.addAll(0,consolidatedDemands);
+			List<EstateDemand> consolidatedDemands = demands.stream()
+					.filter(demand -> demand.getIsPrevious())
+					.collect(Collectors.toList());
+					
+					demands.removeAll(consolidatedDemands);
+			demands.addAll(0,consolidatedDemands);
 		return demands.stream().filter(EstateDemand::isUnPaid).reduce(
 				EstateRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(), (summary, demand) -> {
 				

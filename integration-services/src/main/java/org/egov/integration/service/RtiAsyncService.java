@@ -59,19 +59,19 @@ public class RtiAsyncService {
 			if(null!=cpiores) {
 				response.setCpio(cpiores.get().getBody());
 				if(!StringUtils.isEmpty(cpiores.get().getBody().getTransactionNo())){
-					confirmAllTransactions(cpiores.get().getBody().getTransactionNo(),token);
+					confirmTransaction(cpiores.get().getBody().getTransactionNo(),token);
 				}
 			}
 			if(null!=nodalres) {
 				response.setNodal(nodalres.get().getBody());
 				if(!StringUtils.isEmpty(nodalres.get().getBody().getTransactionNo())){
-					confirmAllTransactions(nodalres.get().getBody().getTransactionNo(),token);
+					confirmTransaction(nodalres.get().getBody().getTransactionNo(),token);
 				}
 			}
 			if(null!=appellateres) {
 				response.setAppellate(appellateres.get().getBody());
 				if(!StringUtils.isEmpty(appellateres.get().getBody().getTransactionNo())){
-					confirmAllTransactions(appellateres.get().getBody().getTransactionNo(),token);
+					confirmTransaction(appellateres.get().getBody().getTransactionNo(),token);
 				}
 			}
 		} catch (InterruptedException | ExecutionException e) {					
@@ -80,7 +80,7 @@ public class RtiAsyncService {
 		return response;
 	}
 	
-	public void confirmAllTransactions(String transactionNo, String token) {
+	public void confirmTransaction(String transactionNo, String token) {
 		CompletableFuture.runAsync(() -> {
 			RtiIndividualResponse res=RtiIndividualResponse.builder().transactionNo(transactionNo).build();
 			rtiRestService.confirmTransaction(res,token);

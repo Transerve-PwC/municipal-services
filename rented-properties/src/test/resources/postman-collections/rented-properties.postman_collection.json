@@ -1,0 +1,776 @@
+{
+	"info": {
+		"_postman_id": "74f7f3e2-17ad-4235-810c-c3c12ae71bd5",
+		"name": "rented-properties",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/rp-services/property/_create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"e6925cfc-8437-4608-9d0f-e4a76f801082\"\n  },\n  \"Properties\": [\n    {\n      \"propertyDetails\": {\n        \"interestRate\": \"1\",\n        \"rentIncrementPercentage\": \"5\",\n        \"rentIncrementPeriod\": \"1\",\n        \"area\": \"200\",\n        \"address\": {\n          \"area\": \"loc\",\n          \"pincode\": \"123456\"\n        },\n        \"floors\": \"\",\n        \"additionalDetails\": \"\"\n      },\n      \"colony\": \"COLONY_VIKAS_NAGAR\",\n      \"transitNumber\": \"1991\",\n      \"owners\": [\n        {\n          \"ownerDetails\": {\n            \"name\": \"ritu\",\n            \"phone\": \"9999999999\",\n            \"relation\": \"HUSBAND\",\n            \"fatherOrHusband\": \"vinay\",\n            \"email\": \"rit@mail.com\",\n            \"aadhaarNumber\": \"123456789123\",\n            \"allotmentStartdate\": 1602700199000,\n            \"posessionStartdate\": 1602700199000,\n            \"allotmentEnddate\": 1760466599000,\n            \"posessionEnddate\": 1760466599000,\n            \"payment\": [\n              {\n                \"amountDue\": \"\",\n                \"receiptNumber\": \"\"\n              }\n            ]\n          },\n          \"allotmenNumber\": \"RP-15\",\n          \"applicationStatus\": \"\",\n          \"activeState\": true,\n          \"isPrimaryOwner\": true\n        }\n      ],\n      \"tenantId\": \"ch.chandigarh\",\n      \"masterDataAction\": \"\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property/_search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_search\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"8bea1040-9469-42b3-b39b-93a8026a3987\"\n  }\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "colony",
+							"value": "COLONY.MILK",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "8500123456",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "Vinil",
+							"disabled": true
+						},
+						{
+							"key": "offset",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "state",
+							"value": "APPROVED",
+							"disabled": true
+						},
+						{
+							"key": "transitNumber",
+							"value": "1919",
+							"disabled": true
+						},
+						{
+							"key": "propertyId",
+							"value": "d881da73-fe31-4c9e-aa80-889d830f6f8d",
+							"disabled": true
+						},
+						{
+							"key": "state",
+							"value": "PM_APPROVED",
+							"disabled": true
+						},
+						{
+							"key": "relations",
+							"value": "owner",
+							"disabled": true
+						},
+						{
+							"key": "relations",
+							"value": "offlinepayment",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property/_update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"e6925cfc-8437-4608-9d0f-e4a76f801082\"\n  },\n  \"Properties\": [\n    {\n      \"rentSummary\": {\n        \"balancePrincipal\": 0,\n        \"balanceInterest\": 0,\n        \"balanceAmount\": 0\n      },\n      \"id\": \"76e78545-ece6-4ab6-9b16-13dff1046b4f\",\n      \"transitNumber\": \"1991\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"colony\": \"COLONY_VIKAS_NAGAR\",\n      \"masterDataState\": \"PM_DRAFTED\",\n      \"auditDetails\": {\n        \"createdBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n        \"lastModifiedBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n        \"createdTime\": 1603887452382,\n        \"lastModifiedTime\": 1603887452382\n      },\n      \"propertyDetails\": {\n        \"interestRate\": \"1\",\n        \"rentIncrementPercentage\": 5,\n        \"rentIncrementPeriod\": 1,\n        \"id\": \"c096309d-336e-4f33-8dd7-91bae16e928f\",\n        \"propertyId\": \"76e78545-ece6-4ab6-9b16-13dff1046b4f\",\n        \"transitNumber\": \"1991\",\n        \"tenantId\": \"ch.chandigarh\",\n        \"area\": \"200\",\n        \"rentPerSqyd\": null,\n        \"currentOwner\": \"993b65c5-ad54-47b3-9e7b-497cc468224d\",\n        \"floors\": \"\",\n        \"additionalDetails\": \"\",\n        \"address\": {\n          \"id\": \"54e8a629-1aec-4b32-a72b-1faa7439feac\",\n          \"propertyId\": \"76e78545-ece6-4ab6-9b16-13dff1046b4f\",\n          \"transitNumber\": \"1991\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"colony\": \"COLONY_VIKAS_NAGAR\",\n          \"area\": \"loc\",\n          \"district\": null,\n          \"state\": null,\n          \"country\": null,\n          \"pincode\": \"123456\",\n          \"landmark\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n            \"lastModifiedBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n            \"createdTime\": 1603887452382,\n            \"lastModifiedTime\": 1603887452382\n          }\n        },\n        \"applicationDocuments\": [\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"46f83579-ac9e-4505-9544-88b21d0debf5\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887552369index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=14476c84c7236eceea8680c5ec8a9c30f1ad5fabe094a6949889595f51abccad,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887552369index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=bb63f9b8bbd3c539fb315cfed538c8533d79272c84003c0de6beabe07995e5c6,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887552369index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3e0b37a1095315f590f7f90212e4353c6cb73c875f586b7c2193a96d455805fc,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887552369index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=f62baa671ef9bc0bee8086bee3b75c3632bea436521674f29b976f181b22fae8\",\n            \"documentType\": \"TRANSIT_SITE_DOCUMENTS\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"fe3e75ca-f8aa-4073-9368-86541988c317\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887557813index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121918Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a464c5d98d5c127ca747f7e885412bffbd0b22d76d62f177418a8ba324d3e987,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887557813index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121918Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=913184c9f5cd5eda76c0917307a5621de99946813249d9c53b5b2e701f9345e2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887557813index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121918Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=0da6a2ff7490b080061ba80a3a24f8cb6c6f33fcc59a7f8aa6074a2cd623eed6,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887557813index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121918Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a7ba8231e1afe64ba14b6a317e71a0d88c24e59d5dc3c3ed088d8ddaa770c6c5\",\n            \"documentType\": \"TRANSIT_SITE_IMAGES\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"d46f32ab-50ff-4f45-aa55-c711fe73ab20\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887562774index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121923Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=158554290c4c899ce52801539776c2fc795c72ccecbfc4656bc90db6716ec645,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887562774index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121923Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d9a7d77698bf42177d96b267be9b13cc06e1a35b3443513e41f100a1ab0e0ba6,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887562774index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121923Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=027c59fd9ce06d12abaa3e5bf65cb5cb4e52a39972725f91c2afb4286a6a96f0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887562774index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121923Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=da229076bc5958e76b7cc723f452e613b40ba387a656c2d5fa7820dd796f1305\",\n            \"documentType\": \"ALLOTEE_IMAGE\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"3bf604e0-bff5-43a9-a304-d552faacc60e\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887568242index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121928Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=32640074f11e687031899e6933feab2f2e3c5d7044900f920cab4423241ca2ad,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887568242index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121928Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b3933340b78ea89cf7807f6151d2e8f0ab8fce16127ca3543542cd111b928e20,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887568242index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121928Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d0d9830e6f37c98b6c997b5792417af60eaa072028d4368e3ac1bb5198198cd9,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887568242index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121928Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=68f6685a085007397e152510a14b699b0b6713e401b199babfd9e87a8c80b74d\",\n            \"documentType\": \"ALLOTEE_AADHAR\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"b4fadeb6-ba56-4972-96de-54107123ff44\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887573162index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121933Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=0de0abd6f90260b3d8c689c02bdb83342f36e4791f8a57b62b0d33a080070ac0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887573162index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121933Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=61f53119d6c836e69851e7ad06caf617c03437b1d8edff7750858486f77d5fa2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887573162index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121933Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=753af1e50a8ba84c028b1e74f4669cd9ec85feb13458694945e3ef0738b14ae6,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603887573162index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T121933Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=cbc4ddd924f809a337f6e9386e09625a7b03d01ddacb7f316cf80942294089a3\",\n            \"documentType\": \"APPROVED_BUILDING_PLAN\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          }\n        ],\n        \"auditDetails\": {\n          \"createdBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n          \"lastModifiedBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n          \"createdTime\": 1603887452382,\n          \"lastModifiedTime\": 1603887452382\n        }\n      },\n      \"owners\": [\n        {\n          \"property\": {\n            \"id\": \"76e78545-ece6-4ab6-9b16-13dff1046b4f\",\n            \"transitNumber\": \"1991\",\n            \"colony\": \"COLONY_VIKAS_NAGAR\",\n            \"pincode\": null,\n            \"area\": null,\n            \"rentSummary\": null\n          },\n          \"id\": \"993b65c5-ad54-47b3-9e7b-497cc468224d\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"allotmenNumber\": \"RP-15\",\n          \"ownerDetails\": {\n            \"id\": \"d3de3ac2-07ad-4e20-b2e8-5ce870fd6663\",\n            \"propertyId\": \"76e78545-ece6-4ab6-9b16-13dff1046b4f\",\n            \"ownerId\": \"993b65c5-ad54-47b3-9e7b-497cc468224d\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"name\": \"ritu banga\",\n            \"email\": \"rit@mail.com\",\n            \"phone\": \"9812345678\",\n            \"gender\": null,\n            \"dateOfBirth\": null,\n            \"aadhaarNumber\": \"123456789123\",\n            \"allotmentStartdate\": 1602700199000,\n            \"allotmentEnddate\": 1760466599000,\n            \"posessionStartdate\": 1602700199000,\n            \"posessionEnddate\": 1760466599000,\n            \"monthlyRent\": null,\n            \"revisionPeriod\": null,\n            \"revisionPercentage\": null,\n            \"auditDetails\": {\n              \"createdBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n              \"lastModifiedBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n              \"createdTime\": 1603887452382,\n              \"lastModifiedTime\": 1603887452382\n            },\n            \"fatherOrHusband\": \"vinay sethi\",\n            \"relation\": \"HUSBAND\",\n            \"applicationType\": \"MasterEntry\",\n            \"permanent\": true,\n            \"relationWithDeceasedAllottee\": null,\n            \"dateOfDeathAllottee\": null,\n            \"applicationNumber\": null,\n            \"ownershipTransferDocuments\": null,\n            \"dueAmount\": null,\n            \"aproCharge\": null,\n            \"payment\": [\n              {\n                \"amountDue\": \"\",\n                \"receiptNumber\": \"\"\n              }\n            ]\n          },\n          \"assignee\": null,\n          \"comment\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n            \"lastModifiedBy\": \"2743bf22-0001-4029-bd26-79e5d0ce6410\",\n            \"createdTime\": 1603887452382,\n            \"lastModifiedTime\": 1603887452382\n          },\n          \"isPrimaryOwner\": true,\n          \"activeState\": true,\n          \"applicationState\": null,\n          \"applicationAction\": null,\n          \"calculation\": null,\n          \"billingBusinessService\": \"RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.OWNERSHIP_TRANSFER\",\n          \"wfDocuments\": null,\n          \"applicationStatus\": \"\"\n        }\n      ],\n      \"billingBusinessService\": \"RENTED_PROPERTIES_COLONY_VIKAS_NAGAR.RENT\",\n      \"formatrentSummary\": {\n        \"balancePrincipal\": 0,\n        \"balanceInterest\": 0,\n        \"balanceAmount\": 0\n      },\n      \"masterDataAction\": \"\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/ownership-transfer/_create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"7a0acc36-db08-43ca-82c1-9a1467c495b4\"\n  },\n  \"Owners\": [\n    {\n      \"ownerDetails\": {\n        \"email\": \"john@mail.com\",\n        \"fatherOrHusband\": \"fsfyguy\",\n        \"monthlyRent\": null,\n        \"revisionPeriod\": null,\n        \"revisionPercentage\": null,\n        \"name\": \"yash\",\n        \"relationWithDeceasedAllottee\": \"LEGAL_HEIR\",\n        \"dateOfDeathAllottee\": 1602700199000,\n        \"aadhaarNumber\": \"123456789123\",\n        \"phone\": \"9999999999\",\n        \"permanent\": false,\n        \"applicationType\": \"CitizenApplication\",\n        \"relation\": \"LEGAL_HEIR\"\n      },\n      \"property\": {\n        \"transitNumber\": \"2222\",\n        \"id\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"pincode\": \"334567\",\n        \"colony\": \"COLONY_MILK\"\n      },\n      \"allotmenNumber\": \"546778\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"isPrimaryOwner\": true,\n      \"activeState\": true,\n      \"applicationState\": \"\",\n      \"applicationAction\": \"DRAFT\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/ownership-transfer/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"ownership-transfer",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/ownership-transfer/_search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_search\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"b93f39e4-bda8-406c-8c0f-523b4bab69ea\"\n  }\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/ownership-transfer/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"ownership-transfer",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "applicationNumber",
+							"value": "CH-RP-OT-2020-09-05-001478",
+							"disabled": true
+						},
+						{
+							"key": "applicantMobNo",
+							"value": "9690844443",
+							"disabled": true
+						},
+						{
+							"key": "propertyId",
+							"value": "ca2c8e60-a63d-490a-a432-bafe5d7cd29b",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/ownership-transfer/_update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"7a0acc36-db08-43ca-82c1-9a1467c495b4\"\n  },\n  \"Owners\": [\n    {\n      \"property\": {\n        \"id\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"transitNumber\": \"2222\",\n        \"colony\": \"COLONY_MILK\",\n        \"pincode\": \"334567\",\n        \"area\": null,\n        \"rentSummary\": {\n          \"balancePrincipal\": 129993.72358900009,\n          \"balanceInterest\": 182253.64274800287,\n          \"balanceAmount\": 0,\n          \"totalDue\": \"₹3,12,247.37\"\n        }\n      },\n      \"id\": \"05089a02-777f-4972-8016-85a11fc068ba\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"allotmenNumber\": \"CH-RP-PM-000352\",\n      \"ownerDetails\": {\n        \"id\": \"10f9d6c8-11ae-4190-ba95-7b6e9f4bb383\",\n        \"propertyId\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"ownerId\": \"05089a02-777f-4972-8016-85a11fc068ba\",\n        \"tenantId\": null,\n        \"name\": \"yash\",\n        \"email\": \"shivam.gaba@transerve.com\",\n        \"phone\": \"9690844443\",\n        \"gender\": null,\n        \"dateOfBirth\": null,\n        \"aadhaarNumber\": \"123456789123\",\n        \"allotmentStartdate\": null,\n        \"allotmentEnddate\": null,\n        \"posessionStartdate\": null,\n        \"posessionEnddate\": null,\n        \"monthlyRent\": null,\n        \"revisionPeriod\": null,\n        \"revisionPercentage\": null,\n        \"auditDetails\": {\n          \"createdBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n          \"lastModifiedBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n          \"createdTime\": 1603887952484,\n          \"lastModifiedTime\": 1603887952484\n        },\n        \"fatherOrHusband\": \"fsfyguy\",\n        \"relation\": \"LEGAL_HEIR\",\n        \"applicationType\": \"CitizenApplication\",\n        \"permanent\": false,\n        \"relationWithDeceasedAllottee\": \"LEGAL_HEIR\",\n        \"dateOfDeathAllottee\": 1602700199000,\n        \"applicationNumber\": \"CH-RP-OT-2020-10-28-000351\",\n        \"ownershipTransferDocuments\": [\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"6c788871-4a63-4ae1-a11b-d02a6b307b54\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888083336index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122803Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=4c1057071464ed62578e612ff1fdcb6f206706c19a313dfd2cde2f69337cf24d,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888083336index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122803Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=5cc9c77945f3951b93a902095fb089b36e9961ee47b8a99adaaf7972ec15fd19,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888083336index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122803Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=ed9c0c791591a7e0b3cd75b45e6de70da957d423d90d0e748b21b8b3b64cbe01,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888083336index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122803Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=20ddaec41c3023635d31c295f497499e0fd546e4597c3c4f92f3d545820ed094\",\n            \"documentType\": \"AFFIDAVIT_CLAIMANT\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"edda9a15-6ec5-4af1-a3b6-4a937abae1b2\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888105414index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122825Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=556344fe4911dd2e0b6f47b3735c77d49a687730b4d320a3b5d016694bc533c9,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888105414index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122825Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b592a4018b2079b571616b8b93e157ed5079fa7920d6aaa059a50318f81e9f62,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888105414index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122825Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=e4268d3e502ea476ea851685536452edc08a775a452ee0f007998108e537db98,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888105414index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122825Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19258f1a27ab514177e8fc4d6db3efb0fb9df35245899d6dc6d24b1e2e0efa48\",\n            \"documentType\": \"AFFIDAVIT_LEGAL_HEIR\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"8acb7069-a724-4960-b049-9da07eb5187b\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888110160index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122830Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=cfbf453d5ca1f549ca57a2480b9b0e74d6cd0dfa585aadecfdb33705d30e120c,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888110160index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122830Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d1d79c3e8650cfa0275ef832e27e748522576739c3e7461e0474b07b19080da8,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888110160index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122830Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=302d6291d5892665fbd0d2520a57a4fac3cebfa92060677599f377aa3a870679,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888110160index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122830Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2f862bb0f730e3f288a4d97e9bf13d7c2af91c0f21bb48b07319f1186f2adfb2\",\n            \"documentType\": \"THREE_SPECIMEN_SIGNATURE\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"00b663e7-254d-44fe-b5a8-e5979e7ebb1e\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888117659index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122837Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=ad3ff582042ccb62be105ad8cabcc744374d9d108c28e7f7d20c7bf12534a55e,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888117659index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122837Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=7ee5d8cd883827cec67500331b2bf96f28a02ac594b2b883dba03f65618591bf,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888117659index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122837Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3d8ac9469c898ad1b7eb49ab6cae43e8b9806b4352dd08981be9609c51159f03,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888117659index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122837Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=30bb36630bb34fab11faf8512d610f84efb8a55a823001559d286b5ac65171a0\",\n            \"documentType\": \"ATTESTED_PHOTOGRAPH_OF_REMAINING_HEIRS\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"cd1f0be8-661c-4af7-9849-e8c4446becad\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888122576index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122842Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=791af6bad9a46613cedc06a9831dd8f169ab81cf7e35ea39d2493c23ecc149dd,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888122576index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122842Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=46876a81141f62fff176edf627b667c82cfa862580cd9d6160fed631227c1b4e,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888122576index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122842Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=93772000948be7b3c0117dc1ff64cf2f7a95b04fcc6087b989e973136701a27a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888122576index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122842Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=dadee3fcddb16cb44a643207dc0e3f006fa71248b42369e6d9eea52b7cda761f\",\n            \"documentType\": \"DEATH_CERTIFICATE_ORIGINAL\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"b33e715a-b846-4861-93e4-83fa7273cc74\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888128289index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122848Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=9fda81b459990ecfd793bef958bbce495b58180036596e3e14037c1b224da299,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888128289index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122848Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=c00e106e3f9eaf6a3f14831fc559b98d0c1401b06e4fb67a58395d6a08da3c64,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888128289index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122848Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=6ad2dd8bc7ed1a7c53c2757539ab100818bdf9bd34ff0eba1425db10999c0ebe,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888128289index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122848Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=e032fe2e38722f4a33886285d134dbea4f372040261c6d47931a787294ef2f9e\",\n            \"documentType\": \"ATTESTED_ID_PROOF_CLAIMANT_OTHER_HEIRS\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"27560e37-b86e-4446-8371-71426e0cb8b0\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888132928index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122853Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3a4a277d4a02624aebfa586b5367636083c2b94288b7948181ff2a19618b0d9d,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888132928index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122853Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=812850cdf75999fd42c15868c578b3053b58153f7c98472d171204a4de3292b1,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888132928index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122853Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=0c74cc992f6149dcae1a08c15f242b6bb5836f3684677a5d459ba1bb8edff38f,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888132928index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122853Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1993d5141bedf3fa02fc6aad6c10015ec4a964e4260bd264b4fac89d04e2a654\",\n            \"documentType\": \"DECEASED_IMAGE\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"a8179a3b-02bd-4163-9d9e-a1f1de0bdfc7\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888136968index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122857Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=7a7602fb59f3a5aa7b5df78e1112cbd9dfba6b2e2e22955b856a5b816086e126,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888136968index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122857Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=9f31c16105d395016fdf2057ead0b6b6b6b84ae2f3367c480ef08c39f7d713e9,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888136968index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122857Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=f88bc6cf7896fbf1eba89fbba9a61115d2cf445c3404fe2e12045ed905532535,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888136968index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122857Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d5e623910323c833ce84e0051f6f6a5c67470ee2983f15a9081c9ed9eaaae0a6\",\n            \"documentType\": \"CLAIMANT_IMAGE\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"ef01a376-5ee6-40a9-959d-0e3342b4aa83\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888141345index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122901Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=eaa41b6b354145926615ee77065b976efab2caa12cec0c9b000dd9a029dc32cb,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888141345index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122901Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=32c4d4480540d436d31a00dd409b07551f599da8c26970d86cfffb7c4db75287,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888141345index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122901Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=6eadab76bf18766d45b69dedfeeb8554e44b9bb92ea778bc251d416a972476ec,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888141345index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122901Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d53e0abf3d767415e2c0abc5d78e85d2c597ac03a7dbbb1609263a87f3f7d4a3\",\n            \"documentType\": \"SELF_ATTESTED_ID_PROOF\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"66b63a54-f781-47ed-b9cb-0fff84420de6\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888146560index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122906Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=fd7d65b8e7a3f86cad14bd82d154b16fe10cef2b3af91017da0c6c7a5924c587,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888146560index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122906Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=365be5effed094e4232a034004a4679907efda0a5592bfcd24cbc82112ec5a0c,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888146560index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122906Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=628ca7f5dd54ff60fb8307f23eb7fad7f636a84bd148b1f40930b517bc9b945b,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888146560index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122906Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=ba872bb03474ee4f827aba8528fc14486f3878b7db40a80468bf96a07978ab6b\",\n            \"documentType\": \"APPROVED_BUILDING_PLAN\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"995ada20-882d-46be-b5b4-91ca4ac461fd\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888152135index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=dec80d8b0975cd0da8909170beade8df12ba8fe9287661785c855274e7ed8cf7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888152135index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=060d57f92cff59f2ed3ee58c6db238ec212e016aa32f06f888b9b89c929b6653,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888152135index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b452d774d4b9defd1f48c6005aaf5743a0c20193fe7a72244e89d7ae25eb4553,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888152135index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3db9c0bd0f1c77f4869ed29f768e67a4cdf2a74fb9d4733f463f6872ddbb4ce7\",\n            \"documentType\": \"OTHER_REQUIRED_DOCUMENTS\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"2468c488-87e5-47f6-9ff2-c2ea2bbbc39b\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888156535index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122916Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=9e228dbf7826ced5aad1d59c363b57dd100fc27c46facfcec2eb73e1d8f24434,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888156535index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122916Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=5aa1f82eb189b44ef601219cc28ecf511fa6a222702a577f5d5dffd91fa40605,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888156535index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122916Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=c7aa9946b6024cf1adc65a6baa2db985beb3160d0ab60ca63b56aa5669f6e8c4,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888156535index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122916Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2a00190932540c99b27c18edde144ed4fbd4e5ef82c3395392738e372a50b273\",\n            \"documentType\": \"ALLOTMENT_LETTER\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          },\n          {\n            \"fileName\": \"index.jpeg\",\n            \"fileStoreId\": \"e5764c7e-f28e-4618-8fc5-024b35bd41e8\",\n            \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888161405index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122921Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=184f5ff0a8ff404e30c7eb92394e3dfe94c038214794f4c0c9c6c039f10ec641,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888161405index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122921Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=fc9ead7e5ecb70f5a67fe826ff4d21549b6244bbe7550b90eca2265a95f63f7b,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888161405index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122921Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d6fb1f251f943c00dfd24ddf2810023f98bf1d63ef83a8de16935da15578c443,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888161405index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T122921Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=72d5f3eadc2ced8a2bf675fac0335dcb6b3a35764461cdab7b2d06f154cb7ecb\",\n            \"documentType\": \"PUBLICATION_CHARGES\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"active\": true\n          }\n        ],\n        \"dueAmount\": null,\n        \"aproCharge\": null\n      },\n      \"assignee\": null,\n      \"comment\": null,\n      \"auditDetails\": {\n        \"createdBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n        \"lastModifiedBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n        \"createdTime\": 1603887952484,\n        \"lastModifiedTime\": 1603887952484\n      },\n      \"isPrimaryOwner\": true,\n      \"activeState\": true,\n      \"applicationState\": \"OT_DRAFTED\",\n      \"applicationAction\": \"REINITIATE\",\n      \"calculation\": {\n        \"applicationNumber\": null,\n        \"tenantId\": \"ch.chandigarh\",\n        \"taxHeadEstimates\": [\n          {\n            \"taxHeadCode\": \"RENTED_PROPERTIES_COLONY_MILK.OWNERSHIP_TRANSFER_APPLICATION_FEE\",\n            \"estimateAmount\": 0,\n            \"category\": \"FEE\"\n          },\n          {\n            \"taxHeadCode\": \"RENTED_PROPERTIES_COLONY_MILK.OWNERSHIP_TRANSFER_PUBLICATION_FEE\",\n            \"estimateAmount\": 0,\n            \"category\": \"FEE\"\n          }\n        ]\n      },\n      \"billingBusinessService\": \"RENTED_PROPERTIES_COLONY_MILK.OWNERSHIP_TRANSFER\",\n      \"wfDocuments\": null\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/ownership-transfer/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"ownership-transfer",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/duplicatecopy/_create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"7a0acc36-db08-43ca-82c1-9a1467c495b4\"\n  },\n  \"DuplicateCopyApplications\": [\n    {\n      \"applicant\": [\n        {\n          \"email\": \"john@mail.com\",\n          \"phone\": \"9999999999\",\n          \"name\": \"fsfyguy\",\n          \"guardian\": \"clsdl\",\n          \"relationship\": \"FATHER\",\n          \"adhaarNumber\": null\n        }\n      ],\n      \"property\": {\n        \"transitNumber\": \"2222\",\n        \"id\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"pincode\": \"334567\",\n        \"colony\": \"COLONY_MILK\"\n      },\n      \"tenantId\": \"ch.chandigarh\",\n      \"propertyDetails\": \"null\",\n      \"state\": \"\",\n      \"action\": \"DRAFT\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/duplicatecopy/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"duplicatecopy",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/duplicatecopy/_search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"a108a60a-ffef-4cd6-a84a-b8951470b496\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/duplicatecopy/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"duplicatecopy",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "propertyId",
+							"value": "541ac4a2-52e1-4af4-b29d-cdc26250c2ed",
+							"disabled": true
+						},
+						{
+							"key": "applicantMobNo",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/duplicatecopy/_update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"7a0acc36-db08-43ca-82c1-9a1467c495b4\"\n  },\n  \"DuplicateCopyApplications\": [\n    {\n      \"property\": {\n        \"id\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"transitNumber\": \"2222\",\n        \"colony\": \"COLONY_MILK\",\n        \"pincode\": \"334567\",\n        \"area\": null,\n        \"rentSummary\": {\n          \"balancePrincipal\": 129993.72358900009,\n          \"balanceInterest\": 182253.64274800287,\n          \"balanceAmount\": 0,\n          \"totalDue\": \"₹3,12,247.37\"\n        }\n      },\n      \"id\": \"30256caa-02d0-4eb8-8dd0-b970d150080e\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"state\": \"DC_DRAFTED\",\n      \"action\": \"REINITIATE\",\n      \"applicationNumber\": \"CH-RP-DC-2020-10-28-000353\",\n      \"allotmentNumber\": null,\n      \"allotmentStartDate\": null,\n      \"allotmentEndDate\": null,\n      \"assignee\": null,\n      \"comment\": null,\n      \"auditDetails\": {\n        \"createdBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n        \"lastModifiedBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n        \"createdTime\": 1603888296679,\n        \"lastModifiedTime\": 1603888296679\n      },\n      \"applicationDocuments\": [\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"5c5e40e2-8d4f-433b-8f35-2f8342b867fd\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888372014index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123252Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1357d732182074075d560143ac28e97c13c6ac25ddf63765baa9ffa1982a579e,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888372014index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123252Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=c3456d653435e4989e7be3e82e94a1b0b601663c146338bd2638d0bee2e57f66,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888372014index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123252Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a04cbb98455a8636ef6d44101d3ad4d2573267f707216f804355056705a32766,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888372014index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123252Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2148ba91ee2579891ea3f0e189d04b56f1c9dad034a13228d9e915db2bd94cac\",\n          \"documentType\": \"AFFIDAVIT_APPLICANT\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"5aa4a001-cbd8-423c-a482-0a278a7c7d68\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888376613index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123256Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b9a9b48d393d04336ad5300fa47c188c29069b75df301101b4f157e765aaabe5,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888376613index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123256Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b76c3675335647dda9317afccee51f366002f2ada9dda255546c2dc9915d23d5,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888376613index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123256Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b9412e7daecb73a72b0a6eb8afe43637149031c588db1277d3aa8ce4a66debfd,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888376613index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123256Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=0176f8e48aef31f3faebc6cf0b008945a5f1daa094ae2f9eb8748359b6a24339\",\n          \"documentType\": \"INDEMNITY_BOND\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"53412979-8712-4024-b3fe-0a637ed28b30\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888381248index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123301Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=6d347105ea1806a9c8aa7d43755e13cc8228f13d9111a31fd5765bc076779f21,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888381248index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123301Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=72bda17011a0c67c588ff86fa65df8ce4236f4901d27818ad5d6cdc61445c651,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888381248index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123301Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2784f3ca79a91eebcc46bf983c4dd5d1718d4c7e3a9653e390534e00d0a7586f,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888381248index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123301Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=dc48aeaeb1e3dc1431f5f790ffb35ed580b3e636ffda3cd9e630398b0daaffaf\",\n          \"documentType\": \"ORIGINAL_DDR\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"7c843607-c531-4ccb-9950-0ad76f666f4b\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888386285index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123306Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=6ac97661ab98f57e53558245caec1d3332fa074ae4c4fede606d9d69cca8852a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888386285index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123306Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8b8959e4810f3544c66bc93e08add919c648c0c43e3f8ac546182d827043d0bd,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888386285index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123306Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=4c94d24df7219db17efdd97e6153e9773ead2788735cda26c8c0ee6c34bc2cca,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888386285index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123306Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=e20173a4c753458227fbd15f3416311df37c7de83c22aea368a01b59ff5c0dd4\",\n          \"documentType\": \"NON_TRACEABLE_REPORT\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"134baf5e-8e8c-40a9-9a0c-7958f20f7d16\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888391842index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123312Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1ffbb6cbc6e4319ab7519ff6520a8a4ac48ad43dd5f9eda320bc1837f9225fe1,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888391842index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123312Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=34b9d8ff4499e2ea956756b119151b44f772fe26c4ebc33d1356b85b14016aac,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888391842index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123312Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3b0aa48699dc6dc1e5376c477e46b8d106eac1f1468e48aa9767129d67bcecbe,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888391842index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123312Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=767a68e50e29707532c89fa349c6bf84d284f2502d38844bf5e76e590f822b0a\",\n          \"documentType\": \"THREE_SPECIMEN_SIGNATURE\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"18690b4d-b8b0-4f2e-a19d-06b43b669729\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888397677index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123317Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=942fbaa9b882b8abe211cbf174dd6103540037c98427369823004879d6c21d51,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888397677index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123317Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=35be330ffb69bcf789df900d5581b48a3a25fd6d62c70236074d7e5cf6bbd593,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888397677index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123317Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=7e6c3434d45e2d4c99c2e8a44d142b2b2477572701bb52ea1b8b3c59c9b141ee,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888397677index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123317Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=07cdc07597301953aec168711febfdfa00eca94351369501efd0a80b0cbeeb33\",\n          \"documentType\": \"DETAILS_OF_PAYMENT\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"f8d981be-423f-4797-ae00-5f2fc3ad3ed2\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888402277index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123322Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=38d1ae3fd67b8a4f17a57ddd3764abe1cc2ba46abac09cb4234e10fa7f021983,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888402277index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123322Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=7b839070fe47c750a93162d16aff58a8bec93d1c431ccb47a7dbac18aa6933a4,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888402277index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123322Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=916d00358988f639281cbbae5f0f6ae410e7fa458826dd3b5b1a4772e20fd742,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888402277index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123322Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3b4b6f023aa3acc870bccad7f6abe4e5720035d6f61dbe24acfa69d1f1b189d\",\n          \"documentType\": \"ID_PROOF_ALLOTEE\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"4318c389-cb41-406f-a24e-1dedb38c5b88\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888406603index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123326Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=0e9e54aa77aa2fffc498ecc5985d83d0657adbd3dfb0a76fb4cfef2d80f450e5,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888406603index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123326Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a292db7b567150d3e27c1760918030c4635f89e28d4f761a4b9cc4dd26042b67,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888406603index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123326Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=77cd04f5e3136ef3f507b40b401292a2a27d21d33d0902c9b7a9b47a7ba104dc,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888406603index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123326Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a590cd23cd00b51357a916cf3eb004fd81ec87400484df616c87f98fb8052d5b\",\n          \"documentType\": \"PUBLICATION_CHARGES_DUPLICATE\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        }\n      ],\n      \"applicant\": [\n        {\n          \"id\": \"ab229539-d2db-44b5-bd24-f11537e10e90\",\n          \"applicationId\": \"30256caa-02d0-4eb8-8dd0-b970d150080e\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"name\": \"fsfyguy\",\n          \"email\": \"shivam.gaba@transerve.com\",\n          \"phone\": \"9690844443\",\n          \"guardian\": \"clsdl\",\n          \"relationship\": \"FATHER\",\n          \"adhaarNumber\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n            \"lastModifiedBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n            \"createdTime\": 1603888296679,\n            \"lastModifiedTime\": 1603888296679\n          },\n          \"feeAmount\": null,\n          \"aproCharge\": null\n        }\n      ],\n      \"wfDocuments\": null,\n      \"calculation\": {\n        \"applicationNumber\": null,\n        \"tenantId\": \"ch.chandigarh\",\n        \"taxHeadEstimates\": [\n          {\n            \"taxHeadCode\": \"RENTED_PROPERTIES_COLONY_MILK.DUPLICATE_ALLOTMENT_LETTER_APPLICATION_FEE\",\n            \"estimateAmount\": 0,\n            \"category\": \"FEE\"\n          },\n          {\n            \"taxHeadCode\": \"RENTED_PROPERTIES_COLONY_MILK.DUPLICATE_ALLOTMENT_LETTER_PUBLICATION_FEE\",\n            \"estimateAmount\": 0,\n            \"category\": \"FEE\"\n          }\n        ]\n      },\n      \"billingBusinessService\": \"RENTED_PROPERTIES_COLONY_MILK.DUPLICATE_ALLOTMENT_LETTER\",\n      \"propertyDetails\": \"null\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/duplicatecopy/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"duplicatecopy",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/mortgage/_create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"7a0acc36-db08-43ca-82c1-9a1467c495b4\"\n  },\n  \"MortgageApplications\": [\n    {\n      \"applicant\": [\n        {\n          \"email\": \"john@mail.com\",\n          \"phone\": \"9999999999\",\n          \"name\": \"fsfyguy\",\n          \"guardian\": \"clsdl\",\n          \"relationship\": \"FATHER\",\n          \"adhaarNumber\": null\n        }\n      ],\n      \"property\": {\n        \"transitNumber\": \"2222\",\n        \"id\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"pincode\": \"334567\",\n        \"colony\": \"COLONY_MILK\"\n      },\n      \"tenantId\": \"ch.chandigarh\",\n      \"propertyDetails\": \"null\",\n      \"state\": \"\",\n      \"action\": \"DRAFT\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/mortgage/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"mortgage",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/mortgage/_search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_search\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"a108a60a-ffef-4cd6-a84a-b8951470b496\"\n  }\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/mortgage/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"mortgage",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "transitNumber",
+							"value": "1234",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "INITIATED",
+							"disabled": true
+						},
+						{
+							"key": "applicationNumber",
+							"value": "CH-RP-OT-2020-07-07-000017",
+							"disabled": true
+						},
+						{
+							"key": "applicantMobNo",
+							"value": "8500123456",
+							"disabled": true
+						},
+						{
+							"key": "propertyId",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/mortgage/_update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"action\": \"\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"requesterId\": \"\",\n    \"authToken\": \"7a0acc36-db08-43ca-82c1-9a1467c495b4\"\n  },\n  \"MortgageApplications\": [\n    {\n      \"property\": {\n        \"id\": \"feb3067c-474c-42b2-aa37-5341a4d6a008\",\n        \"transitNumber\": \"2222\",\n        \"colony\": \"COLONY_MILK\",\n        \"pincode\": \"334567\",\n        \"area\": null,\n        \"rentSummary\": null\n      },\n      \"id\": \"c237dd87-a8c1-4812-8555-34572e046d98\",\n      \"tenantId\": \"ch.chandigarh\",\n      \"state\": \"MG_DRAFTED\",\n      \"action\": \"REINITIATE\",\n      \"applicationNumber\": \"CH-RP-MG-2020-10-28-000354\",\n      \"allotmentStartDate\": null,\n      \"allotmentEndDate\": null,\n      \"allotmentNumber\": null,\n      \"assignee\": null,\n      \"comment\": null,\n      \"auditDetails\": {\n        \"createdBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n        \"lastModifiedBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n        \"createdTime\": 1603888505055,\n        \"lastModifiedTime\": 1603888505055\n      },\n      \"applicationDocuments\": [\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"ce68bb9f-2170-44bd-b195-7345bbfa6d32\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888631688index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123712Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=22c26161bec9c9d45ddf4b4d4140ae0e521294a4e510b5084a81051b698c031f,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888631688index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123712Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=061432c0f7305addc08db9bf2e92a09bf2237e4f45a640a9c818fa807a5a6c8b,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888631688index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123712Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=ec9626116904bb5c07f1d742c664016f92199d40297dd42e12b549bea8681650,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888631688index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123712Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=e51ed03f3c459600c67e731b96fa2438f6ba0c97565e1bef095b7b83d689d9b3\",\n          \"documentType\": \"UNDER_TAKING_PERFORMA\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"9e7e67d4-8efe-4de6-984c-66fd277e5029\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888635560index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123715Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=c032f22b0e57e268feac95c4b0d3331e2f58879a402d39386133b20694c2355a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888635560index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123715Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=495e7ea0de8982ad5af0784e7da8e85ae045915c7a9fd77031885bc20eb85f25,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888635560index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123715Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b86d1c8a4bd9498c6ac2aa383e738ae4fb583d737c78d47c1baf913d8ef650dc,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888635560index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123715Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=45d5dce19828a882ccdce3ba9473c3bfdd254acc5b0068b17500e0f850b3dd2c\",\n          \"documentType\": \"AFFIDAVIT_ALLOTEE\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        },\n        {\n          \"fileName\": \"index.jpeg\",\n          \"fileStoreId\": \"585b8299-244d-406d-8f7f-527791660e8a\",\n          \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888639814index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123720Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=3f994a9256d71b40f24c1fbeaae8be3c090818e2300b36f743e6b07961ff8458,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888639814index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123720Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=25ef3f4fd169def66d657f95a76a358329fdc17be39a5cbc7ddc63e64edc9372,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888639814index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123720Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13d76acfcece0664aa00abe63cf397d96d164fad39d6b1fe3211a23d1c92285e,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/RentedProperties/October/28/1603888639814index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T123720Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=5351e9c290df95851b96af0a4096939e34772e3dbaa81c7752bf13e25610feff\",\n          \"documentType\": \"CONSENT_OF_BANK\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"active\": true\n        }\n      ],\n      \"applicant\": [\n        {\n          \"id\": \"7e27b71f-c8f4-4fcf-bb97-c584ac03e2fe\",\n          \"mortgageId\": \"c237dd87-a8c1-4812-8555-34572e046d98\",\n          \"tenantId\": \"ch.chandigarh\",\n          \"name\": \"fsfyguy\",\n          \"email\": \"shivam.gaba@transerve.com\",\n          \"phone\": \"9690844443\",\n          \"guardian\": \"clsdl\",\n          \"relationship\": \"FATHER\",\n          \"adhaarNumber\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n            \"lastModifiedBy\": \"f915af74-5a77-4fc1-9738-8af3a936b6f0\",\n            \"createdTime\": 1603888505055,\n            \"lastModifiedTime\": 1603888505055\n          }\n        }\n      ],\n      \"mortgageApprovedGrantDetails\": null,\n      \"propertyDetails\": \"null\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/mortgage/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"mortgage",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property-images/_create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"APPROVE\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"12cf21f1-32e0-477c-9ee3-dd039e4167ed\"\n    },\n    \"PropertyImagesApplications\": [\n        {\n            \"property\": {\n                \"id\": \"541ac4a2-52e1-4af4-b29d-cdc26250c2ed\",\n                \"area\": \"\",\n                \"pincode\": \"334567\",\n                \"colony\": \"COLONY_MILK\",\n                \"transitNumber\": \"2222\"\n            },\n            \"tenantId\": \"ch.chandigarh\",\n            \"description\": \"This is the desc test 2\",\n            \"applicationDocuments\": [\n                {\n                    \"fileName\": \"person-icon-1680.png\",\n                    \"fileStoreId\": \"59c95c89-ffbb-4614-b4dc-c758b3247311\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8fa39dd32b5b218da9b808dad997388b8441f1eaea45fd64bb321531f8573e38,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_large.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2c8f9755bd9a0bb9c6cec5a8c108a092dd5dfc9c34a0c5a7c2576214e571e8c0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_medium.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a3d3298d2e693d62b1711e4d1b732c75676c0f8e4b5a3dac7acf9bf7f7f7c209,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_small.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c4a02dfbb2f839d4f640e088222c0a4e7901a19bb9bb0206a2566240d9edcc\",\n                    \"documentType\": \"PROPERTYIMAGE1\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"person-icon-1680.png\",\n                    \"fileStoreId\": \"73abefb6-f456-4826-ba46-92eefe6cc639\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8fa39dd32b5b218da9b808dad997388b8441f1eaea45fd64bb321531f8573e38,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_large.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2c8f9755bd9a0bb9c6cec5a8c108a092dd5dfc9c34a0c5a7c2576214e571e8c0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_medium.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a3d3298d2e693d62b1711e4d1b732c75676c0f8e4b5a3dac7acf9bf7f7f7c209,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_small.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c4a02dfbb2f839d4f640e088222c0a4e7901a19bb9bb0206a2566240d9edcc\",\n                    \"documentType\": \"PROPERTYIMAGE2\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"person-icon-1680.png\",\n                    \"fileStoreId\": \"b9c8a4aa-b6ee-4df5-a720-6b1a06134636\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8fa39dd32b5b218da9b808dad997388b8441f1eaea45fd64bb321531f8573e38,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_large.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2c8f9755bd9a0bb9c6cec5a8c108a092dd5dfc9c34a0c5a7c2576214e571e8c0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_medium.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a3d3298d2e693d62b1711e4d1b732c75676c0f8e4b5a3dac7acf9bf7f7f7c209,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_small.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c4a02dfbb2f839d4f640e088222c0a4e7901a19bb9bb0206a2566240d9edcc\",\n                    \"documentType\": \"PROPERTYIMAGE3\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"person-icon-1680.png\",\n                    \"fileStoreId\": \"8f3de876-74c1-443b-bdcd-d2dbb69b1956\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8fa39dd32b5b218da9b808dad997388b8441f1eaea45fd64bb321531f8573e38,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_large.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2c8f9755bd9a0bb9c6cec5a8c108a092dd5dfc9c34a0c5a7c2576214e571e8c0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_medium.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a3d3298d2e693d62b1711e4d1b732c75676c0f8e4b5a3dac7acf9bf7f7f7c209,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_small.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c4a02dfbb2f839d4f640e088222c0a4e7901a19bb9bb0206a2566240d9edcc\",\n                    \"documentType\": \"PROPERTYIMAGE4\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"person-icon-1680.png\",\n                    \"fileStoreId\": \"8f3de876-74c1-443b-bdcd-d2dbb69b1957\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8fa39dd32b5b218da9b808dad997388b8441f1eaea45fd64bb321531f8573e38,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_large.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2c8f9755bd9a0bb9c6cec5a8c108a092dd5dfc9c34a0c5a7c2576214e571e8c0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_medium.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a3d3298d2e693d62b1711e4d1b732c75676c0f8e4b5a3dac7acf9bf7f7f7c209,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_small.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c4a02dfbb2f839d4f640e088222c0a4e7901a19bb9bb0206a2566240d9edcc\",\n                    \"documentType\": \"PROPERTYIMAGE5\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n{\n                    \"fileName\": \"person-icon-1680.png\",\n                    \"fileStoreId\": \"8f3de876-74c1-443b-bdcd-d2dbb69b1958\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=8fa39dd32b5b218da9b808dad997388b8441f1eaea45fd64bb321531f8573e38,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_large.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=2c8f9755bd9a0bb9c6cec5a8c108a092dd5dfc9c34a0c5a7c2576214e571e8c0,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_medium.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=a3d3298d2e693d62b1711e4d1b732c75676c0f8e4b5a3dac7acf9bf7f7f7c209,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/tl-services/June/26/1593160010940person-icon-1680_small.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200626T082651Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIXRFOQPTX3%2F20200626%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c4a02dfbb2f839d4f640e088222c0a4e7901a19bb9bb0206a2566240d9edcc\",\n                    \"documentType\": \"PROPERTYIMAGE6\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                }\n            ]\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property-images/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property-images",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property-images/_update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"APPROVE\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"16c02053-f48b-463f-b048-c54be8aa405f\"\n    },\n        \"PropertyImagesApplications\": [\n        {\n            \"id\": \"2c7b3b32-5816-4c8f-8e68-1775641015ba\",\n            \"property\": {\n                \"id\": \"0d24a20f-c686-4fdd-87c2-7f5367ae21bc\",\n                \"transitNumber\": null,\n                \"colony\": null,\n                \"pincode\": null,\n                \"area\": null\n            },\n            \"tenantId\": \"ch.chandigarh\",\n            \"applicationNumber\": \"CH-PI-MG-2020-07-26-000071\",\n            \"description\": \"description working!\",\n            \"applicationDocuments\": [\n                {\n                    \"id\": \"076b00a2-f0f4-45c5-94c5-80f99c8b13e2\",\n                    \"applicationId\": \"2c7b3b32-5816-4c8f-8e68-1775641015ba\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true,\n                    \"documentType\": \"PROPERTYIMAGE1\",\n                    \"fileStoreId\": \"59c95c89-ffbb-4614-b4dc-c758b3247311\",\n                    \"auditDetails\": {\n                        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"createdTime\": 1595786250937,\n                        \"lastModifiedTime\": 1595786250937\n                    }\n                },\n                {\n                    \"id\": \"9b9d55a7-5c59-4f29-bc69-d2c7196edee5\",\n                    \"applicationId\": \"2c7b3b32-5816-4c8f-8e68-1775641015ba\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true,\n                    \"documentType\": \"PROPERTYIMAGE2\",\n                    \"fileStoreId\": \"73abefb6-f456-4826-ba46-92eefe6cc639\",\n                    \"auditDetails\": {\n                        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"createdTime\": 1595786250937,\n                        \"lastModifiedTime\": 1595786250937\n                    }\n                },\n                {\n                    \"id\": \"840b3ca5-1c88-4e31-9ade-3df6f1298d59\",\n                    \"applicationId\": \"2c7b3b32-5816-4c8f-8e68-1775641015ba\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true,\n                    \"documentType\": \"PROPERTYIMAGE3\",\n                    \"fileStoreId\": \"b9c8a4aa-b6ee-4df5-a720-6b1a06134636\",\n                    \"auditDetails\": {\n                        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"createdTime\": 1595786250937,\n                        \"lastModifiedTime\": 1595786250937\n                    }\n                },\n                {\n                    \"id\": \"22c3c8fc-0415-4cea-98c0-fafe083a7c74\",\n                    \"applicationId\": \"2c7b3b32-5816-4c8f-8e68-1775641015ba\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true,\n                    \"documentType\": \"PROPERTYIMAGE4\",\n                    \"fileStoreId\": \"8f3de876-74c1-443b-bdcd-d2dbb69b1956\",\n                    \"auditDetails\": {\n                        \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                        \"createdTime\": 1595786250937,\n                        \"lastModifiedTime\": 1595786250937\n                    }\n                }\n            ],\n            \"auditDetails\": {\n                \"createdBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                \"lastModifiedBy\": \"2743bf22-6499-4029-bd26-79e5d0ce6426\",\n                \"createdTime\": 1595786250934,\n                \"lastModifiedTime\": 1595786250934\n            }\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property-images/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property-images",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/notice-generation/_create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"action\": \"\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"requesterId\": \"\",\n        \"authToken\": \"fd8ea8ca-c459-48d1-995b-a639160cefc8\"\n    },\n    \"NoticeApplications\": [\n        {\n            \"OwnerName\": \"Rent Summary mismatch\",\n            \"tenantId\": \"ch.chandigarh\",\n            \"allotmentNumber\": \"24-09\",\n            \"memoDate\": 1540232999000,\n            \"violations\": \"vwefwef\",\n            \"noticeType\": \"Violation\",\n            \"description\": \"fwefwed\",\n            \"relationship\": \"FATHER\",\n            \"guardian\": \"A A A\",\n            \"propertyImageId\": \"04b21be2-ab2d-4125-85ea-a3fa57ce16f4\",\n            \"property\": {\n                \"id\": \"541ac4a2-52e1-4af4-b29d-cdc26250c2ed\",\n                \"transitNumber\": \"1919\",\n                \"pincode\": null,\n                \"area\": null,\n                \"colony\": \"COLONY.MILK\"\n            },\n            \"applicationDocuments\": [\n                {\n                    \"fileName\": \"index.jpeg\",\n                    \"fileStoreId\": \"4485c834-14e8-4342-87a3-5ec335aa7329\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1963d7246ba63efad2ea4813554e21ca55c0564f772a7c0d650ced8f9626c58a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=520e229908f3d2830995b83273db37ee75feed9b521fe0fffccdd7059213e8f7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3597312bc4a1fb1e868fdf45ee8259e35c53a0d6733c67d96dfb62b6bfc9ff2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19e0307eb5c1f4d71f935e1b2b4f31c994e5b3ec279d9488d7d1e00d4718a539\",\n                    \"documentType\": \"PROPERTYIMAGE 1\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"index.jpeg\",\n                    \"fileStoreId\": \"4485c834-14e8-4342-87a3-5ec335aa7329\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1963d7246ba63efad2ea4813554e21ca55c0564f772a7c0d650ced8f9626c58a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=520e229908f3d2830995b83273db37ee75feed9b521fe0fffccdd7059213e8f7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3597312bc4a1fb1e868fdf45ee8259e35c53a0d6733c67d96dfb62b6bfc9ff2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19e0307eb5c1f4d71f935e1b2b4f31c994e5b3ec279d9488d7d1e00d4718a539\",\n                    \"documentType\": \"PROPERTYIMAGE 2\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"index.jpeg\",\n                    \"fileStoreId\": \"4485c834-14e8-4342-87a3-5ec335aa7329\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1963d7246ba63efad2ea4813554e21ca55c0564f772a7c0d650ced8f9626c58a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=520e229908f3d2830995b83273db37ee75feed9b521fe0fffccdd7059213e8f7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3597312bc4a1fb1e868fdf45ee8259e35c53a0d6733c67d96dfb62b6bfc9ff2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19e0307eb5c1f4d71f935e1b2b4f31c994e5b3ec279d9488d7d1e00d4718a539\",\n                    \"documentType\": \"PROPERTYIMAGE 3\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"index.jpeg\",\n                    \"fileStoreId\": \"4485c834-14e8-4342-87a3-5ec335aa7329\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1963d7246ba63efad2ea4813554e21ca55c0564f772a7c0d650ced8f9626c58a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=520e229908f3d2830995b83273db37ee75feed9b521fe0fffccdd7059213e8f7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3597312bc4a1fb1e868fdf45ee8259e35c53a0d6733c67d96dfb62b6bfc9ff2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19e0307eb5c1f4d71f935e1b2b4f31c994e5b3ec279d9488d7d1e00d4718a539\",\n                    \"documentType\": \"PROPERTYIMAGE 4\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"index.jpeg\",\n                    \"fileStoreId\": \"4485c834-14e8-4342-87a3-5ec335aa7329\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1963d7246ba63efad2ea4813554e21ca55c0564f772a7c0d650ced8f9626c58a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=520e229908f3d2830995b83273db37ee75feed9b521fe0fffccdd7059213e8f7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3597312bc4a1fb1e868fdf45ee8259e35c53a0d6733c67d96dfb62b6bfc9ff2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19e0307eb5c1f4d71f935e1b2b4f31c994e5b3ec279d9488d7d1e00d4718a539\",\n                    \"documentType\": \"PROPERTYIMAGE 5\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                },\n                {\n                    \"fileName\": \"index.jpeg\",\n                    \"fileStoreId\": \"4485c834-14e8-4342-87a3-5ec335aa7329\",\n                    \"fileUrl\": \"https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=1963d7246ba63efad2ea4813554e21ca55c0564f772a7c0d650ced8f9626c58a,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_large.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=520e229908f3d2830995b83273db37ee75feed9b521fe0fffccdd7059213e8f7,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_medium.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=d3597312bc4a1fb1e868fdf45ee8259e35c53a0d6733c67d96dfb62b6bfc9ff2,https://digit-s3.s3.ap-south-1.amazonaws.com/ch/egov-rented-properties/October/28/1603888809051index_small.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201028T124324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA3CQUPMIX3BJDAIVF%2F20201028%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=19e0307eb5c1f4d71f935e1b2b4f31c994e5b3ec279d9488d7d1e00d4718a539\",\n                    \"documentType\": \"PROPERTYIMAGE 6\",\n                    \"tenantId\": \"ch.chandigarh\",\n                    \"active\": true\n                }\n            ]\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/notice-generation/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"notice-generation",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property/_payrent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"action\": \"\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"requesterId\": \"\",\n        \"authToken\": \"2ca3e99b-8330-45c5-8910-4b2b7dafab88\"\n    },\n    \"Properties\": [\n        {\n            \"id\": \"541ac4a2-52e1-4af4-b29d-cdc26250c2ed\",\n            \"paymentAmount\": \"900\",\n            \"transactionId\": \"trans3349\",\n            \"bankName\": \"xxxx\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_payrent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_payrent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property/_accountstatementxlsx",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_search\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"8bea1040-9469-42b3-b39b-93a8026a3987\"\n  },\n  \"Criteria\": {\n      \"toDate\": 1600260684532,\n      \"fromDate\": 1420549876000,\n      \"propertyid\": \"ca2c8e60-a63d-490a-a432-bafe5d7cd29b\"\n  }\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_accountstatementxlsx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_accountstatementxlsx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property/_accountstatement",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_search\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"8bea1040-9469-42b3-b39b-93a8026a3987\"\n  },\n  \"Criteria\": {\n      \"toDate\": 1600260684532,\n      \"fromDate\": 1420549876000,\n      \"propertyid\": \"ca2c8e60-a63d-490a-a432-bafe5d7cd29b\"\n  }\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_accountstatement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_accountstatement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/property/_update_dues",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \".01\",\n    \"ts\": \"\",\n    \"action\": \"_search\",\n    \"did\": \"1\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900|en_IN\",\n    \"authToken\": \"8bea1040-9469-42b3-b39b-93a8026a3987\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/property/_update_dues",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"property",
+						"_update_dues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/rent-demands/_create?date=01/09/2020",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8284/rp-services/rent-demands/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8284",
+					"path": [
+						"rp-services",
+						"rent-demands",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "01/09/2020",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/rp-services/v1/excel/read",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": \"\",\n        \"action\": \"APPROVE\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"752ad9c4-f68c-4090-9b03-8923999cf791\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/rp-services/v1/excel/read",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"rp-services",
+						"v1",
+						"excel",
+						"read"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "fileStoreId",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

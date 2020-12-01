@@ -703,7 +703,7 @@ serviceMaps:
 
       - jsonPath: $.Properties.*.rentCollections.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO cs_pt_offline_payment_detail (id, property_id, demand_id, amount, bankname, transactionnumber) VALUES (?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bankname=?, transactionnumber=?;
+    - query: INSERT INTO cs_pt_offline_payment_detail (id, property_id, demand_id, amount, bankname, transactionnumber, created_by, modified_by, created_date, modified_date) VALUES (?,?,?,?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bankname=?, transactionnumber=?, modified_by=?, modified_date=?;
       basePath: $.Properties.*.offlinePaymentDetails.*
       jsonMaps:
 
@@ -719,6 +719,14 @@ serviceMaps:
 
       - jsonPath: $.Properties.*.offlinePaymentDetails.*.transactionNumber
 
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.auditDetails.createdBy
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.auditDetails.lastModifiedBy
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.auditDetails.createdTime
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.auditDetails.lastModifiedTime
+
       - jsonPath: $.Properties.*.offlinePaymentDetails.*.demandId
 
       - jsonPath: $.Properties.*.offlinePaymentDetails.*.amount
@@ -726,6 +734,10 @@ serviceMaps:
       - jsonPath: $.Properties.*.offlinePaymentDetails.*.bankName
 
       - jsonPath: $.Properties.*.offlinePaymentDetails.*.transactionNumber
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.auditDetails.lastModifiedBy
+
+      - jsonPath: $.Properties.*.offlinePaymentDetails.*.auditDetails.lastModifiedTime
 
  - version: 1.0
    description: Persists Owners details in cs_pt_ownership_v1 table

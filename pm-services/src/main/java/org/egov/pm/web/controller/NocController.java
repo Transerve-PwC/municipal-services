@@ -191,5 +191,4 @@ public class NocController {
 		return new ResponseEntity<>(ResponseInfo.builder().status("SUCCESS").build(), HttpStatus.CREATED);
 
 	}
-
 }

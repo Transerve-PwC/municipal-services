@@ -5,6 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.DuplicateCopy;
@@ -17,15 +21,10 @@ import org.egov.cpt.web.contracts.OwnershipTransferRequest;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -70,9 +69,6 @@ public class WorkflowIntegrator {
 	private RestTemplate rest;
 
 	private PropertyConfiguration config;
-
-	@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
-	private Boolean pickWFServiceNameFromTradeTypeOnly;
 
 	@Autowired
 	public WorkflowIntegrator(RestTemplate rest, PropertyConfiguration config) {

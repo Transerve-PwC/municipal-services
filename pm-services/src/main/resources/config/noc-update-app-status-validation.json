@@ -169,6 +169,11 @@
 					"mandatory": "false",
 					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
 				},
+				"isAnyChangeInRoadCutEstimation": {
+					"fieldName": "isAnyChangeInRoadCutEstimation",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
 				"amount": {
 					"fieldName": "amount",
 					"mandatory": "true",
@@ -209,6 +214,11 @@
 					"fieldName": "uploadDocuments",
 					"mandatory": "false",
 					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				},
+				"isAnyChangeInRoadCutEstimation": {
+					"fieldName": "isAnyChangeInRoadCutEstimation",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
 				},
 				"amount": {
 					"fieldName": "amount",
@@ -251,6 +261,11 @@
 					"mandatory": "false",
 					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
 				},
+				"isAnyChangeInRoadCutEstimation":{
+					"fieldName": "isAnyChangeInRoadCutEstimation",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
 				"amount": {
 					"fieldName": "amount",
 					"mandatory": "true",
@@ -268,6 +283,20 @@
 				}
 			},
 			"REASSIGN": {
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			}
+		},
+		"SDO-PAID": {
+			"VERIFYANDFORWARD": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
@@ -320,6 +349,20 @@
 				}
 			},
 			"REASSIGNTOJE": {
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			}
+		},
+		"EE-VERIFYANDFORWARD": {
+			"COMPLETED": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",

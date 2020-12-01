@@ -201,6 +201,7 @@ public class ReceiptNoteService extends DomainService {
 	public MaterialReceiptResponse update(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
 		List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
 
+
 		for (MaterialReceipt m : materialReceipts) {
 			for (MaterialReceiptDetail receiptDetails : m.getReceiptDetails()) {
 				if (receiptDetails.getUserReceivedQty() != null) {
@@ -266,7 +267,7 @@ public class ReceiptNoteService extends DomainService {
 				}
 			}
 
-			backUpdatePo(tenantId, materialReceipt);
+			// backUpdatePo(tenantId, materialReceipt);
 		});
 
 		logAwareKafkaTemplate.send(updateTopic, updateTopicKey, materialReceiptRequest);
@@ -420,7 +421,7 @@ public class ReceiptNoteService extends DomainService {
 					throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
 				} else {
 					for (MaterialReceipt materialReceipt : materialReceipts) {
-						validateMaterialReceipt(materialReceipt, tenantId, errors, requestInfo);
+						validateMaterialReceipt(materialReceipt, tenantId, errors, requestInfo, method);
 					}
 				}
 			}
@@ -432,7 +433,7 @@ public class ReceiptNoteService extends DomainService {
 					throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
 				} else {
 					for (MaterialReceipt materialReceipt : materialReceipts) {
-						validateMaterialReceipt(materialReceipt, tenantId, errors, requestInfo);
+						validateMaterialReceipt(materialReceipt, tenantId, errors, requestInfo, method);
 					}
 				}
 			}
@@ -447,7 +448,7 @@ public class ReceiptNoteService extends DomainService {
 	}
 
 	private void validateMaterialReceipt(MaterialReceipt materialReceipt, String tenantId, InvalidDataException errors,
-			RequestInfo requestInfo) {
+			RequestInfo requestInfo, String method) {
 
 		if (null != materialReceipt.getReceivingStore() && !isEmpty(materialReceipt.getReceivingStore().getCode())) {
 			validateStore(materialReceipt.getReceivingStore().getCode(), tenantId, errors);
@@ -472,7 +473,7 @@ public class ReceiptNoteService extends DomainService {
 			validateSupplier(materialReceipt, tenantId, errors);
 		}
 
-		validateMaterialReceiptDetail(materialReceipt, tenantId, errors, requestInfo);
+		validateMaterialReceiptDetail(materialReceipt, tenantId, errors, requestInfo, method);
 
 	}
 
@@ -481,7 +482,7 @@ public class ReceiptNoteService extends DomainService {
 	}
 
 	private void validateMaterialReceiptDetail(MaterialReceipt materialReceipt, String tenantId,
-			InvalidDataException errors, RequestInfo requestInfo) {
+			InvalidDataException errors, RequestInfo requestInfo, String method) {
 		int i = 0;
 		validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails(), errors);
 		for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
@@ -490,7 +491,8 @@ public class ReceiptNoteService extends DomainService {
 			if (materialReceipt.getReceiptType().toString()
 					.equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
 				validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceivingStore().getCode(),
-						materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId, i, errors);
+						materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId, i, errors,
+						method);
 			}
 			validateMaterial(materialReceiptDetail, tenantId, i, errors);
 			validateUom(materialReceiptDetail, tenantId, i, errors, requestInfo);
@@ -638,7 +640,7 @@ public class ReceiptNoteService extends DomainService {
 	}
 
 	private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate,
-			String supplier, String tenantId, int i, InvalidDataException errors) {
+			String supplier, String tenantId, int i, InvalidDataException errors, String method) {
 
 		if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
 			PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
@@ -666,19 +668,24 @@ public class ReceiptNoteService extends DomainService {
 					if (materialReceiptDetail.getReceivedQty().compareTo(purchaseOrderDetail.getOrderQuantity()) > 0) {
 						errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), String.valueOf(i));
 					}
-
-					BigDecimal remainingQuantity = purchaseOrderDetail.getOrderQuantity()
-							.subtract(purchaseOrderDetail.getReceivedQuantity());
-					BigDecimal conversionFactor = materialReceiptDetail.getUom().getConversionFactor();
-					BigDecimal convertedRemainingQuantity = getSearchConvertedQuantity(remainingQuantity,
-							conversionFactor);
-					if (null != purchaseOrderDetail.getReceivedQuantity()
-							&& materialReceiptDetail.getReceivedQty().compareTo(remainingQuantity) > 0) {
-						errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(),
-								materialReceiptDetail.getUserReceivedQty().toString(),
-								convertedRemainingQuantity.toString(), String.valueOf(i));
+					if (method.equals(Constants.ACTION_UPDATE)) {
+						validateMaterialReceivedQuantity(materialReceiptDetail.getMrnNumber(),
+								materialReceiptDetail.getReceivedQty(), purchaseOrderDetail, tenantId, errors);
 					}
 
+					if (!method.equals(Constants.ACTION_UPDATE)) {
+						BigDecimal remainingQuantity = purchaseOrderDetail.getOrderQuantity()
+								.subtract(purchaseOrderDetail.getReceivedQuantity());
+						BigDecimal conversionFactor = materialReceiptDetail.getUom().getConversionFactor();
+						BigDecimal convertedRemainingQuantity = getSearchConvertedQuantity(remainingQuantity,
+								conversionFactor);
+						if (null != purchaseOrderDetail.getReceivedQuantity()
+								&& materialReceiptDetail.getReceivedQty().compareTo(remainingQuantity) > 0) {
+							errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(),
+									materialReceiptDetail.getUserReceivedQty().toString(),
+									convertedRemainingQuantity.toString(), String.valueOf(i));
+						}
+					}
 					PurchaseOrderEntity po = new PurchaseOrderEntity();
 					po.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
 					po.setTenantId(tenantId);
@@ -706,13 +713,61 @@ public class ReceiptNoteService extends DomainService {
 					PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
 					purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
 					purchaseOrderSearch.setTenantId(tenantId);
-					if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch)) {
-						errors.addDataError(ErrorCode.PO_SUPPLIED.getCode(),
-								purchaseOrderDetail.getPurchaseOrderNumber());
+					if (!method.equals(Constants.ACTION_UPDATE)) {
+						if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch)) {
+							errors.addDataError(ErrorCode.PO_SUPPLIED.getCode(),
+									purchaseOrderDetail.getPurchaseOrderNumber());
+						}
 					}
 				}
 			}
 		}
+	}
+
+	private void validateMaterialReceivedQuantity(String mrnNumber, BigDecimal receivedQuantityFromRequest,
+			PurchaseOrderDetail purchaseOrderDetail, String tenantId, InvalidDataException errors) {
+
+		MaterialReceiptSearch materialReceiptSearch = new MaterialReceiptSearch();
+		materialReceiptSearch.setMrnNumber(Arrays.asList(mrnNumber));
+		materialReceiptSearch.setTenantId(tenantId);
+		MaterialReceiptResponse receiptResponse = search(materialReceiptSearch);
+		for (MaterialReceipt materialReceipt : receiptResponse.getMaterialReceipt()) {
+			for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+				BigDecimal receivedQuantityToAdjust = new BigDecimal(0);
+				String operationToPerform="+";
+				if (materialReceiptDetail.getReceivedQty().compareTo(receivedQuantityFromRequest) < 0) {
+					// if receieved quantity from request is greater than quantty in update request
+					BigDecimal remainingQuantity = purchaseOrderDetail.getOrderQuantity()
+							.subtract(purchaseOrderDetail.getReceivedQuantity());
+					BigDecimal conversionFactor = materialReceiptDetail.getUom().getConversionFactor();
+					BigDecimal convertedRemainingQuantity = getSearchConvertedQuantity(remainingQuantity,
+							conversionFactor);
+					receivedQuantityToAdjust = receivedQuantityFromRequest
+							.subtract(materialReceiptDetail.getReceivedQty());
+					if (null != purchaseOrderDetail.getReceivedQuantity()
+							&& receivedQuantityToAdjust.compareTo(remainingQuantity) > 0) {
+						errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(),
+								materialReceiptDetail.getUserReceivedQty().toString(),
+								convertedRemainingQuantity.toString(), String.valueOf(0));
+					}
+				} else if (materialReceiptDetail.getReceivedQty().compareTo(receivedQuantityFromRequest) > 0) {
+					receivedQuantityToAdjust = materialReceiptDetail.getReceivedQty()
+							.subtract(receivedQuantityFromRequest);
+					operationToPerform="-";
+				}
+				if (materialReceiptDetail.getReceivedQty().compareTo(receivedQuantityFromRequest) != 0
+						&& MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString()
+								.equalsIgnoreCase(materialReceipt.getReceiptType().toString())) {
+					HashMap<String, String> hashMap = new HashMap<>();
+					hashMap.put("receivedquantity", "receivedquantity "+operationToPerform+" "+ receivedQuantityToAdjust);
+					materialReceiptDetail.getPurchaseOrderDetail().setTenantId(tenantId);
+					receiptNoteRepository.updateColumn(
+							new PurchaseOrderDetailEntity().toEntity(materialReceiptDetail.getPurchaseOrderDetail()),
+							"purchaseorderdetail", hashMap, null);
+				}
+			}
+		}
+
 	}
 
 	private String appendString(MaterialReceipt materialReceipt) {

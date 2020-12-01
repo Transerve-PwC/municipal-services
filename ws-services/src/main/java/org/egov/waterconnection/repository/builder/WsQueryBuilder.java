@@ -31,7 +31,10 @@ public class WsQueryBuilder {
 	private static final String INNER_JOIN_STRING = " INNER JOIN ";
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 
-	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype, holdershippercentage, connectionholder.relationship as holderrelationship, connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
+	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, "
+			+ "connectionholder.status as holderstatus, isprimaryholder, connectionholdertype, holdershippercentage, connectionholder.relationship as holderrelationship, "
+			+ "connectionholder.name as holdername, connectionholder.mobile_No as holdermobile, connectionholder.gender as holdergender, connectionholder.guardian_name as holderguardianname, connectionholder.correspondance_address as holderaddress, "
+			+ "connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
 	
 	private static final String WATER_SEARCH_QUERY = "SELECT "
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
@@ -62,12 +65,14 @@ public class WsQueryBuilder {
 			+  LEFT_OUTER_JOIN_STRING
 			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id"
 			+ LEFT_OUTER_JOIN_STRING
-		    + "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id";
+		    + "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id"
+			+ LEFT_OUTER_JOIN_STRING
+		    + "eg_ws_connection_mapping connmap ON connmap.wsid = conn.id";
 	
 	private static final String NO_OF_CONNECTION_SEARCH_QUERY = "SELECT count(*) FROM eg_ws_connection WHERE";
 	
 	private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
-            "(SELECT *, DENSE_RANK() OVER (ORDER BY app_applicationno) offset_ FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY app_applicationno desc) offset_ FROM " +
             "({})" +
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";

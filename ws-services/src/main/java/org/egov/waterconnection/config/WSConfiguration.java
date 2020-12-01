@@ -59,7 +59,7 @@ public class WSConfiguration {
 
 	@Value("${workflow.businessservice.search.path}")
 	private String wfBusinessServiceSearchPath;
-	
+
 	@Value("${workflow.process.search.path}")
 	private String wfProcessSearchPath;
 
@@ -107,66 +107,66 @@ public class WSConfiguration {
 
 	@Value("${egov.user.event.notification.enabled}")
 	private Boolean isUserEventsNotificationEnabled;
-	
-    //User Configuration
-    @Value("${egov.user.host}")
-    private String userHost;
 
-    @Value("${egov.user.context.path}")
-    private String userContextPath;
+	// User Configuration
+	@Value("${egov.user.host}")
+	private String userHost;
 
-    @Value("${egov.user.search.path}")
-    private String userSearchEndpoint;
-    
-    // water connection Calculator
-    @Value("${egov.ws.calculation.host}")
-    private String calculatorHost;
+	@Value("${egov.user.context.path}")
+	private String userContextPath;
 
-    @Value("${egov.ws.calculation.endpoint}")
-    private String calculateEndpoint;
-    
-    @Value("${egov.receipt.businessservice}")
-    private String receiptBusinessservice;
-    
-    @Value("${ws.meterreading.create}")
-    private String createMeterReading;
-    
-    @Value("${ws.meterreading.create.endpoint}")
-    private String createMeterReadingEndpoint;
-    
-    @Value("${ws.mseva.app.link}")
-    private String mSevaAppLink;
-    
-    @Value("${ws.view.history.link}")
-    private String viewHistoryLink;
-    
-    @Value("${ws.connectiondetails.link}")
-    private String connectionDetailsLink;
-    
-    @Value("${ws.application.pay.link}")
-    private String applicationPayLink;
-    
-    @Value("${egov.ws.estimate.endpoint}")
-    private String estimationEndpoint;
-    
-    @Value("${ws.pdfservice.link}")
-    private String pdfServiceLink;
-    
-    @Value("${ws.fileStore.link}")
-    private String fileStoreLink;
-    
-    @Value("${ws.shortener.url}")
-    private String shortenerURL;
-    
-    @Value("${egov.pdfservice.host}")
-    private String pdfServiceHost;
-    
-    @Value("${egov.filestore.host}")
-    private String fileStoreHost;
-    
-    @Value("${ws.editnotification.topic}")
-    private String editNotificationTopic;
-    
+	@Value("${egov.user.search.path}")
+	private String userSearchEndpoint;
+
+	// water connection Calculator
+	@Value("${egov.ws.calculation.host}")
+	private String calculatorHost;
+
+	@Value("${egov.ws.calculation.endpoint}")
+	private String calculateEndpoint;
+
+	@Value("${egov.receipt.businessservice}")
+	private String receiptBusinessservice;
+
+	@Value("${ws.meterreading.create}")
+	private String createMeterReading;
+
+	@Value("${ws.meterreading.create.endpoint}")
+	private String createMeterReadingEndpoint;
+
+	@Value("${ws.mseva.app.link}")
+	private String mSevaAppLink;
+
+	@Value("${ws.view.history.link}")
+	private String viewHistoryLink;
+
+	@Value("${ws.connectiondetails.link}")
+	private String connectionDetailsLink;
+
+	@Value("${ws.application.pay.link}")
+	private String applicationPayLink;
+
+	@Value("${egov.ws.estimate.endpoint}")
+	private String estimationEndpoint;
+
+	@Value("${ws.pdfservice.link}")
+	private String pdfServiceLink;
+
+	@Value("${ws.fileStore.link}")
+	private String fileStoreLink;
+
+	@Value("${ws.shortener.url}")
+	private String shortenerURL;
+
+	@Value("${egov.pdfservice.host}")
+	private String pdfServiceHost;
+
+	@Value("${egov.filestore.host}")
+	private String fileStoreHost;
+
+	@Value("${ws.editnotification.topic}")
+	private String editNotificationTopic;
+
 	@Value("${ws.consume.filestoreids}")
 	private String fileStoreIdsTopic;
 
@@ -178,17 +178,25 @@ public class WSConfiguration {
 
 	@Value("${egov.user.update.path}")
 	private String userUpdateEndPoint;
-   
-	
+
 	@Value("${create.ws.disconnection.workflow.name}")
 	private String businessServiceDisconnectionValue;
-	
+
 	@Value("${create.ws.rename.workflow.name}")
 	private String businessServiceRenameValue;
-	
+
 	@Value("${create.ws.conversion.workflow.name}")
 	private String businessServiceConversionValue;
-	
+
 	@Value("${create.ws.tubewell.workflow.name}")
 	private String businessServiceTubewellValue;
+	
+	@Value("${egov.waterservice.savewaterbilling}")
+	private String saveWaterBilling;
+	
+	@Value("${egov.waterservice.addconnectionmapping}")
+	private String addConnectionMapping;
+	
+	@Value("${egov.waterservice.deleteconnectionmapping}")
+	private String deleteConnectionMapping;
 }

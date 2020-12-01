@@ -286,7 +286,7 @@
           "action": "PAY",
           "currentState": "PENDING_PAYMENT",
           "nextState": "PENDING_DA_PREPARE_LETTER",
-          "roles": ["CITIZEN"]
+          "roles": ["CITIZEN", "ES_MM_FINANCIAL_OFFICER"]
         }
       ],
       "sla": 2,

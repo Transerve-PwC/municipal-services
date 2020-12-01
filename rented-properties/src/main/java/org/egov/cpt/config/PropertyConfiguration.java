@@ -1,10 +1,11 @@
 package org.egov.cpt.config;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,18 +77,12 @@ public class PropertyConfiguration {
 	@Value("${persister.update.mortgage.topic}")
 	private String updateMortgageTopic;
 
-	@Value("${persister.cancel.property.topic}")
-	private String cancelPropertyTopic;
-
 	@Value("${persister.save.notice.topic}")
 	private String saveNoticeTopic;
 
 	@Value("${persister.update.notice.topic}")
 	private String updateNoticeTopic;
 
-	@Value("${persister.cancel.property.assessment.topic}")
-	private String cancelPropertyAssessmentTopic;
-	
 	@Value("${persister.save.dueamount.topic}")
 	private String dueAmountTopic;
 
@@ -107,9 +100,6 @@ public class PropertyConfiguration {
 	@Value("${kafka.topics.notification.fullpayment}")
 	private String receiptTopic;
 
-	@Value("${kafka.topics.notification.pg.save.txns}")
-	private String pgTopic;
-
 	@Value("${egov.localization.statelevel}")
 	private Boolean isStateLevel;
 
@@ -121,7 +111,7 @@ public class PropertyConfiguration {
 
 	@Value("${kafka.topics.notification.email}")
 	private String emailNotifTopic;
-	
+
 	@Value("${egov.user.event.notification.enabledForRP}")
 	private Boolean isUserEventsNotificationEnabledForRP;
 
@@ -131,9 +121,6 @@ public class PropertyConfiguration {
 
 	@Value("${employee.allowed.search.params}")
 	private String employeeSearchParams;
-
-	@Value("${notification.url}")
-	private String notificationURL;
 
 	@Value("${pt.search.pagination.default.limit}")
 	private Long defaultLimit;
@@ -163,37 +150,23 @@ public class PropertyConfiguration {
 
 	@Value("${egov.usr.events.pay.link}")
 	private String payLink;
-	
+
 	@Value("${egov.usr.events.ot.pay.link}")
 	private String payLinkForOT;
-	
+
 	@Value("${egov.usr.events.dc.pay.link}")
 	private String payLinkForDC;
-	
+
 	@Value("${egov.usr.events.rent.pay.link}")
 	private String payLinkForRent;
-	
+
 	@Value("${egov.usr.events.pay.code}")
 	private String payCode;
-	
+
 	@Value("${egov.usr.events.pay.triggers}")
 	private String payTriggers;
-	
-
-	// Assessments V2
-	@Value("${egov.pt.assessment.create.topic}")
-	private String createAssessmentTopic;
-
-	@Value("${egov.pt.assessment.update.topic}")
-	private String updateAssessmentTopic;
 
 	// Workflow
-
-	@Value("${property.workflow.name}")
-	private String propertyRegistryWf;
-
-	@Value("${pt.business.codes}")
-	private List<String> businessServiceList;
 
 	@Value("${workflow.context.path}")
 	private String wfHost;
@@ -206,9 +179,6 @@ public class PropertyConfiguration {
 
 	@Value("${is.workflow.enabled}")
 	private Boolean isWorkflowEnabled;
-
-	@Value("${workflow.status.active}")
-	private String wfStatusActive;
 
 	@Value("${create.csp.workflow.name}")
 	private String cSPBusinessServiceValue;
@@ -229,17 +199,6 @@ public class PropertyConfiguration {
 
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
-
-	// Registry
-
-	@Value("${property.min.landarea}")
-	private Double minumumLandArea;
-
-	@Value("${property.unit.landarea}")
-	private String landAreaUnit;
-
-	@Value("${property.module.name}")
-	private String propertyModuleName;
 
 	// ID Generation
 

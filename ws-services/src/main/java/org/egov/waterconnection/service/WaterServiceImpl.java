@@ -11,6 +11,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
+import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.WaterConnection;
@@ -29,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -82,6 +82,8 @@ public class WaterServiceImpl implements WaterService {
 	
 	@Autowired
 	private WaterServicesUtil wsUtil;
+	
+	
 	
 	
 	/**
@@ -231,5 +233,22 @@ public class WaterServiceImpl implements WaterService {
 		}
 			
 		return connections.get(0);
+	}
+	@Override
+	public List<WaterConnection> deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
+		AuditDetails auditDetails = wsUtil
+				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
+		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
+		waterDao.deleteConnectionMapping(waterConnectionRequest);
+		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
+	}
+	@Override
+	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
+		AuditDetails auditDetails = wsUtil
+				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
+		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
+		waterDao.addConnectionMapping(waterConnectionRequest);
+		
+		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
 }

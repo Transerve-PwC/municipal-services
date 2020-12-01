@@ -80,7 +80,7 @@ public class PropertyValidator {
 		validateColony(request, errorMap);
 		validateArea(request, errorMap);
 		validateRentDetails(request, errorMap);
-
+		validateNumericValueForProperty(request, errorMap);
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
@@ -241,6 +241,7 @@ public class PropertyValidator {
 		validateColony(request, errorMap);
 		validateArea(request, errorMap);
 		validateRentDetails(request, errorMap);
+		validateNumericValueForProperty(request, errorMap);
 		/**
 		 * TO validate Documents
 		 */
@@ -1065,4 +1066,57 @@ public class PropertyValidator {
 			throw new CustomException(errorMap);
 		}
 	}
+
+	private void validateNumericValueForProperty(PropertyRequest request, Map<String, String> errorMap) {
+		List<Property> properties = request.getProperties();
+		properties.forEach(property -> {
+			if (!isNumeric(property.getPropertyDetails().getFloors())) {
+				errorMap.put("INVALID FLOORS", "Invalid floors");
+			}
+			if (!isNumeric(property.getPropertyDetails().getRentPerSqyd())) {
+				errorMap.put("INVALID RENT PER SQYD", "Invalid rent per sqyd");
+			}
+			if (!isNumeric(property.getPropertyDetails().getArea())) {
+				errorMap.put("INVALID AREA", "Invalid AREA");
+			}
+			property.getOwners().forEach(owner -> {
+				if (!isNumeric(owner.getOwnerDetails().getMonthlyRent())) {
+					errorMap.put("INVALID MONTHLY RENT", "Invalid monthly rent");
+				}
+				if (!isNumeric(owner.getOwnerDetails().getRevisionPeriod())) {
+					errorMap.put("INVALID REVISION PERIOD", "Invalid revision period");
+				}
+				if (!isNumeric(owner.getOwnerDetails().getRevisionPercentage())) {
+					errorMap.put("INVALID REVISION PERCENTAGE", "Invalid revision percentage");
+				}
+			});
+		});
+	}
+
+	public void validatePropertyRentDetails(OwnershipTransferRequest request) {
+		Map<String, String> errorMap = new HashMap<>();
+		List<Owner> owners = request.getOwners();
+		owners.forEach(owner -> {
+			if (!isNumeric(owner.getOwnerDetails().getMonthlyRent())) {
+				errorMap.put("INVALID MONTHLY RENT", "Invalid monthly rent");
+			}
+			if (!isNumeric(owner.getOwnerDetails().getRevisionPeriod())) {
+				errorMap.put("INVALID REVISION PERIOD", "Invalid revision period");
+			}
+			if (!isNumeric(owner.getOwnerDetails().getRevisionPercentage())) {
+				errorMap.put("INVALID REVISION PERCENTAGE", "Invalid revision percentage");
+			}
+		});
+		if (!errorMap.isEmpty()) {
+			throw new CustomException(errorMap);
+		}
+	}
+
+	private Boolean isNumeric(String value) {
+		if (value != null && !value.matches("(\\d+)?(\\.\\d+)?")) {
+			return false;
+		}
+		return true;
+	}
+
 }

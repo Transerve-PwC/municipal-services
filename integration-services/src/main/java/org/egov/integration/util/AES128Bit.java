@@ -1,6 +1,5 @@
 package org.egov.integration.util;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.DigestException;
 import java.security.InvalidAlgorithmParameterException;
@@ -12,35 +11,34 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
 import org.apache.commons.codec.binary.Base64;
 
 public class AES128Bit {
-	//static private final String ENCODING = "UTF-8";
     static private final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-    //static private final String TRANSFORMATION = "AES/CBC/PKCS7Padding";
-    //static private final String TRANSFORMATION = "AES/CBC/NoPadding";
-    //static private final String TRANSFORMATION = "AES/CBC/PKCS5NOPADDING";
-	//static private final String TRANSFORMATION = "AES/CTR/NoPadding";
     static private final String AES = "AES";
 
     public static String doEncryptedAES(String inputString, String key) {
         String encrypted = "error_encrypted";
         byte[] encryptedbyte = null;
-        byte[] keyByte = null;
         Cipher cp;
         SecretKeySpec sks = null;
         IvParameterSpec ips = null;
+        PasswordDeriveBytes secretKey;
         try {
-        	//encryptedbyte = inputString.getBytes(ENCODING);
         	encryptedbyte = inputString.getBytes(StandardCharsets.UTF_16LE);
-            keyByte = getKeyBytes(key);
+            secretKey = getKeyBytes(key);            
         } catch (NullPointerException | DigestException e) {
             e.printStackTrace();
             return encrypted;
-        }
+        } 
 
-        sks = new SecretKeySpec(keyByte, AES);
-        ips = new IvParameterSpec(keyByte);
+        try {
+			sks = new SecretKeySpec(secretKey.GetBytes(16), AES);
+			ips = new IvParameterSpec(secretKey.GetBytes(16));
+		} catch (DigestException e1) {
+			e1.printStackTrace();
+		}
 
         try {
             cp = Cipher.getInstance(TRANSFORMATION);
@@ -57,22 +55,26 @@ public class AES128Bit {
     public static String doDecryptedAES(String encrypted, String key) {
         String decrypted = "error_decrypted";
         byte[] encryptedByte;
-        byte[] keyByte;
+        PasswordDeriveBytes secretKey;
         try {
-        	//encryptedByte = Base64.decodeBase64(encrypted.getBytes("UTF8"));
         	encryptedByte = Base64.decodeBase64(encrypted.getBytes(StandardCharsets.UTF_16LE));
-            keyByte = getKeyBytes(key);
+        	secretKey = getKeyBytes(key);
         } catch (NullPointerException | DigestException e) {
-            System.out.println(e.getMessage());
             return decrypted;
         }
-        SecretKeySpec sks = new SecretKeySpec(keyByte, AES);
-        IvParameterSpec ips = new IvParameterSpec(keyByte);
+        SecretKeySpec sks = null;
+        IvParameterSpec ips = null;
+		try {
+			sks = new SecretKeySpec(secretKey.GetBytes(16), AES);
+			ips = new IvParameterSpec(secretKey.GetBytes(16));
+		} catch (DigestException e1) {
+			e1.printStackTrace();
+		}
+        
         try {
             Cipher cp = Cipher.getInstance(TRANSFORMATION);
             cp.init(Cipher.DECRYPT_MODE, sks, ips);
             encryptedByte = cp.doFinal(encryptedByte);
-            //decrypted = new String(encryptedByte, ENCODING);
             decrypted = new String(encryptedByte, StandardCharsets.UTF_16LE);
             return decrypted;
         } catch (InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
@@ -81,17 +83,23 @@ public class AES128Bit {
         }
     }
     
-    private static byte[] getKeyBytes(String key) throws DigestException {
-        /*byte[] keyBytes = new byte[16];
-        try {
-            byte[] parameterKeyBytes = key.getBytes(ENCODING);
-            System.arraycopy(parameterKeyBytes, 0, keyBytes, 0, Math.min(parameterKeyBytes.length, keyBytes.length));
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("[Error][AES][getKeyBytes][0]: " + e.getMessage());
-        }
-        return keyBytes;*/
-    	
-    	PWDeriveBytes secretKey = new PWDeriveBytes(key, key.getBytes(StandardCharsets.US_ASCII));    	
-    	return secretKey.getBytes(16);
+    private static PasswordDeriveBytes getKeyBytes(String key) throws DigestException {    	
+    	PasswordDeriveBytes secretKey = new PasswordDeriveBytes(key, String.valueOf(key.length()).getBytes(StandardCharsets.US_ASCII));
+    	return secretKey;
     }
+    
+    public static void main(String[] args) {
+    	String secretKey = "Adfhj#$@56677745";
+		
+		String encryptedEmpCode = doEncryptedAES("1975010001Z", secretKey);
+		System.out.println("encryptedEmpCode :: " + encryptedEmpCode);
+		String encryptedMonth = doEncryptedAES("03", secretKey);
+		System.out.println("encryptedMonth :: " + encryptedMonth);
+		String encryptedYear = doEncryptedAES("2018", secretKey);
+		System.out.println("encryptedYear :: " + encryptedYear);
+		
+		System.out.println("decryptedEmpCode : " + doDecryptedAES(encryptedEmpCode, secretKey));
+		System.out.println("decryptedMonth : " + doDecryptedAES(encryptedMonth, secretKey));
+		System.out.println("decryptedYear : " + doDecryptedAES(encryptedYear, secretKey));
+	}
 }

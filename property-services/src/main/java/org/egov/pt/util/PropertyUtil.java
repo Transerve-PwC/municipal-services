@@ -280,6 +280,16 @@ public class PropertyUtil extends CommonUtils {
 				OwnerInfo owner = new OwnerInfo();
 				Address address = new Address();
 				Locality locality = new Locality();
+				int propertyid = propertydetails.get("PROPERTYTypeId").asInt();
+				if(propertyid == 1 || propertyid == 2) {
+					propertyRequest.getProperty().setPropertyType(PTConstants.PROPERTY_DOMESTIC);
+				}
+				else if(propertyid == 3 || propertyid == 5) {
+					propertyRequest.getProperty().setPropertyType(PTConstants.PROPERTY_INSTITUTIONAL);
+				}
+				else if(propertyid == 4) {
+					propertyRequest.getProperty().setPropertyType(PTConstants.PROPERTY_COMMERCIAL);
+				}
 				propertyRequest.getProperty().setLandArea(
 						Double.parseDouble(propertydetails.get(PTConstants.TotalCoveredareainsqft).asText()));
 				propertyRequest.getProperty().setOwnershipCategory(PTConstants.DEFAULTOWNER);
@@ -293,7 +303,8 @@ public class PropertyUtil extends CommonUtils {
 				propertyRequest.getProperty().setAddress(address);
 
 				owner.setName(propertydetails.get(PTConstants.DepositerName).asText());
-				owner.setMobileNumber(propertydetails.get(PTConstants.MOBILE).asText());
+				//owner.setMobileNumber(propertydetails.get(PTConstants.MOBILE).asText());
+				owner.setMobileNumber(propertyRequest.getRequestInfo().getUserInfo().getMobileNumber());
 				owner.setFatherOrHusbandName(propertydetails.get(PTConstants.FATHERNAME).asText());
 				owner.setStatus(Status.ACTIVE);
 				owner.setCorrespondenceAddress(

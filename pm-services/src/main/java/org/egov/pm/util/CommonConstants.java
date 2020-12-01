@@ -25,6 +25,8 @@ public class CommonConstants {
 	public static final String UPDATESTATUSERROR = "Unable to Update Status the record.";
 
 	// Columns Name
+	public static final String APPLICATIONTYPE= "applicationType";
+	public static final String REFUNDWFSTATUS="REFUNDSUCCESS";
 	public static final String APPLICANTNAME = "applicantName";
 	public static final String APPLICANTUUID = "application_uuid";
 	public static final String HOUSENO = "houseNo";
@@ -40,6 +42,7 @@ public class CommonConstants {
 	public static final String STATUSAPPUUID="applicationuuid";
 	public static final String REMARKS = "remarks";
 	public static final String AMOUNT = "amount";
+	public static final String ISANYCHANGEINESTIMATION = "isAnyChangeInRoadCutEstimation";
 	public static final String BADGENUMBER = "badgeNumber";
 	public static final String GSTAMOUNT = "gstAmount";
 	public static final String PERFORMANCEBANKGUARANTEECHARGES = "performanceBankGuaranteeCharges";
@@ -60,6 +63,8 @@ public class CommonConstants {
 	public static final String WITHDRAWAPPROVALTAXAMOUNTERROR="Withdraw tax amount should be less than actual tax amount";
 
 
+
+	public static final String IDNAME = "idName";
 
 	public static final String APPLICATIONID = "applicationId";
 	public static final String DOCUMENTDETAIL = "documentDetail";
@@ -83,10 +88,6 @@ public class CommonConstants {
 	public static final String MINVALUESQFT = "min_sqft";
 	public static final String MAXVALUESQFT = "max_sqft";
 
-	
-	
-	
-	
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "Fail";
 	public static final String SUCCESSFUL = "successful";

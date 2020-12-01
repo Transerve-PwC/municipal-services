@@ -43,12 +43,9 @@ public class CommonService {
 
 	@Value("${egov.wf.uri}")
 	private String workflowPath;
-	
-	@Value("${egov.idgen.ack.name}")
-	private String idName;
 
 
-	public String generateApplicationId(String tenantId) {
+	public String generateApplicationId(String idName, String tenantId) {
 
 		String url = host + path;
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -82,7 +79,7 @@ public class CommonService {
 	public ResponseInfo createWorkflowRequest(ProcessInstanceRequest workflowRequest) throws IOException {
 		String url = workflowHost + workflowPath;
 		ResponseInfo responseInfo = null;
-		ObjectMapper objectMapper=new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			JsonNode response = restTemplate.postForObject(url, workflowRequest, JsonNode.class);
 
@@ -101,5 +98,4 @@ public class CommonService {
 		}
 		return responseInfo;
 	}
-	
 }

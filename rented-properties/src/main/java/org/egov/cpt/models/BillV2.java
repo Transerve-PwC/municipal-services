@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -57,7 +56,7 @@ public class BillV2 {
 	@JsonProperty("billNumber")
 	@Size(max = 1024)
 	private String billNumber;
-	
+
 	@JsonProperty("billDate")
 	private Long billDate;
 
@@ -82,21 +81,21 @@ public class BillV2 {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
-	
+
 	/**
 	 * status of the bill .
 	 */
 	public enum StatusEnum {
-		
+
 		ACTIVE("ACTIVE"),
 
 		CANCELLED("CANCELLED"),
 
 		PAID("PAID"),
-		
-		PARTIALLY_PAID ("PARTIALLY_PAID"),
-		
-		PAYMENT_CANCELLED ("PAYMENT_CANCELLED"),
+
+		PARTIALLY_PAID("PARTIALLY_PAID"),
+
+		PAYMENT_CANCELLED("PAYMENT_CANCELLED"),
 
 		EXPIRED("EXPIRED");
 

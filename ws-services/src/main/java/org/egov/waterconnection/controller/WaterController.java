@@ -71,5 +71,28 @@ public class WaterController {
 
 	}
 
+	@RequestMapping(value = "/_addConnectionMapping", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<WaterConnectionResponse> addConnectionMapping(
+			@Valid @RequestBody WaterConnectionRequest waterConnectionRequest) {
+		List<WaterConnection> waterConnection = waterService.addConnectionMapping(waterConnectionRequest);
+		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnection)
+				.responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(waterConnectionRequest.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+	
+	@RequestMapping(value = "/_deleteConnectionMapping", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<WaterConnectionResponse> deleteConnectionMapping(
+			@Valid @RequestBody WaterConnectionRequest waterConnectionRequest) {
+		List<WaterConnection> waterConnection = waterService.deleteConnectionMapping(waterConnectionRequest);
+		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnection)
+				.responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(waterConnectionRequest.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
 
 }

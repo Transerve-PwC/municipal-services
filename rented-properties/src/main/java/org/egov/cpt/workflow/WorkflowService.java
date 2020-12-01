@@ -39,7 +39,7 @@ public class WorkflowService {
 	 * @param requestInfo The RequestInfo object of the request
 	 * @return BusinessService for the the given tenantId
 	 */
-	@Cacheable(value = "businessServices", key = "#tenantId, #businessServiceName")
+	@Cacheable(value = "businessService", key = "{#tenantId, #businessServiceName}")
 	public BusinessService getBusinessService(String tenantId, RequestInfo requestInfo, String businessServiceName) {
 
 		StringBuilder url = getSearchURLWithParams(tenantId, businessServiceName);
@@ -49,7 +49,8 @@ public class WorkflowService {
 			BusinessServiceResponse response = null;
 			response = mapper.convertValue(result, BusinessServiceResponse.class);
 			if (CollectionUtils.isEmpty(response.getBusinessServices())) {
-				throw new CustomException("NO BUSINESS SERVICE", String.format("No business service found with name %s", businessServiceName));
+				throw new CustomException("NO BUSINESS SERVICE",
+						String.format("No business service found with name %s", businessServiceName));
 			}
 			return response.getBusinessServices().get(0);
 		} catch (IllegalArgumentException e) {

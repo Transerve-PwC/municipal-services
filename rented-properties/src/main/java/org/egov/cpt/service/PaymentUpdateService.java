@@ -54,9 +54,6 @@ public class PaymentUpdateService {
 
 	private RentEnrichmentService rentEnrichmentService;
 
-	@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
-	private Boolean pickWFServiceNameFromPropertyTypeOnly;
-
 	@Value("${egov.allowed.businessServices}")
 	private String allowedBusinessServices;
 
@@ -101,8 +98,7 @@ public class PaymentUpdateService {
 						case PTConstants.BUSINESS_SERVICE_CM_OT:
 						case PTConstants.BUSINESS_SERVICE_CK_OT:
 						case PTConstants.BUSINESS_SERVICE_CS_OT:
-						case PTConstants.BUSINESS_SERVICE_VN_OT:
-						{
+						case PTConstants.BUSINESS_SERVICE_VN_OT: {
 							DuplicateCopySearchCriteria searchCriteria = new DuplicateCopySearchCriteria();
 							searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
 
@@ -200,7 +196,7 @@ public class PaymentUpdateService {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Error while processing the payment ",e);
+			log.error("Error while processing the payment ", e);
 		}
 
 	}

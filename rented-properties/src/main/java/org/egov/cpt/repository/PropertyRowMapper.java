@@ -145,15 +145,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							propertyImage.addApplicationDocumentsItem(applicationDocument);
 						}
 					}
-
-					/*
-					 * PropertyImages propertyImages1 =
-					 * property.getPropertyImages().stream().filter(p -> { try { return
-					 * p.getId().equalsIgnoreCase(rs.getString("pidocid")); } catch (SQLException e)
-					 * { e.printStackTrace(); } return false; }).findFirst().get();
-					 * propertyImages1.addApplicationDocumentsItem(applicationDocument);
-					 */
-
 				}
 			}
 		}
@@ -190,14 +181,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							notice.addApplicationDocumentsItem(applicationDocument);
 						}
 					}
-
-					/*
-					 * NoticeGeneration notice = property.getNotices().stream().filter(p -> { try {
-					 * return p.getId().equalsIgnoreCase(rs.getString("ngdoc_id")); } catch
-					 * (SQLException e) { e.printStackTrace(); } return false; }).findFirst().get();
-					 * notice.addApplicationDocumentsItem(applicationDocument);
-					 */
-
 				}
 			}
 		}

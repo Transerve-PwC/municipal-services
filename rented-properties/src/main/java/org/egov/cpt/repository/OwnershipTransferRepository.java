@@ -43,10 +43,10 @@ public class OwnershipTransferRepository {
 
 	public List<Owner> searchOwnershipTransfer(DuplicateCopySearchCriteria criteria) {
 
-		Map<String, Object> preparedStmtList = new HashMap<>();
-		String query = queryBuilder.getOwnershipTransferSearchQuery(criteria, preparedStmtList);
-		log.info("OwnershipTransferSearchQuery: " + query);
-		return namedParameterJdbcTemplate.query(query, preparedStmtList, rowMapper);
+		Map<String, Object> paramsMap = new HashMap<>();
+		String query = queryBuilder.getOwnershipTransferSearchQuery(criteria, paramsMap);
+		log.info("Params {}, Query: {}", paramsMap.toString(), query);
+		return namedParameterJdbcTemplate.query(query, paramsMap, rowMapper);
 	}
 
 	public void update(OwnershipTransferRequest ownershipTransferRequest,

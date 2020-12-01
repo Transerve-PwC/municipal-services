@@ -371,7 +371,7 @@ public class NocRepository {
 	public String saveValidateStatus(RequestData requestData, String status)
 			throws JsonParseException, JsonMappingException, ParseException, IOException {
 		String nocId = null;
-		String applicationId = commonService.generateApplicationId(requestData.getTenantId());
+		String applicationId = commonService.generateApplicationId(requestData.getDataPayload().get(CommonConstants.IDNAME).toString(),requestData.getTenantId());
 		if (applicationId != null) {
 			requestData.setApplicationId(applicationId);
 			nocId = saveNoc(requestData, status, applicationId);
@@ -718,6 +718,23 @@ public class NocRepository {
 							.readValue(applicationDetailModel.getApplicationDetail(), JSONObject.class);
 					applicationDetailData.put(CommonConstants.BADGENUMBER,
 							dataPayLoad.get(CommonConstants.BADGENUMBER));
+					NOCApplicationDetail details = new NOCApplicationDetail();
+					details.setApplicationDetail(applicationDetailData.toJSONString());
+					details.setApplicationUuid(getAppIdUuid(requestData.getApplicationId()));
+					JSONObject object = new JSONObject();
+					object.put("NOCApplicationDetail", details);
+					producer.push(updateNOCApplicationDetailsTopic, object);
+				}
+			}else if (dataPayLoad.get(CommonConstants.ISANYCHANGEINESTIMATION) != null) {
+				NOCApplicationDetail applicationDetailModel = jdbcTemplate.queryForObject(
+						QueryBuilder.SELECT_APPLICATION_DETAIL_QUERY, new Object[] { requestData.getApplicationId() },
+						BeanPropertyRowMapper.newInstance(NOCApplicationDetail.class));
+				if (applicationDetailModel != null) {
+					ObjectMapper objectMapper = new ObjectMapper();
+					JSONObject applicationDetailData = objectMapper
+							.readValue(applicationDetailModel.getApplicationDetail(), JSONObject.class);
+					applicationDetailData.put(CommonConstants.ISANYCHANGEINESTIMATION,
+							dataPayLoad.get(CommonConstants.ISANYCHANGEINESTIMATION));
 					NOCApplicationDetail details = new NOCApplicationDetail();
 					details.setApplicationDetail(applicationDetailData.toJSONString());
 					details.setApplicationUuid(getAppIdUuid(requestData.getApplicationId()));
@@ -1133,10 +1150,4 @@ public class NocRepository {
 	public static Timestamp getCurrentDate() {
 		return new Timestamp(System.currentTimeMillis());
 	}
-
-	public JSONArray getRefundApplications() {
-		return jdbcTemplate.query(QueryBuilder.GET_REFUND_APPLICATIONS_QUERY, columnsNocRowMapper);
-
-	}
-
 }
