@@ -735,16 +735,17 @@ public class EstateRentCollectionServiceTests1 {
 		
 		 
 		List<EstateDemand> demands = Arrays.asList(
-				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false,OCT_01_2020),
+				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false),
 				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
 				 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
-				getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
+				getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
 				 
 				 
 				 );
-	   List<EstatePayment> payments = 
-	   		Arrays.asList( getPayment(6000D, NOV_15_2019,NOV_15_2019));
+		 List<EstatePayment> payments = 
+		    		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019),getPayment(6000D, NOV_30_2019,NOV_30_2019));
 
+		    
 	   	
 	      utils=new EstateRentCollectionUtils();
 	    List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
@@ -834,6 +835,43 @@ public class EstateRentCollectionServiceTests1 {
 	  // reconcileDemands(demands, collections);
 	   verifyRemainingBalance(account, 5318.44);
 	   
+	}
+	
+	@Test
+	public void testAdditionalBalanceUsecase1Summary1() throws ParseException {
+	
+
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false),
+				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments = 
+	    		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+
+	    		
+
+		EstateAccount rentAccount = getAccount(0.0);
+
+		List<EstateRentCollection> collections = this.estateRentCollectionService.settle(demands, payments, rentAccount,
+				DEFAULT_INTEREST_RATE, true, 10);
+		 double rentDue=demands.stream().mapToDouble(EstateDemand::getRemainingRent).sum();
+		   double gstDue=demands.stream().mapToDouble(EstateDemand::getRemainingGST).sum();
+		   double rentPenaltyDue=demands.stream().mapToDouble(EstateDemand::getRemainingRentPenalty).sum();
+		   double  GSTPenaltyDue=demands.stream().mapToDouble(EstateDemand::getRemainingGSTPenalty).sum();
+		 
+		System.out.println("rentDue= "+rentDue+" gstDue="+gstDue+" rentPenaltyDue="+rentPenaltyDue+"GSTPenaltyDue="+GSTPenaltyDue+"Account balance= "+rentAccount.getRemainingAmount());
+
+		EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummary(demands, rentAccount,
+				DEFAULT_INTEREST_RATE, true, 10);
+
+		System.out.println(rentSummary);
+		System.out.println(rentAccount.getRemainingAmount());
+		assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
+
 	}
 	
 }
