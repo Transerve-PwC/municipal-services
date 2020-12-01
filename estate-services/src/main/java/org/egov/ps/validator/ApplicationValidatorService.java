@@ -6,6 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.annotation.ApplicationValidator;
 import org.egov.ps.model.Application;
@@ -28,14 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -121,7 +121,8 @@ public class ApplicationValidatorService {
 			throw new CustomException("INVALID_PROPERTY", "Could not find property with the given id:" + propertyId);
 		}
 		if (!property.getState().contentEquals(PSConstants.PM_APPROVED)
-				&& !property.getState().contentEquals(PSConstants.ES_APPROVED)) {
+				&& !property.getState().contentEquals(PSConstants.ES_APPROVED)
+				&& !property.getState().contentEquals(PSConstants.ES_PM_MM_APPROVED)) {
 			throw new CustomException("INVALID_PROPERTY", "Property with the given " + propertyId + " is not approved");
 		}
 		Double rentDue = 0.0;
