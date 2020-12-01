@@ -118,4 +118,7 @@ public class PSConstants {
 	public static final String ANNUALLY = "Annually";
 
 	public static final String MODE_GENERATED = "Generated";
+	
+	public static final String RELATION_OPD = "offline";
+
 }

@@ -85,9 +85,9 @@ public class PropertyService {
 
 	@Autowired
 	private MDMSService mdmsservice;
-	
+
 	@Autowired
-	private EstateDemandGenerationService estateDemandGenerationService;	
+	private EstateDemandGenerationService estateDemandGenerationService;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
@@ -224,17 +224,14 @@ public class PropertyService {
 			properties.stream().forEach(property -> {
 				List<String> propertyDetailsIds = new ArrayList<>();
 				propertyDetailsIds.add(property.getPropertyDetails().getId());
+
 				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
-
 				EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
 				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
 						&& property.getPropertyDetails().getPropertyType()
 								.equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
-//					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
-//							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-//							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
 							estateAccount, property.getPropertyDetails().getInterestRate(),
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
@@ -245,6 +242,19 @@ public class PropertyService {
 				}
 				if (estateAccount != null) {
 					property.getPropertyDetails().setEstateAccount(estateAccount);
+				}
+			});
+		}
+
+		if (properties.size() <= 1 && !CollectionUtils.isEmpty(criteria.getRelations())
+				&& criteria.getRelations().contains(PSConstants.RELATION_OPD)) {
+			List<String> propertyDetailsIds = new ArrayList<String>();
+			properties.stream().forEach(property -> {
+				propertyDetailsIds.add(property.getPropertyDetails().getId());
+				List<OfflinePaymentDetails> offlinePaymentDetails = repository
+						.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+				if (!CollectionUtils.isEmpty(offlinePaymentDetails)) {
+					property.getPropertyDetails().setOfflinePaymentDetails(offlinePaymentDetails);
 				}
 			});
 		}
