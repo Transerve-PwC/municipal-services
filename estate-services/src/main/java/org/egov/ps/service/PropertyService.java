@@ -29,7 +29,6 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
-import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -233,9 +232,9 @@ public class PropertyService {
 				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
 						&& property.getPropertyDetails().getPropertyType()
 								.equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
-					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
-							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
+//					estateRentCollectionService.settle(demands, payments, estateAccount, 18,
+//							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+//							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
 							estateAccount, property.getPropertyDetails().getInterestRate(),
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
