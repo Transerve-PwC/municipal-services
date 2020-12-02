@@ -2,9 +2,9 @@ package org.egov.ps.web.contracts;
 
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.egov.ps.model.ModeEnum;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -93,7 +93,7 @@ public class EstatePayment implements Comparable<EstatePayment> {
 	// private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
 
 	public String toString() {
-		return String.format("Amount: %.2f", this.amountPaid);
+		return String.format("Amount: %10.2f, isProcessed: %.5s", this.rentReceived, this.isProcessed());
 
 	}
 }

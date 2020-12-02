@@ -648,7 +648,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.inActiveEstatePayments.*.propertyDetailsId
 
-        - query: INSERT INTO cs_ep_payment (id, property_details_id, receipt_date, rent_received, receipt_no, payment_date, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET receipt_date = ?, rent_received = ?, receipt_no = ?, payment_date = ?, last_modified_by = ?, last_modified_time = ?;
+        - query: INSERT INTO cs_ep_payment (id, property_details_id, receipt_date, rent_received, receipt_no, payment_date, processed, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET receipt_date = ?, rent_received = ?, receipt_no = ?, payment_date = ?, processed = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.estatePayments.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.id
@@ -662,6 +662,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptNo
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.paymentDate
+            
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.processed
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.createdBy
 
@@ -678,6 +680,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.receiptNo
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.paymentDate
+            
+            - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.processed
 
             - jsonPath: $.Properties.*.propertyDetails.estatePayments.*.auditDetails.lastModifiedBy
 
