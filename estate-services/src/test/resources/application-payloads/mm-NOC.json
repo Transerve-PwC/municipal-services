@@ -8,5 +8,6 @@
     "address": "owner address 2",
     "mobileNo": "9876954322",
     "percentageOfShare": 50
-  }
+  },
+  "areaToBeConverted": 10000
 }
