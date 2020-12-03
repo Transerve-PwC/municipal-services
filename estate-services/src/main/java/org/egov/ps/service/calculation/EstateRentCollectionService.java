@@ -627,19 +627,19 @@ List<EstateDemand> filteredDemands = demands.stream().filter(EstateDemand::isUnP
 						}
 						else {
 							if(!demand.getIsPrevious()) {
-							//calculateRentInterest+=demand.getRemainingRentPenalty();
+							calculateRentInterest+=demand.getRemainingRentPenalty();
 							calculatedInterest+=demand.getRemainingGSTPenalty();
 							}
 						}
 					}else  {
 						if(!demand.getIsPrevious()) {
-							//calculateRentInterest+=demand.getRemainingRentPenalty();
+							calculateRentInterest+=demand.getRemainingRentPenalty();
 							calculatedInterest+=demand.getRemainingGSTPenalty();
 						}
 					}
 				}else {
 					if(!demand.getIsPrevious()) {
-					//calculateRentInterest+=demand.getRemainingRentPenalty();
+					calculateRentInterest+=demand.getRemainingRentPenalty();
 					calculatedInterest+=demand.getRemainingGSTPenalty();
 					}
 				}
