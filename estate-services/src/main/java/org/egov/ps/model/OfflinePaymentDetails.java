@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.Size;
 
+import org.egov.ps.web.contracts.AuditDetails;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -89,4 +91,7 @@ public class OfflinePaymentDetails {
 	@JsonProperty("billingBusinessService")
 	private String billingBusinessService;
 
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+	
 }

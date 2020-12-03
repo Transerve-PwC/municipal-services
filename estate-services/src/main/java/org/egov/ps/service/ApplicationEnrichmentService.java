@@ -85,7 +85,7 @@ public class ApplicationEnrichmentService {
 
 		String propertyId = application.getProperty().getId();
 		String transferorId = "";
-		if (null != transferor.get("id")) {
+		if (null != transferor && null != transferor.get("id")) {
 			transferorId = transferor.get("id").asText();
 		}
 
@@ -105,7 +105,7 @@ public class ApplicationEnrichmentService {
 		if (applicationDetails.get("transferee") != null && applicationDetails.get("transferee").get("id") != null) {
 			JsonNode transferee = applicationDetails.get("transferee");
 			String transfereeId = "";
-			if (null != transferee.get("id")) {
+			if (null != transferee && null != transferee.get("id")) {
 				transferee.get("id").asText();
 			}
 

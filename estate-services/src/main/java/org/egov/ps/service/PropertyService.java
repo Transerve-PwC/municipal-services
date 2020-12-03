@@ -29,6 +29,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.AccountStatementResponse;
+import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.BusinessService;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
@@ -88,6 +89,9 @@ public class PropertyService {
 
 	@Autowired
 	private EstateDemandGenerationService estateDemandGenerationService;
+
+	@Autowired
+	Util util;
 
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
@@ -252,7 +256,7 @@ public class PropertyService {
 			properties.stream().forEach(property -> {
 				propertyDetailsIds.add(property.getPropertyDetails().getId());
 				List<OfflinePaymentDetails> offlinePaymentDetails = repository
-						.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+						.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds, criteria);
 				if (!CollectionUtils.isEmpty(offlinePaymentDetails)) {
 					property.getPropertyDetails().setOfflinePaymentDetails(offlinePaymentDetails);
 				}
@@ -390,6 +394,9 @@ public class PropertyService {
 					property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount(), bills.get(0).getId(),
 					owner, config.getAosBusinessServiceValue());
 
+			AuditDetails auditDetails = util.getAuditDetails(propertyRequest.getRequestInfo().getUserInfo().getUuid(),
+					true);
+
 			OfflinePaymentDetails offlinePaymentDetails = OfflinePaymentDetails.builder()
 					.id(UUID.randomUUID().toString()).propertyDetailsId(property.getPropertyDetails().getId())
 					.demandId(bills.get(0).getBillDetails().get(0).getDemandId())
@@ -398,7 +405,7 @@ public class PropertyService {
 					.transactionNumber(
 							property.getPropertyDetails().getOfflinePaymentDetails().get(0).getTransactionNumber())
 					.dateOfPayment(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getDateOfPayment())
-					.build();
+					.auditDetails(auditDetails).build();
 			property.getPropertyDetails().setOfflinePaymentDetails(Collections.singletonList(offlinePaymentDetails));
 
 			propertyRequest.setProperties(Collections.singletonList(property));

@@ -14,6 +14,7 @@ import org.egov.ps.model.OfflinePaymentDetails;
 import org.egov.ps.model.OfflinePaymentDetails.OfflinePaymentType;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
@@ -177,8 +178,11 @@ public class SecurityDepositService {
 
 		List<String> propertyDetailsIds = new ArrayList<String>();
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
+		List<String> relations = new ArrayList<String>();
+		relations.add(PSConstants.RELATION_OPD);
+		PropertyCriteria criteria = PropertyCriteria.builder().relations(relations).build();
 		List<OfflinePaymentDetails> offlinePaymentDetails = repository
-				.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds);
+				.getOfflinePaymentsForPropertyDetailsIds(propertyDetailsIds, criteria);
 		List<OfflinePaymentDetails> filteredOfflinePaymentDetails = offlinePaymentDetails.stream()
 				.filter(offlinePaymentDetail -> null != offlinePaymentDetail.getType()
 						&& offlinePaymentDetail.getType().equals(OfflinePaymentType.SECURITY))

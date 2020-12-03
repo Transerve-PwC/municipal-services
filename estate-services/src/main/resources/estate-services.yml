@@ -722,7 +722,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.estateAccount.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment, type) VALUES (?,?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?, type=?;
+        - query: INSERT INTO cs_ep_offline_payment_detail (id, property_details_id, demand_id, amount, bank_name, transaction_number, date_of_payment, type, created_by, last_modified_by, created_time, last_modified_time) VALUES (?,?,?,?,?,?,?,?)ON CONFLICT (id) DO UPDATE SET demand_id=?, amount=?, bank_name=?, transaction_number=?, date_of_payment=?, type=?, last_modified_by=?, last_modified_time=?;
           basePath: $.Properties.*.propertyDetails.offlinePaymentDetails.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.id
@@ -740,6 +740,14 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.type
+            
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.createdBy
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.createdTime
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedTime
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
 
@@ -752,6 +760,10 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.dateOfPayment
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.type
+            
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedBy
+
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedTime
 
         - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
           basePath: $.Properties.*.propertyDetails.estateRentCollections.*
