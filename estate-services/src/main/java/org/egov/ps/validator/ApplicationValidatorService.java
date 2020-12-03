@@ -134,7 +134,7 @@ public class ApplicationValidatorService {
 		}
 		if (rentDue > 0) {
 			throw new CustomException("PROPERTY_PENDING_DUE", String.format(
-					"Property has pending due of Rs: %6.2f, so you can not apply for %s, please clear the due before applying.",
+					"Property has pending due of Rs: %8.2f, so you can not apply for %s, please clear the due before applying.",
 					rentDue, application.getApplicationType()));
 		}
 	}
