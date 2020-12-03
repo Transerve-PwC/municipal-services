@@ -163,6 +163,7 @@ public class PropertyQueryBuilder {
 	public static final String RELATION_BIDDER = "bidder";
 	public static final String RELATION_ESTATE_FINANCE = "finance";
 	public static final String RELATION_OFFLINE_PAYMENT = "offline";
+	public static final String RELATION_ACC_STATEMENT_DOCUMENT = "accstmtdoc";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList, PropertyCriteria criteria) {
 
@@ -384,6 +385,15 @@ public class PropertyQueryBuilder {
 		sb.append(" where estp.property_details_id IN (:propertyDetailIds)");
 		sb.append(" order by payment_date asc ");
 		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
+	
+	public String getAccStatementDocQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(OWNER_DOCS_COLUMNS);
+		sb.append(" FROM cs_ep_documents_v1 doc ");
+		sb.append(" where doc.reference_id IN (:references)");
+		params.put("references", propertyDetailIds);
 		return sb.toString();
 	}
 }

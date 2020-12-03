@@ -93,6 +93,7 @@ public class PropertyRepository {
 				relations.add(PropertyQueryBuilder.RELATION_BIDDER);
 				relations.add(PropertyQueryBuilder.RELATION_ESTATE_FINANCE);
 				relations.add(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT);
+				relations.add(PropertyQueryBuilder.RELATION_ACC_STATEMENT_DOCUMENT);
 			}
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_OWNER)) {
@@ -114,10 +115,40 @@ public class PropertyRepository {
 		if (relations.contains(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT)) {
 			this.addOfflinePaymentToProperties(properties);
 		}
+		if (relations.contains(PropertyQueryBuilder.RELATION_ACC_STATEMENT_DOCUMENT)) {
+			this.addAccStatemetDocToProperties(properties);
+		}
 
 		return properties;
 	}
+	
+	private void addAccStatemetDocToProperties(List<Property> properties) {
+		if (CollectionUtils.isEmpty(properties)) {
+			return;
+		}
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
 
+		/**
+		 * Fetch owners from database
+		 */
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String accountStatementDocQuery = propertyQueryBuilder.getAccStatementDocQuery(propertyDetailsIds, params);
+		List<Document> accStatementDoc = namedParameterJdbcTemplate.query(accountStatementDocQuery, params, documentRowMapper);
+
+		/**
+		 * Assign owners to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
+			property.getPropertyDetails().setAccountStatementDocument(accStatementDoc.stream().filter(
+					docuement -> docuement.getReferenceId().equalsIgnoreCase(property.getPropertyDetails().getId()))
+					.collect(Collectors.toList()));
+		});
+	}
+	
 	private void addOwnersToProperties(List<Property> properties) {
 		if (CollectionUtils.isEmpty(properties)) {
 			return;
