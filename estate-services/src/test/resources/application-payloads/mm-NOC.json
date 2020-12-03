@@ -1,0 +1,13 @@
+{
+  "owner": {
+    "id": "a58ee4f7-e8f2-453c-b1d4-64d9b7f72ffb",
+    "name": "legalHeir name 2",
+    "dob": 1567856,
+    "fatherOrHusbandName": "owner father name 2",
+    "relation": "FATHER",
+    "address": "owner address 2",
+    "mobileNo": "9876954322",
+    "percentageOfShare": 50
+  },
+  "areaToBeConverted": 10000
+}

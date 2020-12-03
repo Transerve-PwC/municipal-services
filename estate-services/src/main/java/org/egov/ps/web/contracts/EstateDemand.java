@@ -127,6 +127,18 @@ public class EstateDemand implements Comparable<EstateDemand> {
    */
   @JsonProperty("noOfDays")
   private Double noOfDays;
+  
+  /**
+   * For adjustment demand
+   */
+  @JsonProperty("isAdjustment")
+  private boolean isAdjustment;
+  
+  /**
+   * Date For adjustment demand
+   */
+  @JsonProperty("adjustmentDate")
+  private long adjustmentDate;   
 
   /**
    * paid of demand.

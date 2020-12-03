@@ -92,7 +92,8 @@ public class PropertyQueryBuilder {
 			+ " estd.remaining_rent as estdremaining_rent,estd.collected_gst_penalty as estdcollected_gst_penalty, "
 			+ " estd.collected_rent_penalty as estdcollected_rent_penalty,estd.interest_since as estdinterest_since, estd.remaining_gst as estdremaining_gst,"
 			+ " estd.created_by as estdcreated_by, estd.last_modified_by as estdlast_modified_by, "
-			+ " estd.created_time as estdcreated_time, estd.last_modified_time as estdlast_modified_time ";
+			+ " estd.created_time as estdcreated_time, estd.last_modified_time as estdlast_modified_time, "
+			+ " estd.is_adjustment as is_adjustment, estd.adjustment_date as adjustment_date ";
 
 	private static final String ESTATE_PAYMENT_COLUMNS = " estp.id as estpid, estp.property_details_id as estpproperty_details_id, "
 			+ " estp.receipt_date as estpreceipt_date, estp.rent_received as estprent_received, estp.receipt_no as estpreceipt_no, "

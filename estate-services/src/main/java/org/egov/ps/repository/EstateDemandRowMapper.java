@@ -35,6 +35,7 @@ public class EstateDemandRowMapper implements ResultSetExtractor<List<EstateDema
 					.remainingRent(rs.getDouble("estdremaining_rent")).collectedGSTPenalty(rs.getDouble("estdcollected_gst_penalty"))
 					.collectedRentPenalty(rs.getDouble("estdcollected_gst_penalty")).interestSince(rs.getLong("estdinterest_since"))
 					.remainingGST(rs.getDouble("estdremaining_gst"))
+					.isAdjustment(rs.getBoolean("is_adjustment")).adjustmentDate(rs.getLong("adjustment_date"))
 					.auditDetails(auditdetails)
 					.build();
 			bidders.add(auction);
