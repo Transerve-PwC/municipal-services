@@ -7,14 +7,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Document;
+import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.model.calculation.Category;
@@ -29,6 +27,9 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,11 +84,14 @@ public class ApplicationEnrichmentService {
 				: applicationDetails.get("owner");
 
 		String propertyId = application.getProperty().getId();
-		String transferorId = transferor.get("id").asText();
+		String transferorId = "";
+		if (null != transferor.get("id")) {
+			transferorId = transferor.get("id").asText();
+		}
 
 		Property property = propertyRepository.findPropertyById(propertyId);
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
-			property.getPropertyDetails().getOwners().forEach(owner -> {
+			for (Owner owner : property.getPropertyDetails().getOwners()) {
 				if (owner.getId().equals(transferorId)) {
 					((ObjectNode) transferor).put("name", owner.getOwnerDetails().getOwnerName());
 					((ObjectNode) transferor).put("serialNumber", owner.getSerialNumber());
@@ -95,12 +99,15 @@ public class ApplicationEnrichmentService {
 					((ObjectNode) transferor).put("cpNumber", owner.getCpNumber());
 					((ObjectNode) transferor).set("transferorDetails", owner.getOwnerDetails().copyAsJsonNode());
 				}
-			});
+			}
 		}
 
 		if (applicationDetails.get("transferee") != null && applicationDetails.get("transferee").get("id") != null) {
 			JsonNode transferee = applicationDetails.get("transferee");
-			String transfereeId = transferee.get("id").asText();
+			String transfereeId = "";
+			if (null != transferee.get("id")) {
+				transferee.get("id").asText();
+			}
 
 			if (!CollectionUtils.isEmpty(property.getPropertyDetails().getOwners())) {
 				property.getPropertyDetails().getOwners().forEach(owner -> {
