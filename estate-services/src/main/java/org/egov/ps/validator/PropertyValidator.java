@@ -287,6 +287,9 @@ public class PropertyValidator {
 							if (bidder.getId() == null && responseAuctionId.equalsIgnoreCase(requestAuctionId)) {
 								errorMap.put("AUCTION_ID_ALREADY_EXIST", "The given Auction Id already exists");
 							}
+							if (bidder.getAuctionId() == null || bidder.getAuctionId().isEmpty()) {
+								errorMap.put("INVALID_AUCTION_ID", "Auction Id can't be null or empty");
+							}
 						});
 					}
 				});
