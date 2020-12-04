@@ -487,9 +487,6 @@ public class NotificationUtil {
 				actionLink = config.getPayLinkForDC().replace("$mobile", mobile)
 						.replace("$applicationNo", applicationNumber).replace("$tenantId", tenantId);
 				break;
-			case PTConstants.PAYRENT:
-				actionLink = config.getPayLinkForRent();
-				break;
 		}
 		actionLink = config.getUiAppHost() + actionLink;
 		ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
