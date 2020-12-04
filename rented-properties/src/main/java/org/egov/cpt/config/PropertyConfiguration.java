@@ -157,9 +157,6 @@ public class PropertyConfiguration {
 	@Value("${egov.usr.events.dc.pay.link}")
 	private String payLinkForDC;
 
-	@Value("${egov.usr.events.rent.pay.link}")
-	private String payLinkForRent;
-
 	@Value("${egov.usr.events.pay.code}")
 	private String payCode;
 

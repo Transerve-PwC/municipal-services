@@ -30,7 +30,7 @@ public class RentPaymentRowMapper implements ResultSetExtractor<List<RentPayment
 						.createdTime(rs.getLong("payment_created_date"))
 						.lastModifiedBy(rs.getString("payment_modified_by"))
 						.lastModifiedTime(rs.getLong("payment_modified_date")).build();
-				RentPayment rentPayment = RentPayment.builder().id(rs.getString("payment_id")).propertyId("payment_pid")
+				RentPayment rentPayment = RentPayment.builder().id(rs.getString("payment_id")).propertyId(rs.getString("payment_pid"))
 						.receiptNo(rs.getString("payment_receiptNo")).processed(rs.getBoolean("processed"))
 						.amountPaid(rs.getDouble("payment_amtPaid")).dateOfPayment(rs.getLong("payment_dateOfPayment"))
 						.mode(ModeEnum.fromValue(rs.getString("payment_mode"))).auditDetails(paymentAuditDetails)
