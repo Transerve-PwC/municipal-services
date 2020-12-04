@@ -88,6 +88,8 @@ public class PropertyService {
 	@Autowired
 	private NotificationUtil notificationUtil;
 
+	@Autowired
+	private RentDemandGenerationService rentDemandGenerationService;
 
 	public List<Property> createProperty(PropertyRequest request) {
 
@@ -123,6 +125,12 @@ public class PropertyService {
 		// userService.createUser(request);
 		String action = request.getProperties().get(0).getMasterDataAction();
 		String state = request.getProperties().get(0).getMasterDataState();
+
+		/* Approved Property Missing Demands */
+		if (action.equalsIgnoreCase(PTConstants.ACTION_APPROVE) && state.equalsIgnoreCase("PM_PENDINGAPPROVAL")) {
+			rentDemandGenerationService.createMissingDemands(request.getProperties().get(0));
+		}
+
 		if ((config.getIsWorkflowEnabled() && !action.equalsIgnoreCase(""))
 				&& (!state.equalsIgnoreCase(PTConstants.PM_STATUS_APPROVED))) {
 			wfIntegrator.callWorkFlow(request);

@@ -1,6 +1,7 @@
 package org.egov.cpt.service;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -98,6 +99,21 @@ public class RentDemandGenerationService {
 				log.error("exception occured for property id: " + property.getId());
 			}
 		});
+		return counter;
+	}
+
+	public AtomicInteger createMissingDemands(Property property) {
+		AtomicInteger counter = new AtomicInteger(0);
+		List<RentDemand> demands = property.getDemands();
+		Comparator<RentDemand> compare = Comparator.comparing(RentDemand::getGenerationDate);
+		Optional<RentDemand> firstDemand = demands.stream().collect(Collectors.minBy(compare));
+		List<Long> dateList = demands.stream().map(demand -> demand.getGenerationDate()).collect(Collectors.toList());
+		Date date = Date.from(Instant.now());
+		if (!isMonthIncluded(dateList, date)) {
+			counter.getAndIncrement();
+			generateRentDemand(property, firstDemand.get(), getFirstDateOfMonth(date), demands, property.getPayments(),
+					property.getRentAccount());
+		}
 		return counter;
 	}
 
