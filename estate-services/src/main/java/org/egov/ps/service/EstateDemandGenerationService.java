@@ -69,7 +69,20 @@ public class EstateDemandGenerationService {
 		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 				&& cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
 	}
-
+	
+	public static boolean checkMonthWithCurrentDate(Date requestedDate) {
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(new Date());
+		cal2.setTime(requestedDate);
+		if(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) 
+				&& cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)) {
+			return cal1.get(Calendar.DAY_OF_YEAR) >= cal2.get(Calendar.DAY_OF_YEAR);
+		}else {
+			return true;
+		}
+	}
+	
 	public AtomicInteger createMissingDemands(Property property) {
 		AtomicInteger counter = new AtomicInteger(0);
 
@@ -94,13 +107,12 @@ public class EstateDemandGenerationService {
 		List<Date> allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
 		for (Date demandDate : allMonthDemandDatesTillCurrentMonth) {
 			Date demandGenerationStartDate = setDateOfMonth(demandDate, Integer.parseInt(
-					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));			
-
+					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));
 			/* Here checking demand date is already created or not */
 			List<EstateDemand> inRequestDemands = property.getPropertyDetails().getEstateDemands().stream()
 					.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), demandGenerationStartDate))
 					.collect(Collectors.toList());
-			if (inRequestDemands.isEmpty()
+			if (inRequestDemands.isEmpty() && checkMonthWithCurrentDate(demandGenerationStartDate)
 					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 				// generate demand
 				counter.getAndIncrement();
