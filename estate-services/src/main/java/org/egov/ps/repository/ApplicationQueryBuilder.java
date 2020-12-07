@@ -149,7 +149,7 @@ public class ApplicationQueryBuilder {
 			builder.append("app.application_number=:appNumber");
 			preparedStmtList.put("appNumber", criteria.getApplicationNumber());
 		}
-		if (null != criteria.getState()) {
+		if (null != criteria.getState() && criteria.getState().size() != 0) {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("app.state IN (:state)");
 			preparedStmtList.put("state", criteria.getState());
