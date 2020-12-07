@@ -379,7 +379,7 @@ public class EstateDemandGenerationService {
 							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,
 									estateDemandLocal);
 
-							if (noOfDaysForInterestCalculation < estateDemand.getInitialGracePeriod()) {
+							if (noOfDaysForInterestCalculation > estateDemand.getInitialGracePeriod()) {
 
 								GSTinterest = prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365;
 
@@ -450,7 +450,7 @@ public class EstateDemandGenerationService {
 
 							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,
 									estateDemandLocal);
-							if (noOfDaysForInterestCalculation < estateDemand.getInitialGracePeriod()) {
+							if (noOfDaysForInterestCalculation > estateDemand.getInitialGracePeriod()) {
 
 								GSTinterest = prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365;
 
