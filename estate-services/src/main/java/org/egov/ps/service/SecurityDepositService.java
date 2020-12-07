@@ -22,6 +22,7 @@ import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
+import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.SecurityDepositStatementResponse;
 import org.egov.ps.web.contracts.SecurityDepositStatementSummary;
@@ -149,6 +150,8 @@ public class SecurityDepositService {
 		demandService.createCashPaymentProperty(requestInfo, paymentAmount, bills.get(0).getId(), owner,
 				propertyDb.getSecurityDepositBusinessService());
 
+		AuditDetails auditDetails = utils.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+
 		offlinePaymentDetails.forEach(ofpd -> {
 			ofpd.setId(UUID.randomUUID().toString());
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
@@ -158,6 +161,7 @@ public class SecurityDepositService {
 			ofpd.setFileNumber(propertyDb.getFileNumber());
 			ofpd.setConsumerCode(consumerCode);
 			ofpd.setBillingBusinessService(propertyDb.getSecurityDepositBusinessService());
+			ofpd.setAuditDetails(auditDetails);
 		});
 
 //		propertyDb.getPropertyDetails().getPaymentConfig().setSecurityAmount(totalDue.subtract(paymentAmount));

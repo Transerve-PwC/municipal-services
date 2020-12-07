@@ -27,6 +27,7 @@ import org.egov.ps.service.calculation.ExtensionFeeCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AccountStatementRequest;
+import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.ExtensionFeeRequest;
 import org.egov.ps.web.contracts.ExtensionFeeStatementResponse;
 import org.egov.ps.web.contracts.ExtensionFeeStatementSummary;
@@ -223,6 +224,8 @@ public class ExtensionFeeService {
 		demandService.createCashPaymentProperty(requestInfo, new BigDecimal(paymentAmount), bills.get(0).getId(), owner,
 				propertyDb.getExtensionFeeBusinessService());
 
+		AuditDetails auditDetails = utils.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+
 		offlinePaymentDetails.forEach(ofpd -> {
 			ofpd.setId(UUID.randomUUID().toString());
 			ofpd.setDemandId(bills.get(0).getBillDetails().get(0).getDemandId());
@@ -232,6 +235,7 @@ public class ExtensionFeeService {
 			ofpd.setFileNumber(propertyDb.getFileNumber());
 			ofpd.setConsumerCode(consumerCode);
 			ofpd.setBillingBusinessService(propertyDb.getExtensionFeeBusinessService());
+			ofpd.setAuditDetails(auditDetails);
 		});
 
 		List<ExtensionFee> unpaidExtensionFees = extensionFeeCollectionService.settle(extensionFees, paymentAmount);
