@@ -15,8 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import com.google.common.util.concurrent.AtomicDouble;
-
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.EstateDemandCriteria;
 import org.egov.ps.model.PaymentConfig;
@@ -338,6 +336,8 @@ public class EstateDemandGenerationService {
 			AtomicDouble demandRent = new AtomicDouble(0);
 			List<EstateDemand> newDemands = new ArrayList<>();
 			property.getPropertyDetails().getEstateDemands().forEach(estateDemand -> {
+				double GSTinterest = 0D;
+				double rentPenaltyInterest=0D;
 
 				if (estateDemand.getId() == null && estateDemand.getIsPrevious()) {
 					Calendar consolidateDemandCal = Calendar.getInstance();
@@ -371,27 +371,42 @@ public class EstateDemandGenerationService {
 							prevDemand.setGstInterest(0D);
 
 							prevDemand.setGenerationDate(prevDemandDate.getTime());
+							prevDemand.setBifurcate(true);
 
 							LocalDate prevDemandDateLocal = getLocalDate(prevDemandDate.getTime());
 							LocalDate estateDemandLocal = getLocalDate(estateDemand.getGenerationDate());
 							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,
 									estateDemandLocal);
 
+							if(noOfDaysForInterestCalculation<estateDemand.getInitialGracePeriod()) {
+								
+								GSTinterest=prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365;
+								
+								if(property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable()) {
+									rentPenaltyInterest= prevDemand.getRent()
+										* property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()
+										/ 100;
+								}else {
+									   rentPenaltyInterest=prevDemand.getRent()*(property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()/100)* noOfDaysForInterestCalculation/365;
+								}
+								prevDemand.setPenaltyInterest(rentPenaltyInterest);
+								prevDemand.setGstInterest(GSTinterest);
+								
+							}
 							estateDemand.setRent(estateDemand.getRent() - prevDemand.getRent());
 							estateDemand.setGst(estateDemand.getGst() - prevDemand.getGst());
-							estateDemand.setPenaltyInterest(estateDemand.getPenaltyInterest() - prevDemand.getRent()
-									* property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()
-									/ 100);
+							estateDemand.setPenaltyInterest(estateDemand.getPenaltyInterest() - prevDemand.getPenaltyInterest());
 							estateDemand.setGstInterest(estateDemand.getGstInterest()
-									- prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365);
+									- prevDemand.getGstInterest() );
 
 							newDemands.add(prevDemand);
+							
 						} else if (demandRent.get() > estateDemand.getRent()) {
 
 							estateDemand.setIsPrevious(false);
 							estateDemand.setGenerationDate(prevDemandDate.getTime());
-							estateDemand.setPenaltyInterest(0D);
-							estateDemand.setGstInterest(0D);
+							estateDemand.setBifurcate(true);
+							
 						}
 
 					} 
@@ -425,28 +440,41 @@ public class EstateDemandGenerationService {
 							prevDemand.setGstInterest(0D);
 
 							prevDemand.setGenerationDate(prevDemandDate.getTime());
-
+							prevDemand.setBifurcate(true);
 							LocalDate prevDemandDateLocal = getLocalDate(prevDemandDate.getTime());
 							LocalDate estateDemandLocal = getLocalDate(estateDemand.getGenerationDate());
 
 							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,
 									estateDemandLocal);
+							if(noOfDaysForInterestCalculation<estateDemand.getInitialGracePeriod()) {
+								
+								GSTinterest=prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365;
+								
+								if(property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable()) {
+								       GSTinterest= prevDemand.getRent()
+										* property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()
+										/ 100;
+								}else {
+									   rentPenaltyInterest=prevDemand.getRent()*(property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()/100)* noOfDaysForInterestCalculation/365;
+								}
+								prevDemand.setPenaltyInterest(rentPenaltyInterest);
+								prevDemand.setGstInterest(GSTinterest);
+								
+							}
 
 							estateDemand.setRent(estateDemand.getRent() - prevDemand.getRent());
 							estateDemand.setGst(estateDemand.getGst() - prevDemand.getGst());
-							estateDemand.setPenaltyInterest(estateDemand.getPenaltyInterest() - prevDemand.getRent()
-									* property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()
-									/ 100);
+							estateDemand.setPenaltyInterest(estateDemand.getPenaltyInterest() - prevDemand.getPenaltyInterest());
 							estateDemand.setGstInterest(estateDemand.getGstInterest()
-									- prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365);
+									- prevDemand.getGstInterest());
 
 							newDemands.add(prevDemand);
 						} else if (demandRent.get() > estateDemand.getRent()) {
 
 							estateDemand.setIsPrevious(false);
 							estateDemand.setGenerationDate(prevDemandDate.getTime());
-							estateDemand.setPenaltyInterest(0D);
-							estateDemand.setGstInterest(0D);
+							estateDemand.setBifurcate(true);
+							
 						}
 					}
 
@@ -456,7 +484,7 @@ public class EstateDemandGenerationService {
 		}
 
 	}
-
+	
 	private LocalDate getLocalDate(long atTimestamp) {
 		return Instant.ofEpochMilli(atTimestamp).atZone(ZoneId.systemDefault()).toLocalDate();
 	}

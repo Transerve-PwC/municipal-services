@@ -368,6 +368,26 @@ public class EstateRentCollectionServiceTests1 {
 				.isPrevious(isPrevious).interestSince(getEpochFromDateString(interestSince)).build();
 	}
 
+	
+	private EstateDemand getDemand(double amount, double gst, String date, String demandId, double penaltyInterest,
+			double gstInterest, double collectedRent, double collectedGST, double collectedRentPenalty,
+			double collectedGSTPenaty, boolean isPrevious,boolean isBifurcate,String interestSince) throws ParseException {
+		return EstateDemand.builder().rent(amount).
+				gst(gst).
+				penaltyInterest(penaltyInterest).
+				gstInterest(gstInterest)
+				.generationDate(getEpochFromDateString(date)).id(demandId).
+				remainingRent(amount)
+				.remainingGST(new Double(gst)).
+				remainingRentPenalty(penaltyInterest).
+				remainingGSTPenalty(gstInterest)
+				.collectedGST(collectedGST).collectedGSTPenalty(collectedGSTPenaty)
+				.collectedRentPenalty(collectedRentPenalty).collectedRent(collectedRent)
+				.interestSince(getEpochFromDateString(interestSince)).
+				isPrevious(isPrevious)
+				.isBifurcate(isBifurcate)
+				.build();
+	}
 	private long getEpochFromDateString(String date) throws ParseException {
 		return this.getDateFromString(date).getTime();
 	}
@@ -727,6 +747,8 @@ public class EstateRentCollectionServiceTests1 {
 
 	private static final String NOV_15_2019="15 11 2020";
 	private static final String NOV_30_2019="30 11 2020";
+	private static final String SEP_25_2020="25 09 2020";
+	private static final String OCT_06_2020="06 10 2020";
 	
 
 	@Test
@@ -734,16 +756,16 @@ public class EstateRentCollectionServiceTests1 {
 	public void testSimpleInterestSettlementStatement_New() throws ParseException {
 		
 		 
-		List<EstateDemand> demands = Arrays.asList(
-				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false),
-				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
-				 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
-				getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
-				 
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(1000,180 ,SEP_10_2020,"101",100,1.77,0,0,0,0,false,true,OCT_01_2020),
+				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.14,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
+	 			 
 				 
 				 );
-		 List<EstatePayment> payments = 
-		    		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019),getPayment(6000D, NOV_30_2019,NOV_30_2019));
+	    List<EstatePayment> payments =
+	    		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
 
 		    
 	   	
@@ -842,14 +864,14 @@ public class EstateRentCollectionServiceTests1 {
 	
 
 		 List<EstateDemand> demands = Arrays.asList(
-				 getDemand(1000,180 ,SEP_10_2020,"101",0,0,0,0,0,0,false),
+				 getDemand(1000,180 ,SEP_10_2020,"101",100,1.77,0,0,0,0,false,true,OCT_01_2020),
 				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
 	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
 	 			getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
 	 			 
 				 
 				 );
-	    List<EstatePayment> payments = 
+	    List<EstatePayment> payments =
 	    		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
 
 	    		
@@ -865,13 +887,152 @@ public class EstateRentCollectionServiceTests1 {
 		 
 		System.out.println("rentDue= "+rentDue+" gstDue="+gstDue+" rentPenaltyDue="+rentPenaltyDue+"GSTPenaltyDue="+GSTPenaltyDue+"Account balance= "+rentAccount.getRemainingAmount());
 
-		EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummary(demands, rentAccount,
-				DEFAULT_INTEREST_RATE, true, 10);
-
-		System.out.println(rentSummary);
-		System.out.println(rentAccount.getRemainingAmount());
-		assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
+//		EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummary(demands, rentAccount,
+//				DEFAULT_INTEREST_RATE, true, 10);
+//
+//		System.out.println(rentSummary);
+//		System.out.println(rentAccount.getRemainingAmount());
+//		assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
 
 	}
+	
+	
+	@Test
+	public void partiallyPaidBifurcatedDemand() throws ParseException {
+
+		
+
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(700,126 ,SEP_10_2020,"101",70,1.30,0,0,0,0,false,true,OCT_01_2020),
+				// getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments =
+	    		Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+
+	    		
+
+		EstateAccount rentAccount = getAccount(0.0);
+
+		List<EstateRentCollection> collections = this.estateRentCollectionService.settle(demands, payments, rentAccount,
+				DEFAULT_INTEREST_RATE, true, 10);
+		 double rentDue=demands.stream().mapToDouble(EstateDemand::getRemainingRent).sum();
+		   double gstDue=demands.stream().mapToDouble(EstateDemand::getRemainingGST).sum();
+		   double rentPenaltyDue=demands.stream().mapToDouble(EstateDemand::getRemainingRentPenalty).sum();
+		   double  GSTPenaltyDue=demands.stream().mapToDouble(EstateDemand::getRemainingGSTPenalty).sum();
+		 
+		System.out.println("rentDue= "+rentDue+" gstDue="+gstDue+" rentPenaltyDue="+rentPenaltyDue+"GSTPenaltyDue="+GSTPenaltyDue+"Account balance= "+rentAccount.getRemainingAmount());
+
+//		EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummary(demands, rentAccount,
+//				DEFAULT_INTEREST_RATE, true, 10);
+//
+//		System.out.println(rentSummary);
+//		System.out.println(rentAccount.getRemainingAmount());
+//		assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
+
+	}
+	
+	
+	
+
+	@Test
+	public void partiallyPaidBifurcatedDemand1() throws ParseException {
+
+		
+
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(700,126 ,SEP_25_2020,"101",70,1.30,0,0,0,0,false,true,OCT_01_2020),
+				// getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments =
+	    		Arrays.asList( getPayment(1000, OCT_06_2020,OCT_06_2020));
+
+	    		
+
+		EstateAccount rentAccount = getAccount(0.0);
+
+		List<EstateRentCollection> collections = this.estateRentCollectionService.settle(demands, payments, rentAccount,
+				DEFAULT_INTEREST_RATE, true, 10);
+		 double rentDue=demands.stream().mapToDouble(EstateDemand::getRemainingRent).sum();
+		   double gstDue=demands.stream().mapToDouble(EstateDemand::getRemainingGST).sum();
+		   double rentPenaltyDue=demands.stream().mapToDouble(EstateDemand::getRemainingRentPenalty).sum();
+		   double  GSTPenaltyDue=demands.stream().mapToDouble(EstateDemand::getRemainingGSTPenalty).sum();
+		 
+		System.out.println("rentDue= "+rentDue+" gstDue="+gstDue+" rentPenaltyDue="+rentPenaltyDue+"GSTPenaltyDue="+GSTPenaltyDue+"Account balance= "+rentAccount.getRemainingAmount());
+
+//		EstateRentSummary rentSummary = this.estateRentCollectionService.calculateRentSummary(demands, rentAccount,
+//				DEFAULT_INTEREST_RATE, true, 10);
+//
+//		System.out.println(rentSummary);
+//		System.out.println(rentAccount.getRemainingAmount());
+//		assertEquals(0D, rentSummary.getBalanceAmount(), 0.0001);
+
+	}
+	
+	
+	
+	@Test
+
+	public void bifurcated_accountstatement() throws ParseException {
+		
+		 
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(1000,180 ,SEP_10_2020,"101",100,1.77,0,0,0,0,false,true,OCT_01_2020),
+				 getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"103",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments =null;
+	    		//Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+
+		    
+	   	
+	      utils=new EstateRentCollectionUtils();
+	    List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
+	            payments, DEFAULT_INTEREST_RATE, null, null,true,10);
+	    utils.printStatement(accountStatementItems);
+	 
+	}
+
+
+	@Test
+
+	public void bifurcated_accountstatement_with_partialPayment() throws ParseException {
+		
+		 
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(700,126 ,SEP_25_2020,"101",70,1.30,0,0,0,0,false,true,OCT_01_2020),
+				// getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments =null;
+	    		//Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+
+		    
+	   	
+	      utils=new EstateRentCollectionUtils();
+	    List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
+	            payments, DEFAULT_INTEREST_RATE, null, null,true,10);
+	    utils.printStatement(accountStatementItems);
+	 
+	}
+
+	
+	
+	
+	
+	
 	
 }

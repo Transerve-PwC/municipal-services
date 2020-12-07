@@ -147,6 +147,10 @@ public class EstateDemand implements Comparable<EstateDemand> {
   @JsonProperty("comment")
   private String comment;
 
+  @Builder.Default
+  @JsonProperty("isBifurcate")
+  private boolean isBifurcate=false;
+  
   /**
    * paid of demand.
    */

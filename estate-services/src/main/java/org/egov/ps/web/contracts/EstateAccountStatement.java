@@ -63,6 +63,19 @@ public class EstateAccountStatement {
 	@JsonProperty("receiptNo")
 	private String receiptNo;
 	
+	
+	 /**
+		 * Adjustment Date  of the demand
+	 */
+	@JsonProperty("adjustmentDate")
+	private long adjustmentDate;
+	
+	 /**
+	 * Adjustment Date  of the demand
+     */
+     @JsonProperty("comment")
+     private String comment;
+	
 	@Builder.Default
 	private double rent = 0D;
 	

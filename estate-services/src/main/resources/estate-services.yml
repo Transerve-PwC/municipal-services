@@ -556,7 +556,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.id
 
-        - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid,remaining_rent_penalty,remaining_gst_penalty,remaining_rent,collected_gst_penalty,collected_rent_penalty,interest_since,remaining_gst, created_by, last_modified_by, created_time, last_modified_time, is_adjustment, adjustment_date, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?,remaining_rent_penalty=?,remaining_gst_penalty=?,remaining_rent=?,collected_gst_penalty=?,collected_rent_penalty=?,interest_since=?,remaining_gst=?, last_modified_by = ?, last_modified_time = ?,is_adjustment = ?, adjustment_date = ?, comment = ?;
+        - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid,remaining_rent_penalty,remaining_gst_penalty,remaining_rent,collected_gst_penalty,collected_rent_penalty,interest_since,remaining_gst, created_by, last_modified_by, created_time, last_modified_time, is_adjustment, adjustment_date, comment, is_bifurcate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?,remaining_rent_penalty=?,remaining_gst_penalty=?,remaining_rent=?,collected_gst_penalty=?,collected_rent_penalty=?,interest_since=?,remaining_gst=?, last_modified_by = ?, last_modified_time = ?,is_adjustment = ?, adjustment_date = ?, comment = ?, is_bifurcate=?;
           basePath: $.Properties.*.propertyDetails.estateDemands.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.id
@@ -610,6 +610,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.adjustmentDate
             
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.comment
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isBifurcate
 
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.generationDate
 
@@ -654,6 +656,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.adjustmentDate
             
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.comment
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isBifurcate
 
         - query: DELETE FROM cs_ep_payment WHERE property_details_id=?;
           basePath: $.Properties.*.propertyDetails.inActiveEstatePayments.*
@@ -769,7 +773,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedTime
 
-        - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?;
+        - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date, gst_collected, gst_penalty_collected, rent_penalty_collected) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?, gst_collected=?, gst_penalty_collected=?, rent_penalty_collected=?;
           basePath: $.Properties.*.propertyDetails.estateRentCollections.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.id
@@ -789,6 +793,12 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.createdTime
 
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedTime
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.gstCollected
+
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.gstPenaltyCollected
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.rentPenaltyCollected            
 
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.interestCollected
 
@@ -797,6 +807,12 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.auditDetails.lastModifiedTime
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.gstCollected
+
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.gstPenaltyCollected
+            
+            - jsonPath: $.Properties.*.propertyDetails.estateRentCollections.*.rentPenaltyCollected
 
         - query: INSERT INTO cs_ep_payment_config_v1(id, tenant_id, property_details_id, is_intrest_applicable, due_date_of_payment, no_of_months, rate_of_interest, security_amount, total_amount, is_ground_rent, ground_rent_generation_type, ground_rent_generate_demand, ground_rent_advance_rent, ground_rent_bill_start_date, ground_rent_advance_rent_date, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET is_intrest_applicable=?, due_date_of_payment=?, no_of_months=?, rate_of_interest=?, security_amount=?, total_amount=?, is_ground_rent=?, ground_rent_generation_type=?, ground_rent_generate_demand=?, ground_rent_advance_rent=?, ground_rent_bill_start_date=?, ground_rent_advance_rent_date=?, last_modified_by=?, last_modified_time=?;
           basePath: $.Properties.*.propertyDetails.paymentConfig
