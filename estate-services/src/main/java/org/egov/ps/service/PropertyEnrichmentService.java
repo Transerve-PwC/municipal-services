@@ -318,7 +318,7 @@ public class PropertyEnrichmentService {
 				estateDemand.setRemainingGST(estateDemand.getGst());
 				estateDemand.setRemainingGSTPenalty(estateDemand.getGstInterest());
 				estateDemand.setRemainingRent(estateDemand.getRent());
-				if(estateDemand.getInterestSince() != null || estateDemand.getInterestSince() != 0.0)
+				if(estateDemand.getInterestSince() != null && estateDemand.getInterestSince() != 0.0)
 					estateDemand.setInterestSince(estateDemand.getInterestSince());
 				else
 					estateDemand.setInterestSince(estateDemand.getGenerationDate());
