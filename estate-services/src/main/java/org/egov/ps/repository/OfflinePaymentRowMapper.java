@@ -29,7 +29,7 @@ public class OfflinePaymentRowMapper implements ResultSetExtractor<List<OfflineP
 			OfflinePaymentDetails estatePayment = OfflinePaymentDetails.builder().id(rs.getString("offlineid"))
 					.propertyDetailsId(rs.getString("offlineproperty_details_id"))
 					.demandId(rs.getString("offlinedemand_id")).amount(rs.getBigDecimal("offlineamount"))
-					.bankName(rs.getString("offlinebank_name"))
+					.bankName(rs.getString("offlinebank_name")).comments(rs.getString("offline_comments"))
 					.transactionNumber(rs.getString("offlinetransaction_number"))
 					.dateOfPayment(rs.getLong("offlinedate_of_payment"))
 					.type(OfflinePaymentType.fromValue(rs.getString("offline_type"))).auditDetails(auditDetails)

@@ -94,4 +94,6 @@ public class OfflinePaymentDetails {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 	
+	@JsonProperty("comments")
+	private String comments;
 }

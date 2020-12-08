@@ -117,7 +117,7 @@ public class PropertyQueryBuilder {
 			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
 			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
 
-	private static final String OFFLINE_PAYMENT_COLUMN = " offline.id as offlineid, "
+	private static final String OFFLINE_PAYMENT_COLUMN = " offline.id as offlineid, offline.comments as offline_comments, "
 			+ " offline.property_details_id as offlineproperty_details_id, offline.demand_id as offlinedemand_id, "
 			+ " offline.amount as offlineamount, offline.bank_name as offlinebank_name, offline.type as offline_type, "
 			+ " offline.transaction_number as offlinetransaction_number, offline.date_of_payment as offlinedate_of_payment, "
