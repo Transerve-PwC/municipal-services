@@ -234,19 +234,19 @@
           "action": "REJECT",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "REJECTED",
-          "roles": ["ES_MM_ADDITIONAL_COMMISSIONER"]
+          "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         },
         {
           "action": "APPROVE",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_NOTICE",
-          "roles": ["ES_MM_ADDITIONAL_COMMISSIONER"]
+          "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         },
         {
           "action": "SENDBACK",
           "currentState": "PENDING_AC_APPROVAL",
           "nextState": "PENDING_SO_VERIFICATION",
-          "roles": ["ES_MM_ADDITIONAL_COMMISSIONER"]
+          "roles": ["ES_ADDITIONAL_COMMISSIONER"]
         }
       ],
       "sla": 2,
