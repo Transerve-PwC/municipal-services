@@ -120,6 +120,12 @@ public class ApplicationValidatorService {
 		if (property == null) {
 			throw new CustomException("INVALID_PROPERTY", "Could not find property with the given id:" + propertyId);
 		}
+
+		List<String> propertyDetailsIds = new ArrayList<>();
+		propertyDetailsIds.add(property.getPropertyDetails().getId());
+		property.getPropertyDetails()
+				.setEstateAccount(propertyRepository.getPropertyEstateAccountDetails(propertyDetailsIds));
+
 		if (!property.getState().contentEquals(PSConstants.PM_APPROVED)
 				&& !property.getState().contentEquals(PSConstants.ES_APPROVED)
 				&& !property.getState().contentEquals(PSConstants.ES_PM_MM_APPROVED)) {
@@ -134,7 +140,7 @@ public class ApplicationValidatorService {
 		}
 		if (rentDue > 0) {
 			throw new CustomException("PROPERTY_PENDING_DUE", String.format(
-					"Property has pending due of Rs: %8.2f, so you can not apply for %s, please clear the due before applying.",
+					"Property has pending due of Rs:%.2f, so you can not apply for %s, please clear the due before applying.",
 					rentDue, application.getApplicationType()));
 		}
 	}
