@@ -40,6 +40,13 @@ public class EstateRentCollection {
 	private String demandId;
 
 	/**
+	 * Payment Id of the payment that this fulfils.
+	 */
+	@ToString.Include
+	@JsonProperty("paymentId")
+	private String paymentId;
+
+	/**
 	 * Interest collected.
 	 */
 	@Builder.Default

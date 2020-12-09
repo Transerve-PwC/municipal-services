@@ -159,7 +159,9 @@ public class PropertyService {
 		Property property = request.getProperties().get(0);
 		// bifurcate demand
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
-				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)) {
+				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
+				&& property.getPropertyDetails().getPaymentConfig().getGroundRentGenerationType()
+				.equalsIgnoreCase(PSConstants.MONTHLY)) {
 			estateDemandGenerationService.bifurcateDemand(property);
 		}
 		/* Approved Property Missing Demands */

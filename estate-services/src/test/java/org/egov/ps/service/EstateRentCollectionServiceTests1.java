@@ -991,8 +991,8 @@ public class EstateRentCollectionServiceTests1 {
 	 			 
 				 
 				 );
-	    List<EstatePayment> payments =null;
-	    		//Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+	    List<EstatePayment> payments =
+	    		Arrays.asList( getPayment(6490D, "9 12 2020","9 12 2020"));
 
 		    
 	   	
@@ -1010,7 +1010,32 @@ public class EstateRentCollectionServiceTests1 {
 		
 		 
 		 List<EstateDemand> demands = Arrays.asList(
-				 getDemand(700,126 ,SEP_25_2020,"101",70,1.30,0,0,0,0,false,true,OCT_01_2020),
+				 getDemand(700,126 ,SEP_10_2020,"101",70,1.30,0,0,0,0,false,true,OCT_01_2020),
+				// getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
+	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments =null;
+	    		//Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+
+		    
+	   	
+	      utils=new EstateRentCollectionUtils();
+	    List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
+	            payments, DEFAULT_INTEREST_RATE, null, null,true,10);
+	    utils.printStatement(accountStatementItems);
+	 
+	}
+	
+	@Test
+
+	public void bifurcated_accountstatement_with_partialPayment_nograce() throws ParseException {
+		
+		 
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(700,126 ,"25 11 2020","101",70,1.30,0,0,0,0,false,true,"01 12 2020"),
 				// getDemand(2500D,450 ,OCT_01_2020,"102",250,8.22,0,0,0,0,true), 
 	 			 getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
 	 			getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
@@ -1030,7 +1055,31 @@ public class EstateRentCollectionServiceTests1 {
 	}
 
 	
-	
+	@Test
+
+	public void bifurcated_accountstatement_with_unpaidPayment_nograce() throws ParseException {
+		
+		 
+		 List<EstateDemand> demands = Arrays.asList(
+				 getDemand(1000,180 ,"25 11 2020","101",100,1.77,0,0,0,0,false,true,"01 12 2020"),
+				 getDemand(2500D,450 ,"01 12 2020","102",250,8.22,0,0,0,0,true) 
+				// getDemand(1000,180 ,OCT_10_2020,"103",0,0,0,0,0,0,false),
+	 			//getDemand(1000,180 ,NOV_10_2020,"104",0,0,0,0,0,0,false)
+	 			 
+				 
+				 );
+	    List<EstatePayment> payments =null;
+	    		//Arrays.asList( getPayment(5000D, NOV_15_2019,NOV_15_2019));
+
+		    
+	   	
+	      utils=new EstateRentCollectionUtils();
+	    List<EstateAccountStatement> accountStatementItems = this.estateRentCollectionService.getAccountStatement(demands,
+	            payments, DEFAULT_INTEREST_RATE, null, null,true,10);
+	    utils.printStatement(accountStatementItems);
+	 
+	}
+
 	
 	
 	

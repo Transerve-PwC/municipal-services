@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -80,14 +81,32 @@ public class EstateDemandGenerationService {
 			return true;
 		}
 	}
+	
+	public static boolean compareDates(Date requestedDate,Date compareDate) {
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(compareDate);
+		cal2.setTime(requestedDate);
+		if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)) {
+			return cal1.get(Calendar.DAY_OF_YEAR) >= cal2.get(Calendar.DAY_OF_YEAR);
+		} else {
+			return false;
+		}
+	}
 
 	public AtomicInteger createMissingDemands(Property property) {
 		AtomicInteger counter = new AtomicInteger(0);
 
+		Boolean monthly =  property.getPropertyDetails().getPaymentConfig().getGroundRentGenerationType()
+				.equalsIgnoreCase(PSConstants.MONTHLY);
+		
 		/* Fetch billing date of the property */
-		Date propertyBillingDate = getFirstDateOfMonth(
-				new Date(property.getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate()));
-
+		Date propertyBillingDate = new Date(property.getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate());
+		if(monthly) 
+			propertyBillingDate = getFirstDateOfMonth(
+					new Date(property.getPropertyDetails().getPaymentConfig().getGroundRentBillStartDate()));
+		
 		/*
 		 * fetch the consolidated demand, if consolidated demand present , take the date
 		 * of consolidated demand and created demand from that date
@@ -101,11 +120,17 @@ public class EstateDemandGenerationService {
 				propertyBillingDate = new Date(demand.getGenerationDate());
 			}
 		}
-
-		List<Date> allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
+		List<Date> allMonthDemandDatesTillCurrentMonth = new ArrayList<>();
+		if(monthly) 
+			allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
+		 else 
+			allMonthDemandDatesTillCurrentMonth = getAllRemainingDatesYear(propertyBillingDate);
+		
 		for (Date demandDate : allMonthDemandDatesTillCurrentMonth) {
-			Date demandGenerationStartDate = setDateOfMonth(demandDate, Integer.parseInt(
-					property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));
+			if(monthly) 
+				demandDate = setDateOfMonth(demandDate, Integer.parseInt(
+						property.getPropertyDetails().getPaymentConfig().getGroundRentGenerateDemand().toString()));			
+			Date demandGenerationStartDate = demandDate;
 			/* Here checking demand date is already created or not */
 			List<EstateDemand> inRequestDemands = property.getPropertyDetails().getEstateDemands().stream()
 					.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), demandGenerationStartDate))
@@ -158,11 +183,13 @@ public class EstateDemandGenerationService {
 						if (paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 							generateDemandDate = setDateOfMonth(date,
 									Integer.parseInt(paymentConfig.getGroundRentGenerateDemand().toString()));
+						} else if (paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.ANNUALLY)) {
+							generateDemandDate = new Date(paymentConfig.getGroundRentBillStartDate());
 						}
 					}
 
 					if (existingDemands.isEmpty()
-							&& DateTimeComparator.getDateOnlyInstance().compare(date, generateDemandDate) == 0
+							&& compareDates(generateDemandDate,date)
 							&& property.getPropertyDetails().getPropertyType()
 									.equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 						// generate demand
@@ -192,6 +219,8 @@ public class EstateDemandGenerationService {
 			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 			if (paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 				date = setDateOfMonth(date, Integer.parseInt(paymentConfig.getGroundRentGenerateDemand().toString()));
+			} else if (paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.ANNUALLY)) {
+				date = setDateOfMonth(date, new Date(paymentConfig.getGroundRentBillStartDate()).getDate());
 			}
 		}
 
@@ -224,6 +253,8 @@ public class EstateDemandGenerationService {
 					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 
 		}
+		double securityAmount = property.getPropertyDetails().getPaymentConfig().getNoOfMonths() * calculatedRent;
+		property.getPropertyDetails().getPaymentConfig().setSecurityAmount(new BigDecimal(securityAmount));
 		PropertyRequest propertyRequest = new PropertyRequest();
 		propertyRequest.setProperties(Collections.singletonList(property));
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateRentCollections())) {
@@ -305,6 +336,22 @@ public class EstateDemandGenerationService {
 		return allMonthDemandDatesTillCurrentMonth;
 	}
 
+	private static List<Date> getAllRemainingDatesYear(Date propertyBillingDate) {
+		List<Date> allMonthDemandDatesTillCurrentMonth = new ArrayList<>();
+		Calendar beginCalendar = Calendar.getInstance();
+		Calendar finishCalendar = Calendar.getInstance();
+
+		beginCalendar.setTime(propertyBillingDate);
+		finishCalendar.setTime(new Date());
+
+		while (beginCalendar.before(finishCalendar)) {
+			// add one month to date per loop
+			allMonthDemandDatesTillCurrentMonth.add(beginCalendar.getTime());
+			beginCalendar.add(Calendar.YEAR, 1);
+		}
+		return allMonthDemandDatesTillCurrentMonth;
+	}
+
 	private void generateEstateDemand(Property property, Date date) {
 		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 		if (property.getPropertyDetails().getPaymentConfig() != null
@@ -312,15 +359,19 @@ public class EstateDemandGenerationService {
 			PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
 			if (paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 				date = setDateOfMonth(date, Integer.parseInt(paymentConfig.getGroundRentGenerateDemand().toString()));
+			} else if (paymentConfig.getGroundRentGenerationType().equalsIgnoreCase(PSConstants.ANNUALLY)) {
+				date = setDateOfMonth(date, new Date(paymentConfig.getGroundRentBillStartDate()).getDate());
 			}
 		}
-
+		
 		EstateDemand estateDemand = EstateDemand.builder().generationDate(date.getTime()).collectionPrincipal(0.0)
 				.remainingPrincipal(calculatedRent).interestSince(date.getTime()).isPrevious(false).rent(calculatedRent)
 				.penaltyInterest(0.0).gstInterest(0.0).gst(calculatedRent * 18 / 100).noOfDays(0.0).paid(0.0)
 				.remainingRent(calculatedRent).remainingGST(calculatedRent * 18 / 100).remainingRentPenalty(0.0)
 				.remainingGSTPenalty(0.0).build();
 
+		double securityAmount = property.getPropertyDetails().getPaymentConfig().getNoOfMonths() * calculatedRent;
+		property.getPropertyDetails().getPaymentConfig().setSecurityAmount(new BigDecimal(securityAmount));
 		property.getPropertyDetails().getEstateDemands().add(estateDemand);
 
 		log.info("Generating Estate demand id '{}' of principal '{}' for property with file no {}",
@@ -451,7 +502,6 @@ public class EstateDemandGenerationService {
 							long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(prevDemandDateLocal,
 									estateDemandLocal);
 							if (noOfDaysForInterestCalculation > estateDemand.getInitialGracePeriod()) {
-
 
 								GSTinterest = prevDemand.getGst() * .18 * noOfDaysForInterestCalculation / 365;
 
