@@ -1,4 +1,4 @@
-CREATE TABLE nulm_susv_application_detail (
+CREATE TABLE public.nulm_susv_application_detail (
 	application_uuid varchar(64) NOT NULL,
 	application_id varchar(64) NOT NULL,
 	nulm_application_id varchar(64) NULL,
@@ -31,6 +31,7 @@ CREATE TABLE nulm_susv_application_detail (
 	created_time int8 NULL,
 	last_modified_by varchar(64) NULL,
 	last_modified_time int8 NULL,
+	dob timestamp NULL,
 	CONSTRAINT nulm_susv_application_detail_pkey PRIMARY KEY (application_uuid),
 	CONSTRAINT susv_application_id UNIQUE (application_id)
 );

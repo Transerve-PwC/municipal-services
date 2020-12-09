@@ -1,4 +1,4 @@
-CREATE TABLE nulm_smid_application_detail (
+CREATE TABLE public.nulm_smid_application_detail (
 	application_uuid varchar(64) NOT NULL,
 	application_id varchar(64) NOT NULL,
 	nulm_application_id varchar(64) NULL,
@@ -44,6 +44,7 @@ CREATE TABLE nulm_smid_application_detail (
 	document_attachemnt jsonb NULL,
 	is_registered bool NULL,
 	cob_number varchar(255) NULL,
+	age int4 NULL,
 	CONSTRAINT nulm_smid_application_detail_pkey PRIMARY KEY (application_uuid),
 	CONSTRAINT smid_application_id UNIQUE (application_id)
 );

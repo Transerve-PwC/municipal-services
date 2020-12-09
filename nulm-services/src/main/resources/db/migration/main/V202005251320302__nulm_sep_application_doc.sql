@@ -1,4 +1,4 @@
-CREATE TABLE nulm_sep_application_document (
+CREATE TABLE public.nulm_sep_application_document (
 	document_uuid varchar(64) NOT NULL,
 	filestore_id varchar NOT NULL,
 	application_uuid varchar(64) NOT NULL,

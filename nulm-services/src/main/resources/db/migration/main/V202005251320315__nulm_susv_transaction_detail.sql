@@ -1,4 +1,4 @@
-CREATE TABLE nulm_susv_transaction_detail (
+CREATE TABLE public.nulm_susv_transaction_detail (
 	uuid varchar(64) NOT NULL,
 	transaction_type varchar(64) NOT NULL,
 	amount varchar(64) NULL,

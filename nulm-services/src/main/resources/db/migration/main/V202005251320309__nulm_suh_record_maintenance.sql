@@ -1,4 +1,4 @@
-CREATE TABLE nulm_suh_record_maintenance (
+CREATE TABLE public.nulm_suh_record_maintenance (
 	suh_uuid varchar(256) NULL,
 	record_uuid varchar(256) NOT NULL,
 	is_asset_inventory_register bool NULL,

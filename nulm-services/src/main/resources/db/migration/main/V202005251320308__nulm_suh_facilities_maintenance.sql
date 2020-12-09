@@ -1,4 +1,4 @@
-CREATE TABLE nulm_suh_facilities_maintenance (
+CREATE TABLE public.nulm_suh_facilities_maintenance (
 	suh_uuid varchar(256) NULL,
 	facility_uuid varchar(256) NOT NULL,
 	is_bedding bool NULL,

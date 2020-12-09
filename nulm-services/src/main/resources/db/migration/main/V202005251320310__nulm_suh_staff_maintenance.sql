@@ -1,4 +1,4 @@
-CREATE TABLE nulm_suh_staff_maintenance (
+CREATE TABLE public.nulm_suh_staff_maintenance (
 	suh_uuid varchar(256) NOT NULL,
 	staff_uuid varchar(256) NOT NULL,
 	is_manager bool NULL,

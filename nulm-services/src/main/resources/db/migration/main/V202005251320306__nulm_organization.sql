@@ -1,4 +1,4 @@
-CREATE TABLE nulm_organization (
+CREATE TABLE public.nulm_organization (
 	organization_uuid varchar(64) NOT NULL,
 	user_id int8 NOT NULL,
 	organization_name varchar(64) NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE nulm_susv_transaction_document (
+CREATE TABLE public.nulm_susv_transaction_document (
 	document_uuid varchar(64) NOT NULL,
 	filestore_id varchar NOT NULL,
 	uuid varchar(64) NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE nulm_smid_shg_detail (
+CREATE TABLE public.nulm_smid_shg_detail (
 	shg_uuid varchar(256) NOT NULL,
 	shg_id varchar(256) NOT NULL,
 	"name" varchar(256) NOT NULL,

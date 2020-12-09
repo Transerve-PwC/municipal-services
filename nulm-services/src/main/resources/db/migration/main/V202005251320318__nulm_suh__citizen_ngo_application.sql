@@ -1,4 +1,4 @@
-CREATE TABLE nulm_suh_citizenngo_application (
+CREATE TABLE public.nulm_suh_citizenngo_application (
 	suh_citizen_ngo_uuid varchar(256) NOT NULL,
 	shelter_requested_for_person varchar(256) NULL,
 	address varchar(256) NULL,
@@ -14,5 +14,6 @@ CREATE TABLE nulm_suh_citizenngo_application (
 	created_time int8 NULL,
 	last_modified_by varchar(64) NULL,
 	last_modified_time int8 NULL,
+	dob timestamp NULL,
 	CONSTRAINT nulm_suh_citizenngo_application_pkey PRIMARY KEY (suh_citizen_ngo_uuid)
 );

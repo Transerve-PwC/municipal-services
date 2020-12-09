@@ -1,4 +1,4 @@
-CREATE TABLE nulm_suh_occupancy_log (
+CREATE TABLE public.nulm_suh_occupancy_log (
 	log_uuid varchar(256) NOT NULL,
 	name_of_shelter varchar(256) NULL,
 	"date" timestamp NULL,
@@ -15,5 +15,6 @@ CREATE TABLE nulm_suh_occupancy_log (
 	created_time int8 NULL,
 	last_modified_by varchar(64) NULL,
 	last_modified_time int8 NULL,
+	dob timestamp NULL,
 	CONSTRAINT nulm_suh_occupancy_log_pkey PRIMARY KEY (log_uuid)
 );

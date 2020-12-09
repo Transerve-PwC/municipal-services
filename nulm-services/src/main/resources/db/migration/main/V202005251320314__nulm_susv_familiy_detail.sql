@@ -1,4 +1,4 @@
-CREATE TABLE nulm_susv_familiy_detail (
+CREATE TABLE public.nulm_susv_familiy_detail (
 	uuid varchar(64) NOT NULL,
 	application_uuid varchar(64) NOT NULL,
 	"name" varchar(64) NULL,

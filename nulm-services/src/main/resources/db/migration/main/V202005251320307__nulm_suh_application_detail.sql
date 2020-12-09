@@ -1,4 +1,4 @@
-CREATE TABLE nulm_suh_application_detail (
+CREATE TABLE public.nulm_suh_application_detail (
 	suh_uuid varchar(256) NOT NULL,
 	suh_id varchar(256) NULL,
 	nulm_application_id varchar(64) NULL,
