@@ -150,8 +150,8 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 			 * Add if any previous unpaid GST penalty or Rent penalty is there No need to
 			 * add the penalties if the demand is fully unpaid
 			 */
-			if (demand.isBifurcate() || demand.getIsPrevious()
-					|| (demand.getCollectedGSTPenalty() > 0 && demand.getCollectedRentPenalty() > 0)) {
+			if (demand.isBifurcate() || demand.getIsPrevious() || (demand.getRent() != demand.getRemainingRent())
+					|| demand.isAdjustment()) {
 				GSTinterest = demand.getRemainingGSTPenalty();
 				rentPenaltyInterest = demand.getRemainingRentPenalty();
 			}
@@ -528,7 +528,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 		statement.setDate(currentDemand.getGenerationDate());
 		// statement.setAmount(currentDemand.getCollectedRent());
 		statement.setType(Type.D);
-		// statement.setComment(currentDemand.getComment);
+		statement.setComment(currentDemand.getComment());
 		statement.setAdjustmentDate(currentDemand.getAdjustmentDate());
 		return rentSummary;
 	}
@@ -597,7 +597,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 						 * add the penalties if the demand is fully unpaid
 						 */
 						if (demand.isBifurcate() || demand.getIsPrevious()
-								|| (demand.getCollectedGSTPenalty() > 0 && demand.getCollectedRentPenalty() > 0)) {
+								|| (demand.getRent() != demand.getRemainingRent()) || demand.isAdjustment()) {
 							GSTinterest = demand.getRemainingGSTPenalty();
 							rentPenaltyInterest = demand.getRemainingRentPenalty();
 						}
@@ -617,14 +617,16 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 							rentPenaltyInterest = calculateRentInterest(demand, rentPenaltyInterest, rentInterest,
 									noOfDaysForInterestCalculation, isFixRentPenalty);
 
-						} else {
-							GSTinterest = demand.getRemainingGSTPenalty();
-							if (isFixRentPenalty)
-								rentPenaltyInterest = demand.getRemainingRentPenalty();
-							else
-								rentPenaltyInterest = demand.getRemainingRentPenalty();
-
 						}
+//						else if(!demand.isBifurcate() && !demand.getIsPrevious() ){
+//							GSTinterest=demand.getRemainingGSTPenalty();
+//							
+//							if(isFixRentPenalty) 
+//								rentPenaltyInterest=demand.getRemainingRentPenalty();
+//							else
+//								rentPenaltyInterest=demand.getRemainingRentPenalty();
+//							
+//						}
 					}
 
 					return EstateRentSummary.builder().rent(demand.getRent())
@@ -633,12 +635,14 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 
 							.collectedGST(demand.getCollectedGST() != null ? demand.getCollectedGST() : 0)
 							.balanceGST(summary.getBalanceGST() + demand.getRemainingGST())
-// .GSTPenalty( calculatedInterest)
-							.GSTPenalty(summary.getBalanceGSTPenalty() + GSTinterest).collectedGSTPenalty(
+							// .GSTPenalty( calculatedInterest)
+							.GSTPenalty(summary.getBalanceGSTPenalty() + GSTinterest)
+							.collectedGSTPenalty(
 									demand.getCollectedGSTPenalty() != null ? demand.getCollectedGSTPenalty() : 0)
-//.balanceGSTPenalty(summary.getBalanceGSTPenalty() + demand.getRemainingGSTPenalty())
+							// .balanceGSTPenalty(summary.getBalanceGSTPenalty() +
+							// demand.getRemainingGSTPenalty())
 							.balanceGSTPenalty(summary.getBalanceGSTPenalty() + GSTinterest)
-//.balanceRentPenalty(summary.getBalanceGSTPenalty()+demand.getPenaltyInterest())
+							// .balanceRentPenalty(summary.getBalanceGSTPenalty()+demand.getPenaltyInterest())
 							.balanceRentPenalty(summary.getBalanceRentPenalty() + rentPenaltyInterest)
 							.collectedRentPenalty(
 									demand.getCollectedRentPenalty() != null ? demand.getCollectedRentPenalty() : 0)
