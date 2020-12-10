@@ -173,6 +173,7 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 						noOfDaysForInterestCalculation, isFixRentPenalty);
 
 			}
+			
 			demand.setRemainingRentPenalty(rentPenaltyInterest);
 			demand.setRemainingGSTPenalty(GSTinterest);
 
