@@ -1,9 +1,9 @@
 name: Rented Properties Build
 
 on: 
-  - push:
+  push:
     branches:
-      - March_2020_Release1
+      - 'feature/rp'
       - 'feature/rp-*'
       - 'bugfix/rp-*'
 
