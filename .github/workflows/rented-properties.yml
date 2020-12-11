@@ -3,7 +3,7 @@ name: Rented Properties Build
 on: 
   push:
     paths:
-    - 'rented-properties/**'
+      - 'rented-properties/**'
 
 jobs:
   build:
