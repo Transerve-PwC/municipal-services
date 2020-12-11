@@ -2,10 +2,8 @@ name: Rented Properties Build
 
 on: 
   push:
-    branches:
-      - 'feature/rp'
-      - 'feature/rp-*'
-      - 'bugfix/rp-*'
+    paths:
+    - 'rented-properties/**'
 
 jobs:
   build:
@@ -29,4 +27,3 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
         working-directory: ./rented-properties
-
