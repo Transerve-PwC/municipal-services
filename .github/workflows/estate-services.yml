@@ -1,7 +1,11 @@
-name: Java CI
+name: Estate Services Build
 
-on: [push]
-
+on: 
+  push:
+    branches:
+      - 'feature/estate-services'
+      - 'feature/est-*'
+      - 'bugfix/est-*'
 jobs:
   build:
     runs-on: ubuntu-latest
