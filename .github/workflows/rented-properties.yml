@@ -1,9 +1,6 @@
 name: Rented Properties Build
 
-on: 
-  push:
-    paths:
-      - 'rented-properties/**'
+on: push
 
 jobs:
   build:
