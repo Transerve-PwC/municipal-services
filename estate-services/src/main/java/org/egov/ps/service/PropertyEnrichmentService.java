@@ -325,7 +325,7 @@ public class PropertyEnrichmentService {
 				estateDemand.setIsPrevious(estateDemand.getIsPrevious());
 				AuditDetails estateDemandAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 				estateDemand.setAuditDetails(estateDemandAuditDetails);
-
+				estateDemand.setAdjustmentDate(estateDemand.getAdjustmentDate());
 			});
 		}
 

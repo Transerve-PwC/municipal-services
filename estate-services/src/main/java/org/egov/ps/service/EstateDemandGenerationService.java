@@ -446,7 +446,7 @@ public class EstateDemandGenerationService {
 								prevDemand.setGstInterest(GSTinterest);
 							}
 							prevDemand.setInterestSince(estateDemand.getGenerationDate());
-
+							prevDemand.setAdjustmentDate(estateDemand.getGenerationDate());
 							estateDemand.setRent(estateDemand.getRent() - prevDemand.getRent());
 							estateDemand.setGst(estateDemand.getGst() - prevDemand.getGst());
 							estateDemand.setPenaltyInterest(
@@ -461,7 +461,7 @@ public class EstateDemandGenerationService {
 							estateDemand.setGenerationDate(prevDemandDate.getTime());
 							estateDemand.setBifurcate(true);
 							estateDemand.setInterestSince(estateDemand.getGenerationDate());
-
+							estateDemand.setAdjustmentDate(estateDemand.getGenerationDate());
 						}
 
 					}
@@ -517,7 +517,7 @@ public class EstateDemandGenerationService {
 								prevDemand.setGstInterest(GSTinterest);
 							}
 							prevDemand.setInterestSince(estateDemand.getGenerationDate());
-
+							prevDemand.setAdjustmentDate(estateDemand.getGenerationDate());
 							estateDemand.setRent(estateDemand.getRent() - prevDemand.getRent());
 							estateDemand.setGst(estateDemand.getGst() - prevDemand.getGst());
 							estateDemand.setPenaltyInterest(
@@ -531,7 +531,7 @@ public class EstateDemandGenerationService {
 							estateDemand.setGenerationDate(prevDemandDate.getTime());
 							estateDemand.setBifurcate(true);
 							estateDemand.setInterestSince(estateDemand.getGenerationDate());
-
+							estateDemand.setAdjustmentDate(estateDemand.getGenerationDate());
 						}
 					}
 
