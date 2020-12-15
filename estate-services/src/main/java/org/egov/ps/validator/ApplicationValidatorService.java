@@ -132,9 +132,9 @@ public class ApplicationValidatorService {
 			throw new CustomException("INVALID_PROPERTY", "Property with the given " + propertyId + " is not approved");
 		}
 		Double rentDue = 0.0;
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())
-				&& property.getPropertyDetails().getEstateAccount() != null
+		if (property.getPropertyDetails().getEstateAccount() != null
 				&& property.getPropertyDetails().getPaymentConfig() != null
+				&& property.getPropertyDetails().getEstateDemands() != null
 				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 			rentDue = getRentDue(property);
 		}

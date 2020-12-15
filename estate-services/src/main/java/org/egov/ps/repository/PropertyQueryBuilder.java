@@ -100,6 +100,18 @@ public class PropertyQueryBuilder {
 			+ " estp.payment_date as estpayment_date, estp.created_by as estpcreated_by, estp.last_modified_by as estplast_modified_by, "
 			+ " estp.created_time as estpcreated_time, estp.last_modified_time as estplast_modified_time, estp.processed as estpprocessed ";
 
+	private static final String MANI_MAJRA_DEMAND_COLUMNS = " mmd.id as mmd_id, mmd.property_details_id as mmd_property_details_id, "
+			+ " mmd.demand_date as mmd_demand_date, mmd.paid as mmd_paid, mmd.rent as mmd_rent, mmd.gst as mmd_gst, "
+			+ " mmd.collected_rent as mmd_collected_rent, mmd.collected_gst as mmd_collected_gst, mmd.comment as mmd_comment, "
+			+ " mmd.created_by as mmd_created_by, mmd.last_modified_by as mmd_last_modified_by, "
+			+ " mmd.created_time as mmd_created_time, mmd.last_modified_time as mmd_last_modified_time ";
+
+	private static final String MANI_MAJRA_PAYMENT_COLUMNS = " mmp.id as mmp_id, mmp.property_details_id as mmp_property_details_id, "
+			+ " mmp.receipt_date as mmp_receipt_date, mmp.rent_received as mmp_rent_received, mmp.receipt_no as mmp_receipt_no, "
+			+ " mmp.payment_date as mmp_payment_date, mmp.processed as mmp_processed, "
+			+ " mmp.created_by as mmp_created_by, mmp.last_modified_by as mmp_last_modified_by, "
+			+ " mmp.created_time as mmp_created_time, mmp.last_modified_time as mmp_last_modified_time ";
+
 	private static final String PT_TABLE = " FROM cs_ep_property_v1 pt " + INNER_JOIN
 			+ " cs_ep_property_details_v1 ptdl  ON pt.id = ptdl.property_id " + LEFT_JOIN
 			+ " cs_ep_payment_config_v1 pc ON pc.property_details_id = ptdl.id " + LEFT_JOIN
@@ -146,6 +158,10 @@ public class PropertyQueryBuilder {
 	private static final String ESTATE_DEMAND_TABLE = " cs_ep_demand estd ";
 
 	private static final String ESTATE_PAYMENT_TABLE = " cs_ep_payment estp ";
+
+	private static final String MANI_MAJRA_DEMAND_TABLE = " cs_ep_mm_demand mmd ";
+
+	private static final String MANI_MAJRA_PAYMENT_TABLE = " cs_ep_mm_payment mmp ";
 
 	private static final String OFFLINE_PAYMENT_TABLE = " cs_ep_offline_payment_detail offline ";
 
@@ -395,13 +411,31 @@ public class PropertyQueryBuilder {
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
-	
+
 	public String getAccStatementDocQuery(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(OWNER_DOCS_COLUMNS);
 		sb.append(" FROM cs_ep_documents_v1 doc ");
 		sb.append(" where doc.reference_id IN (:references)");
 		params.put("references", propertyDetailIds);
+		return sb.toString();
+	}
+
+	public String getManiMajraDemandQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(MANI_MAJRA_DEMAND_COLUMNS);
+		sb.append(" FROM " + MANI_MAJRA_DEMAND_TABLE);
+		sb.append(" where estd.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
+
+	public String getManiMajraPaymentsQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(MANI_MAJRA_PAYMENT_COLUMNS);
+		sb.append(" FROM " + MANI_MAJRA_PAYMENT_TABLE);
+		sb.append(" where estp.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
 }

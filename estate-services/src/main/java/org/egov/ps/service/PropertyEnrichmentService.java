@@ -90,12 +90,14 @@ public class PropertyEnrichmentService {
 		enrichEstateDemand(property, requestInfo);
 		enrichEstatePayment(property, requestInfo);
 		enrichEstateAccount(property, requestInfo);
-		enrichAccountStatementDoc(property,requestInfo);
+		enrichAccountStatementDoc(property, requestInfo);
 
+		enrichManiMajraDemand(property, requestInfo);
+		enrichManiMajraPayment(property, requestInfo);
 	}
 
 	private void enrichAccountStatementDoc(Property property, RequestInfo requestInfo) {
-		if(property.getPropertyDetails().getAccountStatementDocument()!=null){
+		if (property.getPropertyDetails().getAccountStatementDocument() != null) {
 			List<Document> accountStatementDoc = property.getPropertyDetails().getAccountStatementDocument();
 			if (!CollectionUtils.isEmpty(accountStatementDoc)) {
 				accountStatementDoc.forEach(document -> {
@@ -318,7 +320,7 @@ public class PropertyEnrichmentService {
 				estateDemand.setRemainingGST(estateDemand.getGst());
 				estateDemand.setRemainingGSTPenalty(estateDemand.getGstInterest());
 				estateDemand.setRemainingRent(estateDemand.getRent());
-				if(estateDemand.getInterestSince() != null && estateDemand.getInterestSince() != 0.0)
+				if (estateDemand.getInterestSince() != null && estateDemand.getInterestSince() != 0.0)
 					estateDemand.setInterestSince(estateDemand.getInterestSince());
 				else
 					estateDemand.setInterestSince(estateDemand.getGenerationDate());
@@ -529,6 +531,35 @@ public class PropertyEnrichmentService {
 		extensionFee.setTenantId(property.getTenantId());
 		extensionFee.setBranchType(property.getPropertyDetails().getBranchType());
 		extensionFee.setAuditDetails(extensionFeeAuditDetails);
+	}
+
+	private void enrichManiMajraDemand(Property property, RequestInfo requestInfo) {
+		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraDemands())) {
+			AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+
+			property.getPropertyDetails().getManiMajraDemands().forEach(mmDemand -> {
+				if (null != mmDemand.getId()) {
+					mmDemand.setId(UUID.randomUUID().toString());
+					mmDemand.setPropertyDetailsId(property.getPropertyDetails().getId());
+				}
+				mmDemand.setAuditDetails(auditDetails);
+			});
+		}
+
+	}
+
+	private void enrichManiMajraPayment(Property property, RequestInfo requestInfo) {
+		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraPayments())) {
+			AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+
+			property.getPropertyDetails().getManiMajraPayments().forEach(mmPayments -> {
+				if (null != mmPayments.getId()) {
+					mmPayments.setId(UUID.randomUUID().toString());
+					mmPayments.setPropertyDetailsId(property.getPropertyDetails().getId());
+				}
+				mmPayments.setAuditDetails(auditDetails);
+			});
+		}
 	}
 
 }

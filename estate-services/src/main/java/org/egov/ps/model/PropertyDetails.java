@@ -14,6 +14,8 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
+import org.egov.ps.web.contracts.ManiMajraDemand;
+import org.egov.ps.web.contracts.ManiMajraPayment;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -62,6 +64,14 @@ public class PropertyDetails {
 	 */
 	@JsonProperty("propertyType")
 	private String propertyType;
+
+	/**
+	 * Demand type is added for ManiMajra, * If Property Type is Janatha Reddy
+	 * Market the enable this and * Demand will be generated monthly or annually
+	 * based on selection
+	 */
+	@JsonProperty("demandType")
+	private String demandType;
 
 	/**
 	 * One of ALLOCATION_TYPE.AUCTION or ALLOCATION_TYPE.ALLOTMENT
@@ -150,7 +160,7 @@ public class PropertyDetails {
 	@JsonProperty("owners")
 	@Builder.Default
 	private List<Owner> owners = new ArrayList<Owner>();
-	
+
 	@JsonProperty("accountStatementDocument")
 	private List<Document> accountStatementDocument;
 
@@ -281,6 +291,14 @@ public class PropertyDetails {
 	@Valid
 	@JsonProperty
 	private List<OfflinePaymentDetails> offlinePaymentDetails;
+
+	@Valid
+	@JsonProperty
+	private List<ManiMajraDemand> maniMajraDemands;
+
+	@Valid
+	@JsonProperty
+	private List<ManiMajraPayment> maniMajraPayments;
 
 	@JsonProperty("billingBusinessService")
 	@Size(max = 256, message = "Billing business service must be between 0 and 256 characters in length")

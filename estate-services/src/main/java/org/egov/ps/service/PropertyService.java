@@ -25,6 +25,7 @@ import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.DemandRepository;
 import org.egov.ps.service.calculation.DemandService;
 import org.egov.ps.service.calculation.IEstateRentCollectionService;
+import org.egov.ps.service.calculation.IManiMajraRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.validator.PropertyValidator;
@@ -35,6 +36,8 @@ import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
+import org.egov.ps.web.contracts.ManiMajraDemand;
+import org.egov.ps.web.contracts.ManiMajraPayment;
 import org.egov.ps.web.contracts.PropertyDueRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.egov.ps.web.contracts.State;
@@ -73,6 +76,9 @@ public class PropertyService {
 	private IEstateRentCollectionService estateRentCollectionService;
 
 	@Autowired
+	private IManiMajraRentCollectionService maniMajraRentCollectionService;
+
+	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -94,13 +100,34 @@ public class PropertyService {
 	Util util;
 
 	public List<Property> createProperty(PropertyRequest request) {
-		propertyValidator.validateCreateRequest(request);
-		// bifurcate demand
-		enrichmentService.enrichPropertyRequest(request);
-		processRentHistory(request);
-		producer.push(config.getSavePropertyTopic(), request);
-		processRentSummary(request);
+
+		request.getProperties().forEach(property -> {
+			propertyValidator.validateCreateRequest(request);
+			// bifurcate demand
+			enrichmentService.enrichPropertyRequest(request);
+			if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+				maniMajraSettlePayment(property, request.getRequestInfo());
+				producer.push(config.getSavePropertyTopic(), request);
+			} else {
+				processRentHistory(request);
+				producer.push(config.getSavePropertyTopic(), request);
+				processRentSummary(request);
+			}
+		});
 		return request.getProperties();
+	}
+
+	private void maniMajraSettlePayment(Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetails().getManiMajraDemands() != null
+				&& property.getPropertyDetails().getManiMajraPayments() != null) {
+			boolean isMonthly = false;
+			if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+				isMonthly = true;
+			}
+			maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
+					property.getPropertyDetails().getManiMajraPayments(), isMonthly);
+		}
+
 	}
 
 	private void processRentSummary(PropertyRequest request) {
@@ -161,7 +188,7 @@ public class PropertyService {
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
 				&& property.getPropertyDetails().getPaymentConfig().getGroundRentGenerationType()
-				.equalsIgnoreCase(PSConstants.MONTHLY)) {
+						.equalsIgnoreCase(PSConstants.MONTHLY)) {
 			estateDemandGenerationService.bifurcateDemand(property);
 		}
 		/* Approved Property Missing Demands */
@@ -351,26 +378,54 @@ public class PropertyService {
 		List<String> propertyDetailsIds = propertiesFromDB.stream()
 				.map(propertyFromDb -> propertyFromDb.getPropertyDetails().getId()).collect(Collectors.toList());
 
-		/**
-		 * Generate Calculations for the property.
-		 */
-		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
-		EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
+		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+			/**
+			 * TODO: Vinil 1. get manimajra demands 2. get manimajra accounts (deleted this
+			 * because of no partial payment) 3. get manimajra payments 4. call settle
+			 * method to settle rent payment
+			 */
 
-		if (!CollectionUtils.isEmpty(demands) && null != account
-				&& property.getPropertyDetails().getPaymentConfig() != null
-				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
-			List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
-			estateRentCollectionService.settle(demands, payments, account, 18,
-					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
-			EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
-					property.getPropertyDetails().getInterestRate(),
-					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
-			property.getPropertyDetails()
-					.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
-			enrichmentService.enrichRentDemand(property, rentSummary);
+			/**
+			 * Generate Calculations for the property.
+			 */
+			List<ManiMajraDemand> demands = repository.getManiMajraDemandDetails(propertyDetailsIds);
+
+			if (!CollectionUtils.isEmpty(demands)) {
+				List<ManiMajraPayment> payments = repository.getManiMajraPaymentsDetails(propertyDetailsIds);
+				boolean isMonthly = false;
+				if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+					isMonthly = true;
+				}
+				maniMajraRentCollectionService.settle(demands, payments, isMonthly);
+				property.getPropertyDetails()
+						.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
+//				TODO: Vinil enrich rent demand
+//				enrichmentService.enrichRentDemand(property, rentSummary);
+			}
+
+		} else {
+
+			/**
+			 * Generate Calculations for the property.
+			 */
+			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
+			EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
+
+			if (!CollectionUtils.isEmpty(demands) && null != account
+					&& property.getPropertyDetails().getPaymentConfig() != null
+					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
+				estateRentCollectionService.settle(demands, payments, account, 18,
+						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
+				EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
+						property.getPropertyDetails().getInterestRate(),
+						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
+				property.getPropertyDetails()
+						.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
+				enrichmentService.enrichRentDemand(property, rentSummary);
+			}
 		}
 
 		/**
