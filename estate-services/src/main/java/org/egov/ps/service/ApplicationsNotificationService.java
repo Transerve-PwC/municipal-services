@@ -68,8 +68,7 @@ public class ApplicationsNotificationService {
                  * Get the notification config from mdms.
                  */
                 List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
-                        application.getMDMSModuleName(), request.getRequestInfo(), application.getTenantId(),
-                        application);
+                        application.getMDMSModuleName(), request.getRequestInfo(), application.getTenantId());
                 /**
                  * Process the notification config
                  */

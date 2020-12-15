@@ -9,6 +9,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
+import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.model.calculation.PaymentDetail;
 import org.egov.ps.model.calculation.PaymentRequest;
 import org.egov.ps.repository.ApplicationRepository;
@@ -42,6 +44,9 @@ public class PaymentNotificationService {
 	
 	@Autowired
 	private ApplicationsNotificationService applicationNotificationService;
+	
+	@Autowired
+	private PropertyService propertyService;
 
 
 	final String tenantId = "tenantId";
@@ -100,7 +105,15 @@ public class PaymentNotificationService {
 						case PSConstants.BUSINESS_SERVICE_EB_PENALTY:
 						case PSConstants.BUSINESS_SERVICE_BB_PENALTY:
 						case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
-							log.info("Post enrichment need to do");
+							String consumerCode = paymentDetail.getBill().getConsumerCode();
+
+							PropertyCriteria searchCriteria = new PropertyCriteria();
+							searchCriteria.setFileNumber(util.getFileNumberFromConsumerCode(consumerCode));
+							List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
+							
+							if (CollectionUtils.isEmpty(properties))
+								throw new CustomException("INVALID RECEIPT",
+										"No Owner found for the comsumerCode " + consumerCode);
 							break;
 						default: {
 							if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
@@ -115,8 +128,7 @@ public class PaymentNotificationService {
 									 * Get the notification config from mdms.
 									 */
 									List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
-											application.getMDMSModuleName(), requestInfo, application.getTenantId(),
-											application);
+											application.getMDMSModuleName(), requestInfo, application.getTenantId());
 									
 									if(valMap.get(payerMobileNumberKey)!=null){
 										User payer = User.builder().mobileNumber(valMap.get(payerMobileNumberKey))

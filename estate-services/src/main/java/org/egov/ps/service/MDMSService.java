@@ -148,7 +148,7 @@ public class MDMSService {
 	}
 
 	public List<Map<String, Object>> getNotificationConfig(String applicationType, RequestInfo requestInfo,
-			String tenantId, Application application) {
+			String tenantId) {
 		tenantId = tenantId.split("\\.")[0];
 		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
 		mdmsCriteriaReq = util.prepareMdMsRequest(tenantId, PSConstants.MDMS_PS_MODULE_NAME,

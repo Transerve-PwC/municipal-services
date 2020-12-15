@@ -122,5 +122,12 @@ public class PSConstants {
 	public static final String MODE_GENERATED = "Generated";
 	
 	public static final String RELATION_OPD = "offline";
+	
+	public static final String PROPERTY_RENT = "PROPERTY_RENT";
+	public static final String PENALTY = "PENALTY";
+	public static final String PROPERTY_PAYMENT_PAYER = "PROPERTY_PAYMENT_PAYER";
+	public static final String PROPERTY_PAYMENT_OWNER = "PROPERTY_PAYMENT_OWNER";
+	public static final String PROPERTY_RENT_MDMS_MODULE ="Property_Rent_Fee";
+	
 
 }
