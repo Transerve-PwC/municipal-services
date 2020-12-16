@@ -66,10 +66,14 @@ public class PropertyViolationService {
 
 	@Autowired
 	DemandService demandService;
+	
+	@Autowired
+	PropertyNotificationService propertyNotificationService;
 
 	public List<PropertyPenalty> createPenalty(PropertyPenaltyRequest propertyPenaltyRequest) {
 		propertyEnrichmentService.enrichPenaltyRequest(propertyPenaltyRequest);
 		producer.push(config.getSavePenaltyTopic(), propertyPenaltyRequest);
+		propertyNotificationService.processPenaltyNotification(propertyPenaltyRequest);
 		return propertyPenaltyRequest.getPropertyPenalties();
 	}
 

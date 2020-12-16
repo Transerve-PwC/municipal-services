@@ -35,16 +35,19 @@ public class PaymentNotificationService {
 
 	@Autowired
 	private ApplicationRepository applicationRepository;
-	
+
 	@Autowired
 	private MDMSService mdmsservice;
-	
+
 	@Autowired
-    Util util;
-	
+	Util util;
+
 	@Autowired
 	private ApplicationsNotificationService applicationNotificationService;
-	
+
+	@Autowired
+	private PropertyNotificationService propertyNotificationService;
+
 	@Autowired
 	private PropertyService propertyService;
 
@@ -69,6 +72,8 @@ public class PaymentNotificationService {
 
 	final String payerName = "payerName";
 	
+	private final static String CASH = "cash";
+
 
 	Map<String, String> valMap = new HashMap<>();
 
@@ -93,68 +98,103 @@ public class PaymentNotificationService {
 			List<PaymentDetail> paymentDetails = paymentRequest.getPayment().getPaymentDetails();
 			for (PaymentDetail paymentDetail : paymentDetails) {
 
-					valMap.put(mobileKey, paymentDetail.getBill().getMobileNumber());
-					valMap.put(emailKey, paymentDetail.getBill().getPayerEmail());
+				valMap.put(mobileKey, paymentDetail.getBill().getMobileNumber());
+				valMap.put(emailKey, paymentDetail.getBill().getPayerEmail());
 
-					switch (paymentDetail.getBusinessService()) {
-						case PSConstants.BUSINESS_SERVICE_EB_RENT:
-						case PSConstants.BUSINESS_SERVICE_BB_RENT:
-						case PSConstants.BUSINESS_SERVICE_MB_RENT:
-							log.info("Post enrichment need to do");
-							break;
-						case PSConstants.BUSINESS_SERVICE_EB_PENALTY:
-						case PSConstants.BUSINESS_SERVICE_BB_PENALTY:
-						case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
-							String consumerCode = paymentDetail.getBill().getConsumerCode();
+				switch (paymentDetail.getBusinessService()) {
+				case PSConstants.BUSINESS_SERVICE_EB_RENT:
+				case PSConstants.BUSINESS_SERVICE_BB_RENT:
+				case PSConstants.BUSINESS_SERVICE_MB_RENT:
+					log.info("Post enrichment need to do");
+					break;
+				case PSConstants.BUSINESS_SERVICE_EB_PENALTY:
+				case PSConstants.BUSINESS_SERVICE_BB_PENALTY:
+				case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
+					String consumerCode = paymentDetail.getBill().getConsumerCode();
 
-							PropertyCriteria searchCriteria = new PropertyCriteria();
-							searchCriteria.setFileNumber(util.getFileNumberFromConsumerCode(consumerCode));
-							List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
+					PropertyCriteria searchCriteria = new PropertyCriteria();
+					searchCriteria.setFileNumber(util.getFileNumberFromConsumerCode(consumerCode));
+					List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
+
+					if (CollectionUtils.isEmpty(properties))
+						throw new CustomException("INVALID RECEIPT",
+								"No Owner found for the comsumerCode " + consumerCode);
+					properties.forEach(property -> {
+						/**
+						 * Get the notification config from mdms.
+						 */
+						List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
+								PSConstants.PROPERTY_RENT_MDMS_MODULE, requestInfo, property.getTenantId());
+						
+						if(paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) 
+							property.setTransactionNumber("OFFLINE");
+						else
+							property.setTransactionNumber(paymentRequest.getPayment().getTransactionNumber());
+
+						if(valMap.get(payerMobileNumberKey)!=null){
+							User payer = User.builder().mobileNumber(valMap.get(payerMobileNumberKey))
+									.emailId(valMap.get(emailKey))
+									.name(valMap.get(payerName))
+									.build();
 							
-							if (CollectionUtils.isEmpty(properties))
-								throw new CustomException("INVALID RECEIPT",
-										"No Owner found for the comsumerCode " + consumerCode);
-							break;
-						default: {
-							if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
-								ApplicationCriteria applicationCriteria = ApplicationCriteria.builder()
-										.applicationNumber(paymentDetail.getBill().getConsumerCode()).build();
-								List<Application> applications = applicationRepository.getApplications(applicationCriteria);
-								if (CollectionUtils.isEmpty(applications))
-									throw new CustomException("INVALID RECEIPT",
-											"No Owner found for the comsumerCode " + applicationCriteria.getApplicationNumber());
-								applications.forEach(application -> {
-									/**
-									 * Get the notification config from mdms.
-									 */
-									List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
-											application.getMDMSModuleName(), requestInfo, application.getTenantId());
-									
-									if(valMap.get(payerMobileNumberKey)!=null){
-										User payer = User.builder().mobileNumber(valMap.get(payerMobileNumberKey))
-												.emailId(valMap.get(emailKey))
-												.name(valMap.get(payerName))
-												.build();
-										application.setPayer(payer);
-										application.setState("PAYMENT_NOTIFICATION_PAYER");
-										application.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
-										application.setRecieptNumber(valMap.get(receiptNumberKey));
-										
-										/**
-										 * Process the notification config for payer
-										 */
-										applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
-									}
-									/**
-									 * Process the notification config for Owner
-									 */
-									application.setState("PAYMENT_NOTIFICATION");
-									applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
-	
-								});
-							}
+							property.setNotificationCode(String.format("%s_%s", property.getPropertyDetails().getBranchType(),PSConstants.PROPERTY_PAYMENT_PAYER));
+							  property.setPayer(payer); 
+							  property.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
+							 
+
+							/**
+							 * Process the notification config for payer
+							 */
+//							propertyNotificationService.processPropertyNotification(notificationConfigs, property, requestInfo);
 						}
+						/**
+						 * Process the notification config for Owner
+						 */
+						property.setNotificationCode(String.format("%s_%s", property.getPropertyDetails().getBranchType(),PSConstants.PROPERTY_PAYMENT_OWNER));
+//						propertyNotificationService.processPropertyNotification(notificationConfigs, property, requestInfo);
+
+					});
+					break;
+				default: {
+					if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
+						ApplicationCriteria applicationCriteria = ApplicationCriteria.builder()
+								.applicationNumber(paymentDetail.getBill().getConsumerCode()).build();
+						List<Application> applications = applicationRepository.getApplications(applicationCriteria);
+						if (CollectionUtils.isEmpty(applications))
+							throw new CustomException("INVALID RECEIPT",
+									"No Owner found for the comsumerCode " + applicationCriteria.getApplicationNumber());
+						applications.forEach(application -> {
+							/**
+							 * Get the notification config from mdms.
+							 */
+							List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
+									application.getMDMSModuleName(), requestInfo, application.getTenantId());
+
+							if(valMap.get(payerMobileNumberKey)!=null){
+								User payer = User.builder().mobileNumber(valMap.get(payerMobileNumberKey))
+										.emailId(valMap.get(emailKey))
+										.name(valMap.get(payerName))
+										.build();
+								application.setPayer(payer);
+								application.setState("PAYMENT_NOTIFICATION_PAYER");
+								application.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
+								application.setRecieptNumber(valMap.get(receiptNumberKey));
+
+								/**
+								 * Process the notification config for payer
+								 */
+								applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
+							}
+							/**
+							 * Process the notification config for Owner
+							 */
+							application.setState("PAYMENT_NOTIFICATION");
+							applicationNotificationService.processNotification(notificationConfigs, application, requestInfo);
+
+						});
 					}
+				}
+				}
 			}
 		}catch (Exception e) {
 			log.error("Failed to notify the payment information to payer ",e);
