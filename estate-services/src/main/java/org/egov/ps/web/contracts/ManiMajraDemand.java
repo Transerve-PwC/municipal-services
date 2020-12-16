@@ -36,44 +36,6 @@ public class ManiMajraDemand implements Comparable<ManiMajraDemand> {
 	private Long generationDate;
 
 	/**
-	 * The principal rent amount that is to be collected
-	 */
-	@JsonProperty("collectionPrincipal")
-	private Double collectionPrincipal;
-
-	/**
-	 * Rent of demand.
-	 */
-	@JsonProperty("rent")
-	private Double rent;
-
-	/**
-	 * GST of demand.
-	 */
-	@JsonProperty("gst")
-	private Double gst;
-
-	/**
-	 * Collected Rent of demand.
-	 */
-	@Builder.Default
-	@JsonProperty("collectedRent")
-	private Double collectedRent = 0.0;
-
-	/**
-	 * Collected GST of demand.
-	 */
-	@Builder.Default
-	@JsonProperty("collectedGST")
-	private Double collectedGST = 0.0;
-
-	/**
-	 * For comment demand
-	 */
-	@JsonProperty("comment")
-	private String comment;
-
-	/**
 	 * paid of demand.
 	 */
 	@JsonProperty("paid")
@@ -91,6 +53,38 @@ public class ManiMajraDemand implements Comparable<ManiMajraDemand> {
 		return !this.isPaid();
 	}
 
+	/**
+	 * Rent of demand.
+	 */
+	@JsonProperty("rent")
+	private Double rent;
+
+	/**
+	 * GST of demand.
+	 */
+	@JsonProperty("gst")
+	private Double gst;
+
+	/**
+	 * For comment demand
+	 */
+	@JsonProperty("comment")
+	private String comment;
+
+	/**
+	 * Collected Rent of demand.
+	 */
+	@Builder.Default
+	@JsonProperty("collectedRent")
+	private Double collectedRent = 0.0;
+
+	/**
+	 * Collected GST of demand.
+	 */
+	@Builder.Default
+	@JsonProperty("collectedGST")
+	private Double collectedGST = 0.0;
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
@@ -98,4 +92,10 @@ public class ManiMajraDemand implements Comparable<ManiMajraDemand> {
 	public int compareTo(ManiMajraDemand other) {
 		return this.getGenerationDate().compareTo(other.getGenerationDate());
 	}
+
+	/**
+	 * The principal rent amount that is to be collected
+	 */
+	@JsonProperty("collectionPrincipal")
+	private Double collectionPrincipal;
 }

@@ -6,18 +6,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.egov.ps.util.Util;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.ManiMajraDemand;
 import org.egov.ps.web.contracts.ManiMajraPayment;
 import org.egov.ps.web.contracts.ManiMajraRentCollection;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ManiMajraRentCollectionService implements IManiMajraRentCollectionService {
 
+	@Autowired
+	Util util;
+
 	@Override
 	public List<ManiMajraRentCollection> settle(List<ManiMajraDemand> demandsToBeSettled,
-			List<ManiMajraPayment> payments, boolean isMonthly) {
+			List<ManiMajraPayment> payments, EstateAccount account, boolean isMonthly) {
 
 		Collections.sort(demandsToBeSettled);
 		Collections.sort(payments);
@@ -32,14 +38,14 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 		 * Settle unprocessed payments
 		 */
 		List<ManiMajraRentCollection> collections = paymentsToBeSettled.stream().map(payment -> {
-			return settlePayment(demandsToBeSettled, payment, isMonthly);
+			return settlePayment(demandsToBeSettled, payment, account, isMonthly);
 		}).flatMap(Collection::stream).collect(Collectors.toList());
 
 		return collections;
 	}
 
 	private List<ManiMajraRentCollection> settlePayment(final List<ManiMajraDemand> demandsToBeSettled,
-			final ManiMajraPayment payment, boolean isMonthly) {
+			final ManiMajraPayment payment, EstateAccount account, boolean isMonthly) {
 
 		/**
 		 * Each payment will only operate on the demands generated before it is paid.
@@ -52,11 +58,11 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 		double gstAmount;
 
 		if (isMonthly) {
-			effectiveAmount = payment.getAmountPaid();
-			gstAmount = extractGst(effectiveAmount);
+			effectiveAmount = payment.getAmountPaid() + account.getRemainingAmount();
+			gstAmount = util.extractGst(effectiveAmount);
 			effectiveAmount = effectiveAmount - gstAmount;
 		} else {
-			effectiveAmount = payment.getAmountPaid();
+			effectiveAmount = payment.getAmountPaid() + account.getRemainingAmount();
 		}
 
 		/**
@@ -76,6 +82,8 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 				unPaidDemand.setCollectedRent(unPaidDemand.getRent());
 				unPaidDemand.setCollectedGST(unPaidDemand.getGst());
 			} else {
+				account.setRemainingAmount(effectiveAmount);
+				account.setRemainingSince(payment.getPaymentDate());
 				break;
 			}
 
@@ -91,12 +99,6 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 
 		return collections;
 
-	}
-
-	public double extractGst(double effectiveAmount) {
-//		TODO: get it from mdms
-		double gstPercentage = 18;
-		return (gstPercentage / 100) * effectiveAmount;
 	}
 
 }

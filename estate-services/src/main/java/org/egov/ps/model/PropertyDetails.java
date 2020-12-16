@@ -16,6 +16,7 @@ import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentCollection;
 import org.egov.ps.web.contracts.ManiMajraDemand;
 import org.egov.ps.web.contracts.ManiMajraPayment;
+import org.egov.ps.web.contracts.ManiMajraRentCollection;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -292,13 +293,64 @@ public class PropertyDetails {
 	@JsonProperty
 	private List<OfflinePaymentDetails> offlinePaymentDetails;
 
-	@Valid
-	@JsonProperty
-	private List<ManiMajraDemand> maniMajraDemands;
+	@JsonProperty("maniMajraDemands")
+	@Builder.Default
+	private List<ManiMajraDemand> maniMajraDemands = new ArrayList<ManiMajraDemand>();
+
+	public PropertyDetails addManiMajraDemandItem(ManiMajraDemand maniMajraDemandItem) {
+		if (this.maniMajraDemands == null) {
+			this.maniMajraDemands = new ArrayList<>();
+		}
+		for (ManiMajraDemand maniMajraDemand : maniMajraDemands) {
+			if (maniMajraDemand.getId().equalsIgnoreCase(maniMajraDemandItem.getId())) {
+				return this;
+			}
+		}
+		this.maniMajraDemands.add(maniMajraDemandItem);
+		return this;
+	}
 
 	@Valid
 	@JsonProperty
-	private List<ManiMajraPayment> maniMajraPayments;
+	private List<ManiMajraDemand> inActiveManiMajraDemands;
+
+	@JsonProperty("maniMajraPayments")
+	@Builder.Default
+	private List<ManiMajraPayment> maniMajraPayments = new ArrayList<ManiMajraPayment>();
+
+	public PropertyDetails addManiMajraPaymentItem(ManiMajraPayment maniMajraPaymentItem) {
+		if (this.maniMajraPayments == null) {
+			this.maniMajraPayments = new ArrayList<>();
+		}
+		for (ManiMajraPayment maniMajraPayment : maniMajraPayments) {
+			if (maniMajraPayment.getId().equalsIgnoreCase(maniMajraPaymentItem.getId())) {
+				return this;
+			}
+		}
+		this.maniMajraPayments.add(maniMajraPaymentItem);
+		return this;
+	}
+
+	@Valid
+	@JsonProperty
+	private List<ManiMajraPayment> inActiveManiMajraPayments;
+
+	@Valid
+	@JsonProperty("maniMajraRentCollections")
+	private List<ManiMajraRentCollection> maniMajraRentCollections;
+
+	public PropertyDetails addManiMajraCollectionItem(ManiMajraRentCollection newCollectionItem) {
+		if (this.maniMajraRentCollections == null) {
+			this.maniMajraRentCollections = new ArrayList<>();
+		}
+		for (ManiMajraRentCollection maniMajraRentCollections : maniMajraRentCollections) {
+			if (maniMajraRentCollections.getId().equalsIgnoreCase(newCollectionItem.getId())) {
+				return this;
+			}
+		}
+		this.maniMajraRentCollections.add(newCollectionItem);
+		return this;
+	}
 
 	@JsonProperty("billingBusinessService")
 	@Size(max = 256, message = "Billing business service must be between 0 and 256 characters in length")

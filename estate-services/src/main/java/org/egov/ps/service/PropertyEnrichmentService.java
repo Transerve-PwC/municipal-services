@@ -562,4 +562,43 @@ public class PropertyEnrichmentService {
 		}
 	}
 
+	public void enrichMmRentDemand(Property property) {
+
+		List<TaxHeadEstimate> estimates = new LinkedList<>();
+		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
+
+		if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+			double gstAmount = util.extractGst(amount);
+			double rentAmount = amount - gstAmount;
+
+			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
+			estimate1.setEstimateAmount(new BigDecimal(rentAmount));
+			estimate1.setCategory(Category.PRINCIPAL);
+			estimate1.setTaxHeadCode(
+					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
+			estimates.add(estimate1);
+
+			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+			estimate2.setEstimateAmount(new BigDecimal(gstAmount));
+			estimate2.setCategory(Category.TAX);
+			estimate2.setTaxHeadCode(
+					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.TAX));
+			estimates.add(estimate2);
+		} else {
+			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
+			estimate1.setEstimateAmount(new BigDecimal(amount));
+			estimate1.setCategory(Category.PRINCIPAL);
+			estimate1.setTaxHeadCode(
+					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
+			estimates.add(estimate1);
+		}
+
+		// estimates.add(estimate);
+		Calculation calculation = Calculation.builder()
+				.applicationNumber(util.getPropertyRentConsumerCode(property.getFileNumber()))
+				.taxHeadEstimates(estimates).tenantId(property.getTenantId()).build();
+		property.setCalculation(calculation);
+
+	}
+
 }

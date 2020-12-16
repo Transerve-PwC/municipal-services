@@ -125,7 +125,8 @@ public class PropertyService {
 				isMonthly = true;
 			}
 			maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
-					property.getPropertyDetails().getManiMajraPayments(), isMonthly);
+					property.getPropertyDetails().getManiMajraPayments(),
+					property.getPropertyDetails().getEstateAccount(), isMonthly);
 		}
 
 	}
@@ -389,18 +390,18 @@ public class PropertyService {
 			 * Generate Calculations for the property.
 			 */
 			List<ManiMajraDemand> demands = repository.getManiMajraDemandDetails(propertyDetailsIds);
+			EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
 
-			if (!CollectionUtils.isEmpty(demands)) {
+			if (!CollectionUtils.isEmpty(demands) && null != account) {
 				List<ManiMajraPayment> payments = repository.getManiMajraPaymentsDetails(propertyDetailsIds);
 				boolean isMonthly = false;
 				if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
 					isMonthly = true;
 				}
-				maniMajraRentCollectionService.settle(demands, payments, isMonthly);
+				maniMajraRentCollectionService.settle(demands, payments, account, isMonthly);
 				property.getPropertyDetails()
 						.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
-//				TODO: Vinil enrich rent demand
-//				enrichmentService.enrichRentDemand(property, rentSummary);
+				enrichmentService.enrichMmRentDemand(property);
 			}
 
 		} else {

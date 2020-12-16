@@ -18,17 +18,12 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 public class ManiMajraRentCollection {
+
 	/**
 	 * Unique id of the collection
 	 */
 	@JsonProperty("id")
 	private String id;
-
-	/**
-	 * The timestamp at which this collection was made. This is not same as
-	 * createdAt.
-	 */
-	private long collectedAt;
 
 	/**
 	 * Demand Id of the demand that this fulfils.
@@ -53,6 +48,12 @@ public class ManiMajraRentCollection {
 	@ToString.Include
 	@JsonProperty("gstCollected")
 	private Double gstCollected = 0D;
+
+	/**
+	 * The timestamp at which this collection was made. This is not same as
+	 * createdAt.
+	 */
+	private long collectedAt;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

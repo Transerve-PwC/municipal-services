@@ -12,8 +12,8 @@ import java.util.Map;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.calculation.Category;
 import org.egov.ps.service.ApplicationEnrichmentService;
-import org.egov.ps.service.calculation.ManiMajraRentCollectionService;
 import org.egov.ps.util.PSConstants;
+import org.egov.ps.util.Util;
 import org.egov.ps.validator.ApplicationField;
 import org.egov.ps.validator.ApplicationValidation;
 import org.egov.ps.validator.DateField;
@@ -79,7 +79,7 @@ public class ValidatorTests {
 	ApplicationEnrichmentService applicationEnrichmentService;
 
 	@Autowired
-	ManiMajraRentCollectionService maniMajraRentCollectionService;
+	Util util;
 
 	@Test
 	public void testEmailValidator() {
@@ -518,6 +518,6 @@ public class ValidatorTests {
 
 	@Test
 	public void testGstCalculation() {
-		assertEquals("18", maniMajraRentCollectionService.extractGst(100));
+		assertEquals("18", util.extractGst(100));
 	}
 }

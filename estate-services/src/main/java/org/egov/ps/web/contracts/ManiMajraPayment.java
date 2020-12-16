@@ -40,12 +40,6 @@ public class ManiMajraPayment implements Comparable<ManiMajraPayment> {
 	private Long receiptDate;
 
 	/**
-	 * Payment Date of demand.
-	 */
-	@JsonProperty("paymentDate")
-	private Long paymentDate;
-
-	/**
 	 * Rent Received of demand.
 	 */
 	@JsonProperty("rentReceived")
@@ -56,6 +50,18 @@ public class ManiMajraPayment implements Comparable<ManiMajraPayment> {
 	 */
 	@JsonProperty("receiptNo")
 	private String receiptNo;
+
+	/**
+	 * Payment Date of demand.
+	 */
+	@JsonProperty("paymentDate")
+	private Long paymentDate;
+
+	/**
+	 * boolean indicates whether payment is processed or not
+	 */
+	@Builder.Default
+	private boolean processed = false;
 
 	@JsonProperty("auditDetails")
 	@Builder.Default
@@ -78,12 +84,6 @@ public class ManiMajraPayment implements Comparable<ManiMajraPayment> {
 	@JsonProperty("mode")
 	@Builder.Default
 	private ModeEnum mode = ModeEnum.UPLOAD;
-
-	/**
-	 * boolean indicates whether payment is processed or not
-	 */
-	@Builder.Default
-	private boolean processed = false;
 
 	// DateFormat DATE_FORMAT = new SimpleDateFormat("MMM dd yy");
 
