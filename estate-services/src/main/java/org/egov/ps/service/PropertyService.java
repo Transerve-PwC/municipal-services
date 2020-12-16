@@ -298,7 +298,12 @@ public class PropertyService {
 
 	public AccountStatementResponse searchPayments(AccountStatementCriteria accountStatementCriteria,
 			RequestInfo requestInfo) {
-
+		
+		if (accountStatementCriteria.getFromDate() != null
+				&& accountStatementCriteria.getFromDate() > accountStatementCriteria.getToDate()) {
+			throw new CustomException("DATE_VALIDATION", "From date cannot be greater than to date");
+		}
+		
 		List<Property> properties = repository
 				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
 						.relations(Collections.singletonList("finance")).build());
