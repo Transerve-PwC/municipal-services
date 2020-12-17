@@ -39,7 +39,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO cs_ep_property_details_v1 (id, property_id, branch_type, property_type, tenantid, type_of_allocation, emd_amount, emd_date, mode_of_auction, scheme_name, date_of_auction, area_sqft, rate_per_sqft, last_noc_date, service_category, is_property_active, trade_type, company_name, company_address, company_registration_number, company_type, decree_date, court_details, civil_titled_as, company_registration_date, company_or_firm, property_registered_to, entity_type, house_number, village, mohalla, interest_rate, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO cs_ep_property_details_v1 (id, property_id, branch_type, property_type, demand_type, tenantid, type_of_allocation, emd_amount, emd_date, mode_of_auction, scheme_name, date_of_auction, area_sqft, rate_per_sqft, last_noc_date, service_category, is_property_active, trade_type, company_name, company_address, company_registration_number, company_type, decree_date, court_details, civil_titled_as, company_registration_date, company_or_firm, property_registered_to, entity_type, house_number, village, mohalla, interest_rate, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: Properties.*.propertyDetails
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.id
@@ -49,6 +49,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.branchType
 
             - jsonPath: $.Properties.*.propertyDetails.propertyType
+            
+            - jsonPath: $.Properties.*.propertyDetails.demandType
 
             - jsonPath: $.Properties.*.tenantId
 
@@ -156,12 +158,14 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.id
 
-        - query: UPDATE cs_ep_property_details_v1 SET branch_type = ?, property_type = ?, tenantid = ?, type_of_allocation = ?, emd_amount = ?,  emd_date = ?, mode_of_auction = ?, scheme_name = ?, date_of_auction = ?, area_sqft = ?, rate_per_sqft = ?, last_noc_date = ?, service_category = ?, is_property_active = ?, trade_type = ?, company_name = ?, company_address = ?, company_registration_number = ?, company_type = ?, decree_date = ?, court_details = ?, civil_titled_as = ?, company_registration_date = ?, company_or_firm = ?, property_registered_to = ?, entity_type = ?, house_number = ?, village = ?, mohalla = ?, interest_rate = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
+        - query: UPDATE cs_ep_property_details_v1 SET branch_type = ?, property_type = ?, demand_type = ?, tenantid = ?, type_of_allocation = ?, emd_amount = ?,  emd_date = ?, mode_of_auction = ?, scheme_name = ?, date_of_auction = ?, area_sqft = ?, rate_per_sqft = ?, last_noc_date = ?, service_category = ?, is_property_active = ?, trade_type = ?, company_name = ?, company_address = ?, company_registration_number = ?, company_type = ?, decree_date = ?, court_details = ?, civil_titled_as = ?, company_registration_date = ?, company_or_firm = ?, property_registered_to = ?, entity_type = ?, house_number = ?, village = ?, mohalla = ?, interest_rate = ?, last_modified_by = ?, last_modified_time = ? WHERE id = ?;
           basePath: Properties.*.propertyDetails
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.branchType
 
             - jsonPath: $.Properties.*.propertyDetails.propertyType
+            
+            - jsonPath: $.Properties.*.propertyDetails.demandType
 
             - jsonPath: $.Properties.*.tenantId
 
@@ -1030,7 +1034,7 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.maniMajraPayments.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO cs_ep_mm_collection (id, demand_id, payment_id, rent_collected, gst_collected, collected_at, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET payment_id=?, rent_collected=?, gst_collected=?, collected_at=?, last_modified_by=?, last_modified_time=?;
+        - query: INSERT INTO cs_ep_mm_collection (id, demand_id, payment_id, rent_collected, gst_collected, collected_at, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET payment_id=?, rent_collected=?, gst_collected=?, collected_at=?, last_modified_by=?, last_modified_time=?;
           basePath: $.Properties.*.propertyDetails.maniMajraRentCollections.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.maniMajraRentCollections.*.id
