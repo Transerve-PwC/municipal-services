@@ -101,34 +101,34 @@ public class PropertyService {
 
 	public List<Property> createProperty(PropertyRequest request) {
 
-		request.getProperties().forEach(property -> {
-			propertyValidator.validateCreateRequest(request);
-			// bifurcate demand
-			enrichmentService.enrichPropertyRequest(request);
-			if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
-				maniMajraSettlePayment(property, request.getRequestInfo());
-				producer.push(config.getSavePropertyTopic(), request);
-			} else {
-				processRentHistory(request);
-				producer.push(config.getSavePropertyTopic(), request);
-				processRentSummary(request);
-			}
-		});
+		propertyValidator.validateCreateRequest(request);
+		// bifurcate demand
+		enrichmentService.enrichPropertyRequest(request);
+		if (request.getProperties().get(0).getPropertyDetails().getBranchType()
+				.contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+			maniMajraSettlePayment(request);
+			producer.push(config.getSavePropertyTopic(), request);
+		} else {
+			processRentHistory(request);
+			producer.push(config.getSavePropertyTopic(), request);
+			processRentSummary(request);
+		}
 		return request.getProperties();
 	}
 
-	private void maniMajraSettlePayment(Property property, RequestInfo requestInfo) {
-		if (property.getPropertyDetails().getManiMajraDemands() != null
-				&& property.getPropertyDetails().getManiMajraPayments() != null) {
-			boolean isMonthly = false;
-			if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
-				isMonthly = true;
+	private void maniMajraSettlePayment(PropertyRequest request) {
+		request.getProperties().forEach(property -> {
+			if (property.getPropertyDetails().getManiMajraDemands() != null
+					&& property.getPropertyDetails().getManiMajraPayments() != null) {
+				boolean isMonthly = false;
+				if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+					isMonthly = true;
+				}
+				maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
+						property.getPropertyDetails().getManiMajraPayments(),
+						property.getPropertyDetails().getEstateAccount(), isMonthly);
 			}
-			maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
-					property.getPropertyDetails().getManiMajraPayments(),
-					property.getPropertyDetails().getEstateAccount(), isMonthly);
-		}
-
+		});
 	}
 
 	private void processRentSummary(PropertyRequest request) {
@@ -200,7 +200,11 @@ public class PropertyService {
 			estateDemandGenerationService.addCredit(property);
 		}
 		enrichmentService.enrichPropertyRequest(request);
-		processRentHistory(request);
+		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+			maniMajraSettlePayment(request);
+		} else {
+			processRentHistory(request);
+		}
 		String action = property.getAction();
 		String state = property.getState();
 		if (config.getIsWorkflowEnabled() && !action.contentEquals("") && !action.contentEquals(PSConstants.ES_DRAFT)
@@ -214,9 +218,10 @@ public class PropertyService {
 				wfIntegrator.callWorkFlow(request);
 			}
 		}
-
 		producer.push(config.getUpdatePropertyTopic(), request);
-		processRentSummary(request);
+		if (!property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+			processRentSummary(request);
+		}
 		return request.getProperties();
 	}
 
@@ -298,12 +303,12 @@ public class PropertyService {
 
 	public AccountStatementResponse searchPayments(AccountStatementCriteria accountStatementCriteria,
 			RequestInfo requestInfo) {
-		
+
 		if (accountStatementCriteria.getFromDate() != null
 				&& accountStatementCriteria.getFromDate() > accountStatementCriteria.getToDate()) {
 			throw new CustomException("DATE_VALIDATION", "From date cannot be greater than to date");
 		}
-		
+
 		List<Property> properties = repository
 				.getProperties(PropertyCriteria.builder().propertyId(accountStatementCriteria.getPropertyid())
 						.relations(Collections.singletonList("finance")).build());
@@ -385,15 +390,7 @@ public class PropertyService {
 				.map(propertyFromDb -> propertyFromDb.getPropertyDetails().getId()).collect(Collectors.toList());
 
 		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
-			/**
-			 * TODO: Vinil 1. get manimajra demands 2. get manimajra accounts (deleted this
-			 * because of no partial payment) 3. get manimajra payments 4. call settle
-			 * method to settle rent payment
-			 */
 
-			/**
-			 * Generate Calculations for the property.
-			 */
 			List<ManiMajraDemand> demands = repository.getManiMajraDemandDetails(propertyDetailsIds);
 			EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);
 
