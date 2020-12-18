@@ -95,7 +95,7 @@ public class PropertyService {
 
 	@Autowired
 	private EstateDemandGenerationService estateDemandGenerationService;
-	
+
 	@Autowired
 	private ManiMajraDemandGenerationService maniMajraDemandGenerationService;
 
@@ -107,8 +107,7 @@ public class PropertyService {
 		propertyValidator.validateCreateRequest(request);
 		// bifurcate demand
 		enrichmentService.enrichPropertyRequest(request);
-		if (request.getProperties().get(0).getPropertyDetails().getBranchType()
-				.contentEquals(PSConstants.MANI_MAJRA)) {
+		if (request.getProperties().get(0).getPropertyDetails().getBranchType().contentEquals(PSConstants.MANI_MAJRA)) {
 			maniMajraSettlePayment(request);
 			producer.push(config.getSavePropertyTopic(), request);
 		} else {
@@ -202,14 +201,14 @@ public class PropertyService {
 			estateDemandGenerationService.createMissingDemands(property);
 			estateDemandGenerationService.addCredit(property);
 		}
-		
+
 		/* ManiMajra Demands */
 		if (null != request.getProperties().get(0).getState()
 				&& PSConstants.PENDING_PM_MM_APPROVAL.equalsIgnoreCase(property.getState())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
-			maniMajraDemandGenerationService.createMissingDemands(property);
+			maniMajraDemandGenerationService.createMissingDemandsForMM(property);
 		}
-		
+
 		enrichmentService.enrichPropertyRequest(request);
 		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.MANI_MAJRA)) {
 			maniMajraSettlePayment(request);

@@ -66,6 +66,7 @@ CREATE TABLE cs_ep_mm_demand_audit(
    gst 						    numeric(13,6),
    collected_rent 			   	numeric(13,6),
    collected_gst			    numeric(13,6),
+   comment						CHARACTER VARYING (256),
    
    created_by           		CHARACTER VARYING (128) NOT NULL,
    last_modified_by     		CHARACTER VARYING (128),
