@@ -425,7 +425,7 @@ public class PropertyQueryBuilder {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(MANI_MAJRA_DEMAND_COLUMNS);
 		sb.append(" FROM " + MANI_MAJRA_DEMAND_TABLE);
-		sb.append(" where estd.property_details_id IN (:propertyDetailIds)");
+		sb.append(" where mmd.property_details_id IN (:propertyDetailIds)");
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}
@@ -434,7 +434,7 @@ public class PropertyQueryBuilder {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(MANI_MAJRA_PAYMENT_COLUMNS);
 		sb.append(" FROM " + MANI_MAJRA_PAYMENT_TABLE);
-		sb.append(" where estp.property_details_id IN (:propertyDetailIds)");
+		sb.append(" where mmp.property_details_id IN (:propertyDetailIds)");
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
 	}

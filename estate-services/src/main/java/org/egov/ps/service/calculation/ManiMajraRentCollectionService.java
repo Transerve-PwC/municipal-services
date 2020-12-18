@@ -59,6 +59,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 
 		if (isMonthly) {
 			effectiveAmount = payment.getAmountPaid() + account.getRemainingAmount();
+//			TODO: gst/tax and values should be from mdms
 			gstAmount = util.extractGst(effectiveAmount);
 			effectiveAmount = effectiveAmount - gstAmount;
 		} else {

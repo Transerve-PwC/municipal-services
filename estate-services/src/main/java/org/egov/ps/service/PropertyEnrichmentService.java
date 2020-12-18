@@ -568,6 +568,7 @@ public class PropertyEnrichmentService {
 		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
 
 		if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+//			TODO: gst/tax and values should be from mdms
 			double gstAmount = util.extractGst(amount);
 			double rentAmount = amount - gstAmount;
 

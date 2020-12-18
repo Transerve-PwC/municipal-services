@@ -159,8 +159,7 @@ public class ApplicationValidatorService {
 				property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 				property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 		Double rentDue = estateRentSummary.getBalanceRent() + estateRentSummary.getBalanceGST()
-				+ estateRentSummary.getBalanceGSTPenalty() + estateRentSummary.getBalanceRentPenalty()
-				+ estateRentSummary.getBalanceAmount();
+				+ estateRentSummary.getBalanceGSTPenalty() + estateRentSummary.getBalanceRentPenalty();
 		return rentDue;
 	}
 

@@ -80,7 +80,7 @@ public class PSConstants {
 
 	public static final String PROPERTY_MASTER = "PROPERTY_MASTER";
 	
-	public static final String MONTHLY_DEMAND = "MonthlyCharges";
+	public static final String MONTHLY_DEMAND = "Monthly";
 
 	public static final String BUSINESS_SERVICE_EB_RENT = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_BB_RENT = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_MASTER";
@@ -115,6 +115,8 @@ public class PSConstants {
 	
 	public static final String  APPLICATION_TYPE_NDC = "NDC";
 	public static final String  PENDING_SO_APPROVAL = "ES_PENDING_SO_APPROVAL";
+	
+	public static final String  PENDING_PM_MM_APPROVAL = "ES_PM_MM_PENDING_APPROVAL";
 	
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";

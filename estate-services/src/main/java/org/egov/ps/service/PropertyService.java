@@ -105,7 +105,7 @@ public class PropertyService {
 		// bifurcate demand
 		enrichmentService.enrichPropertyRequest(request);
 		if (request.getProperties().get(0).getPropertyDetails().getBranchType()
-				.contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+				.contentEquals(PSConstants.MANI_MAJRA)) {
 			maniMajraSettlePayment(request);
 			producer.push(config.getSavePropertyTopic(), request);
 		} else {
@@ -199,8 +199,16 @@ public class PropertyService {
 			estateDemandGenerationService.createMissingDemands(property);
 			estateDemandGenerationService.addCredit(property);
 		}
+		
+		/* ManiMajra Demands */
+		if (null != request.getProperties().get(0).getState()
+				&& PSConstants.PENDING_PM_MM_APPROVAL.equalsIgnoreCase(property.getState())
+				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
+			estateDemandGenerationService.createManiMajraDemands(property);
+		}
+		
 		enrichmentService.enrichPropertyRequest(request);
-		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.MANI_MAJRA)) {
 			maniMajraSettlePayment(request);
 		} else {
 			processRentHistory(request);
@@ -219,7 +227,7 @@ public class PropertyService {
 			}
 		}
 		producer.push(config.getUpdatePropertyTopic(), request);
-		if (!property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+		if (!property.getPropertyDetails().getBranchType().contentEquals(PSConstants.MANI_MAJRA)) {
 			processRentSummary(request);
 		}
 		return request.getProperties();
@@ -389,7 +397,7 @@ public class PropertyService {
 		List<String> propertyDetailsIds = propertiesFromDB.stream()
 				.map(propertyFromDb -> propertyFromDb.getPropertyDetails().getId()).collect(Collectors.toList());
 
-		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.APPLICATION_MANI_MAJRA)) {
+		if (property.getPropertyDetails().getBranchType().contentEquals(PSConstants.MANI_MAJRA)) {
 
 			List<ManiMajraDemand> demands = repository.getManiMajraDemandDetails(propertyDetailsIds);
 			EstateAccount account = repository.getAccountDetailsForPropertyDetailsIds(propertyDetailsIds);

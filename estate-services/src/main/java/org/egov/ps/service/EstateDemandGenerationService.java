@@ -558,4 +558,9 @@ public class EstateDemandGenerationService {
 					.setRemainingSince(property.getPropertyDetails().getPaymentConfig().getGroundRentAdvanceRentDate());
 		}
 	}
+
+	public void createManiMajraDemands(Property property) {
+		// TODO Auto-generated method stub
+		
+	}
 }
