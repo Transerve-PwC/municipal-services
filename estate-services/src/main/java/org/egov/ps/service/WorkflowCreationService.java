@@ -51,7 +51,7 @@ public class WorkflowCreationService {
 				ApplicationType.builder().name("ES-EB-OT-RegisteredWill").prefix("ES_EB_RW_").build(),
 				ApplicationType.builder().name("ES-EB-OT-UnRegisteredWill").prefix("ES_EB_URW_").build(),
 				ApplicationType.builder().name("ES-EB-OT-IntestateDeath").prefix("ES_EB_ID_").build(),
-				ApplicationType.builder().name("ES-EB-OT-PatnershipDeed").prefix("ES_EB_PD_").build(),
+				ApplicationType.builder().name("ES-EB-OT-PartnershipDeed").prefix("ES_EB_PD_").build(),
 				ApplicationType.builder().name("ES-EB-OT-FamilySettlement").prefix("ES_EB_FS_").build(),
 
 				ApplicationType.builder().name("ES-EB-OCS-NOC").prefix("ES_EB_NOC_").build(),
