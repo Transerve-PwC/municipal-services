@@ -559,8 +559,4 @@ public class EstateDemandGenerationService {
 		}
 	}
 
-	public void createManiMajraDemands(Property property) {
-		// TODO Auto-generated method stub
-		
-	}
 }

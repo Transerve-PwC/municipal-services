@@ -95,6 +95,9 @@ public class PropertyService {
 
 	@Autowired
 	private EstateDemandGenerationService estateDemandGenerationService;
+	
+	@Autowired
+	private ManiMajraDemandGenerationService maniMajraDemandGenerationService;
 
 	@Autowired
 	Util util;
@@ -204,7 +207,7 @@ public class PropertyService {
 		if (null != request.getProperties().get(0).getState()
 				&& PSConstants.PENDING_PM_MM_APPROVAL.equalsIgnoreCase(property.getState())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
-			estateDemandGenerationService.createManiMajraDemands(property);
+			maniMajraDemandGenerationService.createMissingDemands(property);
 		}
 		
 		enrichmentService.enrichPropertyRequest(request);
