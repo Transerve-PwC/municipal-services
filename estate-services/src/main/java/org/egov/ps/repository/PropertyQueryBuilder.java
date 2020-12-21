@@ -35,7 +35,7 @@ public class PropertyQueryBuilder {
 			+ " ptdl.is_property_active, ptdl.trade_type, ptdl.company_name, ptdl.company_address, ptdl.company_registration_number, "
 			+ " ptdl.company_registration_date, ptdl.decree_date, ptdl.court_details, ptdl.civil_titled_as, ptdl.company_or_firm, "
 			+ " ptdl.company_type, ptdl.emd_amount, ptdl.emd_date , ptdl.property_registered_to, ptdl.entity_type, "
-			+ " ptdl.house_number, ptdl.mohalla, ptdl.village, ptdl.interest_rate, "
+			+ " ptdl.house_number, ptdl.mohalla, ptdl.village, ptdl.interest_rate, ptdl.mm_demand_start_year, ptdl.mm_demand_start_month, "
 
 			+ " pc.id as pc_id, " + " pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
 			+ " pc.is_intrest_applicable as pc_is_intrest_applicable, pc.due_date_of_payment as pc_due_date_of_payment, "

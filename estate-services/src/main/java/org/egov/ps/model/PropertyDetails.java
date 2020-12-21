@@ -381,4 +381,10 @@ public class PropertyDetails {
 		str = str.replaceAll(regex, replacement).toUpperCase();
 		return str;
 	}
+
+	@JsonProperty("mmDemandStartYear")
+	private int mmDemandStartYear;
+	
+	@JsonProperty("mmDemandStartMonth")
+	private int mmDemandStartMonth;
 }

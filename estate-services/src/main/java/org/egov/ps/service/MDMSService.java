@@ -74,6 +74,20 @@ public class MDMSService {
 		return feesConfigurations;
 	}
 
+	public List<Map<String, Object>> getManimajraPropertyRent(String masterName, RequestInfo requestInfo,
+			String tenantId) throws JSONException {
+		tenantId = tenantId.split("\\.")[0];
+		MdmsCriteriaReq mdmsCriteriaReq = util.prepareMdMsRequest(tenantId, PSConstants.MDMS_PS_MODULE_NAME,
+				Arrays.asList(masterName), PSConstants.MDMS_PS_FEES_FILTER, requestInfo);
+		StringBuilder url = getMdmsSearchUrl(tenantId, masterName, PSConstants.MDMS_PS_MODULE_NAME);
+		Object response = serviceRequestRepository.fetchResult(url, mdmsCriteriaReq);
+
+		String MDMSResponsePath = "$.MdmsRes." + PSConstants.MDMS_PS_MODULE_NAME + "." + masterName;
+
+		List<Map<String, Object>> feesConfigurations = JsonPath.read(response, MDMSResponsePath);
+		return feesConfigurations;
+	}
+
 	public List<Map<String, Object>> getApplicationGST(String applicationType, RequestInfo requestInfo, String tenantId)
 			throws JSONException {
 		tenantId = tenantId.split("\\.")[0];

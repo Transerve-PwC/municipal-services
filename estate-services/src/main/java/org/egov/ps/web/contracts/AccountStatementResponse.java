@@ -21,4 +21,8 @@ public class AccountStatementResponse {
 	@Valid
 	private List<EstateAccountStatement> estateAccountStatements;
 
+	@JsonProperty("ManiMajraAccountStatement")
+	@Valid
+	private List<ManiMajraAccountStatement> mmAccountStatements;
+
 }

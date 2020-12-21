@@ -11,11 +11,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.config.Configuration;
 import org.egov.ps.model.Property;
 import org.egov.ps.producer.Producer;
@@ -53,6 +55,9 @@ public class ManiMajraDemandGenerationService {
 		this.config = config;
 	}
 
+	@Autowired
+	private MDMSService mdmsService;
+
 	public AtomicInteger createMissingDemands(Property property) {
 
 		Boolean monthly = property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY);
@@ -75,10 +80,8 @@ public class ManiMajraDemandGenerationService {
 	private void generateRentDemand(Property property, ManiMajraDemand firstDemand, Date date,
 			List<ManiMajraDemand> rentDemandList, List<ManiMajraPayment> rentPaymentList, EstateAccount rentAccount) {
 
-		int pendingDueYear = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
-				.toLocalDate().getYear();
-		int pendingDueMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
-				.toLocalDate().getMonthValue();
+		int pendingDueYear = property.getPropertyDetails().getMmDemandStartYear();
+		int pendingDueMonth = property.getPropertyDetails().getMmDemandStartMonth();
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		int currentYear = localDate.getYear();
 		int currentMonth = localDate.getMonthValue();
@@ -94,7 +97,7 @@ public class ManiMajraDemandGenerationService {
 
 		while (pendingDueYear <= currentYear) {
 			int demandYear = pendingDueYear;
-			if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY)) {
+			if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 
 				int minMonth = 1;
 				int maxMonth = 12;
@@ -167,7 +170,7 @@ public class ManiMajraDemandGenerationService {
 				&& property.getPropertyDetails().getEstateAccount() != null) {
 
 			boolean isMonthly = false;
-			if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+			if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY_DEMAND)) {
 				isMonthly = true;
 			}
 
@@ -195,14 +198,15 @@ public class ManiMajraDemandGenerationService {
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 	}
 
-	public AtomicInteger createMissingDemandsForMM(Property property) {
+	public AtomicInteger createMissingDemandsForMM(Property property, RequestInfo requestInfo) {
 		AtomicInteger counter = new AtomicInteger(0);
 
 		/* Fetch billing date of the property */
 		// should be replaced with the front end value
 		Date date = null;
+		String demandYearAndMonth = property.getPropertyDetails().getMmDemandStartYear() + "-" + property.getPropertyDetails().getMmDemandStartMonth() + "-01";
 		try {
-			date = new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01");
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(demandYearAndMonth);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -225,7 +229,7 @@ public class ManiMajraDemandGenerationService {
 					&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
 				// generate demand
 				counter.getAndIncrement();
-				generateEstateDemandMM(property, getFirstDateOfMonth(demandGenerationStartDate));
+				generateEstateDemandMM(property, getFirstDateOfMonth(demandGenerationStartDate), requestInfo);
 			}
 		}
 		return counter;
@@ -242,11 +246,20 @@ public class ManiMajraDemandGenerationService {
 		return cal.getTime();
 	}
 
-	private void generateEstateDemandMM(Property property, Date date) {
+	private void generateEstateDemandMM(Property property, Date date, RequestInfo requestInfo) {
+
+		String moduleName = "EstateServices";
+		String masterName = "ManiMajra_OtherCitizenService_AllotmentOfNewHouse";
+		String tenantId = "ch";
+		// TODO: 'calculatedRent' and 'gst' should be comming from MDMS
+		List<Map<String, Object>> feesConfigurations = mdmsService
+		.getManimajraPropertyRent(masterName, requestInfo, tenantId);
+		System.out.println(feesConfigurations);
+		int gst = 18;
 		Double calculatedRent = 1000D;// calculateRentAccordingtoMonth(property, date);
 //		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 
-		if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY)) {
+		if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 			date = setDateOfMonthMM(date, 1);
 		}
 
@@ -256,7 +269,7 @@ public class ManiMajraDemandGenerationService {
 
 		ManiMajraDemand estateDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
 				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent)
-				.propertyDetailsId(property.getPropertyDetails().getId()).gst(calculatedRent * 18 / 100).build();
+				.propertyDetailsId(property.getPropertyDetails().getId()).gst(calculatedRent * gst / 100).build();
 
 		if (null == property.getPropertyDetails().getManiMajraDemands()) {
 			List<ManiMajraDemand> maniMajraDemands = new ArrayList<ManiMajraDemand>();

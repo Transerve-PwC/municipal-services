@@ -567,7 +567,7 @@ public class PropertyEnrichmentService {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
 
-		if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+		if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 //			TODO: gst/tax and values should be from mdms
 			double gstAmount = util.extractGst(amount);
 			double rentAmount = amount - gstAmount;

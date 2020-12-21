@@ -123,7 +123,7 @@ public class PropertyService {
 			if (property.getPropertyDetails().getManiMajraDemands() != null
 					&& property.getPropertyDetails().getManiMajraPayments() != null) {
 				boolean isMonthly = false;
-				if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+				if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 					isMonthly = true;
 				}
 				maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
@@ -206,7 +206,7 @@ public class PropertyService {
 		if (null != request.getProperties().get(0).getState()
 				&& PSConstants.PENDING_PM_MM_APPROVAL.equalsIgnoreCase(property.getState())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
-			maniMajraDemandGenerationService.createMissingDemandsForMM(property);
+			maniMajraDemandGenerationService.createMissingDemandsForMM(property, request.getRequestInfo());
 		}
 
 		enrichmentService.enrichPropertyRequest(request);
@@ -331,26 +331,45 @@ public class PropertyService {
 		List<String> propertyDetailsIds = new ArrayList<String>();
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
 
-		List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(
-				Collections.singletonList(property.getPropertyDetails().getId()));
-
-		List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(
-				Collections.singletonList(property.getPropertyDetails().getId()));
-
 		EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands()) && null != estateAccount
-				&& property.getPropertyDetails().getPaymentConfig() != null
-				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+		if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
+			List<ManiMajraDemand> mmDemands = repository
+					.getManiMajraDemandDetails(Collections.singletonList(property.getPropertyDetails().getId()));
 
-			return AccountStatementResponse.builder()
-					.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments, 18.00,
-							accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
-							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
-					.build();
+			List<ManiMajraPayment> mmPayments = repository
+					.getManiMajraPaymentsDetails(Collections.singletonList(property.getPropertyDetails().getId()));
+
+			if (!CollectionUtils.isEmpty(mmDemands) && null != estateAccount) {
+
+				return AccountStatementResponse.builder()
+						.mmAccountStatements(
+								maniMajraRentCollectionService.getAccountStatement(mmDemands, mmPayments,
+										accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
+						.build();
+			} else {
+				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(
+						Collections.singletonList(property.getPropertyDetails().getId()));
+
+				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(
+						Collections.singletonList(property.getPropertyDetails().getId()));
+
+				if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands()) && null != estateAccount
+						&& property.getPropertyDetails().getPaymentConfig() != null && property.getPropertyDetails()
+								.getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+
+					return AccountStatementResponse.builder()
+							.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments,
+									18.00, accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
+									property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+									property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
+							.build();
+				}
+			}
+
 		}
 		return AccountStatementResponse.builder().estateAccountStatements(Collections.emptyList()).build();
+
 	}
 
 	public List<Property> generateFinanceDemand(PropertyRequest propertyRequest) {
@@ -407,7 +426,7 @@ public class PropertyService {
 			if (!CollectionUtils.isEmpty(demands) && null != account) {
 				List<ManiMajraPayment> payments = repository.getManiMajraPaymentsDetails(propertyDetailsIds);
 				boolean isMonthly = false;
-				if (property.getPropertyDetails().getDemandType().contentEquals(PSConstants.MONTHLY_DEMAND)) {
+				if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 					isMonthly = true;
 				}
 				maniMajraRentCollectionService.settle(demands, payments, account, isMonthly);
