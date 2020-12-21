@@ -102,6 +102,9 @@ public class Property {
 	@JsonProperty("payer")
 	private User payer;
 	
+	@JsonProperty("notifyingOwner")
+	private User notifyingOwner;
+	
 	@JsonProperty("paymentAmount")
 	private BigDecimal paymentAmount;
 	

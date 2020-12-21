@@ -72,8 +72,6 @@ public class PaymentNotificationService {
 
 	final String payerName = "payerName";
 	
-	private final static String CASH = "cash";
-
 
 	Map<String, String> valMap = new HashMap<>();
 
@@ -113,25 +111,21 @@ public class PaymentNotificationService {
 					String consumerCode = paymentDetail.getBill().getConsumerCode();
 
 					PropertyCriteria searchCriteria = new PropertyCriteria();
-					searchCriteria.setFileNumber(util.getFileNumberFromConsumerCode(consumerCode));
+					searchCriteria.setFileNumber(util.getFileNumberFromRentFeeConsumerCode(consumerCode));
 					List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
 
 					if (CollectionUtils.isEmpty(properties))
 						throw new CustomException("INVALID RECEIPT",
 								"No Owner found for the comsumerCode " + consumerCode);
 					properties.forEach(property -> {
-						/**
-						 * Get the notification config from mdms.
-						 */
-						List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
-								PSConstants.PROPERTY_RENT_MDMS_MODULE, requestInfo, property.getTenantId());
-						
-						if(paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(CASH)) 
-							property.setTransactionNumber("OFFLINE");
+						if(paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(PSConstants.PAYMENT_MODE_OFFLINE)) 
+							property.setTransactionNumber(property.getPropertyDetails().getOfflinePaymentDetails().get(0).getTransactionNumber());
 						else
 							property.setTransactionNumber(paymentRequest.getPayment().getTransactionNumber());
-
-						if(valMap.get(payerMobileNumberKey)!=null){
+						
+						 property.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
+						 
+						if(paymentRequest.getPayment().getPaymentMode().equalsIgnoreCase(PSConstants.PAYMENT_MODE_ONLINE) && valMap.get(payerMobileNumberKey)!=null){
 							User payer = User.builder().mobileNumber(valMap.get(payerMobileNumberKey))
 									.emailId(valMap.get(emailKey))
 									.name(valMap.get(payerName))
@@ -139,19 +133,17 @@ public class PaymentNotificationService {
 							
 							property.setNotificationCode(String.format("%s_%s", property.getPropertyDetails().getBranchType(),PSConstants.PROPERTY_PAYMENT_PAYER));
 							  property.setPayer(payer); 
-							  property.setPaymentAmount(new BigDecimal(valMap.get(amountPaidKey)));
-							 
 
 							/**
 							 * Process the notification config for payer
 							 */
-//							propertyNotificationService.processPropertyNotification(notificationConfigs, property, requestInfo);
+							propertyNotificationService.processPaymentNotification(property, paymentRequest.getPayment().getPaymentMode());
 						}
 						/**
 						 * Process the notification config for Owner
 						 */
 						property.setNotificationCode(String.format("%s_%s", property.getPropertyDetails().getBranchType(),PSConstants.PROPERTY_PAYMENT_OWNER));
-//						propertyNotificationService.processPropertyNotification(notificationConfigs, property, requestInfo);
+						propertyNotificationService.processPaymentNotification(property, paymentRequest.getPayment().getPaymentMode());
 
 					});
 					break;
