@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -502,7 +503,30 @@ public class EstateRentCollectionService implements IEstateRentCollectionService
 				break;
 			}
 		}
-		return accountStatementItems;
+		if (fromDateTimestamp == null) {
+			return accountStatementItems;
+		} else {
+			List<LocalDate> dates = accountStatementItems.stream()
+					.map(stmt -> Instant.ofEpochMilli(stmt.getDate()).atZone(ZoneId.systemDefault()).toLocalDate())
+					.collect(Collectors.toList());
+
+			if (!dates.contains(Instant.ofEpochMilli(fromDateTimestamp).atZone(ZoneId.systemDefault()).toLocalDate())) {
+				Optional<Long> afterDate = accountStatementItems.stream().map(stmt -> stmt.getDate())
+						.filter(stmt -> fromDateTimestamp < stmt).findFirst();
+				return accountStatementItems.stream()
+						.filter(statementItem -> statementItem.getDate() >= afterDate.get().longValue())
+						.collect(Collectors.toList());
+			}
+
+			Long fromDate = accountStatementItems.stream().map(stmt -> stmt.getDate())
+					.filter(date -> Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate().equals(
+							Instant.ofEpochMilli(fromDateTimestamp).atZone(ZoneId.systemDefault()).toLocalDate()))
+					.findFirst().get();
+			return accountStatementItems.stream()
+					.filter(statementItem -> statementItem.getDate() >= fromDate.longValue())
+					.collect(Collectors.toList());
+		}
+//		return accountStatementItems;
 	}
 
 	private EstateRentSummary calculateSummaryForPayment(double interestRate, EstateAccount rentAccount,
