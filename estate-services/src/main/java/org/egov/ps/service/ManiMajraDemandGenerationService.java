@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -204,7 +205,8 @@ public class ManiMajraDemandGenerationService {
 		/* Fetch billing date of the property */
 		// should be replaced with the front end value
 		Date date = null;
-		String demandYearAndMonth = property.getPropertyDetails().getMmDemandStartYear() + "-" + property.getPropertyDetails().getMmDemandStartMonth() + "-01";
+		String demandYearAndMonth = property.getPropertyDetails().getMmDemandStartYear() + "-"
+				+ property.getPropertyDetails().getMmDemandStartMonth() + "-01";
 		try {
 			date = new SimpleDateFormat("yyyy-MM-dd").parse(demandYearAndMonth);
 		} catch (ParseException e) {
@@ -249,15 +251,17 @@ public class ManiMajraDemandGenerationService {
 	private void generateEstateDemandMM(Property property, Date date, RequestInfo requestInfo) {
 
 		String moduleName = "EstateServices";
-		String masterName = "ManiMajra_OtherCitizenService_AllotmentOfNewHouse";
+		String masterName = "ManiMajra_Rent_Config";
 		String tenantId = "ch";
 		// TODO: 'calculatedRent' and 'gst' should be comming from MDMS
-		List<Map<String, Object>> feesConfigurations = mdmsService
-		.getManimajraPropertyRent(masterName, requestInfo, tenantId);
+		List<Map<String, Object>> feesConfigurations = mdmsService.getManimajraPropertyRent(masterName, requestInfo,
+				tenantId);
 		System.out.println(feesConfigurations);
 		int gst = 18;
 		Double calculatedRent = 1000D;// calculateRentAccordingtoMonth(property, date);
 //		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
+
+		fetchEstimateAmountFromMDMSJson(feesConfigurations, property);
 
 		if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 			date = setDateOfMonthMM(date, 1);
@@ -355,4 +359,15 @@ public class ManiMajraDemandGenerationService {
 //		}
 //		return 0.0;
 //	}
+
+	// Used for filter fees by using category and sub-category
+	public void fetchEstimateAmountFromMDMSJson(List<Map<String, Object>> feesConfigurations, Property property) {
+		BigDecimal responseEstimateAmount = new BigDecimal(0.0);
+		Integer compareVarForEstimateAmount = 0;
+		for (Map<String, Object> feesConfig : feesConfigurations) {
+
+			System.out.println("StartYear--->   " + feesConfig.get("StartYear"));
+		}
+
+	}
 }
