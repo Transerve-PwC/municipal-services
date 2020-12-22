@@ -1,6 +1,5 @@
 package org.egov.ps.service;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -89,12 +88,12 @@ public class ManiMajraDemandGenerationService {
 
 		Double collectionPrincipal = firstDemand.getCollectionPrincipal();
 
-//		int startYear = 2015;
-//		int endYear = 2016;
-//		int startMonth = 2;
-//		int endMonth = 8;
+		// int startYear = 2015;
+		// int endYear = 2016;
+		// int startMonth = 2;
+		// int endMonth = 8;
 		double rent = 1000;
-//		int gstOrTax = 18;
+		// int gstOrTax = 18;
 
 		while (pendingDueYear <= currentYear) {
 			int demandYear = pendingDueYear;
@@ -137,22 +136,26 @@ public class ManiMajraDemandGenerationService {
 			collectionPrincipal = rent;
 		}
 
-//		AuditDetails auditDetails = AuditDetails.builder().createdBy("System").createdTime(new Date().getTime())
-//				.lastModifiedBy("System").lastModifiedTime(new Date().getTime()).build();
-//
-//		PropertyRequest propertyRequest = new PropertyRequest();
-//		propertyRequest.setProperties(Collections.singletonList(property));
-//
-//		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraRentCollections())) {
-//			property.getPropertyDetails().getManiMajraRentCollections().forEach(collection -> {
-//				if (collection.getId() == null) {
-//					collection.setId(UUID.randomUUID().toString());
-//					collection.setAuditDetails(auditDetails);
-//				}
-//
-//			});
-//		}
-//		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+		// AuditDetails auditDetails =
+		// AuditDetails.builder().createdBy("System").createdTime(new Date().getTime())
+		// .lastModifiedBy("System").lastModifiedTime(new Date().getTime()).build();
+		//
+		// PropertyRequest propertyRequest = new PropertyRequest();
+		// propertyRequest.setProperties(Collections.singletonList(property));
+		//
+		// if
+		// (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraRentCollections()))
+		// {
+		// property.getPropertyDetails().getManiMajraRentCollections().forEach(collection
+		// -> {
+		// if (collection.getId() == null) {
+		// collection.setId(UUID.randomUUID().toString());
+		// collection.setAuditDetails(auditDetails);
+		// }
+		//
+		// });
+		// }
+		// producer.push(config.getUpdatePropertyTopic(), propertyRequest);
 
 	}
 
@@ -250,26 +253,53 @@ public class ManiMajraDemandGenerationService {
 
 	private void generateEstateDemandMM(Property property, Date date, RequestInfo requestInfo) {
 
-		String moduleName = "EstateServices";
-		String masterName = "ManiMajra_Rent_Config";
+		String masterName = "ManiMajra_Property_Rent_Config";
 		String tenantId = "ch";
-		// TODO: 'calculatedRent' and 'gst' should be comming from MDMS
+
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		int month = localDate.getMonthValue();
+		int year = localDate.getYear();
+		System.out.println(date.toString() + "---Month--->" + month + "---Year--->" + year);
+
+		int gst = 0;
+		Double calculatedRent = 0D;
+
 		List<Map<String, Object>> feesConfigurations = mdmsService.getManimajraPropertyRent(masterName, requestInfo,
 				tenantId);
-		System.out.println(feesConfigurations);
-		int gst = 18;
-		Double calculatedRent = 1000D;// calculateRentAccordingtoMonth(property, date);
-//		Double calculatedRent = calculateRentAccordingtoMonth(property, date);
 
-		fetchEstimateAmountFromMDMSJson(feesConfigurations, property);
+		// Here
+
+		// "StartYear": 2018,
+		// "StartMonth": 1,
+		// "TaxOrGst": 36,
+		// "rent": 800,
+		// "EndYear": 2019,
+		// "EndMonth": 12
+
+		// "Year": 2018,
+		// "Month": 3
+
+		for (Map<String, Object> feesConfig : feesConfigurations) {
+			Integer startYear = new Integer(feesConfig.get("StartYear").toString());
+			Integer startMonth = new Integer(feesConfig.get("StartMonth").toString());
+			Integer endYear = new Integer(feesConfig.get("EndYear").toString());
+			Integer endMonth = new Integer(feesConfig.get("EndMonth").toString());
+			
+			if(year >= startYear && year <= endYear){
+				if(month >= startMonth && month <= endMonth){
+					gst = new Integer(feesConfig.get("TaxOrGst").toString());
+					calculatedRent = new Double(feesConfig.get("rent").toString());
+				}
+
+			}
+			
+		}
+
+		// Here
 
 		if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
 			date = setDateOfMonthMM(date, 1);
 		}
-
-//			ManiMajraDemand.builder().id(UUID.randomUUID().toString())
-//			.propertyDetailsId(property.getPropertyDetails().getId()).generationDate(date.getTime())
-//			.collectionPrincipal(collectionPrincipal).build();
 
 		ManiMajraDemand estateDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
 				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent)
@@ -331,43 +361,40 @@ public class ManiMajraDemandGenerationService {
 		return cal.getTime();
 	}
 
-//	private Double calculateRentAccordingtoMonth(Property property, Date requestedDate) {
-//		PaymentConfig paymentConfig = property.getPropertyDetails().getPaymentConfig();
-//		AtomicInteger checkLoopIf = new AtomicInteger();
-//		if (paymentConfig != null
-//				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
-//			Date startDate = new Date(paymentConfig.getGroundRentBillStartDate());
-//			String startDateText = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
-//			String endDateText = new SimpleDateFormat("yyyy-MM-dd").format(requestedDate);
-//
-//			/* Check Months between both date */
-//			long monthsBetween = ChronoUnit.MONTHS.between(LocalDate.parse(startDateText).withDayOfMonth(1),
-//					LocalDate.parse(endDateText).withDayOfMonth(1));
-//
-//			for (PaymentConfigItems paymentConfigItem : paymentConfig.getPaymentConfigItems()) {
-//				if (paymentConfigItem.getGroundRentStartMonth() <= monthsBetween
-//						&& monthsBetween <= paymentConfigItem.getGroundRentEndMonth()) {
-//					checkLoopIf.incrementAndGet();
-//					return paymentConfigItem.getGroundRentAmount().doubleValue();
-//				}
-//			}
-//			if (checkLoopIf.get() == 0) {
-//				int paymentConfigCount = paymentConfig.getPaymentConfigItems().size() - 1;
-//				return paymentConfig.getPaymentConfigItems().get(paymentConfigCount).getGroundRentAmount()
-//						.doubleValue();
-//			}
-//		}
-//		return 0.0;
-//	}
-
-	// Used for filter fees by using category and sub-category
-	public void fetchEstimateAmountFromMDMSJson(List<Map<String, Object>> feesConfigurations, Property property) {
-		BigDecimal responseEstimateAmount = new BigDecimal(0.0);
-		Integer compareVarForEstimateAmount = 0;
-		for (Map<String, Object> feesConfig : feesConfigurations) {
-
-			System.out.println("StartYear--->   " + feesConfig.get("StartYear"));
-		}
-
-	}
+	// private Double calculateRentAccordingtoMonth(Property property, Date
+	// requestedDate) {
+	// PaymentConfig paymentConfig =
+	// property.getPropertyDetails().getPaymentConfig();
+	// AtomicInteger checkLoopIf = new AtomicInteger();
+	// if (paymentConfig != null
+	// &&
+	// property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD))
+	// {
+	// Date startDate = new Date(paymentConfig.getGroundRentBillStartDate());
+	// String startDateText = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
+	// String endDateText = new
+	// SimpleDateFormat("yyyy-MM-dd").format(requestedDate);
+	//
+	// /* Check Months between both date */
+	// long monthsBetween =
+	// ChronoUnit.MONTHS.between(LocalDate.parse(startDateText).withDayOfMonth(1),
+	// LocalDate.parse(endDateText).withDayOfMonth(1));
+	//
+	// for (PaymentConfigItems paymentConfigItem :
+	// paymentConfig.getPaymentConfigItems()) {
+	// if (paymentConfigItem.getGroundRentStartMonth() <= monthsBetween
+	// && monthsBetween <= paymentConfigItem.getGroundRentEndMonth()) {
+	// checkLoopIf.incrementAndGet();
+	// return paymentConfigItem.getGroundRentAmount().doubleValue();
+	// }
+	// }
+	// if (checkLoopIf.get() == 0) {
+	// int paymentConfigCount = paymentConfig.getPaymentConfigItems().size() - 1;
+	// return
+	// paymentConfig.getPaymentConfigItems().get(paymentConfigCount).getGroundRentAmount()
+	// .doubleValue();
+	// }
+	// }
+	// return 0.0;
+	// }
 }
