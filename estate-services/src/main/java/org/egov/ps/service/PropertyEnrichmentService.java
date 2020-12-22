@@ -1,11 +1,13 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ps.model.AuctionBidder;
@@ -30,6 +32,7 @@ import org.egov.ps.web.contracts.EstateDemand;
 import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.ExtensionFeeRequest;
+import org.egov.ps.web.contracts.ManiMajraDemand;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -567,34 +570,55 @@ public class PropertyEnrichmentService {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 		double amount = property.getPropertyDetails().getOfflinePaymentDetails().get(0).getAmount().doubleValue();
 
-		if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
-//			TODO: gst/tax and values should be from mdms
-			double gstAmount = util.extractGst(amount);
-			double rentAmount = amount - gstAmount;
+		/**
+		 * rent due from mar 2018
+		 * 
+		 * 1st payment apr 2018
+		 * 
+		 * 2nd payment jun 2018
+		 * 
+		 * selected demands data mar 2018 rent = 1200, gst = 216, and apr 2018 rent =
+		 * 1200, gst = 216
+		 * 
+		 * collection amount 1200+216+1200+216=2832
+		 * 
+		 * divide 2832 into principal=2400 and gst=432
+		 */
 
-			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
-			estimate1.setEstimateAmount(new BigDecimal(rentAmount));
-			estimate1.setCategory(Category.PRINCIPAL);
-			estimate1.setTaxHeadCode(
-					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
-			estimates.add(estimate1);
+		List<String> propertyDetailsIds = new ArrayList<String>();
+		propertyDetailsIds.add(property.getPropertyDetails().getId());
 
-			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
-			estimate2.setEstimateAmount(new BigDecimal(gstAmount));
-			estimate2.setCategory(Category.TAX);
-			estimate2.setTaxHeadCode(
-					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.TAX));
-			estimates.add(estimate2);
-		} else {
-			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
-			estimate1.setEstimateAmount(new BigDecimal(amount));
-			estimate1.setCategory(Category.PRINCIPAL);
-			estimate1.setTaxHeadCode(
-					getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
-			estimates.add(estimate1);
-		}
+		/**
+		 * unpaid & oldest first demands
+		 */
+		List<ManiMajraDemand> demands = propertyRepository.getManiMajraDemandDetails(propertyDetailsIds);
+		Collections.sort(demands);
+		List<ManiMajraDemand> demandsToBeSettled = demands.stream().filter(demand -> demand.isUnPaid())
+				.collect(Collectors.toList());
 
-		// estimates.add(estimate);
+		demandsToBeSettled.forEach(demand -> {
+			if (amount >= demand.getRent() + demand.getGst()) {
+				
+			}
+		});
+
+		double gstAmount = util.extractGst(amount);
+		double rentAmount = amount - gstAmount;
+
+		TaxHeadEstimate estimate1 = new TaxHeadEstimate();
+		estimate1.setEstimateAmount(new BigDecimal(rentAmount));
+		estimate1.setCategory(Category.PRINCIPAL);
+		estimate1.setTaxHeadCode(
+				getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.PRINCIPAL));
+		estimates.add(estimate1);
+
+		TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+		estimate2.setEstimateAmount(new BigDecimal(gstAmount));
+		estimate2.setCategory(Category.TAX);
+		estimate2.setTaxHeadCode(
+				getTaxHeadCode(property.getPropertyDetails().getBillingBusinessService(), Category.TAX));
+		estimates.add(estimate2);
+
 		Calculation calculation = Calculation.builder()
 				.applicationNumber(util.getPropertyRentConsumerCode(property.getFileNumber()))
 				.taxHeadEstimates(estimates).tenantId(property.getTenantId()).build();
