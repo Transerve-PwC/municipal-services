@@ -575,6 +575,8 @@ public class PropertyEnrichmentService {
 		 * 
 		 * 1st payment apr 2018
 		 * 
+		 * unpaid is starting from may 2018
+		 * 
 		 * 2nd payment jun 2018
 		 * 
 		 * selected demands data mar 2018 rent = 1200, gst = 216, and apr 2018 rent =
@@ -596,14 +598,17 @@ public class PropertyEnrichmentService {
 		List<ManiMajraDemand> demandsToBeSettled = demands.stream().filter(demand -> demand.isUnPaid())
 				.collect(Collectors.toList());
 
-		demandsToBeSettled.forEach(demand -> {
-			if (amount >= demand.getRent() + demand.getGst()) {
-				
-			}
-		});
+		Double gstAmount = 0D;
+		Double rentAmount = 0D;
 
-		double gstAmount = util.extractGst(amount);
-		double rentAmount = amount - gstAmount;
+		for (ManiMajraDemand demand : demandsToBeSettled) {
+			Double currentDue = demand.getRent() + demand.getGst();
+			if (amount >= currentDue) {
+				gstAmount = gstAmount + demand.getGst();
+				rentAmount = rentAmount + demand.getRent();
+				amount = amount - currentDue;
+			}
+		}
 
 		TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 		estimate1.setEstimateAmount(new BigDecimal(rentAmount));
