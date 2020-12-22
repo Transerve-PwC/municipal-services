@@ -3,7 +3,6 @@ package org.egov.ps.service.calculation;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.EstateAccount;
@@ -69,7 +67,6 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 
 		if (isMonthly) {
 			effectiveAmount = payment.getAmountPaid() + account.getRemainingAmount();
-			// TODO: gst/tax and values should be from mdms
 			gstAmount = util.extractGst(effectiveAmount);
 			effectiveAmount = effectiveAmount - gstAmount;
 		} else {
@@ -210,7 +207,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 			List<ManiMajraDemand> demandsToBeSettled, ManiMajraPayment currentPayment,
 			ManiMajraAccountStatement statement) {
 		currentPayment = this.clonePayment(currentPayment);
-		// TODO: Update hardcode boolean 'ture' with the getProperty method
+		// TODO: Update hardcode boolean 'true' with the getProperty method
 		this.settle(demandsToBeSettled, Collections.singletonList(currentPayment), rentAccount, true);
 		ManiMajraRentSummary rentSummary = calculateRentSummaryAtPayment(demandsToBeSettled, rentAccount,
 				currentPayment.getPaymentDate());
