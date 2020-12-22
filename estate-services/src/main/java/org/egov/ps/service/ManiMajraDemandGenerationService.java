@@ -284,15 +284,27 @@ public class ManiMajraDemandGenerationService {
 			Integer startMonth = new Integer(feesConfig.get("StartMonth").toString());
 			Integer endYear = new Integer(feesConfig.get("EndYear").toString());
 			Integer endMonth = new Integer(feesConfig.get("EndMonth").toString());
-			
-			if(year >= startYear && year <= endYear){
-				if(month >= startMonth && month <= endMonth){
-					gst = new Integer(feesConfig.get("TaxOrGst").toString());
-					calculatedRent = new Double(feesConfig.get("rent").toString());
-				}
 
-			}
-			
+//			if(year >= startYear && year <= endYear){
+//				if(month >= startMonth && month <= endMonth){
+//					gst = new Integer(feesConfig.get("TaxOrGst").toString());
+//					calculatedRent = new Double(feesConfig.get("rent").toString());
+//				}
+//			}
+
+			Date startDate = new Date(startYear, startMonth, 01);
+			Date endDate = new Date(endYear, endMonth, 01);
+
+//			if (startDate.compareTo(date) * date.compareTo(endDate) > 0) {
+//				gst = new Integer(feesConfig.get("TaxOrGst").toString());
+//				calculatedRent = new Double(feesConfig.get("rent").toString());
+//			}
+
+//			if (date.after(startDate) && date.before(endDate)) {
+//				gst = new Integer(feesConfig.get("TaxOrGst").toString());
+//				calculatedRent = new Double(feesConfig.get("rent").toString());
+//			}
+
 		}
 
 		// Here
