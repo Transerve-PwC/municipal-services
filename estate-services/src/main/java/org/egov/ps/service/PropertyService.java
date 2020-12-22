@@ -122,13 +122,9 @@ public class PropertyService {
 		request.getProperties().forEach(property -> {
 			if (property.getPropertyDetails().getManiMajraDemands() != null
 					&& property.getPropertyDetails().getManiMajraPayments() != null) {
-				boolean isMonthly = false;
-				if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
-					isMonthly = true;
-				}
 				maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
 						property.getPropertyDetails().getManiMajraPayments(),
-						property.getPropertyDetails().getEstateAccount(), isMonthly);
+						property.getPropertyDetails().getEstateAccount());
 			}
 		});
 	}
@@ -343,9 +339,8 @@ public class PropertyService {
 			if (!CollectionUtils.isEmpty(mmDemands) && null != estateAccount) {
 
 				return AccountStatementResponse.builder()
-						.mmAccountStatements(
-								maniMajraRentCollectionService.getAccountStatement(mmDemands, mmPayments,
-										accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
+						.mmAccountStatements(maniMajraRentCollectionService.getAccountStatement(mmDemands, mmPayments,
+								accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate()))
 						.build();
 			} else {
 				List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(
@@ -425,11 +420,7 @@ public class PropertyService {
 
 			if (!CollectionUtils.isEmpty(demands) && null != account) {
 				List<ManiMajraPayment> payments = repository.getManiMajraPaymentsDetails(propertyDetailsIds);
-				boolean isMonthly = false;
-				if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
-					isMonthly = true;
-				}
-				maniMajraRentCollectionService.settle(demands, payments, account, isMonthly);
+				maniMajraRentCollectionService.settle(demands, payments, account);
 				property.getPropertyDetails()
 						.setOfflinePaymentDetails(propertyFromRequest.getPropertyDetails().getOfflinePaymentDetails());
 				enrichmentService.enrichMmRentDemand(property);

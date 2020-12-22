@@ -11,7 +11,7 @@ import org.egov.ps.web.contracts.ManiMajraRentCollection;
 public interface IManiMajraRentCollectionService {
 
 	public List<ManiMajraRentCollection> settle(final List<ManiMajraDemand> demands,
-			final List<ManiMajraPayment> payments, EstateAccount account, boolean isMonthly);
+			final List<ManiMajraPayment> payments, EstateAccount account);
 
 	public List<ManiMajraAccountStatement> getAccountStatement(List<ManiMajraDemand> mmDemands,
 			List<ManiMajraPayment> mmPayments, Long fromDate, Long toDate);
