@@ -380,6 +380,7 @@ public class PropertyQueryBuilder {
 		sb.append(" FROM " + PROPERTY_PENALTY_TABLE);
 		sb.append(" where penalty.property_id IN (:propertyId)");
 		params.put("propertyId", propertyId);
+		sb.append(" ORDER BY penalty_last_modified_time desc ");
 		return sb.toString();
 	}
 
@@ -389,6 +390,7 @@ public class PropertyQueryBuilder {
 		sb.append(" FROM " + EXTENSION_FEE_TABLE);
 		sb.append(" where ef.property_id IN (:propertyId)");
 		params.put("propertyId", propertyId);
+		sb.append(" ORDER BY ef_last_modified_time desc ");
 		return sb.toString();
 	}
 

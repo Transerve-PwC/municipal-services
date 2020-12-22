@@ -1,5 +1,8 @@
 package org.egov.ps.service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -313,9 +316,17 @@ public class PropertyService {
 
 	public AccountStatementResponse searchPayments(AccountStatementCriteria accountStatementCriteria,
 			RequestInfo requestInfo) {
+		LocalDate fromLocalDate=null;
+		/**
+		 * converting timestamp to date
+		 */
+		if(accountStatementCriteria.getFromDate() != null)
+			 fromLocalDate=Instant.ofEpochMilli(accountStatementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate();
+			
+			LocalDate toLocalDate=Instant.ofEpochMilli(accountStatementCriteria.getToDate()).atZone(ZoneId.systemDefault()).toLocalDate();
 
 		if (accountStatementCriteria.getFromDate() != null
-				&& accountStatementCriteria.getFromDate() > accountStatementCriteria.getToDate()) {
+				&& toLocalDate.isBefore(fromLocalDate)) {
 			throw new CustomException("DATE_VALIDATION", "From date cannot be greater than to date");
 		}
 
