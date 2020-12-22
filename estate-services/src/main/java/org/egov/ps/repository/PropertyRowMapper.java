@@ -98,7 +98,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.village(rs.getString("village")).mohalla(rs.getString("mohalla"))
 							.propertyRegisteredTo(rs.getString("property_registered_to"))
 							.companyOrFirm(rs.getString("company_or_firm")).interestRate(rs.getDouble("interest_rate"))
-							.mmDemandStartYear(rs.getInt("mm_demand_start_year"))
+							.demandType(rs.getString("demand_year")).mmDemandStartYear(rs.getInt("mm_demand_start_year"))
 							.mmDemandStartMonth(rs.getInt("mm_demand_start_month"))
 							.paymentConfig(paymentConfig).auditDetails(pdAuditdetails)
 							.build();
