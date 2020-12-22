@@ -51,6 +51,7 @@ import org.egov.assets.model.StoreGetRequest;
 import org.egov.assets.model.Supplier;
 import org.egov.assets.model.Uom;
 import org.egov.assets.model.WorkFlowDetails;
+import org.egov.assets.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.assets.repository.IndentJdbcRepository;
 import org.egov.assets.repository.MaterialReceiptJdbcRepository;
 import org.egov.assets.repository.PDFServiceReposistory;
@@ -72,6 +73,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -167,6 +171,9 @@ public class PurchaseOrderService extends DomainService {
 	WorkflowIntegrator workflowIntegrator;
 
 	private String INDENT_MULTIPLE = "Multiple";
+
+	@Autowired
+	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	/**
 	 * @param purchaseOrderRequest
@@ -1429,6 +1436,31 @@ public class PurchaseOrderService extends DomainService {
 					purchaseOrderRequest.getWorkFlowDetails(), purchaseOrderRequest.getWorkFlowDetails().getTenantId());
 			purchaseOrderRequest.setWorkFlowDetails(workFlowDetails);
 			kafkaQue.send(updatestatusTopic, updatestatusKey, purchaseOrderRequest);
+			
+			
+			if (purchaseOrderRequest.getWorkFlowDetails().getStatus()
+					.equals(StatusEnum.REJECTED.toString())) {
+				
+				PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+				purchaseOrderSearch.setTenantId(tenantId);
+				purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderRequest.getWorkFlowDetails().getBusinessId());
+
+				PurchaseOrderResponse poSearchData = search(purchaseOrderSearch);
+				poSearchData.getPurchaseOrders().forEach(purchaseOrder->{
+					purchaseOrder.getPurchaseOrderDetails().forEach(poDetail->{
+						poDetail.getPurchaseIndentDetails().forEach(poIndentDetail->{
+							Map<String, Object> paramValues = new HashMap<>();
+							String query = "update indentdetail set poorderedquantity = poorderedquantity - :poquantity where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
+							paramValues.put("id", poIndentDetail.getIndentDetail().getId());
+							paramValues.put("tenantId", tenantId);
+							paramValues.put("poquantity", poDetail.getOrderQuantity());
+//							paramValues.put("material", poIndentDetail.getIndentDetail().getMaterial().getCode());
+							namedParameterJdbcTemplate.update(query.toString(), paramValues);
+						});
+					});
+				});
+			}
+			
 			PurchaseOrderResponse response = new PurchaseOrderResponse();
 			response.setPurchaseOrders(purchaseOrderRequest.getPurchaseOrders());
 			response.setResponseInfo(getResponseInfo(purchaseOrderRequest.getRequestInfo()));

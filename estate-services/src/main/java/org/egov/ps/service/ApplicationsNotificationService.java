@@ -1,7 +1,10 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jayway.jsonpath.JsonPath;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -126,6 +130,17 @@ public class ApplicationsNotificationService {
 
 			BigDecimal estimateAmount = applicationEnrichmentService.fetchEstimateAmountFromMDMSJson(feesConfigurations, application);
 			application.setTotalDue(estimateAmount);
+			
+			/**
+			 * Enrich hearing date
+			 */
+			ObjectNode applicationDetails = (ObjectNode) application.getApplicationDetails();
+			if(applicationDetails.get("dateOfHearing")!=null) {
+				Date date = new Date(applicationDetails.get("dateOfHearing").asLong());
+				DateFormat f = new SimpleDateFormat("dd MMM yyyy");
+				String hearingDate = f.format(date);
+			    applicationDetails.put("dateOfHearing",hearingDate);
+			}
 			
             /**
              * Enrich content by replacing paths like {createdBy.name}

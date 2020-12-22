@@ -133,5 +133,13 @@ public class PSConstants {
 	public static final String PROPERTY_PAYMENT_OWNER = "PROPERTY_PAYMENT_OWNER";
 	public static final String PROPERTY_RENT_MDMS_MODULE ="Property_Rent_Fee";
 	
+	public static final String PAYMENT_MODE_ONLINE = "ONLINE";
+	public static final String PAYMENT_MODE_OFFLINE = "CASH";
+	
+	public static final String PAYMENT_TYPE_RENT = "rent";
+	public static final String PAYMENT_TYPE_EF = "extention fee";
+	public static final String PAYMENT_TYPE_SD = "security deposit";
+	public static final String PAYMENT_TYPE_PENALTY = "penalty";
+	
 
 }

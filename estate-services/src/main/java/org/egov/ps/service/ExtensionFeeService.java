@@ -66,10 +66,14 @@ public class ExtensionFeeService {
 
 	@Autowired
 	private DemandRepository demandRepository;
+	
+	@Autowired
+	PropertyNotificationService propertyNotificationService;
 
 	public List<ExtensionFee> createExtensionFee(ExtensionFeeRequest extensionFeeRequest) {
 		propertyEnrichmentService.enrichExtensionFeeRequest(extensionFeeRequest);
 		producer.push(config.getSaveExtensionFeeTopic(), extensionFeeRequest);
+		propertyNotificationService.processExtensionFeeNotification(extensionFeeRequest);
 		return extensionFeeRequest.getExtensionFees();
 	}
 

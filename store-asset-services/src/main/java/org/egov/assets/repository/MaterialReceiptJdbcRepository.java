@@ -121,7 +121,7 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
 		if (materialReceiptSearch.getReceiptType() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("receipttype = :receiptType");
+			params.append("receipttype in(:receiptType)");
 			paramValues.put("receiptType", materialReceiptSearch.getReceiptType());
 		}
 

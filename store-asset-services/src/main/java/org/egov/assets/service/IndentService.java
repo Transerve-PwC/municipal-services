@@ -617,7 +617,12 @@ public class IndentService extends DomainService {
 				indent.put("indentPurpose", in.getIndentPurpose());
 				indent.put("narration", in.getNarration());
 				indent.put("inventoryType", in.getInventoryType());
-				indent.put("deliveryDate", in.getExpectedDeliveryDate());
+				if (in.getExpectedDeliveryDate() != null) {
+					Instant expectedDeliveryDate = Instant.ofEpochMilli(in.getExpectedDeliveryDate());
+					indent.put("deliveryDate", fmt.format(expectedDeliveryDate.atZone(ZoneId.systemDefault())));
+				} else {
+					indent.put("deliveryDate", "NA");
+				}
 				indent.put("createdBy", in.getIndentCreatedBy());
 				indent.put("designation", in.getDesignation());
 
@@ -640,7 +645,7 @@ public class IndentService extends DomainService {
 				ProcessInstanceResponse workflowData = workflowIntegrator.getWorkflowDataByID(requestInfo,
 						in.getIndentNumber(), in.getTenantId());
 				JSONArray workflows = new JSONArray();
-				int wfSrNo=1;
+				int wfSrNo = 1;
 				for (int j = 0; j < workflowData.getProcessInstances().size(); j++) {
 					ProcessInstance processData = workflowData.getProcessInstances().get(j);
 					Instant wfDate = Instant.ofEpochMilli(processData.getAuditDetails().getCreatedTime());
@@ -685,8 +690,8 @@ public class IndentService extends DomainService {
 	public IndentResponse updateStatus(IndentRequest indentRequest) {
 
 		try {
-			WorkFlowDetails workFlowDetails = workflowIntegrator.callWorkFlow(indentRequest.getRequestInfo(), indentRequest.getWorkFlowDetails(),
-					indentRequest.getWorkFlowDetails().getTenantId());
+			WorkFlowDetails workFlowDetails = workflowIntegrator.callWorkFlow(indentRequest.getRequestInfo(),
+					indentRequest.getWorkFlowDetails(), indentRequest.getWorkFlowDetails().getTenantId());
 			indentRequest.setWorkFlowDetails(workFlowDetails);
 			kafkaQue.send(updatestatusTopic, updatestatusKey, indentRequest);
 			IndentResponse response = new IndentResponse();
@@ -700,7 +705,7 @@ public class IndentService extends DomainService {
 	}
 
 	@Transactional
-	public IndenUserListResponse getCreatorList(RequestInfo requestInfo,String tenantId) {
+	public IndenUserListResponse getCreatorList(RequestInfo requestInfo, String tenantId) {
 
 		try {
 			IndenUserListResponse response = new IndenUserListResponse();

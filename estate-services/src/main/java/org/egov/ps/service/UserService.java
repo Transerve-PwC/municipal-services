@@ -122,7 +122,7 @@ public class UserService {
 		return tenantId.split("\\.")[0];
 	}
 
-	private UserDetailResponse searchByUserName(String userName, String tenantId) {
+	public UserDetailResponse searchByUserName(String userName, String tenantId) {
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
 		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setUserName(userName);

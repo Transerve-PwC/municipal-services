@@ -1,10 +1,12 @@
 package org.egov.ps.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.egov.common.contract.request.User;
 import org.egov.ps.model.calculation.Calculation;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
@@ -92,7 +94,30 @@ public class Property {
 	@Valid
 	@JsonProperty("estateRentSummary")
 	private EstateRentSummary estateRentSummary;
-
+	
+	@Valid
+	@JsonProperty("notificationCode")
+	private String notificationCode;
+	
+	@JsonProperty("payer")
+	private User payer;
+	
+	@JsonProperty("notifyingOwner")
+	private User notifyingOwner;
+	
+	@JsonProperty("paymentAmount")
+	private BigDecimal paymentAmount;
+	
+	@JsonProperty("paymentType")
+	private String paymentType;
+	
+	@JsonProperty("transactionNumber")
+	private String transactionNumber;
+	
+	@JsonProperty("demandDate")
+	private String demandDate;
+	
+	
 	/**
 	 * Pending consumer code. This needs to be saved in the database for online
 	 * payments.

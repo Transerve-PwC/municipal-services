@@ -253,4 +253,35 @@ public class Util {
 		double gstPercentage = 18;
 		return (gstPercentage / 100) * effectiveAmount;
 	}
+/**
+ * Extract file number from rent/fee consumer code	
+ */
+	public String getFileNumberFromRentFeeConsumerCode(String consumerCode) {
+		try {
+			Pattern pattern = Pattern.compile("^ES-");
+			Matcher matcher = pattern.matcher(consumerCode);
+			if (matcher.find()) {
+				// String formatted = consumerCode;
+				String[] tokens = consumerCode.split("-");
+				String fileNumber = "";
+				int length = Array.getLength(tokens) - 8;
+				for (int i = 2; i <= length + 1; i++) {
+					if (i == 2) {
+						fileNumber = fileNumber.concat(tokens[i]);
+					}
+					if (i > 2) {
+						String x = "-" + tokens[i];
+						fileNumber = fileNumber.concat(x);
+					}
+				}
+				return fileNumber;
+			}
+			log.error("Could not match rent consumer code pattern {}", consumerCode);
+		} catch (Exception e) {
+			log.error("Failed during parsing transit number from consumer code", e);
+			throw new CustomException(Collections.singletonMap("INVALID_RENT_CONSUMER_CODE",
+					"File number could not be extracted from consumer code " + consumerCode));
+		}
+		return null;
+	}
 }

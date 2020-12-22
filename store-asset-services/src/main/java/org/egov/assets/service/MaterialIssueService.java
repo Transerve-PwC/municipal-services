@@ -327,10 +327,11 @@ public class MaterialIssueService extends DomainService {
 			materialIssue.setIssueType(IssueTypeEnum.INDENTISSUE);
 		else
 			materialIssue.setIssueType(IssueTypeEnum.MATERIALOUTWARD);
-		if (StringUtils.isNotBlank(materialIssue.getIndent().getIndentCreatedBy()))
+/*if (StringUtils.isNotBlank(materialIssue.getIndent().getIndentCreatedBy()))
 			materialIssue.setIssuedToEmployee(materialIssue.getIndent().getIndentCreatedBy());
 		if (StringUtils.isNotBlank(materialIssue.getIndent().getDesignation()))
 			materialIssue.setIssuedToDesignation(materialIssue.getIndent().getDesignation());
+*/
 		if (action.equals(Constants.ACTION_CREATE)) {
 			int year = Calendar.getInstance().get(Calendar.YEAR);
 

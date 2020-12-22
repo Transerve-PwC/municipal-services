@@ -48,16 +48,18 @@ public class EstateDemandGenerationService {
 	private IEstateRentCollectionService estateRentCollectionService;
 	private Configuration config;
 	private Producer producer;
+	private PropertyNotificationService propertyNotificationService;
 
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Autowired
 	public EstateDemandGenerationService(PropertyRepository propertyRepository, Producer producer, Configuration config,
-			IEstateRentCollectionService estateRentCollectionService) {
+			IEstateRentCollectionService estateRentCollectionService,PropertyNotificationService propertyNotificationService) {
 		this.propertyRepository = propertyRepository;
 		this.estateRentCollectionService = estateRentCollectionService;
 		this.producer = producer;
 		this.config = config;
+		this.propertyNotificationService = propertyNotificationService;
 	}
 
 	public boolean checkSameDay(Date date1, Date date2) {
@@ -267,6 +269,7 @@ public class EstateDemandGenerationService {
 			});
 		}
 		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+		propertyNotificationService.processDemandNotification(propertyRequest,estateDemand);
 	}
 
 	private Double calculateRentAccordingtoMonth(Property property, Date requestedDate) {
