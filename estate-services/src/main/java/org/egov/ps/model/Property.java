@@ -108,6 +108,9 @@ public class Property {
 	@JsonProperty("paymentAmount")
 	private BigDecimal paymentAmount;
 	
+	@JsonProperty("paymentType")
+	private String paymentType;
+	
 	@JsonProperty("transactionNumber")
 	private String transactionNumber;
 	

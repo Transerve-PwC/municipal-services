@@ -23,6 +23,7 @@ import org.egov.ps.model.NotificationsSms;
 import org.egov.ps.model.Property;
 import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.model.UserDetailResponse;
+import org.egov.ps.model.UserResponse;
 import org.egov.ps.model.notification.uservevents.Event;
 import org.egov.ps.model.notification.uservevents.EventRequest;
 import org.egov.ps.repository.PropertyRepository;
@@ -64,6 +65,9 @@ public class PropertyNotificationService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ObjectMapper mapper;
+
 
 	/**
 	 * Invoke process notification on each application in the request
@@ -96,19 +100,28 @@ public class PropertyNotificationService {
 			 * Process the notification config
 			 */
 			property.setNotificationCode(String.format("%s_%s", property.getPropertyDetails().getBranchType(),PSConstants.PROPERTY_RENT));
-			property.getPropertyDetails().getOwners().forEach(owner->{ 
+			property.getPropertyDetails().getOwners().stream().filter(owner->owner.getOwnerDetails().getIsCurrentOwner()).forEach(owner->{ 
 				try {
 					UserDetailResponse ownerDetail = userService.searchByUserName(owner.getOwnerDetails().getMobileNumber(),
 							owner.getTenantId()); 
 					ownerDetail.getUser().get(0).getUuid();
-					User notifyingOwner = User.builder().name(owner.getOwnerDetails().getOwnerName())
-							.mobileNumber(owner.getOwnerDetails().getMobileNumber())
-							.emailId(ownerDetail.getUser().get(0).getEmailId())
-							.uuid(ownerDetail.getUser().get(0).getUuid())
-							.build();
+					/**
+					 * converting into user object
+					 */
+					User notifyingOwner = mapper.convertValue(ownerDetail, UserResponse.class).getUser().get(0).toCommonUser();
+					/**
+					 * replacing owner name
+					 */
+					notifyingOwner.setName(owner.getOwnerDetails().getOwnerName());
+					/**
+					 * current notifying owner
+					 */
 					property.setNotifyingOwner(notifyingOwner);
+					/**
+					 * Enriching requestinfo
+					 */
+					requestInfo.setUserInfo(notifyingOwner);
 
-					System.out.println("owner:"+property.getNotifyingOwner().getName());
 					Notifications notification= filterNotification(notificationConfigs, property, requestInfo);
 					if(notification!=null) {
 						ObjectMapper mapper = new ObjectMapper();
@@ -142,7 +155,7 @@ public class PropertyNotificationService {
 			List<Property> properties = propertyService.searchProperty(searchCriteria, propertyPenaltyRequest.getRequestInfo());
 			penalty.setProperty(properties.get(0));
 			penalty.getProperty().setNotificationCode(String.format("%s_%s", penalty.getBranchType(),PSConstants.PENALTY));
-			penalty.getProperty().getPropertyDetails().getOwners().forEach(owner->{ 
+			penalty.getProperty().getPropertyDetails().getOwners().stream().filter(owner->owner.getOwnerDetails().getIsCurrentOwner()).forEach(owner->{ 
 				try {
 					UserDetailResponse ownerDetail = userService.searchByUserName(owner.getOwnerDetails().getMobileNumber(),
 							owner.getTenantId()); 
@@ -191,7 +204,7 @@ public class PropertyNotificationService {
 			List<Property> properties = propertyService.searchProperty(searchCriteria, extensionFeeRequest.getRequestInfo());
 			extensionFee.setProperty(properties.get(0));
 			extensionFee.getProperty().setNotificationCode(String.format("%s_%s", extensionFee.getBranchType(),PSConstants.EXTENSION_FEE));
-			extensionFee.getProperty().getPropertyDetails().getOwners().forEach(owner->{ 
+			extensionFee.getProperty().getPropertyDetails().getOwners().stream().filter(owner->owner.getOwnerDetails().getIsCurrentOwner()).forEach(owner->{ 
 				try {
 					UserDetailResponse ownerDetail = userService.searchByUserName(owner.getOwnerDetails().getMobileNumber(),
 							owner.getTenantId()); 
@@ -203,7 +216,6 @@ public class PropertyNotificationService {
 							.build();
 					extensionFee.getProperty().setNotifyingOwner(notifyingOwner);
 
-					System.out.println("owner:"+extensionFee.getProperty().getNotifyingOwner().getName());
 					Notifications notification= filterNotification(notificationConfigs, extensionFee.getProperty(), extensionFeeRequest.getRequestInfo());
 					if(notification!=null) {
 						ObjectMapper mapper = new ObjectMapper();
@@ -219,12 +231,7 @@ public class PropertyNotificationService {
 		});
 	}
 
-	public void processPaymentNotification(Property property,String paymentMode) {
-		/**
-		 * generate request info
-		 */
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setMsgId("20170310130900|en_IN");
+	public void processPaymentNotification(Property property,RequestInfo requestInfo, String paymentMode) {
 		/**
 		 * Get the notification config from mdms.
 		 */
@@ -248,7 +255,7 @@ public class PropertyNotificationService {
 			}
 		}
 		else {
-			property.getPropertyDetails().getOwners().forEach(owner->{ 
+			property.getPropertyDetails().getOwners().stream().filter(owner->owner.getOwnerDetails().getIsCurrentOwner()).forEach(owner->{ 
 				try {
 					UserDetailResponse ownerDetail = userService.searchByUserName(owner.getOwnerDetails().getMobileNumber(),
 							owner.getTenantId()); 
@@ -260,7 +267,6 @@ public class PropertyNotificationService {
 							.build();
 					property.setNotifyingOwner(notifyingOwner);
 
-					System.out.println("owner:"+property.getNotifyingOwner().getName());
 					Notifications notification= filterNotification(notificationConfigs, property, requestInfo);
 					if(notification!=null) {
 						ObjectMapper mapper = new ObjectMapper();
@@ -275,39 +281,8 @@ public class PropertyNotificationService {
 			});
 		}
 	}
-	/**
-	 * For Security deposit
-	 * @param extensionFeeRequest
-	 */
-	/*public void processSecurityDepositNotification(ExtensionFeeRequest extensionFeeRequest) {
-		extensionFeeRequest.getExtensionFees().forEach(extensionFee->{
-			try {
-				List<Map<String, Object>> notificationConfigs = mdmsservice.getNotificationConfig(
-						PSConstants.PROPERTY_RENT_MDMS_MODULE, extensionFeeRequest.getRequestInfo(), extensionFee.getTenantId());
-				PropertyCriteria searchCriteria = new PropertyCriteria();
-				searchCriteria.setPropertyId(extensionFee.getProperty().getId());
-				searchCriteria.setRelations(Collections.singletonList("owner"));
-				searchCriteria.setLimit(1L);
-				List<Property> properties = propertyService.searchProperty(searchCriteria, extensionFeeRequest.getRequestInfo());
-				extensionFee.setProperty(properties.get(0));
-				extensionFee.getProperty().setNotificationCode(String.format("%s_%s", extensionFee.getBranchType(),PSConstants.SECURITY_DEPOSIT));
-				Notifications notification= filterNotification(notificationConfigs, extensionFee.getProperty(), extensionFeeRequest.getRequestInfo());
-				if(notification!=null) {
-										ObjectMapper mapper = new ObjectMapper();
-										String applicationJsonString = mapper.writeValueAsString(extensionFee);
-					processNotification(extensionFee.getProperty(),extensionFeeRequest.getRequestInfo(),applicationJsonString,notification);
-				}
-			}  catch (Exception e) {
-				log.error("Exception while fetching notification config for the property '{}' '{}'",
-						extensionFee.getProperty().getFileNumber(), e);
-			}
-		});
-	}*/
 	private void processNotification(Property property, RequestInfo requestInfo, String applicationJsonString, Notifications notification) {
-		//				String	applicationJsonString = mapper.writeValueAsString(property);
-
 		String contentWithPathsEnriched = enrichPathPatternsWithApplication(notification.getContent(),applicationJsonString);
-		//				             String enrichedContent = enrichLocalizationPatternsInString(property, requestInfo,contentWithPathsEnriched);
 
 		/**
 		 * Send email
@@ -391,17 +366,6 @@ public class PropertyNotificationService {
 		});
 		log.debug("Enriched '{}' to '{}' ", sourceString, replacedString);
 		return replacedString;
-	}
-
-	private List<String> localisationStringList(String str) {
-		Pattern pattern = Pattern.compile("\\[(.*?)\\]");
-		Matcher m = pattern.matcher(str);
-		List<String> list = new ArrayList<String>();
-
-		while (m.find()) {
-			list.add(m.group(1));
-		}
-		return list;
 	}
 
 	public EventRequest getEventsForApplication(String message,RequestInfo requestInfo, Property property, NotificationsEvent eventConfig, String applicationJsonString) {
