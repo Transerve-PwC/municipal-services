@@ -99,9 +99,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.propertyRegisteredTo(rs.getString("property_registered_to"))
 							.companyOrFirm(rs.getString("company_or_firm")).interestRate(rs.getDouble("interest_rate"))
 							.mmDemandStartYear(rs.getInt("mm_demand_start_year"))
-							.mmDemandStartMonth(rs.getInt("mm_demand_start_month"))
-							.paymentConfig(paymentConfig).auditDetails(pdAuditdetails)
-							.build();
+							.mmDemandStartMonth(rs.getInt("mm_demand_start_month")).paymentConfig(paymentConfig)
+							.auditDetails(pdAuditdetails).build();
 
 					currentProperty = Property.builder().id(propertyId).fileNumber(rs.getString("file_number"))
 							.tenantId(tenantId).category(rs.getString("category"))
@@ -250,7 +249,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 				if (null != permiumAmountId) {
 					PremiumAmountConfigItems premiumAmountConfigItems = PremiumAmountConfigItems.builder()
 							.id(rs.getString("paci_id")).tenantId(rs.getString("paci_tenant_id"))
-							.paymentConfigId("paci_payment_config_id").premiumAmount(rs.getBigDecimal("paci_premium_amount"))
+							.paymentConfigId("paci_payment_config_id")
+							.premiumAmount(rs.getBigDecimal("paci_premium_amount"))
 							.premiumAmountDate(rs.getLong("paci_premiumamountdate")).build();
 
 					property.getPropertyDetails().getPaymentConfig()

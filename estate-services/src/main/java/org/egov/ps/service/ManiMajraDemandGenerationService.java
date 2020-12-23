@@ -2,17 +2,13 @@ package org.egov.ps.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -25,11 +21,8 @@ import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.IManiMajraRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.ManiMajraDemand;
-import org.egov.ps.web.contracts.ManiMajraPayment;
-import org.egov.ps.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -143,9 +136,7 @@ public class ManiMajraDemandGenerationService {
 
 		}
 
-		if (property.getPropertyDetails().getDemandType().equalsIgnoreCase(PSConstants.MONTHLY)) {
-			date = setDateOfMonthMM(date, 1);
-		}
+		date = setDateOfMonthMM(date, 1);
 
 		ManiMajraDemand estateDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
 				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent)
