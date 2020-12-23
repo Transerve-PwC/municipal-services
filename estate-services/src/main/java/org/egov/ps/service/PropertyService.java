@@ -260,12 +260,27 @@ public class PropertyService {
 			 */
 			criteria.setUserId(requestInfo.getUserInfo().getUuid());
 		}
-
+		if(requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)) {
+			List<String> userRoleCode=requestInfo.getUserInfo().getRoles().stream().filter(role->role.getCode()!=PSConstants.ROLE_EMPLOYEE).map(role->role.getCode()).collect(Collectors.toList());
+			if(userRoleCode.get(0).startsWith("ES_EB")) {
+				criteria.setBranchType(PSConstants.ESTATE_BRANCH);
+			}
+			else if(userRoleCode.get(0).startsWith("ES_BB")) {
+				criteria.setBranchType(PSConstants.BUILDING_BRANCH);
+			}
+			else if(userRoleCode.get(0).startsWith("ES_MM")) {
+				criteria.setBranchType(PSConstants.MANI_MAJRA);
+			}
+		}
 		List<Property> properties = repository.getProperties(criteria);
 
-		if (CollectionUtils.isEmpty(properties))
+		if (CollectionUtils.isEmpty(properties)) {
+			if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)
+					&& criteria.getFileNumber() != null)
+				throw new CustomException("INVALID ACCESS", "You are not authorised to access this resource.");
+			else
 			return Collections.emptyList();
-
+		}
 		// Note : criteria.getRelations().contains(PSConstants.RELATION_FINANCE) filter
 		// is in rented-properties do we need to put here?
 		if (properties.size() <= 1 || !CollectionUtils.isEmpty(criteria.getRelations())) {
