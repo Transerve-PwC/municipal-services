@@ -596,8 +596,9 @@ public class PropertyEnrichmentService {
 		List<ManiMajraDemand> demands = propertyRepository.getManiMajraDemandDetails(propertyDetailsIds);
 		Collections.sort(demands);
 		List<ManiMajraDemand> demandsToBeSettled = demands.stream().filter(demand -> demand.isUnPaid())
-				.collect(Collectors.toList());
-
+		.collect(Collectors.toList());
+		Collections.sort(demandsToBeSettled);
+		
 		Double gstAmount = 0D;
 		Double rentAmount = 0D;
 

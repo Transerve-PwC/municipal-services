@@ -12,10 +12,12 @@ import org.egov.ps.model.calculation.PaymentDetail;
 import org.egov.ps.producer.Producer;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.IEstateRentCollectionService;
+import org.egov.ps.service.calculation.IManiMajraRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstatePayment;
+import org.egov.ps.web.contracts.ManiMajraPayment;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class RentEnrichmentService {
 
 	@Autowired
 	private Producer producer;
+
+	@Autowired
+	private IManiMajraRentCollectionService maniMajraRentCollectionService;
 
 	public void enrichCollection(PropertyRequest request) {
 		RequestInfo requestInfo = request.getRequestInfo();
@@ -94,6 +99,47 @@ public class RentEnrichmentService {
 					property.getPropertyDetails().getEstateAccount(), 18,
 					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
+		}
+
+		// Save everything back to database
+		PropertyRequest propertyRequest = PropertyRequest.builder().requestInfo(requestInfo)
+				.properties(Collections.singletonList(property)).build();
+		enrichCollection(propertyRequest);
+		producer.push(config.getUpdatePropertyTopic(), propertyRequest);
+	}
+
+	/**
+	 * Accept payment and process it to settle pending demands.
+	 * 
+	 * @param requestInfo
+	 * @param property
+	 * @param paymentDetail
+	 */
+	public void postEnrichmentForMmRentPayment(RequestInfo requestInfo, Property property,
+			PaymentDetail paymentDetail) {
+		AuditDetails paymentAuditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
+
+		// Construct a new rent payment object.
+		List<ManiMajraPayment> rentPayments = Collections.singletonList(ManiMajraPayment.builder()
+				.id(UUID.randomUUID().toString()).amountPaid(paymentDetail.getTotalAmountPaid().doubleValue())
+				.propertyDetailsId(property.getPropertyDetails().getId()).dateOfPayment(System.currentTimeMillis())
+				.mode(ModeEnum.fromValue(PSConstants.MODE_GENERATED)).processed(false)
+				.paymentDate(System.currentTimeMillis()).receiptDate(System.currentTimeMillis())
+				.rentReceived(paymentDetail.getTotalAmountPaid().doubleValue())
+				.receiptNo(paymentDetail.getReceiptNumber()).auditDetails(paymentAuditDetails).build());
+
+		if (CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraPayments())) {
+			property.getPropertyDetails().setManiMajraPayments(rentPayments);
+		} else {
+			property.getPropertyDetails().getManiMajraPayments().addAll(rentPayments);
+		}
+
+		// Settle the payment
+		if (property.getPropertyDetails().getManiMajraDemands() != null
+				&& property.getPropertyDetails().getManiMajraPayments() != null) {
+			maniMajraRentCollectionService.settle(property.getPropertyDetails().getManiMajraDemands(),
+					property.getPropertyDetails().getManiMajraPayments(),
+					property.getPropertyDetails().getEstateAccount());
 		}
 
 		// Save everything back to database

@@ -119,6 +119,8 @@ public class PropertyRepository {
 		if (relations.contains(PropertyQueryBuilder.RELATION_ESTATE_FINANCE)) {
 			this.addEstateDemandToProperties(properties);
 			this.addEstatePaymentToProperties(properties);
+			this.addManiMajraDemandToProperties(properties);
+			this.addManiMajraPaymentToProperties(properties);
 		}
 		if (relations.contains(PropertyQueryBuilder.RELATION_OFFLINE_PAYMENT)) {
 			this.addOfflinePaymentToProperties(properties, criteria);
@@ -313,6 +315,58 @@ public class PropertyRepository {
 		});
 	}
 
+	/**
+	 * Fetch Manimajra Demands and Payments
+	 */
+
+	private void addManiMajraDemandToProperties(List<Property> properties) {
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch demand from database
+		 */
+		List<ManiMajraDemand> maniMajraDemands = this.getManiMajraDemandDetails(propertyDetailsIds);
+
+		/**
+		 * Assign demands to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
+			property.getPropertyDetails()
+					.setManiMajraDemands(maniMajraDemands.stream()
+							.filter(maniMajraDemand -> maniMajraDemand.getPropertyDetailsId()
+									.equalsIgnoreCase(property.getPropertyDetails().getId()))
+							.collect(Collectors.toList()));
+		});
+	}
+
+	private void addManiMajraPaymentToProperties(List<Property> properties) {
+		/**
+		 * Extract property detail ids.
+		 */
+		List<String> propertyDetailsIds = properties.stream().map(property -> property.getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch payments from database
+		 */
+		List<ManiMajraPayment> maniMajraPayments = this.getManiMajraPaymentsDetails(propertyDetailsIds);
+
+		/**
+		 * Assign payments to corresponding properties
+		 */
+		properties.stream().forEach(property -> {
+			property.getPropertyDetails()
+					.setManiMajraPayments(maniMajraPayments.stream()
+							.filter(maniMajraPayment -> maniMajraPayment.getPropertyDetailsId()
+									.equalsIgnoreCase(property.getPropertyDetails().getId()))
+							.collect(Collectors.toList()));
+		});
+	}
+
 	private void addOfflinePaymentToProperties(List<Property> properties, PropertyCriteria criteria) {
 		/**
 		 * Extract property detail ids.
@@ -425,12 +479,16 @@ public class PropertyRepository {
 	public List<ManiMajraDemand> getManiMajraDemandDetails(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String maniMajraDemandQuery = propertyQueryBuilder.getManiMajraDemandQuery(propertyDetailsIds, params);
+		log.debug("query:" + maniMajraDemandQuery);
+		log.debug("preparedStmtList:" + params);
 		return namedParameterJdbcTemplate.query(maniMajraDemandQuery, params, maniMajraDemandRowMapper);
 	}
 
 	public List<ManiMajraPayment> getManiMajraPaymentsDetails(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String maniMajraPaymentsQuery = propertyQueryBuilder.getManiMajraPaymentsQuery(propertyDetailsIds, params);
+		log.debug("query:" + maniMajraPaymentsQuery);
+		log.debug("preparedStmtList:" + params);
 		return namedParameterJdbcTemplate.query(maniMajraPaymentsQuery, params, maniMajraPaymentRowMapper);
 	}
 }

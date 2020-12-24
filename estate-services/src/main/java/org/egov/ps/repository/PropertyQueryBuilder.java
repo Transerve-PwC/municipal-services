@@ -101,7 +101,7 @@ public class PropertyQueryBuilder {
 			+ " estp.created_time as estpcreated_time, estp.last_modified_time as estplast_modified_time, estp.processed as estpprocessed ";
 
 	private static final String MANI_MAJRA_DEMAND_COLUMNS = " mmd.id as mmd_id, mmd.property_details_id as mmd_property_details_id, "
-			+ " mmd.demand_date as mmd_demand_date, mmd.paid as mmd_paid, mmd.rent as mmd_rent, mmd.gst as mmd_gst, "
+			+ " mmd.demand_date as mmd_demand_date, mmd.paid as mmd_paid, mmd.rent as mmd_rent, mmd.gst as mmd_gst, mmd.status as mmd_status, "
 			+ " mmd.collected_rent as mmd_collected_rent, mmd.collected_gst as mmd_collected_gst, mmd.comment as mmd_comment, "
 			+ " mmd.created_by as mmd_created_by, mmd.last_modified_by as mmd_last_modified_by, "
 			+ " mmd.created_time as mmd_created_time, mmd.last_modified_time as mmd_last_modified_time ";

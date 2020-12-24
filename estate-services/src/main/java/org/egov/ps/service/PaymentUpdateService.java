@@ -1,5 +1,6 @@
 package org.egov.ps.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,88 +62,107 @@ public class PaymentUpdateService {
 			List<PaymentDetail> paymentDetails = paymentRequest.getPayment().getPaymentDetails();
 			for (PaymentDetail paymentDetail : paymentDetails) {
 				switch (paymentDetail.getBusinessService()) {
-				case PSConstants.BUSINESS_SERVICE_EB_RENT:
-				case PSConstants.BUSINESS_SERVICE_BB_RENT:
-				case PSConstants.BUSINESS_SERVICE_MB_RENT: {
-					String consumerCode = paymentDetail.getBill().getConsumerCode();
+					case PSConstants.BUSINESS_SERVICE_EB_RENT:
+					case PSConstants.BUSINESS_SERVICE_BB_RENT: {
+						String consumerCode = paymentDetail.getBill().getConsumerCode();
 
-					PropertyCriteria searchCriteria = new PropertyCriteria();
-					searchCriteria.setFileNumber(util.getFileNumberFromConsumerCode(consumerCode));
+						PropertyCriteria searchCriteria = new PropertyCriteria();
+						searchCriteria.setFileNumber(util.getFileNumberFromConsumerCode(consumerCode));
 
-					List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
+						List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
 
-					if (CollectionUtils.isEmpty(properties))
-						throw new CustomException("INVALID RECEIPT",
-								"No Property found for the comsumerCode " + consumerCode);
-
-					rentEnrichmentService.postEnrichmentForRentPayment(requestInfo, properties.get(0), paymentDetail);
-
-					break;
-				}
-				case PSConstants.BUSINESS_SERVICE_EB_PENALTY:
-				case PSConstants.BUSINESS_SERVICE_BB_PENALTY:
-				case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
-					log.info("Post enrichment need to do");
-					break;
-
-				case PSConstants.BUSINESS_SERVICE_EB_EXTENSION_FEE:
-				case PSConstants.BUSINESS_SERVICE_BB_EXTENSION_FEE:
-				case PSConstants.BUSINESS_SERVICE_MB_EXTENSION_FEE:
-					log.info("Post enrichment need to do");
-					break;
-
-				case PSConstants.BUSINESS_SERVICE_EB_SECURITY_DEPOSIT:
-				case PSConstants.BUSINESS_SERVICE_BB_SECURITY_DEPOSIT:
-				case PSConstants.BUSINESS_SERVICE_MB_SECURITY_DEPOSIT:
-					log.info("Post enrichment need to do");
-					break;
-
-				default: {
-					if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
-
-						ApplicationCriteria searchCriteria = new ApplicationCriteria();
-						searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
-						
-						if(paymentDetail.getBusinessService().contains(PSConstants.ESTATE_BRANCH)){
-							searchCriteria.setBranchType(PSConstants.APPLICATION_ESTATE_BRANCH);
-						}else if(paymentDetail.getBusinessService().contains(PSConstants.BUILDING_BRANCH)){
-							searchCriteria.setBranchType(PSConstants.APPLICATION_BUILDING_BRANCH);
-						}else{
-							searchCriteria.setBranchType(PSConstants.APPLICATION_MANI_MAJRA);
-						}
-						List<Application> applications = applicationService.searchApplication(searchCriteria,
-								requestInfo);
-
-						if (CollectionUtils.isEmpty(applications))
+						if (CollectionUtils.isEmpty(properties))
 							throw new CustomException("INVALID RECEIPT",
-									"No Owner found for the comsumerCode " + searchCriteria.getApplicationNumber());
+									"No Property found for the comsumerCode " + consumerCode);
 
-						BusinessService otBusinessService = workflowService.getBusinessService(
-								applications.get(0).getTenantId(), requestInfo,
-								applications.get(0).getWorkFlowBusinessService());
+						rentEnrichmentService.postEnrichmentForRentPayment(requestInfo, properties.get(0),
+								paymentDetail);
 
-						applications.forEach(application -> application.setAction(PSConstants.ACTION_PAY));
-
-						Role role = Role.builder().code("SYSTEM_PAYMENT").build();
-						requestInfo.getUserInfo().getRoles().add(role);
-
-						ApplicationRequest updateRequest = ApplicationRequest.builder().requestInfo(requestInfo)
-								.applications(applications).build();
-
-						updateRequest.getApplications()
-								.forEach(obj -> log.info(" the status of the application is : " + obj.getState()));
-
-						/**
-						 * Payment is not the end state for Ownership Transfer. No need to postEnrich
-						 */
-
-						Map<String, Boolean> idToIsStateUpdatableMap = util
-								.getIdToIsStateUpdatableMap(otBusinessService, applications);
-
-						applicationService.updatePostPayment(updateRequest, idToIsStateUpdatableMap);
+						break;
 					}
-					break;
-				}
+
+					case PSConstants.BUSINESS_SERVICE_MB_RENT: {
+						String consumerCode = paymentDetail.getBill().getConsumerCode();
+
+						PropertyCriteria searchCriteria = new PropertyCriteria();
+						searchCriteria.setFileNumber(util.getMmFileNumberFromConsumerCode(consumerCode));
+						searchCriteria.setRelations(Collections.singletonList("finance"));
+
+						List<Property> properties = propertyService.searchProperty(searchCriteria, requestInfo);
+
+						if (CollectionUtils.isEmpty(properties))
+							throw new CustomException("INVALID RECEIPT",
+									"No Property found for the comsumerCode " + consumerCode);
+
+						rentEnrichmentService.postEnrichmentForMmRentPayment(requestInfo, properties.get(0),
+								paymentDetail);
+
+						break;
+					}
+					case PSConstants.BUSINESS_SERVICE_EB_PENALTY:
+					case PSConstants.BUSINESS_SERVICE_BB_PENALTY:
+					case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
+						log.info("Post enrichment need to do");
+						break;
+
+					case PSConstants.BUSINESS_SERVICE_EB_EXTENSION_FEE:
+					case PSConstants.BUSINESS_SERVICE_BB_EXTENSION_FEE:
+					case PSConstants.BUSINESS_SERVICE_MB_EXTENSION_FEE:
+						log.info("Post enrichment need to do");
+						break;
+
+					case PSConstants.BUSINESS_SERVICE_EB_SECURITY_DEPOSIT:
+					case PSConstants.BUSINESS_SERVICE_BB_SECURITY_DEPOSIT:
+					case PSConstants.BUSINESS_SERVICE_MB_SECURITY_DEPOSIT:
+						log.info("Post enrichment need to do");
+						break;
+
+					default: {
+						if (paymentDetail.getBusinessService().startsWith(PSConstants.ESTATE_SERVICE)) {
+
+							ApplicationCriteria searchCriteria = new ApplicationCriteria();
+							searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
+
+							if (paymentDetail.getBusinessService().contains(PSConstants.ESTATE_BRANCH)) {
+								searchCriteria.setBranchType(PSConstants.APPLICATION_ESTATE_BRANCH);
+							} else if (paymentDetail.getBusinessService().contains(PSConstants.BUILDING_BRANCH)) {
+								searchCriteria.setBranchType(PSConstants.APPLICATION_BUILDING_BRANCH);
+							} else {
+								searchCriteria.setBranchType(PSConstants.APPLICATION_MANI_MAJRA);
+							}
+							List<Application> applications = applicationService.searchApplication(searchCriteria,
+									requestInfo);
+
+							if (CollectionUtils.isEmpty(applications))
+								throw new CustomException("INVALID RECEIPT",
+										"No Owner found for the comsumerCode " + searchCriteria.getApplicationNumber());
+
+							BusinessService otBusinessService = workflowService.getBusinessService(
+									applications.get(0).getTenantId(), requestInfo,
+									applications.get(0).getWorkFlowBusinessService());
+
+							applications.forEach(application -> application.setAction(PSConstants.ACTION_PAY));
+
+							Role role = Role.builder().code("SYSTEM_PAYMENT").build();
+							requestInfo.getUserInfo().getRoles().add(role);
+
+							ApplicationRequest updateRequest = ApplicationRequest.builder().requestInfo(requestInfo)
+									.applications(applications).build();
+
+							updateRequest.getApplications()
+									.forEach(obj -> log.info(" the status of the application is : " + obj.getState()));
+
+							/**
+							 * Payment is not the end state for Ownership Transfer. No need to postEnrich
+							 */
+
+							Map<String, Boolean> idToIsStateUpdatableMap = util
+									.getIdToIsStateUpdatableMap(otBusinessService, applications);
+
+							applicationService.updatePostPayment(updateRequest, idToIsStateUpdatableMap);
+						}
+						break;
+					}
 
 				}
 			}

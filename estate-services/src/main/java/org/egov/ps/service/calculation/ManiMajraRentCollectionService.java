@@ -58,16 +58,13 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 		/**
 		 * Each payment will only operate on the demands generated before it is paid.
 		 */
+		
 		List<ManiMajraDemand> demands = demandsToBeSettled.stream()
-				.filter(demand -> demand.isUnPaid() && demand.getGenerationDate() <= payment.getDateOfPayment())
+				.filter(demand -> demand.isUnPaid() && demand.getGenerationDate() <= payment.getPaymentDate())
 				.collect(Collectors.toList());
 
-		double effectiveAmount;
-		double gstAmount;
 
-		effectiveAmount = payment.getAmountPaid() + account.getRemainingAmount();
-		gstAmount = util.extractGst(effectiveAmount);
-		effectiveAmount = effectiveAmount - gstAmount;
+		double effectiveAmount = payment.getRentReceived() + account.getRemainingAmount();
 
 		/**
 		 * deduct payment from each demand
@@ -255,6 +252,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 		// statement.setAmount(currentDemand.getCollectedRent());
 		statement.setType(Type.D);
 		statement.setComment(currentDemand.getComment());
+		statement.setStatus(currentDemand.getStatus());
 		return rentSummary;
 	}
 
