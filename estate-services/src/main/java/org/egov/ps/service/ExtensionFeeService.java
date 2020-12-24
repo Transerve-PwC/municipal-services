@@ -1,6 +1,9 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -78,19 +81,21 @@ public class ExtensionFeeService {
 	}
 
 	public ExtensionFeeStatementResponse createExtensionFeeStatement(AccountStatementRequest statementRequest) {
-
+		LocalDate fromLocalDate=null;
 		/* Set current date in a toDate if it is null */
-		statementRequest.getCriteria()
+		AccountStatementCriteria statementCriteria = statementRequest.getCriteria();
+		statementCriteria
 				.setToDate(statementRequest.getCriteria().getToDate() == null ? new Date().getTime()
 						: statementRequest.getCriteria().getToDate());
-		AccountStatementCriteria statementCriteria = statementRequest.getCriteria();
-		if (null == statementCriteria.getFromDate()) {
-			throw new CustomException(Collections.singletonMap("NO_FROM_DATE", "From date should not be null"));
-		}
+		if(statementCriteria.getFromDate() != null)
+			 fromLocalDate=Instant.ofEpochMilli(statementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate();
+			
+			LocalDate toLocalDate=Instant.ofEpochMilli(statementCriteria.getToDate()).atZone(ZoneId.systemDefault()).toLocalDate();
+
 		if (null == statementCriteria.getPropertyid()) {
 			throw new CustomException(Collections.singletonMap("NO_PROPERTY_ID", "Property id should not be null"));
 		}
-		if (statementCriteria.getToDate() <= statementCriteria.getFromDate()) {
+		if (statementCriteria.getFromDate() !=null && toLocalDate.isBefore(fromLocalDate)) {
 			throw new CustomException(
 					Collections.singletonMap("NO_PROPER_DATE", "Statement from date should be greater than to date"));
 		}
@@ -103,10 +108,16 @@ public class ExtensionFeeService {
 
 		List<ExtensionFee> extensionFees = repository.getExtensionFeesForPropertyId(property.getId());
 		List<ExtensionFee> filteredExtensionFees = extensionFees.stream()
-				.filter(extensionFee -> extensionFee.getGenerationDate() >= statementCriteria.getFromDate()
-						&& extensionFee.getGenerationDate() <= statementCriteria.getToDate())
+				.filter(extensionFee -> Instant.ofEpochMilli(extensionFee.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().equals(toLocalDate)
+						|| Instant.ofEpochMilli(extensionFee.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().isBefore(toLocalDate))
 				.collect(Collectors.toList());
-
+		
+		if(fromLocalDate != null) {
+		filteredExtensionFees = filteredExtensionFees.stream()
+				.filter(extensionFee -> Instant.ofEpochMilli(extensionFee.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().equals(Instant.ofEpochMilli(statementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate())
+						|| Instant.ofEpochMilli(extensionFee.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().isAfter(Instant.ofEpochMilli(statementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate()))
+				.collect(Collectors.toList());
+		}
 		List<String> propertyDetailsIds = new ArrayList<String>();
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
 		List<String> relations = new ArrayList<String>();

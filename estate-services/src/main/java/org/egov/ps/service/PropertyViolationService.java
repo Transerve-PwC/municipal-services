@@ -1,6 +1,9 @@
 package org.egov.ps.service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -194,19 +197,26 @@ public class PropertyViolationService {
 	}
 
 	public PenaltyStatementResponse createPenaltyStatement(AccountStatementRequest accountStatementRequest) {
-
+		LocalDate fromLocalDate=null;
+		
 		/* Set current date in a toDate if it is null */
 		accountStatementRequest.getCriteria()
 				.setToDate(accountStatementRequest.getCriteria().getToDate() == null ? new Date().getTime()
 						: accountStatementRequest.getCriteria().getToDate());
 		AccountStatementCriteria accountStatementCriteria = accountStatementRequest.getCriteria();
-		if (null == accountStatementCriteria.getFromDate()) {
-			throw new CustomException(Collections.singletonMap("NO_FROM_DATE", "From date should not be null"));
-		}
+		
+		/**
+		 * converting timestamp to date
+		 */
+		if(accountStatementCriteria.getFromDate() != null)
+			 fromLocalDate=Instant.ofEpochMilli(accountStatementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate();
+			
+			LocalDate toLocalDate=Instant.ofEpochMilli(accountStatementCriteria.getToDate()).atZone(ZoneId.systemDefault()).toLocalDate();
+
 		if (null == accountStatementCriteria.getPropertyid()) {
 			throw new CustomException(Collections.singletonMap("NO_PROPERTY_ID", "Property id should not be null"));
 		}
-		if (accountStatementCriteria.getToDate() <= accountStatementCriteria.getFromDate()) {
+		if (accountStatementCriteria.getFromDate() != null && toLocalDate.isBefore(fromLocalDate)) {
 			throw new CustomException(
 					Collections.singletonMap("NO_PROPER_DATE", "Statement from date should be greater than to date"));
 		}
@@ -219,9 +229,16 @@ public class PropertyViolationService {
 
 		List<PropertyPenalty> propertyPenalties = repository.getPenaltyDemandsForPropertyId(property.getId());
 		List<PropertyPenalty> filteredPropertyPenalties = propertyPenalties.stream()
-				.filter(propertyPenalty -> propertyPenalty.getGenerationDate() >= accountStatementCriteria.getFromDate()
-						&& propertyPenalty.getGenerationDate() <= accountStatementCriteria.getToDate())
+				.filter(propertyPenalty -> Instant.ofEpochMilli(propertyPenalty.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().equals(toLocalDate)
+						|| Instant.ofEpochMilli(propertyPenalty.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().isBefore(toLocalDate))
 				.collect(Collectors.toList());
+		
+		if(fromLocalDate != null) {
+			filteredPropertyPenalties = filteredPropertyPenalties.stream()
+					.filter(propertyPenalty -> Instant.ofEpochMilli(propertyPenalty.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().equals(Instant.ofEpochMilli(accountStatementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate())
+							|| Instant.ofEpochMilli(propertyPenalty.getGenerationDate()).atZone(ZoneId.systemDefault()).toLocalDate().isAfter(Instant.ofEpochMilli(accountStatementCriteria.getFromDate()).atZone(ZoneId.systemDefault()).toLocalDate()))
+					.collect(Collectors.toList());
+		}
 
 		List<String> propertyDetailsIds = new ArrayList<String>();
 		propertyDetailsIds.add(property.getPropertyDetails().getId());
