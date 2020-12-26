@@ -544,6 +544,7 @@ public class PropertyEnrichmentService {
 				if (null != mmDemand.getId()) {
 					mmDemand.setId(UUID.randomUUID().toString());
 					mmDemand.setPropertyDetailsId(property.getPropertyDetails().getId());
+					mmDemand.setStatus(PaymentStatusEnum.UNPAID);
 				}
 				mmDemand.setAuditDetails(auditDetails);
 			});

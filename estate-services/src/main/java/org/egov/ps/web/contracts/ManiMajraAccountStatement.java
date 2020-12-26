@@ -80,7 +80,7 @@ public class ManiMajraAccountStatement {
     private double collectedGST = 0D;
 
     public double getDueAmount() {
-        return Math.max(0, this.remainingPrincipal + this.remainingGST - this.remainingBalance);
+        return Math.max(0, this.rent + this.gst);
     }
 
     public enum Type {
