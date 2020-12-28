@@ -46,7 +46,7 @@ public class PropertyCriteria {
 	@Builder.Default
 	private Set<String> propertyIds = new HashSet<String>();
 
-	private String branchType;
+	private List<String> branchType;
 
 	@Builder.Default
 	private List<String> relations = new ArrayList<String>();

@@ -269,7 +269,7 @@ public class PropertyQueryBuilder {
 
 		if (null != criteria.getBranchType()) {
 			addClauseIfRequired(preparedStmtList, builder);
-			builder.append("ptdl.branch_type = :branch_type");
+			builder.append("ptdl.branch_type IN (:branch_type)");
 			preparedStmtList.put("branch_type", criteria.getBranchType());
 		}
 

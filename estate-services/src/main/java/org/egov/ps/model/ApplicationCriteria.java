@@ -41,7 +41,7 @@ public class ApplicationCriteria {
 
 	private String moduleType;
 
-	private String branchType;
+	private List<String> branchType;
 
 	private String createdBy;
 

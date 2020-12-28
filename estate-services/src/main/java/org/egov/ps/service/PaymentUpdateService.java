@@ -1,5 +1,7 @@
 package org.egov.ps.service;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,11 +106,11 @@ public class PaymentUpdateService {
 						searchCriteria.setApplicationNumber(paymentDetail.getBill().getConsumerCode());
 						
 						if(paymentDetail.getBusinessService().contains(PSConstants.ESTATE_BRANCH)){
-							searchCriteria.setBranchType(PSConstants.APPLICATION_ESTATE_BRANCH);
+							searchCriteria.setBranchType(Arrays.asList( PSConstants.APPLICATION_ESTATE_BRANCH));
 						}else if(paymentDetail.getBusinessService().contains(PSConstants.BUILDING_BRANCH)){
-							searchCriteria.setBranchType(PSConstants.APPLICATION_BUILDING_BRANCH);
+							searchCriteria.setBranchType(Arrays.asList(PSConstants.APPLICATION_BUILDING_BRANCH));
 						}else{
-							searchCriteria.setBranchType(PSConstants.APPLICATION_MANI_MAJRA);
+							searchCriteria.setBranchType(Arrays.asList(PSConstants.APPLICATION_MANI_MAJRA));
 						}
 						List<Application> applications = applicationService.searchApplication(searchCriteria,
 								requestInfo);
