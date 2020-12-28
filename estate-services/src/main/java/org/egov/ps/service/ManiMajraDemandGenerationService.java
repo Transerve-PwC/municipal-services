@@ -21,6 +21,7 @@ import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.calculation.IManiMajraRentCollectionService;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.ManiMajraDemand;
+import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -137,10 +138,12 @@ public class ManiMajraDemandGenerationService {
 		}
 
 		date = setDateOfMonthMM(date, 1);
+		double calculatedGst = calculatedRent * gst / 100;
 
 		ManiMajraDemand estateDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
 				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent)
-				.propertyDetailsId(property.getPropertyDetails().getId()).gst(calculatedRent * gst / 100).build();
+				.propertyDetailsId(property.getPropertyDetails().getId()).gst(calculatedGst)
+				.status(PaymentStatusEnum.UNPAID).build();
 
 		if (null == property.getPropertyDetails().getManiMajraDemands()) {
 			List<ManiMajraDemand> maniMajraDemands = new ArrayList<ManiMajraDemand>();

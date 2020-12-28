@@ -56,10 +56,16 @@ public class ManiMajraAccountStatement {
     private long adjustmentDate;
 
     /**
-     * Adjustment Date of the demand
+     * Comment of the demand
      */
     @JsonProperty("comment")
     private String comment;
+
+    /**
+     * Status of the demand
+     */
+    @JsonProperty("status")
+    private PaymentStatusEnum status;
 
     @Builder.Default
     private double rent = 0D;
@@ -74,7 +80,7 @@ public class ManiMajraAccountStatement {
     private double collectedGST = 0D;
 
     public double getDueAmount() {
-        return Math.max(0, this.remainingPrincipal + this.remainingGST - this.remainingBalance);
+        return Math.max(0, this.rent + this.gst);
     }
 
     public enum Type {

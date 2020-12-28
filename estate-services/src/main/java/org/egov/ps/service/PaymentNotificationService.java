@@ -109,10 +109,8 @@ public class PaymentNotificationService {
 				case PSConstants.BUSINESS_SERVICE_MB_PENALTY:
 				case PSConstants.BUSINESS_SERVICE_EB_EXTENSION_FEE:
 				case PSConstants.BUSINESS_SERVICE_BB_EXTENSION_FEE:
-				case PSConstants.BUSINESS_SERVICE_MB_EXTENSION_FEE:
 				case PSConstants.BUSINESS_SERVICE_EB_SECURITY_DEPOSIT:
 				case PSConstants.BUSINESS_SERVICE_BB_SECURITY_DEPOSIT:
-				case PSConstants.BUSINESS_SERVICE_MB_SECURITY_DEPOSIT:
 
 					String consumerCode = paymentDetail.getBill().getConsumerCode();
 					PropertyCriteria searchCriteria = new PropertyCriteria();

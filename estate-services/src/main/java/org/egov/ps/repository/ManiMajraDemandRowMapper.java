@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.ManiMajraDemand;
+import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class ManiMajraDemandRowMapper implements ResultSetExtractor<List<ManiMaj
 					.propertyDetailsId(rs.getString("mmd_property_details_id"))
 					.generationDate(rs.getLong("mmd_demand_date")).paid(rs.getDouble("mmd_paid"))
 					.rent(rs.getDouble("mmd_rent")).gst(rs.getDouble("mmd_gst"))
+					.status(PaymentStatusEnum.fromValue(rs.getString("mmd_status")))
 					.collectedRent(rs.getDouble("mmd_collected_rent")).collectedGST(rs.getDouble("mmd_collected_gst"))
 					.comment(rs.getString("mmd_comment")).auditDetails(auditdetails).build();
 			bidders.add(auction);
