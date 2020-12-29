@@ -58,11 +58,10 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 		/**
 		 * Each payment will only operate on the demands generated before it is paid.
 		 */
-		
+
 		List<ManiMajraDemand> demands = demandsToBeSettled.stream()
 				.filter(demand -> demand.isUnPaid() && demand.getGenerationDate() <= payment.getPaymentDate())
 				.collect(Collectors.toList());
-
 
 		double effectiveAmount = payment.getRentReceived() + account.getRemainingAmount();
 
@@ -136,6 +135,13 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 			if (currentDemand == null && currentPayment == null) {
 				rentSummary = getSummaryForDemand(rentAccount, demandsToBeSettled,
 						ManiMajraDemand.builder().generationDate(endTimestamp).collectedRent(0D).build(), statement);
+
+				double totalRentDue = demands.stream().filter(demand -> demand.isUnPaid())
+						.mapToDouble(ManiMajraDemand::getRent).sum();
+				double totalGst = demands.stream().filter(demand -> demand.isUnPaid())
+						.mapToDouble(ManiMajraDemand::getGst).sum();
+				rentSummary.setRent(totalRentDue);
+				rentSummary.setGst(totalGst);
 				reachedLast = true;
 			}
 			// no demand remaining
@@ -218,7 +224,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 				ManiMajraRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(),
 				(summary, demand) -> {
 
-					return ManiMajraRentSummary.builder().rent(demand.getRent())
+					return ManiMajraRentSummary.builder()
 							.collectedRent(demand.getCollectedRent() != null ? demand.getCollectedRent() : 0)
 							.collectedGST(demand.getCollectedGST() != null ? demand.getCollectedGST() : 0)
 							.balanceAmount(rentAccount.getRemainingAmount()).build();
@@ -258,7 +264,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 
 	private ManiMajraRentSummary calculateRentSummaryAt(List<ManiMajraDemand> demands, EstateAccount rentAccount,
 			Long atTimestamp) {
-		final LocalDate atDate = getLocalDate(atTimestamp);
+		// final LocalDate atDate = getLocalDate(atTimestamp);
 
 		if (demands == null)
 			demands = Collections.emptyList();
@@ -267,7 +273,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 				ManiMajraRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(),
 				(summary, demand) -> {
 
-					final LocalDate demandGenerationDate = getLocalDate(demand.getGenerationDate());
+					// final LocalDate demandGenerationDate = getLocalDate(demand.getGenerationDate());
 
 					return ManiMajraRentSummary.builder().rent(demand.getRent())
 							.collectedRent(demand.getCollectedRent() != null ? demand.getCollectedRent() : 0)

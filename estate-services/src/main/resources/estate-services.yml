@@ -554,11 +554,6 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.courtCases.*.auditDetails.lastModifiedTime
 
-        - query: DELETE FROM cs_ep_demand WHERE property_details_id=?;
-          basePath: $.Properties.*.propertyDetails.inActiveEstateDemands.*
-          jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.inActiveEstateDemands.*.propertyDetailsId
-
         - query: INSERT INTO cs_ep_demand_audit SELECT * FROM cs_ep_demand WHERE id = ?;
           basePath: Properties.*.propertyDetails
           jsonMaps:
@@ -666,11 +661,6 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.comment
             
             - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.isBifurcate
-
-        - query: DELETE FROM cs_ep_payment WHERE property_details_id=?;
-          basePath: $.Properties.*.propertyDetails.inActiveEstatePayments.*
-          jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.inActiveEstatePayments.*.propertyDetailsId
 
         - query: INSERT INTO cs_ep_payment (id, property_details_id, receipt_date, rent_received, receipt_no, payment_date, processed, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET receipt_date = ?, rent_received = ?, receipt_no = ?, payment_date = ?, processed = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.estatePayments.*
@@ -937,11 +927,6 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.paymentConfig.premiumAmountConfigItems.*.premiumAmountDate
 
-        - query: DELETE FROM cs_ep_mm_demand WHERE property_details_id=?;
-          basePath: $.Properties.*.propertyDetails.inActiveManiMajraDemands.*
-          jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.inActiveManiMajraDemands.*.propertyDetailsId
-
         - query: INSERT INTO cs_ep_mm_demand_audit SELECT * FROM cs_ep_mm_demand WHERE id = ?;
           basePath: Properties.*.propertyDetails
           jsonMaps:
@@ -1001,11 +986,6 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.auditDetails.lastModifiedBy
 
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.auditDetails.lastModifiedTime
-
-        - query: DELETE FROM cs_ep_mm_payment WHERE property_details_id=?;
-          basePath: $.Properties.*.propertyDetails.inActiveManiMajraPayments.*
-          jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.inActiveManiMajraPayments.*.propertyDetailsId
 
         - query: INSERT INTO cs_ep_mm_payment (id, property_details_id, receipt_date, rent_received, receipt_no, payment_date, processed, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET receipt_date = ?, rent_received = ?, receipt_no = ?, payment_date = ?, processed = ?, last_modified_by = ?, last_modified_time = ?;
           basePath: $.Properties.*.propertyDetails.maniMajraPayments.*

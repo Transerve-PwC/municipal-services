@@ -277,11 +277,11 @@ public class Util {
 		return null;
 	}
 	
-	public double extractGst(double effectiveAmount) {
-//		TODO: get it from mdms
-		double gstPercentage = 18;
-		return (gstPercentage / 100) * effectiveAmount;
-	}
+// 	public double extractGst(double effectiveAmount) {
+// 		double gstPercentage = 18;
+// 		return (gstPercentage / 100) * effectiveAmount;
+// 	}
+
 /**
  * Extract file number from rent/fee consumer code	
  */

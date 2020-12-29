@@ -515,9 +515,4 @@ public class ValidatorTests {
 				applicationEnrichmentService.getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 						PSConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.TAX));
 	}
-
-	@Test
-	public void testGstCalculation() {
-		assertEquals("18", util.extractGst(100));
-	}
 }

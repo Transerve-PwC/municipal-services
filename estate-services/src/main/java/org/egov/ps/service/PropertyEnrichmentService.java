@@ -28,12 +28,9 @@ import org.egov.ps.util.Util;
 import org.egov.ps.web.contracts.AuctionSaveRequest;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
-import org.egov.ps.web.contracts.EstateDemand;
-import org.egov.ps.web.contracts.EstatePayment;
 import org.egov.ps.web.contracts.EstateRentSummary;
 import org.egov.ps.web.contracts.ExtensionFeeRequest;
 import org.egov.ps.web.contracts.ManiMajraDemand;
-import org.egov.ps.web.contracts.ManiMajraPayment;
 import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.egov.ps.web.contracts.PropertyPenaltyRequest;
 import org.egov.ps.web.contracts.PropertyRequest;
@@ -292,24 +289,6 @@ public class PropertyEnrichmentService {
 
 	private void enrichEstateDemand(Property property, RequestInfo requestInfo) {
 
-		/**
-		 * Delete existing data as new data is coming in.
-		 */
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())) {
-
-			boolean hasAnyNewEstateDemands = property.getPropertyDetails().getEstateDemands().stream()
-					.filter(estateDemand -> estateDemand.getId() == null || estateDemand.getId().isEmpty()).findAny()
-					.isPresent();
-
-			if (hasAnyNewEstateDemands) {
-				List<EstateDemand> existingEstateDemands = propertyRepository.getDemandDetailsForPropertyDetailsIds(
-						Collections.singletonList(property.getPropertyDetails().getId()));
-				property.getPropertyDetails().setInActiveEstateDemands(existingEstateDemands);
-			} else {
-				property.getPropertyDetails().setInActiveEstateDemands(Collections.emptyList());
-			}
-		}
-
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())) {
 
 			property.getPropertyDetails().getEstateDemands().forEach(estateDemand -> {
@@ -338,24 +317,6 @@ public class PropertyEnrichmentService {
 	}
 
 	private void enrichEstatePayment(Property property, RequestInfo requestInfo) {
-
-		/**
-		 * Delete existing data as new data is coming in.
-		 */
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())) {
-
-			boolean hasAnyNewEstatePayments = property.getPropertyDetails().getEstatePayments().stream()
-					.filter(estatePayment -> estatePayment.getId() == null || estatePayment.getId().isEmpty()).findAny()
-					.isPresent();
-
-			if (hasAnyNewEstatePayments) {
-				List<EstatePayment> existingEstatePayments = propertyRepository.getEstatePaymentsForPropertyDetailsIds(
-						Collections.singletonList(property.getPropertyDetails().getId()));
-				property.getPropertyDetails().setInActiveEstatePayments(existingEstatePayments);
-			} else {
-				property.getPropertyDetails().setInActiveEstatePayments(Collections.emptyList());
-			}
-		}
 
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstatePayments())) {
 
@@ -538,23 +499,6 @@ public class PropertyEnrichmentService {
 	}
 
 	private void enrichManiMajraDemand(Property property, RequestInfo requestInfo) {
-		/**
-		 * Delete existing data as new data is coming in.
-		 */
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraDemands())) {
-
-			boolean hasAnyNewManiMajraDemands = property.getPropertyDetails().getManiMajraDemands().stream()
-					.filter(maniMajraDemand -> maniMajraDemand.getId() == null || maniMajraDemand.getId().isEmpty())
-					.findAny().isPresent();
-
-			if (hasAnyNewManiMajraDemands) {
-				List<ManiMajraDemand> existingManiMajraDemands = propertyRepository
-						.getManiMajraDemandDetails(Collections.singletonList(property.getPropertyDetails().getId()));
-				property.getPropertyDetails().setInActiveManiMajraDemands(existingManiMajraDemands);
-			} else {
-				property.getPropertyDetails().setInActiveManiMajraDemands(Collections.emptyList());
-			}
-		}
 
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraDemands())) {
 			AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
@@ -572,24 +516,6 @@ public class PropertyEnrichmentService {
 	}
 
 	private void enrichManiMajraPayment(Property property, RequestInfo requestInfo) {
-
-		/**
-		 * Delete existing data as new data is coming in.
-		 */
-		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraPayments())) {
-
-			boolean hasAnyNewManiMajraPayments = property.getPropertyDetails().getManiMajraPayments().stream()
-					.filter(maniMajraPayment -> maniMajraPayment.getId() == null || maniMajraPayment.getId().isEmpty())
-					.findAny().isPresent();
-
-			if (hasAnyNewManiMajraPayments) {
-				List<ManiMajraPayment> existingManiMajraPayments = propertyRepository
-						.getManiMajraPaymentsDetails(Collections.singletonList(property.getPropertyDetails().getId()));
-				property.getPropertyDetails().setInActiveManiMajraPayments(existingManiMajraPayments);
-			} else {
-				property.getPropertyDetails().setInActiveManiMajraPayments(Collections.emptyList());
-			}
-		}
 
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getManiMajraPayments())) {
 			AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
