@@ -98,4 +98,10 @@ public class ManiMajraDemand implements Comparable<ManiMajraDemand> {
 	 */
 	@JsonProperty("collectionPrincipal")
 	private Double collectionPrincipal;
+
+	/**
+	 * Demand Type Monthly or Annually
+	 */
+	@JsonProperty("typeOfDemand")
+	private String typeOfDemand;
 }

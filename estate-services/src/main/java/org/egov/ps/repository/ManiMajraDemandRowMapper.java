@@ -28,6 +28,7 @@ public class ManiMajraDemandRowMapper implements ResultSetExtractor<List<ManiMaj
 					.propertyDetailsId(rs.getString("mmd_property_details_id"))
 					.generationDate(rs.getLong("mmd_demand_date")).paid(rs.getDouble("mmd_paid"))
 					.rent(rs.getDouble("mmd_rent")).gst(rs.getDouble("mmd_gst"))
+					.typeOfDemand(rs.getString("mmd_type_of_demand"))
 					.status(PaymentStatusEnum.fromValue(rs.getString("mmd_status")))
 					.collectedRent(rs.getDouble("mmd_collected_rent")).collectedGST(rs.getDouble("mmd_collected_gst"))
 					.comment(rs.getString("mmd_comment")).auditDetails(auditdetails).build();

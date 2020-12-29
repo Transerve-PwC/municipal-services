@@ -21,12 +21,16 @@ public class PSConstants {
 	public static final String BUILDING_BRANCH = "BUILDING_BRANCH";
 
 	public static final String MANI_MAJRA = "MANI_MAJRA";
-	
+
 	public static final String APPLICATION_ESTATE_BRANCH = "EstateBranch";
 
 	public static final String APPLICATION_BUILDING_BRANCH = "BuildingBranch";
 
 	public static final String APPLICATION_MANI_MAJRA = "ManiMajra";
+
+	public static final String MM_JANTA_READY_MARKET = "PROPERTY_TYPE.JANTA_READY_MARKET";
+
+	public static final String MM_PUNJAB_AGRO_JUICE = "PROPERTY_TYPE.PUNJAB_AGRO_JUICE";
 
 	public static final String JSONPATH_PROPERTY_SERVICE = "$.MdmsRes.OwnershipTransferSaleDeed";
 
@@ -41,6 +45,12 @@ public class PSConstants {
 	public static final String MDMS_PS_FIELD_FILTER = "[0].fields";
 
 	public static final String MDMS_PS_FEES_FILTER = "[0].fees";
+
+	public static final String MDMS_PS_MM_JANATHA_READY_MONTHLY_FILTER = "[0].janathaReadyMarketManiMajraMonthly";
+
+	public static final String MDMS_PS_MM_JANATHA_READY_ANNUALLY_FILTER = "[0].janathaReadyMarketManiMajraAnnually";
+
+	public static final String MDMS_PS_MM_PUNJAB_JUICE_SITE_FILTER = "[0].punjabAgroJuiceSite";
 
 	public static final String MDMS_PS_FEE_GST_FILTER = "[0].feePercentGST";
 
@@ -73,13 +83,13 @@ public class PSConstants {
 	public static final String ES_APPROVE = "APPROVE";
 
 	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
-	
+
 	public static final String ROLE_CITIZEN = "CITIZEN";
 
 	public static final String ACTION_PAY = "PAY";
 
 	public static final String PROPERTY_MASTER = "PROPERTY_MASTER";
-	
+
 	public static final String MONTHLY_DEMAND = "Monthly";
 
 	public static final String MM_PROPERTY_RENT_MASTER_NAME = "ManiMajra_Property_Rent_Config";
@@ -87,15 +97,15 @@ public class PSConstants {
 	public static final String BUSINESS_SERVICE_EB_RENT = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_BB_RENT = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_MASTER";
 	public static final String BUSINESS_SERVICE_MB_RENT = "ESTATE_SERVICE_MANI_MAJRA.PROPERTY_MASTER";
-	
+
 	public static final String BUSINESS_SERVICE_EB_PENALTY = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_VIOLATION";
 	public static final String BUSINESS_SERVICE_BB_PENALTY = "ESTATE_SERVICE_BUILDING_BRANCH.PROPERTY_VIOLATION";
 	public static final String BUSINESS_SERVICE_MB_PENALTY = "ESTATE_SERVICE_MANI_MAJRA.PROPERTY_VIOLATION";
-	
+
 	public static final String BUSINESS_SERVICE_EB_EXTENSION_FEE = "ESTATE_SERVICE_ESTATE_BRANCH.EXTENSION_FEE";
 	public static final String BUSINESS_SERVICE_BB_EXTENSION_FEE = "ESTATE_SERVICE_BUILDING_BRANCH.EXTENSION_FEE";
 	public static final String BUSINESS_SERVICE_MB_EXTENSION_FEE = "ESTATE_SERVICE_MANI_MAJRA.EXTENSION_FEE";
-	
+
 	public static final String BUSINESS_SERVICE_EB_SECURITY_DEPOSIT = "ESTATE_SERVICE_ESTATE_BRANCH.SECURITY_DEPOSIT";
 	public static final String BUSINESS_SERVICE_BB_SECURITY_DEPOSIT = "ESTATE_SERVICE_BUILDING_BRANCH.SECURITY_DEPOSIT";
 	public static final String BUSINESS_SERVICE_MB_SECURITY_DEPOSIT = "ESTATE_SERVICE_MANI_MAJRA.SECURITY_DEPOSIT";
@@ -105,41 +115,40 @@ public class PSConstants {
 	public static final String LOCALIZATION_LOCALE = "en_IN";
 
 	public static final String PROPERTY_VIOLATION = "PROPERTY_VIOLATION";
-	
+
 	public static final String EXTENSION_FEE = "EXTENSION_FEE";
-	
+
 	public static final String SECURITY_DEPOSIT = "SECURITY_DEPOSIT";
-	
-	//User event
-	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
-	public static final String  USREVENTS_EVENT_NAME = "Estate Module";
-	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-EST";
-	
-	public static final String  APPLICATION_TYPE_NDC = "NDC";
-	public static final String  PENDING_SO_APPROVAL = "ES_PENDING_SO_APPROVAL";
-	
-	public static final String  PENDING_PM_MM_APPROVAL = "ES_PM_MM_PENDING_APPROVAL";
-	
+
+	// User event
+	public static final String USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String USREVENTS_EVENT_NAME = "Estate Module";
+	public static final String USREVENTS_EVENT_POSTEDBY = "SYSTEM-EST";
+
+	public static final String APPLICATION_TYPE_NDC = "NDC";
+	public static final String PENDING_SO_APPROVAL = "ES_PENDING_SO_APPROVAL";
+
+	public static final String PENDING_PM_MM_APPROVAL = "ES_PM_MM_PENDING_APPROVAL";
+
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";
 
 	public static final String MODE_GENERATED = "Generated";
-	
+
 	public static final String RELATION_OPD = "offline";
-	
+
 	public static final String PROPERTY_RENT = "PROPERTY_RENT";
 	public static final String PENALTY = "PENALTY";
 	public static final String PROPERTY_PAYMENT_PAYER = "PROPERTY_PAYMENT_PAYER";
 	public static final String PROPERTY_PAYMENT_OWNER = "PROPERTY_PAYMENT_OWNER";
-	public static final String PROPERTY_RENT_MDMS_MODULE ="Property_Rent_Fee";
-	
+	public static final String PROPERTY_RENT_MDMS_MODULE = "Property_Rent_Fee";
+
 	public static final String PAYMENT_MODE_ONLINE = "ONLINE";
 	public static final String PAYMENT_MODE_OFFLINE = "CASH";
-	
+
 	public static final String PAYMENT_TYPE_RENT = "rent";
 	public static final String PAYMENT_TYPE_EF = "extention fee";
 	public static final String PAYMENT_TYPE_SD = "security deposit";
 	public static final String PAYMENT_TYPE_PENALTY = "penalty";
-	
 
 }

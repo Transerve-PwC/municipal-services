@@ -262,6 +262,8 @@ public class PropertyValidator {
 
 		Map<String, String> errorMap = new HashMap<>();
 
+		Property requestProperty = request.getProperties().get(0);
+
 		// validateUserRole(request, errorMap);
 
 		PropertyCriteria criteria = getPropertyCriteriaForSearch(request);
@@ -271,19 +273,24 @@ public class PropertyValidator {
 			errorMap.put("PROPERTY NOT FOUND", "The property to be updated does not exist");
 		}
 
-		if (!CollectionUtils.isEmpty(request.getProperties().get(0).getPropertyDetails().getBidders())) {
+		if (requestProperty.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)
+				&& (requestProperty.getPropertyDetails().getMmDemandStartMonth() == 0
+						|| requestProperty.getPropertyDetails().getMmDemandStartYear() == 0)) {
+			errorMap.put("MANIMAJRA DEMAND DATE", "The Demand Start Year or Start Month can't be null or 0");
+		}
+
+		if (!CollectionUtils.isEmpty(requestProperty.getPropertyDetails().getBidders())) {
 			PropertyCriteria auctionCriteria = new PropertyCriteria();
 			List<String> bidders = new ArrayList<String>();
 			bidders.add("bidder");
 			auctionCriteria.setRelations(bidders);
 			List<Property> auctionPropertiesFromSearchResponse = repository.getProperties(auctionCriteria);
-			String requestAuctionId = request.getProperties().get(0).getPropertyDetails().getBidders().get(0)
-					.getAuctionId().trim();
+			String requestAuctionId = requestProperty.getPropertyDetails().getBidders().get(0).getAuctionId().trim();
 			if (!CollectionUtils.isEmpty(propertiesFromSearchResponse)) {
 				auctionPropertiesFromSearchResponse.forEach(property -> {
 					if (!CollectionUtils.isEmpty(property.getPropertyDetails().getBidders())) {
 						String responseAuctionId = property.getPropertyDetails().getBidders().get(0).getAuctionId();
-						request.getProperties().get(0).getPropertyDetails().getBidders().forEach(bidder -> {
+						requestProperty.getPropertyDetails().getBidders().forEach(bidder -> {
 							if (bidder.getId() == null && responseAuctionId.equalsIgnoreCase(requestAuctionId)) {
 								errorMap.put("AUCTION_ID_ALREADY_EXIST", "The given Auction Id already exists");
 							}

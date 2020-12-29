@@ -471,11 +471,6 @@ public class PropertyRepository {
 		return namedParameterJdbcTemplate.query(query, preparedStmtList, estatePaymentRowMapper);
 	}
 
-	/**
-	 * TODO: Vinil 1. get manimajra demands 2. get manimajra accounts (deleted this
-	 * because of no partial payment) 3. get manimajra payments
-	 */
-
 	public List<ManiMajraDemand> getManiMajraDemandDetails(List<String> propertyDetailsIds) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		String maniMajraDemandQuery = propertyQueryBuilder.getManiMajraDemandQuery(propertyDetailsIds, params);

@@ -56,6 +56,7 @@ public class ManiMajraDemandGenerationService {
 		Date propertyBillingDate = getFirstDateOfMonth(date);
 
 		List<Date> allMonthDemandDatesTillCurrentMonth = getAllRemainingDates(propertyBillingDate);
+		int year = 0;
 		for (Date demandDate : allMonthDemandDatesTillCurrentMonth) {
 			Date demandGenerationStartDate = setDateOfMonthMM(demandDate, 1);
 
@@ -66,11 +67,17 @@ public class ManiMajraDemandGenerationService {
 						.filter(demand -> checkSameDay(new Date(demand.getGenerationDate()), demandGenerationStartDate))
 						.collect(Collectors.toList());
 			}
+			Date demandGenerationAnnualDate = demandGenerationStartDate;
 			if (inRequestDemands.isEmpty()
 					&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
+				if (year == 0) {
+					demandGenerationAnnualDate = getFirstMonthOfYear(demandGenerationAnnualDate);
+					year++;
+				}
 				// generate demand
 				counter.getAndIncrement();
-				generateEstateDemandMM(property, getFirstDateOfMonth(demandGenerationStartDate), requestInfo);
+				generateEstateDemandMM(property, getFirstDateOfMonth(demandGenerationStartDate),
+						demandGenerationAnnualDate, requestInfo);
 			}
 		}
 		return counter;
@@ -87,75 +94,188 @@ public class ManiMajraDemandGenerationService {
 		return cal.getTime();
 	}
 
-	private void generateEstateDemandMM(Property property, Date date, RequestInfo requestInfo) {
+	private void generateEstateDemandMM(Property property, Date date, Date demandGenerationAnnualDate,
+			RequestInfo requestInfo) {
 
 		int gst = 0;
 		Double calculatedRent = 0D;
+		Double annualCalculatedRent = 0D;
 
-		List<Map<String, Object>> feesConfigurations = mdmsService
-				.getManimajraPropertyRent(PSConstants.MM_PROPERTY_RENT_MASTER_NAME, requestInfo, PSConstants.TENANT_ID);
+		if (property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.MM_JANTA_READY_MARKET)) {
 
-		for (Map<String, Object> feesConfig : feesConfigurations) {
-			Integer startYear = new Integer(feesConfig.get("StartYear").toString());
-			Integer startMonth = new Integer(feesConfig.get("StartMonth").toString());
-			Integer endYear;
-			Integer endMonth;
-			if (null != feesConfig.get("EndYear") && null != feesConfig.get("EndMonth")) {
-				endYear = new Integer(feesConfig.get("EndYear").toString());
-				endMonth = new Integer(feesConfig.get("EndMonth").toString());
-			} else {
-				Date currentDate = new Date();
-				LocalDate presentDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-				endYear = presentDate.getYear();
-				endMonth = presentDate.getMonthValue();
+			List<Map<String, Object>> janathaReadyMonthlyConfigurations = mdmsService.getManimajraPropertyRent(
+					PSConstants.MM_PROPERTY_RENT_MASTER_NAME, requestInfo, PSConstants.TENANT_ID,
+					PSConstants.MDMS_PS_MM_JANATHA_READY_MONTHLY_FILTER);
+
+			List<Map<String, Object>> janathaReadyAnuallyConfigurations = mdmsService.getManimajraPropertyRent(
+					PSConstants.MM_PROPERTY_RENT_MASTER_NAME, requestInfo, PSConstants.TENANT_ID,
+					PSConstants.MDMS_PS_MM_JANATHA_READY_ANNUALLY_FILTER);
+			/**
+			 * Generate Monthly Demands for Janatha Ready Market Mani Majra
+			 */
+			for (Map<String, Object> janathaReadyMonthlyConfiguration : janathaReadyMonthlyConfigurations) {
+				Integer startYear = new Integer(janathaReadyMonthlyConfiguration.get("StartYear").toString());
+				Integer startMonth = new Integer(janathaReadyMonthlyConfiguration.get("StartMonth").toString());
+				Integer endYear;
+				Integer endMonth;
+				if (null != janathaReadyMonthlyConfiguration.get("EndYear")
+						&& null != janathaReadyMonthlyConfiguration.get("EndMonth")) {
+					endYear = new Integer(janathaReadyMonthlyConfiguration.get("EndYear").toString());
+					endMonth = new Integer(janathaReadyMonthlyConfiguration.get("EndMonth").toString());
+				} else {
+					Date currentDate = new Date();
+					LocalDate presentDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					endYear = presentDate.getYear();
+					endMonth = presentDate.getMonthValue();
+				}
+
+				Calendar startCal = Calendar.getInstance();
+				startCal.set(Calendar.YEAR, startYear);
+				startCal.set(Calendar.MONTH, startMonth - 1);
+				startCal.set(Calendar.DAY_OF_MONTH, 01);
+				startCal.set(Calendar.HOUR_OF_DAY, 0);
+				startCal.set(Calendar.MINUTE, 0);
+				startCal.set(Calendar.SECOND, 0);
+				startCal.set(Calendar.MILLISECOND, 0);
+				Date startDate = startCal.getTime();
+
+				Calendar endCal = Calendar.getInstance();
+				endCal.set(Calendar.YEAR, endYear);
+				endCal.set(Calendar.MONTH, endMonth - 1);
+				endCal.set(Calendar.DAY_OF_MONTH, 01);
+				endCal.set(Calendar.HOUR_OF_DAY, 0);
+				endCal.set(Calendar.MINUTE, 0);
+				endCal.set(Calendar.SECOND, 0);
+				endCal.set(Calendar.MILLISECOND, 0);
+				Date endDate = endCal.getTime();
+
+				if ((date.after(startDate) && date.before(endDate)) || date.equals(startDate) || date.equals(endDate)) {
+					gst = new Integer(janathaReadyMonthlyConfiguration.get("TaxOrGst").toString());
+					calculatedRent = new Double(janathaReadyMonthlyConfiguration.get("rent").toString());
+				}
+
 			}
 
-			Calendar startCal = Calendar.getInstance();
-			startCal.set(Calendar.YEAR, startYear);
-			startCal.set(Calendar.MONTH, startMonth - 1);
-			startCal.set(Calendar.DAY_OF_MONTH, 01);
-			startCal.set(Calendar.HOUR_OF_DAY, 0);
-			startCal.set(Calendar.MINUTE, 0);
-			startCal.set(Calendar.SECOND, 0);
-			startCal.set(Calendar.MILLISECOND, 0);
-			Date startDate = startCal.getTime();
+			for (Map<String, Object> janathaReadyAnnuallyConfig : janathaReadyAnuallyConfigurations) {
+				Integer startYear = new Integer(janathaReadyAnnuallyConfig.get("StartYear").toString());
+				Integer endYear;
+				if (null != janathaReadyAnnuallyConfig.get("EndYear")) {
+					endYear = new Integer(janathaReadyAnnuallyConfig.get("EndYear").toString());
+				} else {
+					Date currentDate = new Date();
+					LocalDate presentDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					endYear = presentDate.getYear();
+				}
 
-			Calendar endCal = Calendar.getInstance();
-			endCal.set(Calendar.YEAR, endYear);
-			endCal.set(Calendar.MONTH, endMonth - 1);
-			endCal.set(Calendar.DAY_OF_MONTH, 01);
-			endCal.set(Calendar.HOUR_OF_DAY, 0);
-			endCal.set(Calendar.MINUTE, 0);
-			endCal.set(Calendar.SECOND, 0);
-			endCal.set(Calendar.MILLISECOND, 0);
-			Date endDate = endCal.getTime();
+				Calendar startCal = Calendar.getInstance();
+				startCal.set(Calendar.YEAR, startYear); // 2017-02-01
+				startCal.set(Calendar.MONTH, 01 - 1);
+				startCal.set(Calendar.DAY_OF_MONTH, 01);
+				startCal.set(Calendar.HOUR_OF_DAY, 0);
+				startCal.set(Calendar.MINUTE, 0);
+				startCal.set(Calendar.SECOND, 0);
+				startCal.set(Calendar.MILLISECOND, 0);
+				Date startDate = startCal.getTime();
 
-			if ((date.after(startDate) && date.before(endDate)) || date.equals(startDate) || date.equals(endDate)) {
-				gst = new Integer(feesConfig.get("TaxOrGst").toString());
-				calculatedRent = new Double(feesConfig.get("rent").toString());
+				Calendar endCal = Calendar.getInstance();
+				endCal.set(Calendar.YEAR, endYear);// 2019-02-01
+				endCal.set(Calendar.MONTH, 01 - 1);
+				endCal.set(Calendar.DAY_OF_MONTH, 01);
+				endCal.set(Calendar.HOUR_OF_DAY, 0);
+				endCal.set(Calendar.MINUTE, 0);
+				endCal.set(Calendar.SECOND, 0);
+				endCal.set(Calendar.MILLISECOND, 0);
+				Date endDate = endCal.getTime();
+				// demandGenerationAnnualDate ---> 2018-02-01
+
+				if (demandGenerationAnnualDate.equals(startDate) || demandGenerationAnnualDate.equals(endDate)) {
+					annualCalculatedRent = new Double(janathaReadyAnnuallyConfig.get("licenceFee").toString());
+				}
 			}
+		}
+		if (property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.MM_PUNJAB_AGRO_JUICE)) {
 
+			List<Map<String, Object>> punjabJuiceSiteConfigurations = mdmsService.getManimajraPropertyRent(
+					PSConstants.MM_PROPERTY_RENT_MASTER_NAME, requestInfo, PSConstants.TENANT_ID,
+					PSConstants.MDMS_PS_MM_PUNJAB_JUICE_SITE_FILTER);
+			/**
+			 * Generate Monthly Demands for Janatha Ready Market Mani Majra
+			 */
+			for (Map<String, Object> punjabJuiceSiteConfig : punjabJuiceSiteConfigurations) {
+				Integer startYear = new Integer(punjabJuiceSiteConfig.get("StartYear").toString());
+				Integer startMonth = new Integer(punjabJuiceSiteConfig.get("StartMonth").toString());
+				Integer endYear;
+				Integer endMonth;
+				if (null != punjabJuiceSiteConfig.get("EndYear") && null != punjabJuiceSiteConfig.get("EndMonth")) {
+					endYear = new Integer(punjabJuiceSiteConfig.get("EndYear").toString());
+					endMonth = new Integer(punjabJuiceSiteConfig.get("EndMonth").toString());
+				} else {
+					Date currentDate = new Date();
+					LocalDate presentDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					endYear = presentDate.getYear();
+					endMonth = presentDate.getMonthValue();
+				}
+
+				Calendar startCal = Calendar.getInstance();
+				startCal.set(Calendar.YEAR, startYear);
+				startCal.set(Calendar.MONTH, startMonth - 1);
+				startCal.set(Calendar.DAY_OF_MONTH, 01);
+				startCal.set(Calendar.HOUR_OF_DAY, 0);
+				startCal.set(Calendar.MINUTE, 0);
+				startCal.set(Calendar.SECOND, 0);
+				startCal.set(Calendar.MILLISECOND, 0);
+				Date startDate = startCal.getTime();
+
+				Calendar endCal = Calendar.getInstance();
+				endCal.set(Calendar.YEAR, endYear);
+				endCal.set(Calendar.MONTH, endMonth - 1);
+				endCal.set(Calendar.DAY_OF_MONTH, 01);
+				endCal.set(Calendar.HOUR_OF_DAY, 0);
+				endCal.set(Calendar.MINUTE, 0);
+				endCal.set(Calendar.SECOND, 0);
+				endCal.set(Calendar.MILLISECOND, 0);
+				Date endDate = endCal.getTime();
+
+				if ((date.after(startDate) && date.before(endDate)) || date.equals(startDate) || date.equals(endDate)) {
+					gst = new Integer(punjabJuiceSiteConfig.get("TaxOrGst").toString());
+					calculatedRent = new Double(punjabJuiceSiteConfig.get("rent").toString());
+				}
+
+			}
 		}
 
 		date = setDateOfMonthMM(date, 1);
 		double calculatedGst = calculatedRent * gst / 100;
 
-		ManiMajraDemand estateDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
-				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent)
+		ManiMajraDemand maniMajraDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
+				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent).typeOfDemand("Monthly")
 				.propertyDetailsId(property.getPropertyDetails().getId()).gst(calculatedGst)
+				.status(PaymentStatusEnum.UNPAID).build();
+
+		ManiMajraDemand maniMajraDemandAnually = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
+				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(annualCalculatedRent)
+				.typeOfDemand("Annually").propertyDetailsId(property.getPropertyDetails().getId()).gst(0.0)
 				.status(PaymentStatusEnum.UNPAID).build();
 
 		if (null == property.getPropertyDetails().getManiMajraDemands()) {
 			List<ManiMajraDemand> maniMajraDemands = new ArrayList<ManiMajraDemand>();
 
-			maniMajraDemands.add(estateDemand);
+			maniMajraDemands.add(maniMajraDemand);
+			if (annualCalculatedRent != 0.0) {
+				maniMajraDemands.add(maniMajraDemandAnually);
+			}
 			property.getPropertyDetails().setManiMajraDemands(maniMajraDemands);
 		} else {
-			property.getPropertyDetails().getManiMajraDemands().add(estateDemand);
+			property.getPropertyDetails().getManiMajraDemands().add(maniMajraDemand);
+			if (annualCalculatedRent != 0.0) {
+				property.getPropertyDetails().getManiMajraDemands().add(maniMajraDemandAnually);
+			}
 		}
-
-		log.info("Generating Estate demand id '{}' of principal '{}' for property with file no {}",
-				estateDemand.getId(), property.getFileNumber());
+		/**
+		 * TODO: Remove the log
+		 */
+		// log.info("Generating Estate demand id '{}' of principal '{}' for property with file no {}",
+		// 		maniMajraDemand.getId(), property.getFileNumber());
 
 	}
 
@@ -184,12 +304,6 @@ public class ManiMajraDemandGenerationService {
 				&& cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
 	}
 
-	private boolean isMonthIncluded(List<Long> dates, Date date) {
-		final Date givenDate = getFirstDateOfMonth(date);
-		return dates.stream().map(d -> new Date(d))
-				.anyMatch(d -> getFirstDateOfMonth(d).getTime() == givenDate.getTime());
-	}
-
 	private Date getFirstDateOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -201,40 +315,17 @@ public class ManiMajraDemandGenerationService {
 		return cal.getTime();
 	}
 
-	// private Double calculateRentAccordingtoMonth(Property property, Date
-	// requestedDate) {
-	// PaymentConfig paymentConfig =
-	// property.getPropertyDetails().getPaymentConfig();
-	// AtomicInteger checkLoopIf = new AtomicInteger();
-	// if (paymentConfig != null
-	// &&
-	// property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD))
-	// {
-	// Date startDate = new Date(paymentConfig.getGroundRentBillStartDate());
-	// String startDateText = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
-	// String endDateText = new
-	// SimpleDateFormat("yyyy-MM-dd").format(requestedDate);
-	//
-	// /* Check Months between both date */
-	// long monthsBetween =
-	// ChronoUnit.MONTHS.between(LocalDate.parse(startDateText).withDayOfMonth(1),
-	// LocalDate.parse(endDateText).withDayOfMonth(1));
-	//
-	// for (PaymentConfigItems paymentConfigItem :
-	// paymentConfig.getPaymentConfigItems()) {
-	// if (paymentConfigItem.getGroundRentStartMonth() <= monthsBetween
-	// && monthsBetween <= paymentConfigItem.getGroundRentEndMonth()) {
-	// checkLoopIf.incrementAndGet();
-	// return paymentConfigItem.getGroundRentAmount().doubleValue();
-	// }
-	// }
-	// if (checkLoopIf.get() == 0) {
-	// int paymentConfigCount = paymentConfig.getPaymentConfigItems().size() - 1;
-	// return
-	// paymentConfig.getPaymentConfigItems().get(paymentConfigCount).getGroundRentAmount()
-	// .doubleValue();
-	// }
-	// }
-	// return 0.0;
-	// }
+
+	private Date getFirstMonthOfYear(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.MONTH, 01 - 1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
+		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
+		return cal.getTime();
+	}
+
 }

@@ -562,7 +562,7 @@ serviceMaps:
         - query: INSERT INTO cs_ep_demand_audit SELECT * FROM cs_ep_demand WHERE id = ?;
           basePath: Properties.*.propertyDetails
           jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.id
+            - jsonPath: $.Properties.*.propertyDetails.estateDemands.*.id
 
         - query: INSERT INTO cs_ep_demand (id, property_details_id, demand_date, is_previous, rent, penalty_interest, gst_interest, gst, collected_rent, collected_gst, no_of_days, paid,remaining_rent_penalty,remaining_gst_penalty,remaining_rent,collected_gst_penalty,collected_rent_penalty,interest_since,remaining_gst, created_by, last_modified_by, created_time, last_modified_time, is_adjustment, adjustment_date, comment, is_bifurcate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date = ?, is_previous = ?, rent = ?, penalty_interest = ?, gst_interest = ?, gst = ?, collected_rent = ?, collected_gst = ?, no_of_days = ?, paid = ?,remaining_rent_penalty=?,remaining_gst_penalty=?,remaining_rent=?,collected_gst_penalty=?,collected_rent_penalty=?,interest_since=?,remaining_gst=?, last_modified_by = ?, last_modified_time = ?,is_adjustment = ?, adjustment_date = ?, comment = ?, is_bifurcate=?;
           basePath: $.Properties.*.propertyDetails.estateDemands.*
@@ -945,9 +945,9 @@ serviceMaps:
         - query: INSERT INTO cs_ep_mm_demand_audit SELECT * FROM cs_ep_mm_demand WHERE id = ?;
           basePath: Properties.*.propertyDetails
           jsonMaps:
-            - jsonPath: $.Properties.*.propertyDetails.id
+            - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.id
 
-        - query: INSERT INTO cs_ep_mm_demand (id, property_details_id, demand_date, paid, rent, gst, status, collected_rent, collected_gst, comment, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date=?, paid=?, rent=?, gst=?, status = ?, collected_rent=?, collected_gst=?, comment=?, last_modified_by=?, last_modified_time=?;
+        - query: INSERT INTO cs_ep_mm_demand (id, property_details_id, demand_date, paid, rent, gst, status, type_of_demand, collected_rent, collected_gst, comment, created_by, last_modified_by, created_time, last_modified_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET demand_date=?, paid=?, rent=?, gst=?, status = ?, type_of_demand = ?, collected_rent=?, collected_gst=?, comment=?, last_modified_by=?, last_modified_time=?;
           basePath: $.Properties.*.propertyDetails.maniMajraDemands.*
           jsonMaps:
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.id
@@ -963,6 +963,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.gst
 
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.status
+
+            - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.typeOfDemand
 
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.collectedRent
 
@@ -987,6 +989,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.gst
 
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.status
+
+            - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.typeOfDemand
 
             - jsonPath: $.Properties.*.propertyDetails.maniMajraDemands.*.collectedRent
 
@@ -1369,4 +1373,3 @@ serviceMaps:
             - jsonPath: $.ExtensionFees.*.auditDetails.lastModifiedTime
 
             - jsonPath: $.ExtensionFees.*.id
-

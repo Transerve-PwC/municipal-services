@@ -37,7 +37,7 @@ public class PropertyQueryBuilder {
 			+ " ptdl.company_type, ptdl.emd_amount, ptdl.emd_date , ptdl.property_registered_to, ptdl.entity_type, "
 			+ " ptdl.house_number, ptdl.mohalla, ptdl.village, ptdl.interest_rate, ptdl.mm_demand_start_year, ptdl.mm_demand_start_month, "
 
-			+ " pc.id as pc_id, " + " pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
+			+ " pc.id as pc_id, pc.tenant_id as pc_tenant_id, pc.property_details_id as pc_property_details_id, "
 			+ " pc.is_intrest_applicable as pc_is_intrest_applicable, pc.due_date_of_payment as pc_due_date_of_payment, "
 			+ " pc.no_of_months as pc_no_of_months, pc.rate_of_interest as pc_rate_of_interest, "
 			+ " pc.security_amount as pc_security_amount, pc.total_amount as pc_total_amount, "
@@ -103,7 +103,7 @@ public class PropertyQueryBuilder {
 	private static final String MANI_MAJRA_DEMAND_COLUMNS = " mmd.id as mmd_id, mmd.property_details_id as mmd_property_details_id, "
 			+ " mmd.demand_date as mmd_demand_date, mmd.paid as mmd_paid, mmd.rent as mmd_rent, mmd.gst as mmd_gst, mmd.status as mmd_status, "
 			+ " mmd.collected_rent as mmd_collected_rent, mmd.collected_gst as mmd_collected_gst, mmd.comment as mmd_comment, "
-			+ " mmd.created_by as mmd_created_by, mmd.last_modified_by as mmd_last_modified_by, "
+			+ " mmd.created_by as mmd_created_by, mmd.last_modified_by as mmd_last_modified_by, mmd.type_of_demand as mmd_type_of_demand, "
 			+ " mmd.created_time as mmd_created_time, mmd.last_modified_time as mmd_last_modified_time ";
 
 	private static final String MANI_MAJRA_PAYMENT_COLUMNS = " mmp.id as mmp_id, mmp.property_details_id as mmp_property_details_id, "
