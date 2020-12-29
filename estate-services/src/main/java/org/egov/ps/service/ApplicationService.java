@@ -71,7 +71,7 @@ public class ApplicationService {
 		}
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE))
 		{
-			if(	CollectionUtils.isEmpty(criteria.getState())){
+			if(	!CollectionUtils.isEmpty(criteria.getState())){
 				RequestInfoMapper requestInfoMapper = RequestInfoMapper.builder().requestInfo(requestInfo).build();
 				criteria.setBusinessName(criteria.getBranchType().get(0));
 				criteria.setTenantId(PSConstants.TENANT_ID);
