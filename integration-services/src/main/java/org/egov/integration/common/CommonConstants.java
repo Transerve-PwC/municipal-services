@@ -26,6 +26,13 @@ public class CommonConstants {
 	public static final String PT_PARAM_TOKENID = "TokenId";
 	public static final String PT_PARAM_HOUSENO = "HouseNo";
 	public static final String PT_PARAM_SECTORID = "SectorId";
+	public static final String EOFFICE_WS_RESPONSE = "WSResponse";
+	public static final String EOFFICE_FILEPENDING = "FilePending";
+	public static final String EOFFICE_FILECLOSED = "FileClosed";
+	public static final String EOFFICE_RECEIPTPENDING = "ReceiptPending";
+	public static final String EOFFICE_RECEIPTCLOSED = "ReceiptClosed";
+	public static final String EOFFICE_VIP = "VipReceipts";
+	public static final String EOFFICE_HIERARCHY = "FileHierarchy";
 
 }
 

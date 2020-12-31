@@ -25,6 +25,10 @@ import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
+=======
+// @Slf4j
+>>>>>>> 0b500e6b901e90cdbe0b1d9c36f8bc858c3cc13d
 @Service
 public class ManiMajraDemandGenerationService {
 

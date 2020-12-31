@@ -274,9 +274,6 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 				ManiMajraRentSummary.builder().balanceAmount(rentAccount.getRemainingAmount()).build(),
 				(summary, demand) -> {
 
-					// final LocalDate demandGenerationDate =
-					// getLocalDate(demand.getGenerationDate());
-
 					return ManiMajraRentSummary.builder().rent(demand.getRent())
 							.collectedRent(demand.getCollectedRent() != null ? demand.getCollectedRent() : 0)
 							.gst(demand.getGst())
