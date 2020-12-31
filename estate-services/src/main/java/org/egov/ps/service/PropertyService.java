@@ -284,7 +284,7 @@ public class PropertyService {
 			});
 			if((criteria.getBranchType()!=null && !criteria.getBranchType().isEmpty()) ) {
 				if(!criteria.getBranchType().stream().filter(branch->employeeBranches.contains(branch)).findAny().isPresent()) 
-					throw new CustomException("INVALID ACCESS", "You are not authorised to access this resource.");
+					throw new CustomException("INVALID ACCESS", "You are not able to access this resource.");
 			}else {
 				criteria.setBranchType(new ArrayList<>(employeeBranches));
 			}
@@ -292,10 +292,6 @@ public class PropertyService {
 		List<Property> properties = repository.getProperties(criteria);
 
 		if (CollectionUtils.isEmpty(properties)) {
-			if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)
-					&& criteria.getFileNumber() != null)
-				throw new CustomException("INVALID ACCESS", "You are not authorised to access this resource.");
-			else
 				return Collections.emptyList();
 		}
 		// Note : criteria.getRelations().contains(PSConstants.RELATION_FINANCE) filter

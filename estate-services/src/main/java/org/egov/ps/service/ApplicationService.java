@@ -98,19 +98,16 @@ public class ApplicationService {
 			if ((criteria.getBranchType() != null && !criteria.getBranchType().isEmpty())) {
 				if (!criteria.getBranchType().stream().filter(branch -> employeeBranches.contains(branch)).findAny()
 						.isPresent())
-					throw new CustomException("INVALID ACCESS", "You are not authorised to access this resource.");
+					throw new CustomException("INVALID ACCESS", "You are not able to access this resource.");
 			} else {
 				criteria.setBranchType(new ArrayList<>(employeeBranches));
 			}
 		}
 		List<Application> applications = applicationRepository.getApplications(criteria);
 		if (CollectionUtils.isEmpty(applications)) {
-			if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)
+			if ((requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN) || requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE))
 					&& criteria.getApplicationNumber() != null)
-				throw new CustomException("INVALID ACCESS", "You can not access this application.");
-			else if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)
-					&& criteria.getApplicationNumber() != null)
-				throw new CustomException("INVALID ACCESS", "You are not authorised to access this resource.");
+				throw new CustomException("INVALID ACCESS", "You are not able to access this resource.");
 			else
 				return Collections.emptyList();
 		}
