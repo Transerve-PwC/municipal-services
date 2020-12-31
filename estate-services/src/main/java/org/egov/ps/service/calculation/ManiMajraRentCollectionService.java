@@ -259,6 +259,7 @@ public class ManiMajraRentCollectionService implements IManiMajraRentCollectionS
 		statement.setType(Type.D);
 		statement.setComment(currentDemand.getComment());
 		statement.setStatus(currentDemand.getStatus());
+		statement.setTypeOfDemand(currentDemand.getTypeOfDemand());
 		return rentSummary;
 	}
 

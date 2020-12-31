@@ -69,9 +69,8 @@ public class ApplicationService {
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)) {
 			criteria.setCreatedBy(requestInfo.getUserInfo().getUuid());
 		}
-		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE))
-		{
-			if(	!CollectionUtils.isEmpty(criteria.getBranchType())){
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)) {
+			if (!CollectionUtils.isEmpty(criteria.getBranchType()) && CollectionUtils.isEmpty(criteria.getState())) {
 				RequestInfoMapper requestInfoMapper = RequestInfoMapper.builder().requestInfo(requestInfo).build();
 				criteria.setBusinessName(criteria.getBranchType().get(0));
 				criteria.setTenantId(PSConstants.TENANT_ID);
@@ -79,28 +78,28 @@ public class ApplicationService {
 				criteria.setState(states);
 			}
 			Set<String> employeeBranches = new HashSet<>();
-			requestInfo.getUserInfo().getRoles().stream().filter(role->role.getCode()!=PSConstants.ROLE_EMPLOYEE)
-			.map(role->role.getCode())
-			.forEach(rolecode->{
-				if(rolecode.startsWith("ES_EB")) {
-					employeeBranches.add(PSConstants.APPLICATION_ESTATE_BRANCH);
-				}
-				if(rolecode.startsWith("ES_BB")) {
-					employeeBranches.add(PSConstants.APPLICATION_BUILDING_BRANCH);
-				}
-				if(rolecode.startsWith("ES_MM")) {
-					employeeBranches.add(PSConstants.APPLICATION_MANI_MAJRA);
-				}
-				if(rolecode.equalsIgnoreCase("ES_ADDITIONAL_COMMISSIONER")){
-					employeeBranches.add(PSConstants.APPLICATION_ESTATE_BRANCH);
-					employeeBranches.add(PSConstants.APPLICATION_BUILDING_BRANCH);
-					employeeBranches.add(PSConstants.APPLICATION_MANI_MAJRA);
-				}
-			});
-			if((criteria.getBranchType()!=null && !criteria.getBranchType().isEmpty()) ) {
-				if(!criteria.getBranchType().stream().filter(branch->employeeBranches.contains(branch)).findAny().isPresent()) 
+			requestInfo.getUserInfo().getRoles().stream().filter(role -> role.getCode() != PSConstants.ROLE_EMPLOYEE)
+					.map(role -> role.getCode()).forEach(rolecode -> {
+						if (rolecode.startsWith("ES_EB")) {
+							employeeBranches.add(PSConstants.APPLICATION_ESTATE_BRANCH);
+						}
+						if (rolecode.startsWith("ES_BB")) {
+							employeeBranches.add(PSConstants.APPLICATION_BUILDING_BRANCH);
+						}
+						if (rolecode.startsWith("ES_MM")) {
+							employeeBranches.add(PSConstants.APPLICATION_MANI_MAJRA);
+						}
+						if (rolecode.equalsIgnoreCase("ES_ADDITIONAL_COMMISSIONER")) {
+							employeeBranches.add(PSConstants.APPLICATION_ESTATE_BRANCH);
+							employeeBranches.add(PSConstants.APPLICATION_BUILDING_BRANCH);
+							employeeBranches.add(PSConstants.APPLICATION_MANI_MAJRA);
+						}
+					});
+			if ((criteria.getBranchType() != null && !criteria.getBranchType().isEmpty())) {
+				if (!criteria.getBranchType().stream().filter(branch -> employeeBranches.contains(branch)).findAny()
+						.isPresent())
 					throw new CustomException("INVALID ACCESS", "You are not authorised to access this resource.");
-			}else {
+			} else {
 				criteria.setBranchType(new ArrayList<>(employeeBranches));
 			}
 		}
@@ -122,7 +121,7 @@ public class ApplicationService {
 		validator.validateUpdateRequest(applicationRequest);
 		applicationEnrichmentService.enrichUpdateApplication(applicationRequest);
 		applicationRequest.getApplications().stream()
-		.forEach(application -> updateApplication(applicationRequest.getRequestInfo(), application));
+				.forEach(application -> updateApplication(applicationRequest.getRequestInfo(), application));
 		producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 
 		applicationNotificationService.processNotifications(applicationRequest);

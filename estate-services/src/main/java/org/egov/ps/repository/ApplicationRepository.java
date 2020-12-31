@@ -48,7 +48,8 @@ public class ApplicationRepository {
 	public List<Application> getApplications(ApplicationCriteria criteria) {
 		Map<String, Object> preparedStmtList = new HashMap<>();
 		String query = applicationQueryBuilder.getApplicationSearchQuery(criteria, preparedStmtList);
-
+		log.debug("Application Query: " + query);
+		log.debug("Params: " + preparedStmtList);
 		// Search for application based on criteria
 		List<Application> applications = namedParameterJdbcTemplate.query(query, preparedStmtList,
 				applicationRowMapper);

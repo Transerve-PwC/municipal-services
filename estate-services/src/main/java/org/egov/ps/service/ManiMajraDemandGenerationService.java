@@ -25,7 +25,6 @@ import org.egov.ps.web.contracts.PaymentStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// @Slf4j
 @Service
 public class ManiMajraDemandGenerationService {
 
@@ -269,11 +268,6 @@ public class ManiMajraDemandGenerationService {
 				property.getPropertyDetails().getManiMajraDemands().add(maniMajraDemandAnually);
 			}
 		}
-		/**
-		 * TODO: Remove the log
-		 */
-		// log.info("Generating Estate demand id '{}' of principal '{}' for property with file no {}",
-		// 		maniMajraDemand.getId(), property.getFileNumber());
 
 	}
 
@@ -312,7 +306,6 @@ public class ManiMajraDemandGenerationService {
 		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
 		return cal.getTime();
 	}
-
 
 	private Date getFirstMonthOfYear(Date date) {
 		Calendar cal = Calendar.getInstance();

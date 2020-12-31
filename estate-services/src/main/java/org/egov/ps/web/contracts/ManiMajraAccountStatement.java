@@ -67,6 +67,12 @@ public class ManiMajraAccountStatement {
     @JsonProperty("status")
     private PaymentStatusEnum status;
 
+    /**
+     * Comment of the demand
+     */
+    @JsonProperty("typeOfDemand")
+    private String typeOfDemand;
+
     @Builder.Default
     private double rent = 0D;
 
