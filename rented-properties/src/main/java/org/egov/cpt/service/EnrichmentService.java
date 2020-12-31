@@ -889,19 +889,21 @@ public class EnrichmentService {
 		double balInterest = rentSummary.getBalanceInterest();
 
 		if (amount >= balInterest) {
+			if(balInterest>0) {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(new BigDecimal(balInterest));
 			estimate1.setCategory(Category.INTEREST);
 			estimate1.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.INTEREST));
 			estimates.add(estimate1);
+			}
 			double remainingAmmount = amount - balInterest;
-			if (remainingAmmount >= balPrincipal) {
+			if (remainingAmmount >= balPrincipal && balPrincipal>0) {
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(balPrincipal));
 				estimate2.setCategory(Category.PRINCIPAL);
 				estimate2.setTaxHeadCode(getTaxHeadCode(property.getBillingBusinessService(), Category.PRINCIPAL));
 				estimates.add(estimate2);
-			} else {
+			} else if (remainingAmmount <= balPrincipal && balPrincipal>0){
 				TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 				estimate2.setEstimateAmount(new BigDecimal(remainingAmmount));
 				estimate2.setCategory(Category.PRINCIPAL);

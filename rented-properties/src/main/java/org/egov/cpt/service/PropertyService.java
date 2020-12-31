@@ -222,6 +222,8 @@ public class PropertyService {
 					property.setPayments(payments);
 					property.setRentAccount(rentAccount);
 				}
+				else 
+					property.setRentSummary(new RentSummary());
 			});
 		}
 

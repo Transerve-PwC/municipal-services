@@ -151,7 +151,7 @@ public class RentCollectionService implements IRentCollectionService {
 			LocalDate paymentDate = getLocalDate(dateOfPayment);
 			boolean isPaymentDateWithinGraceperiod = demand.getInitialGracePeriod() >= ChronoUnit.DAYS
 					.between(demandGenerationDate, paymentDate);
-			return isPaymentDateWithinGraceperiod || dateOfPayment == demand.getInterestSince();
+			return isPaymentDateWithinGraceperiod || Instant.ofEpochMilli(dateOfPayment).atZone(ZoneId.systemDefault()).toLocalDate().equals(Instant.ofEpochMilli( demand.getInterestSince()).atZone(ZoneId.systemDefault()).toLocalDate());
 		});
 	}
 

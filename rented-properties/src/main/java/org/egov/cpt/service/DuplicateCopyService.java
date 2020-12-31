@@ -13,6 +13,7 @@ import org.egov.cpt.models.Property;
 import org.egov.cpt.models.PropertyCriteria;
 import org.egov.cpt.models.RentAccount;
 import org.egov.cpt.models.RentDemand;
+import org.egov.cpt.models.RentSummary;
 import org.egov.cpt.models.calculation.BusinessService;
 import org.egov.cpt.models.calculation.State;
 import org.egov.cpt.producer.Producer;
@@ -170,6 +171,8 @@ public class DuplicateCopyService {
 				application.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
 			}
+			else 
+				application.getProperty().setRentSummary(new RentSummary());
 		});
 	}
 
