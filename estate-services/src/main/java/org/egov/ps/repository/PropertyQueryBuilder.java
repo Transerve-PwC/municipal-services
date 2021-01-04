@@ -357,11 +357,8 @@ public class PropertyQueryBuilder {
 		sb.append(" FROM " + OFFLINE_PAYMENT_TABLE);
 		sb.append(" where offline.property_details_id IN (:propertyDetailIds)");
 		params.put("propertyDetailIds", propertyDetailIds);
-
-		List<String> relations = criteria.getRelations();
-		if (relations == null || relations.contains(PSConstants.RELATION_OPD)) {
-			sb.append(" ORDER BY offline.last_modified_time desc ");
-		}
+		sb.append(" ORDER BY offline.last_modified_time desc ");
+		
 		return sb.toString();
 	}
 

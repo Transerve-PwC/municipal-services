@@ -749,13 +749,13 @@ serviceMaps:
             
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.comments
             
-            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.createdBy
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.auditDetails.createdBy
 
-            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.createdTime
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.auditDetails.createdTime
 
-            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.auditDetails.lastModifiedTime
 
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.demandId
 
@@ -771,9 +771,9 @@ serviceMaps:
             
             - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.comments
             
-            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.offlinePaymentDetails.*.auditDetails.lastModifiedTime
 
         - query: INSERT INTO cs_ep_collection(id, demand_id, interestCollected, principalCollected, collectedAt, created_by, modified_by, created_date, modified_date, gst_collected, gst_penalty_collected, rent_penalty_collected, payment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id) DO UPDATE SET interestCollected=?, principalCollected=?, modified_by=?, modified_date=?, gst_collected=?, gst_penalty_collected=?, rent_penalty_collected=?, payment_id=?;
           basePath: $.Properties.*.propertyDetails.estateRentCollections.*
