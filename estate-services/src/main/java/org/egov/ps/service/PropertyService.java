@@ -292,7 +292,7 @@ public class PropertyService {
 		List<Property> properties = repository.getProperties(criteria);
 
 		if (CollectionUtils.isEmpty(properties)) {
-				return Collections.emptyList();
+			return Collections.emptyList();
 		}
 		// Note : criteria.getRelations().contains(PSConstants.RELATION_FINANCE) filter
 		// is in rented-properties do we need to put here?
@@ -543,19 +543,29 @@ public class PropertyService {
 	}
 
 	public void getDueAmount(RequestInfo requestInfo) {
-		PropertyCriteria criteria = PropertyCriteria.builder().state(Arrays.asList(PSConstants.PM_APPROVED))
+
+		PropertyCriteria criteria = PropertyCriteria.builder().state(Arrays.asList(PSConstants.PM_APPROVED,PSConstants.ES_PM_MM_APPROVED))
 				.relations(Arrays.asList(PropertyQueryBuilder.RELATION_OWNER)).build();
 		List<Property> properties = repository.getProperties(criteria);
+		
+		List<Map<String, Object>> MMPropertyTypes = mdmsservice.getBranchRoles("propertyTypeMM",
+				requestInfo, properties.get(0).getTenantId());
+		List<Map<String, Object>> EstatePropertyTypes = mdmsservice.getBranchRoles("propertyType",
+				requestInfo,properties.get(0).getTenantId());
+	
 		if (CollectionUtils.isEmpty(properties))
 			throw new CustomException("NO_PROPERTY_FOUND", "No approved property found");
 
 		List<PropertyDueAmount> PropertyDueAmounts = new ArrayList<>();
-		properties.stream().forEach(property -> {
+		properties.stream().filter(property->!property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_FREEHOLD)).forEach(property -> {
+			List<Map<String, Object>> propertyTypeConfigurations=new ArrayList<>();
 			Optional<OwnerDetails> currentOwnerDetails = property.getPropertyDetails().getOwners().stream()
 					.map(owner -> owner.getOwnerDetails())
 					.filter(ownerDetail -> ownerDetail.getIsCurrentOwner() == true).findFirst();
-			List<Map<String, Object>> propertyTypeConfigurations = mdmsservice.getBranchRoles("propertyType",
-					requestInfo, property.getTenantId());
+			if(property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA))
+				propertyTypeConfigurations = MMPropertyTypes;
+			else
+				propertyTypeConfigurations = EstatePropertyTypes;
 
 			List<Map<String, Object>> sectorConfigurations = mdmsservice.getBranchRoles("sector", requestInfo,
 					property.getTenantId());
@@ -580,12 +590,30 @@ public class PropertyService {
 			List<EstateDemand> demands = repository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 			EstateAccount estateAccount = repository.getPropertyEstateAccountDetails(propertyDetailsIds);
 
-			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
-					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
-				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-						estateAccount, property.getPropertyDetails().getInterestRate(),
-						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
-						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
+			if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
+				List<ManiMajraDemand> mmDemands = repository
+						.getManiMajraDemandDetails(Collections.singletonList(property.getPropertyDetails().getId()));
+
+				if (!CollectionUtils.isEmpty(mmDemands) && null != estateAccount) {
+					double totalRentDue = mmDemands.stream().filter(mmDemand -> mmDemand.isUnPaid())
+							.mapToDouble(ManiMajraDemand::getRent).sum(); 
+					double totalGst = mmDemands.stream().filter(mmDemand -> mmDemand.isUnPaid())
+							.mapToDouble(ManiMajraDemand::getGst).sum();
+					EstateRentSummary rentSummary = EstateRentSummary.builder().balanceRent(totalRentDue)
+							.balanceGST(totalGst)
+							.build();
+					propertyDueAmount.setEstateRentSummary(rentSummary);
+
+				}
+			}
+			else {
+				if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
+						&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+					propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
+							estateAccount, property.getPropertyDetails().getInterestRate(),
+							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
+							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
+				}
 			}
 			PropertyDueAmounts.add(propertyDueAmount);
 		});
