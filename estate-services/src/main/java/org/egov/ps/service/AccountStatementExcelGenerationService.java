@@ -44,8 +44,8 @@ public class AccountStatementExcelGenerationService {
 	private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	private static final String RENT = "Rent";
 	private static final String PAYMENT = "Payment";
-	private static String[] headerColumns = { "Date", "Amount", "Type (Payment)", "Type (Rent)", "Principal due",
-			"GST Due", "Interest Due", "Gst Penalty Due", "Total Due", "Account Balance", "Receipt" };
+	private static String[] headerColumns = { "Date", "Consolidated Demand", "Amount", "Type (Payment)", "Type (Rent)", "Principal due",
+			"GST Due", "Interest Due", "Gst Penalty Due", "Total Due", "Account Balance", "Receipt No." };
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 
 	@Autowired
@@ -107,34 +107,37 @@ public class AccountStatementExcelGenerationService {
 					Row row = sheet.createRow(rowNum++);
 					if (i < statementsSize - 1) {
 						row.createCell(0).setCellValue(getFormattedDate(rentAccountStmt.getDate()));
-						row.createCell(1)
+
+						String result = rentAccountStmt.getIsPrevious() ? "CF" : "-";
+						row.createCell(1).setCellValue(result);
+						row.createCell(2)
 								.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getAmount())));
 						Optional.ofNullable(rentAccountStmt)
 								.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
-								.ifPresent(o -> row.createCell(2).setCellValue(PAYMENT));
+								.ifPresent(o -> row.createCell(3).setCellValue(PAYMENT));
 						Optional.ofNullable(rentAccountStmt)
 								.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.D.name()))
-								.ifPresent(o -> row.createCell(3).setCellValue(RENT));
+								.ifPresent(o -> row.createCell(4).setCellValue(RENT));
 					} else {
 						row.createCell(0).setCellValue("Balance as on " + getFormattedDate(rentAccountStmt.getDate()));
 					}
 
-					row.createCell(4).setCellValue(
+					row.createCell(5).setCellValue(
 							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingPrincipal())));
-					row.createCell(5)
+					row.createCell(6)
 							.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGST())));
-					row.createCell(6).setCellValue(
-							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingRentPenalty())));
 					row.createCell(7).setCellValue(
+							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingRentPenalty())));
+					row.createCell(8).setCellValue(
 							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGSTPenalty())));
-					row.createCell(8)
+					row.createCell(9)
 							.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getDueAmount())));
-					row.createCell(9).setCellValue(
+					row.createCell(10).setCellValue(
 							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingBalance())));
 					if (i < statementsSize - 1) {
 						Optional.ofNullable(rentAccountStmt)
 								.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
-								.ifPresent(o -> row.createCell(10).setCellValue(o.getReceiptNo()));
+								.ifPresent(o -> row.createCell(11).setCellValue(o.getReceiptNo()));
 					}
 				}
 
