@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.util.FileStoreUtils;
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AccountStatementResponse;
+import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateAccountStatement;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +66,10 @@ public class AccountStatementExcelGenerationService {
 
 		Property property = properties.get(0);
 		List<HashMap<String, String>> response = new ArrayList<HashMap<String, String>>();
+
+		EstateAccount estateAccount = propertyRepository.getPropertyEstateAccountDetails(Collections.singletonList(property.getPropertyDetails().getId()));
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
-				&& null != property.getPropertyDetails().getEstateAccount()
+				&& null != estateAccount
 				&& property.getPropertyDetails().getPaymentConfig() != null
 				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 			AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
