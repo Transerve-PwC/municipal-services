@@ -165,8 +165,8 @@ public class ManiMajraDemandGenerationService {
 				}
 
 				Calendar startCal = Calendar.getInstance();
-				startCal.set(Calendar.YEAR, startYear); // 2017-02-01
-				startCal.set(Calendar.MONTH, 01 - 1);
+				startCal.set(Calendar.YEAR, startYear); // 2017-03-31
+				startCal.set(Calendar.MONTH, 02);
 				startCal.set(Calendar.DAY_OF_MONTH, 01);
 				startCal.set(Calendar.HOUR_OF_DAY, 0);
 				startCal.set(Calendar.MINUTE, 0);
@@ -175,8 +175,8 @@ public class ManiMajraDemandGenerationService {
 				Date startDate = startCal.getTime();
 
 				Calendar endCal = Calendar.getInstance();
-				endCal.set(Calendar.YEAR, endYear);// 2019-02-01
-				endCal.set(Calendar.MONTH, 01 - 1);
+				endCal.set(Calendar.YEAR, endYear);// 2019-03-31
+				endCal.set(Calendar.MONTH, 02);
 				endCal.set(Calendar.DAY_OF_MONTH, 01);
 				endCal.set(Calendar.HOUR_OF_DAY, 0);
 				endCal.set(Calendar.MINUTE, 0);
@@ -310,7 +310,7 @@ public class ManiMajraDemandGenerationService {
 	private Date getFirstMonthOfYear(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(Calendar.MONTH, 01 - 1);
+		cal.set(Calendar.MONTH, 02);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
 		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
@@ -318,5 +318,18 @@ public class ManiMajraDemandGenerationService {
 		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
 		return cal.getTime();
 	}
+
+//	private Date getAnnualChargeOfYear(Date date) {
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(date);
+//		cal.set(Calendar.MONTH, 02);
+////		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+//		cal.set(Calendar.DAY_OF_MONTH, 31);
+//		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+//		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
+//		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+//		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
+//		return cal.getTime();
+//	}
 
 }
