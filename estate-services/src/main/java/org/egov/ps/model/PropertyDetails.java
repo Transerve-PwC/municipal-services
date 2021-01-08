@@ -161,6 +161,9 @@ public class PropertyDetails {
 	@JsonProperty("street")
 	private String street;
 
+	@JsonProperty("addCourtCases")
+	private String addCourtCases;
+
 	@JsonProperty("owners")
 	@Builder.Default
 	private List<Owner> owners = new ArrayList<Owner>();
