@@ -30,6 +30,14 @@ public class PropertyCriteria {
 	
 	private String siteNumber;
 
+	private String mohalla;
+
+	private String street;
+
+	private String houseNumber;
+
+	private String sector;
+
 	private List<String> state;
 
 	private Long offset;

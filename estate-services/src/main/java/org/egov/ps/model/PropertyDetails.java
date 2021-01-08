@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.egov.ps.web.contracts.EstateAccount;
@@ -18,8 +20,6 @@ import org.egov.ps.web.contracts.ManiMajraDemand;
 import org.egov.ps.web.contracts.ManiMajraPayment;
 import org.egov.ps.web.contracts.ManiMajraRentCollection;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -157,6 +157,9 @@ public class PropertyDetails {
 
 	@JsonProperty("mohalla")
 	private String mohalla;
+
+	@JsonProperty("street")
+	private String street;
 
 	@JsonProperty("owners")
 	@Builder.Default
