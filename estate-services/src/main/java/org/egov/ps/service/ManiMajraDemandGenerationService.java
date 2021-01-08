@@ -91,6 +91,17 @@ public class ManiMajraDemandGenerationService {
 		return cal.getTime();
 	}
 
+	private Date setLastDateOfMonthMM(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
+		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
+		return cal.getTime();
+	}
+
 	private void generateEstateDemandMM(Property property, Date date, Date demandGenerationAnnualDate,
 			RequestInfo requestInfo) {
 
@@ -166,8 +177,8 @@ public class ManiMajraDemandGenerationService {
 
 				Calendar startCal = Calendar.getInstance();
 				startCal.set(Calendar.YEAR, startYear); // 2017-02-01
-				startCal.set(Calendar.MONTH, 01 - 1);
-				startCal.set(Calendar.DAY_OF_MONTH, 01);
+				startCal.set(Calendar.MONTH, 03 - 1);
+				startCal.set(Calendar.DAY_OF_MONTH, 31);
 				startCal.set(Calendar.HOUR_OF_DAY, 0);
 				startCal.set(Calendar.MINUTE, 0);
 				startCal.set(Calendar.SECOND, 0);
@@ -176,18 +187,27 @@ public class ManiMajraDemandGenerationService {
 
 				Calendar endCal = Calendar.getInstance();
 				endCal.set(Calendar.YEAR, endYear);// 2019-02-01
-				endCal.set(Calendar.MONTH, 01 - 1);
-				endCal.set(Calendar.DAY_OF_MONTH, 01);
+				endCal.set(Calendar.MONTH, 03 - 1);
+				endCal.set(Calendar.DAY_OF_MONTH, 31);
 				endCal.set(Calendar.HOUR_OF_DAY, 0);
 				endCal.set(Calendar.MINUTE, 0);
 				endCal.set(Calendar.SECOND, 0);
 				endCal.set(Calendar.MILLISECOND, 0);
 				Date endDate = endCal.getTime();
 				// demandGenerationAnnualDate ---> 2018-02-01
+				
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(demandGenerationAnnualDate);
 
-				if (demandGenerationAnnualDate.equals(startDate) || demandGenerationAnnualDate.equals(endDate)) {
-					annualCalculatedRent = new Double(janathaReadyAnnuallyConfig.get("licenceFee").toString());
+				System.out.println("Year Values ----> " + calendar.getWeekYear());
+				System.out.println("Month Values ----> " + calendar.get(Calendar.MONTH));
+				if (calendar.getWeekYear() >= startYear || calendar.getWeekYear() <= endYear) {
+					if (calendar.get(Calendar.MONTH) == 3 - 1 || demandGenerationAnnualDate.equals(startDate)
+							|| demandGenerationAnnualDate.equals(endDate)) {
+						annualCalculatedRent = new Double(janathaReadyAnnuallyConfig.get("licenceFee").toString());
+					}
 				}
+
 			}
 		}
 		if (property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.MM_PUNJAB_AGRO_JUICE)) {
@@ -242,17 +262,20 @@ public class ManiMajraDemandGenerationService {
 		}
 
 		date = setDateOfMonthMM(date, 1);
+		Date annualDate = setLastDateOfMonthMM(date);
 		double calculatedGst = calculatedRent * gst / 100;
 
 		ManiMajraDemand maniMajraDemand = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
 				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(calculatedRent).typeOfDemand("Monthly")
 				.propertyDetailsId(property.getPropertyDetails().getId()).gst(calculatedGst)
 				.status(PaymentStatusEnum.UNPAID).build();
-
-		ManiMajraDemand maniMajraDemandAnually = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
-				.generationDate(date.getTime()).collectionPrincipal(0.0).rent(annualCalculatedRent)
-				.typeOfDemand("Annually").propertyDetailsId(property.getPropertyDetails().getId()).gst(0.0)
-				.status(PaymentStatusEnum.UNPAID).build();
+		ManiMajraDemand maniMajraDemandAnually = ManiMajraDemand.builder().build();
+		if (annualCalculatedRent != 0.0) {
+			maniMajraDemandAnually = ManiMajraDemand.builder().id(UUID.randomUUID().toString())
+					.generationDate(annualDate.getTime()).collectionPrincipal(0.0).rent(annualCalculatedRent)
+					.typeOfDemand("Annually").propertyDetailsId(property.getPropertyDetails().getId()).gst(0.0)
+					.status(PaymentStatusEnum.UNPAID).build();
+		}
 
 		if (null == property.getPropertyDetails().getManiMajraDemands()) {
 			List<ManiMajraDemand> maniMajraDemands = new ArrayList<ManiMajraDemand>();
@@ -310,8 +333,8 @@ public class ManiMajraDemandGenerationService {
 	private Date getFirstMonthOfYear(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(Calendar.MONTH, 01 - 1);
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.MONTH, 03 - 1);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
 		cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
 		cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
 		cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
