@@ -92,6 +92,8 @@ public class PSConstants {
 
 	public static final String MONTHLY_DEMAND = "Monthly";
 
+	public static final String EB_ADD_COURT_CASES = "ADD_COURT_CASES";
+
 	public static final String MM_PROPERTY_RENT_MASTER_NAME = "ManiMajra_Property_Rent_Config";
 
 	public static final String BUSINESS_SERVICE_EB_RENT = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";

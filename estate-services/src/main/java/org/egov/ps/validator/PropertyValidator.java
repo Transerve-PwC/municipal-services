@@ -176,6 +176,11 @@ public class PropertyValidator {
 		Optional<Property> property_Optional = request.getProperties().stream()
 				.filter(p -> !CollectionUtils.isEmpty(p.getPropertyDetails().getOwners())).findAny();
 		if (property_Optional.isPresent()) {
+			double ownerTotalShare = (request.getProperties().get(0).getPropertyDetails().getOwners().stream()
+					.mapToDouble(Owner::getShare)).sum();
+			if (ownerTotalShare != 100) {
+				errorMap.put("INVALID_OWNER_SHARE", "Owner(s) Share can't be lessthan or greaterthan 100%");
+			}
 			property_Optional.get().getPropertyDetails().getOwners().stream().forEach(o -> {
 				if (!isMobileNumberValid(o.getOwnerDetails().getMobileNumber())) {
 					throw new CustomException(Collections.singletonMap("INVALID MOBILE NUMBER",
@@ -205,7 +210,9 @@ public class PropertyValidator {
 						errorMap.put("INVALID_GUARDIAN_RELATION", "Owner relation with guardian can not be empty");
 					}
 				}
-
+				if (!errorMap.isEmpty()) {
+					throw new CustomException(errorMap);
+				}
 				// Document Validation
 				if (null != o.getOwnerDetails() && null != o.getOwnerDetails().getOwnerDocuments()) {
 					try {
