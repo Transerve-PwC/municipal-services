@@ -18,6 +18,7 @@ import org.egov.cpt.models.DuplicateCopy;
 import org.egov.cpt.models.Owner;
 import org.egov.cpt.models.Property;
 import org.egov.cpt.models.calculation.BusinessService;
+import org.egov.cpt.service.MDMSService;
 import org.egov.cpt.workflow.WorkflowService;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -38,6 +39,9 @@ public class PropertyUtil {
 
 	@Autowired
 	private WorkflowService workflowService;
+
+	@Autowired
+	private MDMSService mdmsService;
 
 	/**
 	 * Method to return auditDetails for create/update flows
@@ -198,5 +202,15 @@ public class PropertyUtil {
 					"Transit number could not be extracted from consumer code " + consumerCode));
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public long getInterstStartFromMDMS(Property property, RequestInfo requestInfo) {
+		String filter = "[?(@.code=='" + property.getColony() +"')].interestStartYear"; 
+		Map<String, List<Long>> interestStartDateList =(Map<String, List<Long>>)mdmsService.getMDMSResponse(requestInfo,
+						property.getTenantId().split("\\.")[0], PTConstants.MDMS_PT_MOD_NAME,
+						"colonies",filter, PTConstants.JSONPATH_CODES); 
+				long interestStartDate = ((Number)interestStartDateList.get(PTConstants.MDMS_PT_COLONY).get(0)).longValue();
+				return interestStartDate;
 	}
 }

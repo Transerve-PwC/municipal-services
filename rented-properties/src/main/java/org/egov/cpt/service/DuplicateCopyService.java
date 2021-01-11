@@ -21,6 +21,7 @@ import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.calculation.DemandService;
 import org.egov.cpt.service.notification.DuplicateCopyNotificationService;
 import org.egov.cpt.util.PTConstants;
+import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.validator.PropertyValidator;
 import org.egov.cpt.web.contracts.DuplicateCopyRequest;
 import org.egov.cpt.workflow.WorkflowIntegrator;
@@ -64,6 +65,9 @@ public class DuplicateCopyService {
 	
 	@Autowired
 	private IRentCollectionService rentCollectionService;
+	
+	@Autowired
+	private PropertyUtil propertyUtil;
 
 	public List<DuplicateCopy> createApplication(DuplicateCopyRequest duplicateCopyRequest) {
 		propertyValidator.isPropertyExist(duplicateCopyRequest);
@@ -78,7 +82,7 @@ public class DuplicateCopyService {
 		 * calling Rent summary
 		 */
 		
-		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications());
+		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications(),duplicateCopyRequest.getRequestInfo());
 		
 		
 		return duplicateCopyRequest.getDuplicateCopyApplications();
@@ -118,7 +122,7 @@ public class DuplicateCopyService {
 				return Collections.emptyList();
 		}
 		
-		addRentSummary(applications);
+		addRentSummary(applications,requestInfo);
 		
 		return applications;
 	}
@@ -149,12 +153,12 @@ public class DuplicateCopyService {
 		/**
 		 * calling Rent summary
 		 */
-		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications());
+		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications(),duplicateCopyRequest.getRequestInfo());
 		
 		return duplicateCopyRequest.getDuplicateCopyApplications();
 	}
 	
-	private void addRentSummary(List<DuplicateCopy> duplicateCopyApplications) {
+	private void addRentSummary(List<DuplicateCopy> duplicateCopyApplications, RequestInfo requestInfo) {
 		duplicateCopyApplications.stream().filter(application -> application.getProperty().getId() != null)
 		.forEach(application -> {
 			
@@ -168,8 +172,9 @@ public class DuplicateCopyService {
 			RentAccount rentAccount = repository
 					.getPropertyRentAccountDetails(propertyCriteria);
 			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+				long interestStartDate = propertyUtil.getInterstStartFromMDMS(propertiesFromDB.get(0),requestInfo);
 				application.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
-						propertiesFromDB.get(0).getPropertyDetails().getInterestRate()));
+						propertiesFromDB.get(0).getPropertyDetails().getInterestRate(),interestStartDate));
 			}
 			else 
 				application.getProperty().setRentSummary(new RentSummary());

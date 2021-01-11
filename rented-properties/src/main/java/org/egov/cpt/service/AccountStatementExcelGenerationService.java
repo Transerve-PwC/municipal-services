@@ -69,6 +69,7 @@ public class AccountStatementExcelGenerationService {
 						.relations(Collections.singletonList("owner")).build());
 
 		Property property = properties.get(0);
+		
 		AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
 				requestInfo);
 		List<Double> amounts = accountStatementResponse.getRentAccountStatements().stream()

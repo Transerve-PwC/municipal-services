@@ -129,7 +129,7 @@ public class RentDemandGenerationServiceTest {
 	@Test
 	public void createDemandTestWithRentCollectionsWithoutId() {
 		Mockito.when(rentCollectionService.settle(Mockito.anyListOf(RentDemand.class),
-				Mockito.anyListOf(RentPayment.class), Mockito.any(RentAccount.class), Mockito.anyDouble()))
+				Mockito.anyListOf(RentPayment.class), Mockito.any(RentAccount.class), Mockito.anyDouble(),0L))
 				.thenReturn(buildRentCollections());
 		Mockito.when(propertyRepository.getPropertyRentDemandDetails(Mockito.any())).thenReturn(buildRentDemandList());
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))
@@ -141,7 +141,7 @@ public class RentDemandGenerationServiceTest {
 	@Test
 	public void createDemandTestWithRentCollectionsWithId() {
 		Mockito.when(rentCollectionService.settle(Mockito.anyListOf(RentDemand.class),
-				Mockito.anyListOf(RentPayment.class), Mockito.any(RentAccount.class), Mockito.anyDouble()))
+				Mockito.anyListOf(RentPayment.class), Mockito.any(RentAccount.class), Mockito.anyDouble(),0L))
 				.thenReturn(buildRentCollectionsWithId());
 		Mockito.when(propertyRepository.getPropertyRentDemandDetails(Mockito.any())).thenReturn(buildRentDemandList());
 		Mockito.when(propertyRepository.getPropertyRentPaymentDetails(Mockito.any()))

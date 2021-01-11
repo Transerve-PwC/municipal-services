@@ -40,7 +40,10 @@ public class RentEnrichmentService {
 
 	@Autowired
 	private Producer producer;
-
+	
+	@Autowired
+	private PropertyUtil propertyUtil;
+	
 	public void enrichRentdata(PropertyRequest request) {
 		if (!CollectionUtils.isEmpty(request.getProperties())) {
 			request.getProperties().forEach(property -> {
@@ -157,8 +160,9 @@ public class RentEnrichmentService {
 		}
 		// Settle the payment
 		if (!CollectionUtils.isEmpty(property.getDemands()) && null != property.getRentAccount()) {
+			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property,requestInfo);
 			property.setRentCollections(rentCollectionService.settle(property.getDemands(), property.getPayments(),
-					property.getRentAccount(), property.getPropertyDetails().getInterestRate()));
+					property.getRentAccount(), property.getPropertyDetails().getInterestRate(),interestStartDate));
 		}
 
 		// Save everything back to database

@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.cpt.config.PropertyConfiguration;
 import org.egov.cpt.models.AuditDetails;
 import org.egov.cpt.models.ModeEnum;
@@ -28,6 +29,7 @@ import org.egov.cpt.producer.Producer;
 import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.service.notification.DemandNotificationService;
 import org.egov.cpt.util.PTConstants;
+import org.egov.cpt.util.PropertyUtil;
 import org.egov.cpt.web.contracts.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,9 @@ public class RentDemandGenerationService {
 	private RentCollectionService rentCollectionService;
 
 	private DemandNotificationService demandNotificationService;
+	
+	@Autowired
+	private PropertyUtil propertyUtil;
 
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("d/MM/yyyy");
 
@@ -119,7 +124,9 @@ public class RentDemandGenerationService {
 
 	private void generateRentDemand(Property property, RentDemand firstDemand, Date date,
 			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount) {
-
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("20170310130900|en_IN");
+		
 		int oldYear = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 				.getYear();
 		int oldMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
@@ -156,9 +163,9 @@ public class RentDemandGenerationService {
 		property.setPayments(rentPaymentList);
 
 		if (!CollectionUtils.isEmpty(property.getPayments()) && property.getRentAccount() != null) {
-
+			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property,requestInfo);
 			property.setRentCollections(rentCollectionService.settle(property.getDemands(), property.getPayments(),
-					property.getRentAccount(), property.getPropertyDetails().getInterestRate()));
+					property.getRentAccount(), property.getPropertyDetails().getInterestRate(),interestStartDate));
 		}
 		PropertyRequest propertyRequest = new PropertyRequest();
 		propertyRequest.setProperties(Collections.singletonList(property));

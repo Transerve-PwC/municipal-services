@@ -34,7 +34,7 @@ public class ExcelStatementTests {
         RentDemandResponse rentDemandResponse = this.readExcelService.getDatafromExcel(inputStream, index);
         List<RentAccountStatement> accountStatementItems = this.rentCollectionService.getAccountStatement(
                 rentDemandResponse.getDemand(), rentDemandResponse.getPayment(),
-                RentCollectionServiceTests.DEFAULT_INTEREST_RATE, null, System.currentTimeMillis());
+                RentCollectionServiceTests.DEFAULT_INTEREST_RATE, null, System.currentTimeMillis(), 0L);
         utils.printStatement(accountStatementItems);
         utils.reconcileStatement(accountStatementItems, RentCollectionServiceTests.DEFAULT_INTEREST_RATE);
         return accountStatementItems;

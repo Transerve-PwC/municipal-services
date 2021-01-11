@@ -14,6 +14,7 @@ public interface IRentCollectionService {
 	/**
 	 * Get the list of collections for the given demand and payments for the same
 	 * property.
+	 * @param interestStartDate 
 	 * 
 	 * @apiNote When a new set of demands are saved in the database on every
 	 *          _update.
@@ -24,7 +25,7 @@ public interface IRentCollectionService {
 	 * @return List<RentCollection> Collections to be saved in the database.
 	 */
 	public List<RentCollection> settle(List<RentDemand> demandsToBeSettled, List<RentPayment> paymentsToBeSettled,
-			RentAccount account, double interestRate);
+			RentAccount account, double interestRate, Long interestStartDate);
 
 	/**
 	 * Get the current rent summary by calculating from the given demands and
@@ -44,9 +45,10 @@ public interface IRentCollectionService {
 	 * @param demands
 	 * @param rentAccount
 	 * @param interestRate
+	 * @param interestStartDate 
 	 * @return
 	 */
-	public RentSummary calculateRentSummary(List<RentDemand> demands, RentAccount rentAccount, double interestRate);
+	public RentSummary calculateRentSummary(List<RentDemand> demands, RentAccount rentAccount, double interestRate, Long interestStartDate);
 
 	/**
 	 * Get the rent summary
@@ -58,17 +60,18 @@ public interface IRentCollectionService {
 	 * @return
 	 */
 	public RentSummary calculateRentSummaryAt(List<RentDemand> demands, RentAccount rentAccount, double interestRate,
-			long atTimestamp);
+			long atTimestamp,Long interestStartDate);
 
 	/**
 	 * @apiNote This will provide the account statement between the date specified
 	 *          by the user.
 	 * @param demands
 	 * @param payments
+	 * @param interestStartDate 
 	 * @param lstCollection
 	 * @return List<RentAccountStatement>
 	 */
 	public List<RentAccountStatement> getAccountStatement(List<RentDemand> demands, List<RentPayment> payments,
-			double interesetRate, Long fromDateTimestamp, Long toDateTimestamp);
+			double interesetRate, Long fromDateTimestamp, Long toDateTimestamp, Long interestStartDate);
 
 }
