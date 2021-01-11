@@ -550,14 +550,16 @@ public class EstateRentCollectionServiceTests1 {
 		utils.printStatement(accountStatementItems);
 		utils.reconcileStatement(accountStatementItems, DEFAULT_INTEREST_RATE);
 	}
-
+/**
+ * This Test case is not required as we are not capturing the remaning intrest.
+ */
 	@Test
 
 	public void testSimpleInterestSettlementStatement_noPayment() throws ParseException {
 
 		List<EstateDemand> demands = Arrays.asList(
 				// getDemand(650D,100 ,FEB_1_1999,"101",100,3,0,0,0,0,true),
-				getDemand(1000D, 180, JAN_1_1999, "101", 100, 10, 0, 0, 0, 0, true)
+				getDemand(1000D, 180, JAN_1_1999, "101", 100D, 10D, 0D, 0D, 0D, 0D, true)
 		// getDemand(1000D,180 ,FEB_1_1999,"102",0,0,0,0,0,0,false),
 		// getDemand(1000D, 180 ,MAR_1_1999,"103",0,0,0,0,0,0,false),
 		// getDemand(1000D, 180 ,APR_1_1999,"104",0,0,0,0,0,0,false)
@@ -877,7 +879,7 @@ public class EstateRentCollectionServiceTests1 {
 	   double collectionGST = collections.stream().mapToDouble(EstateRentCollection::getGstCollected).sum();
 	   //assertEquals(964, collectionGST, 0.1);
 	  // reconcileDemands(demands, collections);
-	   verifyRemainingBalance(account, 5318.44);
+	   verifyRemainingBalance(account, 636.70);
 	   
 	}
 	
