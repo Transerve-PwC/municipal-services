@@ -112,21 +112,33 @@ public class WorkflowIntegrator {
 			obj.put(TENANTIDKEY, wfTenantId);
 			if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
 					&& !property.getState().contentEquals(PSConstants.PM_APPROVED)) {
+				/**
+				 * Estate Branch PM & AOS Workflow integretor
+				 */
 				obj.put(BUSINESSSERVICEKEY, config.getAosBusinessServiceValue());
 				obj.put(BUSINESSIDKEY, property.getFileNumber());
 				obj.put(ACTIONKEY, property.getAction());
 			} else if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.BUILDING_BRANCH)) {
+				/**
+				 * Building Branch PM Workflow integretor
+				 */
 				obj.put(BUSINESSSERVICEKEY, config.getBbPmBusinessServiceValue());
 				obj.put(BUSINESSIDKEY, property.getFileNumber());
 				obj.put(ACTIONKEY, property.getAction());
 			} else if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
 					&& property.getState().contentEquals(PSConstants.PM_APPROVED)
 					&& property.getPropertyDetails().getBidders().get(0).getAuctionId() != null) {
+				/**
+				 * Estate Branch Refund Of EMD (ROE) Workflow integretor
+				 */
 				obj.put(BUSINESSSERVICEKEY, config.getEbRoeBusinessServiceValue());
 				obj.put(BUSINESSIDKEY, property.getPropertyDetails().getBidders().get(0).getAuctionId());
 				obj.put(ACTIONKEY, property.getPropertyDetails().getBidders().get(0).getAction());
 			} else if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)
 					&& !property.getState().contentEquals(PSConstants.ES_PM_MM_APPROVED)) {
+				/**
+				 * Mani Majra PM Workflow integretor
+				 */
 				obj.put(BUSINESSSERVICEKEY, config.getMmPmBusinessServiceValue());
 				obj.put(BUSINESSIDKEY, property.getFileNumber());
 				obj.put(ACTIONKEY, property.getAction());
@@ -153,6 +165,10 @@ public class WorkflowIntegrator {
 			} else {
 				property.getPropertyDetails().getBidders().forEach(bidder -> {
 					bidder.setState(idStatusMap.get(property.getPropertyDetails().getBidders().get(0).getAuctionId()));
+					if (property.getPropertyDetails().getBidders().get(0).getAction()
+							.equalsIgnoreCase(PSConstants.EM_ACTION_APPROVE)) {
+						bidder.setRefundStatus(PSConstants.PM_APPROVED);
+					}
 				});
 			}
 		});

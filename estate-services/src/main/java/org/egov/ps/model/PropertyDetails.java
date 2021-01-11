@@ -161,8 +161,9 @@ public class PropertyDetails {
 	@JsonProperty("street")
 	private String street;
 
+	@Builder.Default
 	@JsonProperty("addCourtCases")
-	private String addCourtCases;
+	private String addCourtCases = "";
 
 	@JsonProperty("owners")
 	@Builder.Default
