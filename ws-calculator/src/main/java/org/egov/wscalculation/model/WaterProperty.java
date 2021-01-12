@@ -17,6 +17,9 @@ public class WaterProperty {
 
 	@JsonProperty("usageSubCategory")
 	private String usageSubCategory = null;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 
 	@Override
 	public boolean equals(java.lang.Object o) {
@@ -81,5 +84,13 @@ public class WaterProperty {
 
 	public void setUsageSubCategory(String usageSubCategory) {
 		this.usageSubCategory = usageSubCategory;
+	}
+
+	public AuditDetails getAuditDetails() {
+		return auditDetails;
+	}
+
+	public void setAuditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
 	}
 }

@@ -7,9 +7,11 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
+import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
+import org.egov.waterconnection.model.collection.PaymentRequest;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.builder.WsQueryBuilder;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
@@ -136,5 +138,12 @@ public class WaterDaoImpl implements WaterDao {
 	@Override
 	public void deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(wsConfiguration.getDeleteConnectionMapping(), waterConnectionRequest);		
+	}
+
+	@Override
+	public void updatebillingstatus(BillGeneration billingData) {
+
+		waterConnectionProducer.push(wsConfiguration.getUpdateBillPayment(), billingData);
+		
 	}
 }

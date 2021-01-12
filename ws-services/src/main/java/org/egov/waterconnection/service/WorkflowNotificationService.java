@@ -532,7 +532,7 @@ public class WorkflowNotificationService {
 	 * @param fileStoreId
 	 * @return file store id
 	 */
-	private String getApplicationDownloadLink(String tenantId, String fileStoreId) {
+	public String getApplicationDownloadLink(String tenantId, String fileStoreId) {
 		String fileStoreServiceLink = config.getFileStoreHost() + config.getFileStoreLink();
 		fileStoreServiceLink = fileStoreServiceLink.replace(tenantIdReplacer, tenantId);
 		fileStoreServiceLink = fileStoreServiceLink.replace(fileStoreIdReplacer, fileStoreId);

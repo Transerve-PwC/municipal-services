@@ -37,4 +37,3 @@ CREATE TABLE eg_ws_savebilling
   lastmodifiedtime bigint,
   CONSTRAINT eg_ws_savebilling_pkey PRIMARY KEY (id)
 );
-

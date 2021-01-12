@@ -295,6 +295,7 @@ public class PropertyUtil extends CommonUtils {
 				propertyRequest.getProperty().setOwnershipCategory(PTConstants.DEFAULTOWNER);
 
 				address.setCity(PTConstants.CITY);
+				address.setFloorNo(propertydetails.get(PTConstants.FLOORID).asText());
 				address.setDoorNo(propertydetails.get(PTConstants.HOUSENO).asText());
 
 				locality.setCode(propertydetails.get(PTConstants.SectorId).asText());

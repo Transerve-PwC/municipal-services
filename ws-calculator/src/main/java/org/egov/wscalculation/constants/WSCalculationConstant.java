@@ -332,5 +332,7 @@ public class WSCalculationConstant {
 	public static final String WS_ADDON_PENDING_STATUS = "PENDING_FOR_ADDON_PAYMENT";
 	
 	public static final String WS_STATUS_PENDING_FOR_CMR = "PENDING_METER_READING_CAPTURE";
+
+	public static final String payment_cheque = "CHEQUE";
 	
 }

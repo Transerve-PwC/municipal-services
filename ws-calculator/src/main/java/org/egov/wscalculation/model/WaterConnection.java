@@ -45,6 +45,18 @@ public class WaterConnection extends Connection {
 	
 	@JsonProperty("securityCharge")
 	private Double securityCharge = null;
+
+	@JsonProperty("div")
+	private String div = null;
+
+	@JsonProperty("subdiv")
+	private String subdiv = null;
+
+	@JsonProperty("ledgerNo")
+	private String ledgerNo = null;
+
+	@JsonProperty("ccCode")
+	private String ccCode = null;
 	
 	@JsonProperty("connectionUsagesType")
 	private String connectionUsagesType = null;
@@ -281,5 +293,37 @@ public class WaterConnection extends Connection {
 
 	public void setConnectionUsagesType(String connectionUsagesType) {
 		this.connectionUsagesType = connectionUsagesType;
+	}
+
+	public String getDiv() {
+		return div;
+	}
+
+	public void setDiv(String div) {
+		this.div = div;
+	}
+
+	public String getSubdiv() {
+		return subdiv;
+	}
+
+	public void setSubdiv(String subdiv) {
+		this.subdiv = subdiv;
+	}
+
+	public String getLedgerNo() {
+		return ledgerNo;
+	}
+
+	public void setLedgerNo(String ledgerNo) {
+		this.ledgerNo = ledgerNo;
+	}
+
+	public String getCcCode() {
+		return ccCode;
+	}
+
+	public void setCcCode(String ccCode) {
+		this.ccCode = ccCode;
 	}
 }

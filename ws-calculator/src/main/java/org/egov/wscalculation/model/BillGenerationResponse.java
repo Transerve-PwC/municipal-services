@@ -1,4 +1,4 @@
-package org.egov.waterconnection.model;
+package org.egov.wscalculation.model;
 
 import java.util.List;
 
@@ -27,7 +27,4 @@ public class BillGenerationResponse {
 	@Valid
 	private List<BillGeneration> billGeneration;
 
-	@JsonProperty("billGenerationFile")
-	@Valid
-	private List<BillGenerationFile> billGenerationFile;
 }

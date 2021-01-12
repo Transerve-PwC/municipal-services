@@ -76,6 +76,9 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 			//Calculate and create demand for connection
 			Map<String, Object> masterMap = masterDataService.loadMasterData(request.getRequestInfo(),
 					request.getCalculationCriteria().get(0).getTenantId());
+			Map<String, Object> financialYearMaster =  (Map<String, Object>) masterMap
+					.get(WSCalculationConstant.BILLING_PERIOD);
+			
 			calculations = getCalculations(request, masterMap);
 			demandService.generateDemand(request.getRequestInfo(), calculations, masterMap, request.getIsconnectionCalculation());
 			unsetWaterConnection(calculations);

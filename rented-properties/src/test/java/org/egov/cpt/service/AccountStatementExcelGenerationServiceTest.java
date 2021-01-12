@@ -17,7 +17,6 @@ import org.egov.cpt.repository.PropertyRepository;
 import org.egov.cpt.util.FileStoreUtils;
 import org.egov.cpt.util.NotificationUtil;
 import org.egov.cpt.web.contracts.AccountStatementResponse;
-import org.egov.tracer.model.CustomException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -64,14 +63,6 @@ public class AccountStatementExcelGenerationServiceTest {
 		Mockito.when(fileStoreUtils.fetchFileStoreId(Mockito.any(), Mockito.any())).thenReturn(list);
 		Mockito.when(propertyService.searchPayments(Mockito.any(), Mockito.any()))
 				.thenReturn(buildAccountStatementResponse());
-		Mockito.when(propertyRepository.getProperties(Mockito.any())).thenReturn(buildPropertyList());
-		accountStatementExcelGenerationService.generateAccountStatementExcel(buildAccountStatementCriteria(),
-				buildRequestInfo());
-	}
-
-	@Test
-	public void generateAccountStatementExcelWithExceptionTest() {
-		exception.expect(CustomException.class);
 		Mockito.when(propertyRepository.getProperties(Mockito.any())).thenReturn(buildPropertyList());
 		accountStatementExcelGenerationService.generateAccountStatementExcel(buildAccountStatementCriteria(),
 				buildRequestInfo());

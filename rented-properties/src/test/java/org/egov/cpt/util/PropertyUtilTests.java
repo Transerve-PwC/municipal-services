@@ -3,9 +3,7 @@ package org.egov.cpt.util;
 import static org.junit.Assert.assertEquals;
 
 import org.egov.cpt.CSPropertyApplication;
-import org.egov.tracer.model.CustomException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,16 +31,5 @@ public class PropertyUtilTests {
     public void testValidConsumerCodeExtraction() {
         String consumerCode = "SITE-378-2020-09-248-03-09-614";
         assertEquals("378", utils.getTransitNumberFromConsumerCode(consumerCode));
-    }
-
-    @Test(expected = CustomException.class)
-    public void testInvalidConsumerCodes() {
-        String[] transitSiteNumbers = { "", "10000", "A-9999", "234a2" };
-        for (String transitSiteNumber : transitSiteNumbers) {
-            ExpectedException exception = ExpectedException.none();
-            String consumerCode = utils.getPropertyRentConsumerCode(transitSiteNumber);
-            exception.expect(CustomException.class);
-            utils.getTransitNumberFromConsumerCode(consumerCode);
-        }
     }
 }

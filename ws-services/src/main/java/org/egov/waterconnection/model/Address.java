@@ -28,6 +28,9 @@ public class Address {
 	@JsonProperty("doorNo")
 	private String doorNo;
 
+	@JsonProperty("floorNo")
+	private String floorNo;
+	
 	@JsonProperty("plotNo")
 	private String plotNo;
 

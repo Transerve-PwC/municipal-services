@@ -322,6 +322,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 		.additionalDetails(getadditionalDetail(rs, "addressadditionaldetails"))
 		.buildingName(rs.getString("buildingname"))
 		.landmark(rs.getString("landmark"))
+		.floorNo(rs.getString("floor_no"))
 		.district(rs.getString("district"))
 		.country(rs.getString("country"))
 		.pincode(rs.getString("pincode"))

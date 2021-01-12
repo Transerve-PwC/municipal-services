@@ -194,7 +194,7 @@ public class WaterServiceImpl implements WaterService {
 		}
 		//Call workflow
 		wfIntegrator.callWorkFlow(waterConnectionRequest, property);
-		enrichmentService.postStatusEnrichment(waterConnectionRequest);
+		enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
 		
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
 				waterConnectionRequest.getWaterConnection().getApplicationStatus());
@@ -236,9 +236,6 @@ public class WaterServiceImpl implements WaterService {
 	}
 	@Override
 	public List<WaterConnection> deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
-		AuditDetails auditDetails = wsUtil
-				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
-		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
 		waterDao.deleteConnectionMapping(waterConnectionRequest);
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
@@ -246,7 +243,6 @@ public class WaterServiceImpl implements WaterService {
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
 		AuditDetails auditDetails = wsUtil
 				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
-		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
