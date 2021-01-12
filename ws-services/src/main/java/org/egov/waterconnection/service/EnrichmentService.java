@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -18,6 +20,7 @@ import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
+import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterApplication;
@@ -232,11 +235,12 @@ public class EnrichmentService {
 	 * Enrich water connection request and add connection no if status is approved
 	 * 
 	 * @param waterConnectionrequest 
+	 * @param property 
 	 */
-	public void postStatusEnrichment(WaterConnectionRequest waterConnectionrequest) {
+	public void postStatusEnrichment(WaterConnectionRequest waterConnectionrequest, Property property) {
 		if (WCConstants.ACTIVATE_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())
 				|| WCConstants.ACTION_ACTIVATE_TEMP_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())) {
-			setConnectionNO(waterConnectionrequest);
+			setConnectionNO(waterConnectionrequest,property);
 		}
 	}
 	
@@ -256,15 +260,30 @@ public class EnrichmentService {
     /**
      * Enrich water connection request and set water connection no
      * @param request
+     * @param property 
      */
-	private void setConnectionNO(WaterConnectionRequest request) {
-		List<String> connectionNumbers = getIdList(request.getRequestInfo(), request.getWaterConnection().getTenantId(),
-				config.getWaterConnectionIdGenName(), config.getWaterConnectionIdGenFormat());
-		if (connectionNumbers.size() != 1) {
-			throw new CustomException("IDGEN_ERROR",
-					"The Id of WaterConnection returned by idgen is not equal to number of WaterConnection");
+	private void setConnectionNO(WaterConnectionRequest request, Property property) {
+		/*
+		 * List<String> connectionNumbers = getIdList(request.getRequestInfo(),
+		 * request.getWaterConnection().getTenantId(),
+		 * config.getWaterConnectionIdGenName(),
+		 * config.getWaterConnectionIdGenFormat()); if (connectionNumbers.size() != 1) {
+		 * throw new CustomException("IDGEN_ERROR",
+		 * "The Id of WaterConnection returned by idgen is not equal to number of WaterConnection"
+		 * ); }
+		 */
+		
+		WaterConnection connection = request.getWaterConnection();
+		String connectionId = connection.getDiv().concat(connection.getSubdiv()).concat(property.getAddress().getLocality().getCode()).concat(connection.getLedgerNo()).concat(property.getAddress().getDoorNo()).concat(property.getAddress().getFloorNo()).concat("0");
+		
+		Pattern p = Pattern.compile("-?\\d+");
+		Matcher m = p.matcher(connectionId);
+		int n = 0;
+		while (m.find()) {
+			  n += Integer.parseInt(m.group());
 		}
-		request.getWaterConnection().setConnectionNo(connectionNumbers.get(0));
+		
+		request.getWaterConnection().setConnectionNo(connectionId.concat(((char)(n%26 + 'A'))+""));
 	}
 	/**
 	 * Enrich fileStoreIds

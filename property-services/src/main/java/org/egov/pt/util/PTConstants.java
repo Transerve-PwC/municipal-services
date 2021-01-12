@@ -320,7 +320,7 @@ public class PTConstants {
 	public static final String SECTORNAME = "SECTORNAME";
 
 	public static final String HOUSENO = "HOUSENO";
-
+	public static final String FLOORID = "FloorId";
 	public static final String DepositerName = "Depositer Name";
 
 	public static final String TotalCoveredareainsqft = "Total Covered area in sq. ft";

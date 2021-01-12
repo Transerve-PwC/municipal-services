@@ -34,6 +34,32 @@ public class WSCalculatorQueryBuilder {
 
 	private static final String distinctTenantIdsCriteria = "SELECT distinct(tenantid) FROM eg_ws_connection ws";
 
+	public static final String getBillingDataForDemandGeneration = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
+			" subgroup as subGroup, \r\n" + 
+			"       billtype as billType, name as name, address as address, add1 as add1, add2 as add2, add3 as , add4 as , add5 as , cesscharge as , \r\n" + 
+			"       netamount as , grossamount as , surcharge as , totalnetamount as , totalsurcharge as , \r\n" + 
+			"       totalgrossamount as , fixchargecode as , fixcharge as , duedatecash as , duedatecheque as , \r\n" + 
+			"       status as , billid as , paymentid as , paymentstatus as , createdby as , lastmodifiedby as , \r\n" + 
+			"       createdtime as , lastmodifiedtime\r\n" + 
+			"  FROM public.eg_ws_savebilling where status ='INITIATED' and duedatecash::date >= now()::date;";
+	
+	public static final String getBillingDataForSurcharge = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
+			" subgroup as subGroup, \r\n" + 
+			"       billtype as billType, name as name, address as address, add1 as add1, add2 as add2, add3 as , add4 as , add5 as , cesscharge as , \r\n" + 
+			"       netamount as , grossamount as , surcharge as , totalnetamount as , totalsurcharge as , \r\n" + 
+			"       totalgrossamount as , fixchargecode as , fixcharge as , duedatecash as , duedatecheque as , \r\n" + 
+			"       status as , billid as , paymentid as , paymentstatus as , createdby as , lastmodifiedby as , \r\n" + 
+			"       createdtime as , lastmodifiedtime\r\n" + 
+			"  FROM public.eg_ws_savebilling where status not in ('PAID')::date and duedatecash::date < now()::date;";
+
+	public static final String getBillingDataForConnection = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
+			" subgroup as subGroup, \r\n" + 
+			"       billtype as billType, name as name, address as address, add1 as add1, add2 as add2, add3 as add3 , add4 as add4 , add5 as add5, cesscharge as cessCharge, \r\n" + 
+			"       netamount as netAmount, grossamount as grossAmount , surcharge  , totalnetamount  , totalsurcharge  , \r\n" + 
+			"       totalgrossamount  , fixchargecode  , fixcharge  , duedatecash  , duedatecheque  , \r\n" + 
+			"       status  , billid  , paymentid , paymentstatus  , createdby  , lastmodifiedby  , \r\n" + 
+			"       createdtime  , lastmodifiedtime\r\n" + 
+			"  FROM public.eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
 
 	public String getDistinctTenantIds() {
 		return distinctTenantIdsCriteria;

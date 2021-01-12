@@ -30,6 +30,9 @@ public class Address {
 
 	@JsonProperty("plotNo")
 	private String plotNo;
+	
+	@JsonProperty("floorNo")
+	private String floorNo;
 
 	@JsonProperty("id")
 	private String id;

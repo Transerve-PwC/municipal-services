@@ -93,7 +93,7 @@ public class EstimationService {
 		// billingSlabMaster,
 		// timeBasedExemptionMasterMap);
 		taxAmt = getWaterEstimationCharge(criteria.getWaterConnection(), criteria, billingSlabMaster, billingSlabIds,
-				requestInfo);
+		requestInfo);
 		List<TaxHeadEstimate> taxHeadEstimates = getEstimatesForTax(taxAmt, criteria.getWaterConnection(),
 				timeBasedExemptionMasterMap, RequestInfoWrapper.builder().requestInfo(requestInfo).build());
 

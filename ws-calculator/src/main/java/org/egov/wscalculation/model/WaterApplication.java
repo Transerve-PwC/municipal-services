@@ -14,6 +14,9 @@ public class WaterApplication {
 
 	@JsonProperty("applicationNo")
 	private String applicationNo = null;
+	
+	@JsonProperty("activityType")
+	private String activityType = null;
 
 	@JsonProperty("applicationStatus")
 	private String applicationStatus = null;
@@ -68,5 +71,61 @@ public class WaterApplication {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
+	}
+
+	public String getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
+	}
+
+	public String getApplicationStatus() {
+		return applicationStatus;
+	}
+
+	public void setApplicationStatus(String applicationStatus) {
+		this.applicationStatus = applicationStatus;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public AuditDetails getAuditDetails() {
+		return auditDetails;
+	}
+
+	public void setAuditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
 	}
 }

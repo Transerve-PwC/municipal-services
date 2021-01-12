@@ -2,8 +2,11 @@ package org.egov.waterconnection.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +18,9 @@ import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.BillGeneration;
+import org.egov.waterconnection.model.BillGenerationFile;
 import org.egov.waterconnection.model.BillGenerationRequest;
+import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.repository.BillGenerationDao;
 import org.egov.waterconnection.util.WaterServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +37,7 @@ public class BillGenerationServiceImpl implements BillGenerationService {
 
 	@Override
 	public List<BillGeneration> saveBillingData(BillGenerationRequest billGenerationRequest) {
-
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 		InputStream input = null;
 		List<BillGeneration> listOfBills = new ArrayList<BillGeneration>();
 		try {
@@ -53,6 +58,7 @@ public class BillGenerationServiceImpl implements BillGenerationService {
 					uploadFileData.setBillGenerationId(UUID.randomUUID().toString());
 					uploadFileData.setAuditDetails(auditDetails);
 					uploadFileData.setStatus(WCConstants.STATUS_INITIATED);
+					uploadFileData.setIsFileGenerated(false);
 					XSSFCell cellIndex = rowIndex.getCell(numCol++);
 					uploadFileData.setCcCode(cellIndex.getRawValue());
 
@@ -123,10 +129,10 @@ public class BillGenerationServiceImpl implements BillGenerationService {
 					uploadFileData.setFixCharge(cellIndex.getRawValue());
 
 					cellIndex = rowIndex.getCell(numCol++);
-					uploadFileData.setDueDateCash(cellIndex.getRawValue());
+					uploadFileData.setDueDateCash(dateFormatter.format(cellIndex.getDateCellValue()));
 
 					cellIndex = rowIndex.getCell(numCol++);
-					uploadFileData.setDueDateCheque(cellIndex.getRawValue());
+					uploadFileData.setDueDateCheque(dateFormatter.format(cellIndex.getDateCellValue()));
 
 					listOfBills.add(uploadFileData);
 					numRow++;
@@ -136,7 +142,7 @@ public class BillGenerationServiceImpl implements BillGenerationService {
 
 			}
 
- billRepository.saveBillingData(listOfBills);
+			billRepository.saveBillingData(listOfBills);
 			return listOfBills;
 
 		} catch (Exception e) {
@@ -151,6 +157,51 @@ public class BillGenerationServiceImpl implements BillGenerationService {
 			}
 		}
 
+	}
+
+	@Override
+	public List<BillGenerationFile> generateBillFile(BillGenerationRequest billGenerationRequest) {
+		PrintWriter writer;
+		List<BillGenerationFile> billFileList = new ArrayList<BillGenerationFile>();
+		try {
+			String timeStamp = new SimpleDateFormat("hh:mm:ss a").format(new Date());
+
+			List<BillGeneration> bill = billRepository.getBillingEstimation();
+
+			if (bill.isEmpty()) {
+				throw new CustomException("FILE_GENERATION_FAILED",
+						"Data may not present or may have downloaded earlier please check history");
+			}
+
+			writer = new PrintWriter(WCConstants.WS_BILLING_FILENAME, "UTF-8");
+			for (BillGeneration billGeneration : bill) {
+				writer.println(billGeneration.getCcCode() + " " + timeStamp + " " + billGeneration.getDivSdiv()
+						+ billGeneration.getConsumerCode() + " " + billGeneration.getTotalNetAmount() + " "
+						+ billGeneration.getBillId());
+			}
+
+			writer.close();
+			BillGenerationFile billFile = billRepository.getFilesStoreUrl();
+
+			billRepository.savefileHistory(billFile, bill);
+			billFileList.add(billFile);
+
+		} catch (Exception e) {
+			throw new CustomException("FILE_GENERATION_FAILED", e.getMessage());
+		}
+		return billFileList;
+	}
+
+	@Override
+	public List<BillGenerationFile> getBillingFiles() {
+		List<BillGenerationFile> billFile = billRepository.getBillingFiles();
+		return billFile;
+	}
+
+	@Override
+	public List<BillGeneration> getBillData(BillGenerationRequest billGenerationRequest) {
+		List<BillGeneration> billData = billRepository.getBillData(billGenerationRequest.getBillGeneration());
+		return billData;
 	}
 
 }

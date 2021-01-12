@@ -17,7 +17,7 @@ public class WaterProperty {
 
 	@JsonProperty("usageSubCategory")
 	private String usageSubCategory = null;
-	
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
@@ -93,4 +93,5 @@ public class WaterProperty {
 	public void setAuditDetails(AuditDetails auditDetails) {
 		this.auditDetails = auditDetails;
 	}
+
 }

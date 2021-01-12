@@ -1,4 +1,4 @@
-package org.egov.waterconnection.model;
+package org.egov.wscalculation.model;
 
 import org.egov.common.contract.request.RequestInfo;
 
@@ -21,5 +21,4 @@ public class BillGenerationRequest {
 
 	@JsonProperty("billGeneration")
 	private BillGeneration billGeneration = null;
-	
 }

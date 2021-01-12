@@ -133,6 +133,7 @@ public class OpenPropertyRowMapper implements ResultSetExtractor<List<Property>>
 		.landmark(rs.getString("landmark"))
 		.district(rs.getString("district"))
 		.country(rs.getString("country"))
+		.floorNo(rs.getString("floor_no"))
 		.pincode(rs.getString("pincode"))
 		.doorNo(rs.getString("doorNo"))
 		.plotNo(rs.getString("plotNo"))

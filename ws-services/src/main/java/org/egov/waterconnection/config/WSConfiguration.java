@@ -167,6 +167,9 @@ public class WSConfiguration {
 	@Value("${ws.editnotification.topic}")
 	private String editNotificationTopic;
 
+	@Value("${ws.fileStore.upload}")
+	private String fileStoreupload;
+	
 	@Value("${ws.consume.filestoreids}")
 	private String fileStoreIdsTopic;
 
@@ -199,4 +202,13 @@ public class WSConfiguration {
 	
 	@Value("${egov.waterservice.deleteconnectionmapping}")
 	private String deleteConnectionMapping;
+	
+	@Value("${egov.waterservice.billing.savefilestoreIds}")
+	private String savewaterbillingfile;
+
+	@Value("${egov.waterservice.update.billingPayment}")
+	private String updateBillPayment;
+
+	@Value("${egov.waterservice.update.billingfilFlag}")
+	private String updateBillfileflag;
 }

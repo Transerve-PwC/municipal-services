@@ -28,6 +28,10 @@ public class Document {
   @NotNull
   private String fileStoreId ;
 
+
+  @JsonProperty("fileStroreUrl")
+  private String fileStroreUrl ;
+  
   @JsonProperty("documentUid")
   private String documentUid ;
 

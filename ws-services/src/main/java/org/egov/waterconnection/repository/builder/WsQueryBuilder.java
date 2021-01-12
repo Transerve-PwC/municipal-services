@@ -28,13 +28,30 @@ public class WsQueryBuilder {
 	@Autowired
 	private UserService userService;
 
+	
+	public static final String getBillingDataForDemandGeneration = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
+			" subgroup as subGroup, \r\n" + 
+			"       billtype as billType, name as name, address as address, add1 as add1, add2 as add2, add3  , add4  , add5  , cesscharge , \r\n" + 
+			"       netamount , grossamount , surcharge , totalnetamount  , totalsurcharge  , \r\n" + 
+			"       totalgrossamount , fixchargecode , fixcharge  , duedatecash , duedatecheque  , \r\n" + 
+			"       status , billid , paymentid  , paymentstatus , createdby , lastmodifiedby  , \r\n" + 
+			"       createdtime , lastmodifiedtime\r\n" + 
+			"  FROM public.eg_ws_savebilling where status ='PAID' and isFileGenerated = false;";
+
+	public static final String GET_WS_BILLING_FILES = "SELECT  filestore_url as billFileStoreUrl, filestore_id as billFileStoreId, filegeneration_time as fileGenerationTime\r\n" + 
+			"  FROM public.eg_ws_billfile_history;";
+	public static final String GET_WS_BILLING_Data = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
+			" subgroup as subGroup, \r\n" + 
+			"       billtype as billType, name as name, address as address, add1 as add1, add2 as add2, add3 as add3 , add4 as add4 , add5 as add5, cesscharge as cessCharge, \r\n" + 
+			"       netamount as netAmount, grossamount as grossAmount , surcharge  , totalnetamount  , totalsurcharge  , \r\n" + 
+			"       totalgrossamount  , fixchargecode  , fixcharge  , duedatecash  , duedatecheque  , \r\n" + 
+			"       status  , billid  , paymentid , paymentstatus  , createdby  , lastmodifiedby  , \r\n" + 
+			"       createdtime  , lastmodifiedtime\r\n" + 
+			"  FROM public.eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
 	private static final String INNER_JOIN_STRING = " INNER JOIN ";
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 
-	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, "
-			+ "connectionholder.status as holderstatus, isprimaryholder, connectionholdertype, holdershippercentage, connectionholder.relationship as holderrelationship, "
-			+ "connectionholder.name as holdername, connectionholder.mobile_No as holdermobile, connectionholder.gender as holdergender, connectionholder.guardian_name as holderguardianname, connectionholder.correspondance_address as holderaddress, "
-			+ "connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
+	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype, holdershippercentage, connectionholder.relationship as holderrelationship, connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
 	
 	private static final String WATER_SEARCH_QUERY = "SELECT "
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
@@ -43,7 +60,7 @@ public class WsQueryBuilder {
 			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, "
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
 			+ " conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
-			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
+			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.cccode, conn.div, conn.subdiv, conn.ledger_no, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
 			+ " conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime, "
 			+ " conn.roadtype, conn.waterApplicationType, conn.securityCharge, conn.connectionusagestype, conn.inworkflow, "
 			+ " document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id,"
@@ -65,14 +82,12 @@ public class WsQueryBuilder {
 			+  LEFT_OUTER_JOIN_STRING
 			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id"
 			+ LEFT_OUTER_JOIN_STRING
-		    + "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id"
-			+ LEFT_OUTER_JOIN_STRING
-		    + "eg_ws_connection_mapping connmap ON connmap.wsid = conn.id";
+		    + "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id";
 	
 	private static final String NO_OF_CONNECTION_SEARCH_QUERY = "SELECT count(*) FROM eg_ws_connection WHERE";
 	
 	private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
-            "(SELECT *, DENSE_RANK() OVER (ORDER BY app_applicationno desc) offset_ FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY app_applicationno) offset_ FROM " +
             "({})" +
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";

@@ -1,6 +1,5 @@
-package org.egov.waterconnection.model;
+package org.egov.wscalculation.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -30,6 +29,9 @@ public class BillGeneration {
 	@JsonProperty("ccCode")
 	private String ccCode = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+	
 	@JsonProperty("divSdiv")
 	private String divSdiv = null;
 
@@ -112,19 +114,26 @@ public class BillGeneration {
 	@JsonProperty("paymentId")
 	private String paymentId = null;
 
+	@JsonProperty("paymentStatus")
+	private String paymentStatus = null;
+	
+
 	@JsonProperty("paymentMode")
 	private String paymentMode = null;
 	
-	  @JsonProperty("totalAmountPaid")
-	    private String totalAmountPaid;
-	  
-	@JsonProperty("paymentStatus")
-	private String paymentStatus = null;
+	@JsonProperty("fromDate")
+	private Long fromDate;
 
-	@JsonProperty("isFileGenerated")
-	private Boolean isFileGenerated = false;
+	@JsonProperty("isGenerateDemand")
+	private boolean isGenerateDemand = false;
 
+	@JsonProperty("toDate")
+	private Long toDate;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
+	
+	@JsonProperty("calculation")
+	private Calculation calculation;
 	
 }
