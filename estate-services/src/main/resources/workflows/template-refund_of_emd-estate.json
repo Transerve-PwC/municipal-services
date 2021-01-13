@@ -32,14 +32,6 @@
           "roles": [
             "ES_EB_SECTION_OFFICER"
           ]
-        },
-        {
-          "action": "MODIFY",
-          "currentState": "PENDING_SO_CLARIFICATION",
-          "nextState": "PENDING_SO_CLARIFICATION",
-          "roles": [
-            "ES_EB_SECTION_OFFICER"
-          ]
         }
       ],
       "sla": 86400000,

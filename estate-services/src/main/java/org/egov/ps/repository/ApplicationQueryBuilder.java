@@ -174,6 +174,11 @@ public class ApplicationQueryBuilder {
 			builder.append("app.created_by = :createdBy");
 			preparedStmtList.put("createdBy", criteria.getCreatedBy());
 		}
+		if (null != criteria.getOwnerId()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("ownership.id = :ownerId");
+			preparedStmtList.put("ownerId", criteria.getOwnerId());
+		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}

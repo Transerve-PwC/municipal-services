@@ -94,6 +94,8 @@ public class PSConstants {
 
 	public static final String EB_ADD_COURT_CASES = "ADD_COURT_CASES";
 
+	public static final String EB_ALLOCATION_TYPE_AUCTION = "ALLOCATION_TYPE.AUCTION";
+
 	public static final String MM_PROPERTY_RENT_MASTER_NAME = "ManiMajra_Property_Rent_Config";
 
 	public static final String BUSINESS_SERVICE_EB_RENT = "ESTATE_SERVICE_ESTATE_BRANCH.PROPERTY_MASTER";
@@ -131,6 +133,7 @@ public class PSConstants {
 	public static final String PENDING_SO_APPROVAL = "ES_PENDING_SO_APPROVAL";
 
 	public static final String PENDING_PM_MM_APPROVAL = "ES_PM_MM_PENDING_APPROVAL";
+	public static final String PENDING_MM_SO_APPROVAL = "ES_MM_PENDING_SO_APPROVAL";
 
 	public static final String MONTHLY = "Monthly";
 	public static final String ANNUALLY = "Annually";
@@ -152,5 +155,8 @@ public class PSConstants {
 	public static final String PAYMENT_TYPE_EF = "extention fee";
 	public static final String PAYMENT_TYPE_SD = "security deposit";
 	public static final String PAYMENT_TYPE_PENALTY = "penalty";
+
+	public static final String OWNERSHIP_TRANSFER = "OwnershipTransfer";
+	public static final String MODE_OF_TRANSFER = "MODE_OF_TRANSFER";
 
 }
