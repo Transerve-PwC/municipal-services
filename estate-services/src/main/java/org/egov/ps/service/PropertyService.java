@@ -199,12 +199,22 @@ public class PropertyService {
 						.equalsIgnoreCase(PSConstants.MONTHLY)) {
 			estateDemandGenerationService.bifurcateDemand(property);
 		}
-		/* Approved Property Missing Demands */
+		/* Approved Property Add Estate Branch Missing Demands */
 		if (null != request.getProperties().get(0).getState()
 				&& PSConstants.PENDING_SO_APPROVAL.equalsIgnoreCase(property.getState())
 				&& property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.ESTATE_BRANCH)
 				&& !action.contentEquals("")
 				&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
+			if (null != request.getProperties().get(0).getPropertyDetails().getBidders()
+					&& request.getProperties().get(0).getPropertyDetails().getPropertyType()
+							.equalsIgnoreCase(PSConstants.EB_ALLOCATION_TYPE_AUCTION)) {
+				/**
+				 * This only works if the EMD amounts collect by all the users are same
+				 */
+				request.getProperties().get(0).getPropertyDetails().getEstateAccount()
+						.setRemainingAmount(request.getProperties().get(0).getPropertyDetails().getBidders().get(0)
+								.getDepositedEMDAmount().doubleValue());
+			}
 			estateDemandGenerationService.createMissingDemands(property);
 			estateDemandGenerationService.addCredit(property);
 		}
