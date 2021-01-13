@@ -45,4 +45,5 @@ public class ApplicationCriteria {
 
 	private String createdBy;
 
+	private String ownerId;
 }
