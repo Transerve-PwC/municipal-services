@@ -138,11 +138,12 @@ public class ApplicationService {
 		applicationRequest.getApplications().stream()
 				.forEach(application -> updateApplication(applicationRequest.getRequestInfo(), application));
 
-		if (applicationRequest.getApplications().get(0).getState().equalsIgnoreCase(PSConstants.PENDING_SO_APPROVAL)
-				|| applicationRequest.getApplications().get(0).getState()
-						.equalsIgnoreCase(PSConstants.PENDING_MM_SO_APPROVAL)) {
-			postApprovalChangeOwnerShare(applicationRequest);
-		}
+		applicationRequest.getApplications().forEach(application -> {
+			if (application.getState().equalsIgnoreCase(PSConstants.PENDING_SO_APPROVAL)
+					|| application.getState().equalsIgnoreCase(PSConstants.PENDING_MM_SO_APPROVAL)) {
+				postApprovalChangeOwnerShare(application, applicationRequest.getRequestInfo());
+			}
+		});
 
 		producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 		applicationNotificationService.processNotifications(applicationRequest);
@@ -199,31 +200,21 @@ public class ApplicationService {
 
 	}
 
-	private void postApprovalChangeOwnerShare(ApplicationRequest applicationRequest) {
+	private void postApprovalChangeOwnerShare(Application application, RequestInfo requestInfo) {
 		/**
 		 * Change share % after OWNERSHIP_TRANSFER and update property topic
 		 */
+		if (application.getModuleType().equalsIgnoreCase(PSConstants.OWNERSHIP_TRANSFER)) {
 
-		RequestInfo requestInfo = applicationRequest.getRequestInfo();
-		for (Application application : applicationRequest.getApplications()) {
-			if (application.getModuleType().equalsIgnoreCase(PSConstants.OWNERSHIP_TRANSFER)) {
+			PropertyCriteria propertySearchCriteria = PropertyCriteria.builder()
+					.propertyId(application.getProperty().getId()).build();
+			List<Property> properties = propertyRepository.getProperties(propertySearchCriteria);
+
+			properties.forEach(property -> {
 
 				Owner newOwner = new Owner();
-//				Property property = propertyRepository.findPropertyById(application.getProperty().getId());
-
-				PropertyCriteria propertySearchCriteria = PropertyCriteria.builder()
-						.propertyId(application.getProperty().getId()).build();
-				List<Property> properties = propertyRepository.getProperties(propertySearchCriteria);
-
-//				properties.forEach(property -> {
-
-				Property property = properties.get(0);
-				System.out.println("properties printed");
-//				property.getPropertyDetails().getOwners().forEach(ownerFromDb -> {
-
 				for (Owner ownerFromDb : property.getPropertyDetails().getOwners()) {
 
-					System.out.println("owners printed");
 					/**
 					 * Decrease owner share and if share is equals 0 then make current owner as
 					 * false
@@ -278,16 +269,14 @@ public class ApplicationService {
 
 					}
 				}
-//				});
-//				});
+
 				if (null != newOwner.getId()) {
 					property.getPropertyDetails().addOwnerItem(newOwner);
 				}
-
-				properties.add(property);
-				producer.push(config.getUpdatePropertyTopic(), new PropertyRequest(requestInfo, properties));
-			}
+			});
+			producer.push(config.getUpdatePropertyTopic(), new PropertyRequest(requestInfo, properties));
 		}
+
 	}
 
 	private String getModeOfTransfer(String applicationType) {
