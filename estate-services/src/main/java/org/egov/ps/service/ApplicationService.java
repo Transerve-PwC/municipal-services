@@ -243,7 +243,8 @@ public class ApplicationService {
 						double transferedShare = ownerFromDb.getShare() + percentageTransfered;
 						ownerFromDb.setShare(transferedShare);
 						ownerFromDb.getOwnerDetails().setIsCurrentOwner(true);
-					} else {
+					}
+					if (null == transferee.get("id") && ownerFromDb.getId().equals(transferor.get("id").asText())) {
 						AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 						String ownerId = UUID.randomUUID().toString();
 
