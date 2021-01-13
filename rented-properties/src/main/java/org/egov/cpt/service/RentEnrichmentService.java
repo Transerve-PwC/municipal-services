@@ -160,7 +160,7 @@ public class RentEnrichmentService {
 		}
 		// Settle the payment
 		if (!CollectionUtils.isEmpty(property.getDemands()) && null != property.getRentAccount()) {
-			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property,requestInfo);
+			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 			property.setRentCollections(rentCollectionService.settle(property.getDemands(), property.getPayments(),
 					property.getRentAccount(), property.getPropertyDetails().getInterestRate(),interestStartDate));
 		}

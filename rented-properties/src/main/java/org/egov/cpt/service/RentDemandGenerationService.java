@@ -163,7 +163,7 @@ public class RentDemandGenerationService {
 		property.setPayments(rentPaymentList);
 
 		if (!CollectionUtils.isEmpty(property.getPayments()) && property.getRentAccount() != null) {
-			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property,requestInfo);
+			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 			property.setRentCollections(rentCollectionService.settle(property.getDemands(), property.getPayments(),
 					property.getRentAccount(), property.getPropertyDetails().getInterestRate(),interestStartDate));
 		}

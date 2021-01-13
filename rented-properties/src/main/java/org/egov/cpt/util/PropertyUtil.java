@@ -26,6 +26,7 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -204,11 +205,12 @@ public class PropertyUtil {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public long getInterstStartFromMDMS(Property property, RequestInfo requestInfo) {
-		String filter = "[?(@.code=='" + property.getColony() +"')].interestStartYear"; 
+	@Cacheable(value = "interestStartDate", key = "{#colony, #tenantId}")
+	public long getInterstStartFromMDMS(String colony,String tenantId) {
+		RequestInfo requestInfo = new RequestInfo();
+		String filter = "[?(@.code=='" + colony +"')].interestStartYear"; 
 		Map<String, List<Long>> interestStartDateList =(Map<String, List<Long>>)mdmsService.getMDMSResponse(requestInfo,
-						property.getTenantId().split("\\.")[0], PTConstants.MDMS_PT_MOD_NAME,
+				tenantId.split("\\.")[0], PTConstants.MDMS_PT_MOD_NAME,
 						"colonies",filter, PTConstants.JSONPATH_CODES); 
 				long interestStartDate = ((Number)interestStartDateList.get(PTConstants.MDMS_PT_COLONY).get(0)).longValue();
 				return interestStartDate;

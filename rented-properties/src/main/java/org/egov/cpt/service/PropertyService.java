@@ -110,7 +110,7 @@ public class PropertyService {
 	private void processRentSummary(PropertyRequest request) {
 		request.getProperties().stream().filter(property -> property.getDemands() != null
 				&& property.getPayments() != null && property.getRentAccount() != null).forEach(property -> {
-					long interestStartDate = propertyUtil.getInterstStartFromMDMS(property, request.getRequestInfo());
+					long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 					property.setRentSummary(
 							rentCollectionService.calculateRentSummary(property.getDemands(), property.getRentAccount(),
 									property.getPropertyDetails().getInterestRate(), interestStartDate));
@@ -152,8 +152,7 @@ public class PropertyService {
 
 			request.getProperties().stream().filter(property -> property.getDemands() != null
 					&& property.getPayments() != null && property.getRentAccount() != null).forEach(property -> {
-						long interestStartDate = propertyUtil.getInterstStartFromMDMS(property,
-								request.getRequestInfo());
+						long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 						property.setRentCollections(rentCollectionService.settle(property.getDemands(),
 								property.getPayments(), property.getRentAccount(),
 								property.getPropertyDetails().getInterestRate(), interestStartDate));
@@ -183,7 +182,7 @@ public class PropertyService {
 		List<RentPayment> payments = repository
 				.getPropertyRentPaymentDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
 
-		long interestStartDate = propertyUtil.getInterstStartFromMDMS(property, requestInfo);
+		long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 		return AccountStatementResponse.builder()
 				.rentAccountStatements(rentCollectionService.getAccountStatement(demands, payments,
 						property.getPropertyDetails().getInterestRate(), accountStatementCriteria.getFromDate(),
@@ -225,7 +224,7 @@ public class PropertyService {
 				RentAccount rentAccount = repository
 						.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property.getId()).build());
 				if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
-					long interestStartDate = propertyUtil.getInterstStartFromMDMS(property, requestInfo);
+					long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 					property.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 							property.getPropertyDetails().getInterestRate(), interestStartDate));
 					property.setDemands(demands);
@@ -298,7 +297,7 @@ public class PropertyService {
 		List<RentDemand> demands = repository.getPropertyRentDemandDetails(propertyCriteria);
 		RentAccount account = repository.getPropertyRentAccountDetails(propertyCriteria);
 		if (!CollectionUtils.isEmpty(demands) && null != account) {
-			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property, propertyRequest.getRequestInfo());
+			long interestStartDate = propertyUtil.getInterstStartFromMDMS(property.getColony(),property.getTenantId());
 			RentSummary rentSummary = rentCollectionService.calculateRentSummary(demands, account,
 					property.getPropertyDetails().getInterestRate(), interestStartDate);
 			enrichmentService.enrichRentDemand(property, rentSummary);
@@ -374,7 +373,7 @@ public class PropertyService {
 			RentAccount rentAccount = repository
 					.getPropertyRentAccountDetails(PropertyCriteria.builder().propertyId(property).build());
 			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
-				long interestStartDate = propertyUtil.getInterstStartFromMDMS(singleProperty.get(0), requestInfo);
+				long interestStartDate = propertyUtil.getInterstStartFromMDMS(singleProperty.get(0).getColony(),singleProperty.get(0).getTenantId());
 				propertyDueAmount.setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 						singleProperty.get(0).getPropertyDetails().getInterestRate(), interestStartDate));
 			}

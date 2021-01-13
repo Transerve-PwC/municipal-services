@@ -172,7 +172,7 @@ public class DuplicateCopyService {
 			RentAccount rentAccount = repository
 					.getPropertyRentAccountDetails(propertyCriteria);
 			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
-				long interestStartDate = propertyUtil.getInterstStartFromMDMS(propertiesFromDB.get(0),requestInfo);
+				long interestStartDate = propertyUtil.getInterstStartFromMDMS(propertiesFromDB.get(0).getColony(),propertiesFromDB.get(0).getTenantId());
 				application.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 						propertiesFromDB.get(0).getPropertyDetails().getInterestRate(),interestStartDate));
 			}
