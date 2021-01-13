@@ -82,7 +82,7 @@ public class DuplicateCopyService {
 		 * calling Rent summary
 		 */
 		
-		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications(),duplicateCopyRequest.getRequestInfo());
+		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications());
 		
 		
 		return duplicateCopyRequest.getDuplicateCopyApplications();
@@ -122,7 +122,7 @@ public class DuplicateCopyService {
 				return Collections.emptyList();
 		}
 		
-		addRentSummary(applications,requestInfo);
+		addRentSummary(applications);
 		
 		return applications;
 	}
@@ -153,12 +153,12 @@ public class DuplicateCopyService {
 		/**
 		 * calling Rent summary
 		 */
-		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications(),duplicateCopyRequest.getRequestInfo());
+		addRentSummary(duplicateCopyRequest.getDuplicateCopyApplications());
 		
 		return duplicateCopyRequest.getDuplicateCopyApplications();
 	}
 	
-	private void addRentSummary(List<DuplicateCopy> duplicateCopyApplications, RequestInfo requestInfo) {
+	private void addRentSummary(List<DuplicateCopy> duplicateCopyApplications) {
 		duplicateCopyApplications.stream().filter(application -> application.getProperty().getId() != null)
 		.forEach(application -> {
 			

@@ -124,9 +124,6 @@ public class RentDemandGenerationService {
 
 	private void generateRentDemand(Property property, RentDemand firstDemand, Date date,
 			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount) {
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setMsgId("20170310130900|en_IN");
-		
 		int oldYear = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 				.getYear();
 		int oldMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())

@@ -87,7 +87,7 @@ public class OwnershipTransferService {
 		 * calling rent Summary
 		 */
 
-		addRentSummary(request.getOwners(),request.getRequestInfo());
+		addRentSummary(request.getOwners());
 
 		return request.getOwners();
 	}
@@ -124,7 +124,7 @@ public class OwnershipTransferService {
 		/**
 		 * calling rent Summary
 		 */
-		addRentSummary(owners,requestInfo);
+		addRentSummary(owners);
 
 		return owners;
 	}
@@ -155,12 +155,12 @@ public class OwnershipTransferService {
 		/**
 		 * calling rent Summary
 		 */
-		addRentSummary(request.getOwners(),request.getRequestInfo());
+		addRentSummary(request.getOwners());
 
 		return request.getOwners();
 	}
 
-	private void addRentSummary(List<Owner> owners, RequestInfo requestInfo) {
+	private void addRentSummary(List<Owner> owners) {
 		owners.stream().filter(owner -> owner.getProperty().getId() != null).forEach(owner -> {
 
 			PropertyCriteria propertyCriteria = PropertyCriteria.builder().relations(Arrays.asList("owner"))
