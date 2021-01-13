@@ -170,7 +170,7 @@ public class OwnershipTransferService {
 			List<RentDemand> demands = propertyRepository.getPropertyRentDemandDetails(propertyCriteria);
 
 			RentAccount rentAccount = propertyRepository.getPropertyRentAccountDetails(propertyCriteria);
-			if (!CollectionUtils.isEmpty(demands) && null != rentAccount) {
+			if (!CollectionUtils.isEmpty(demands) && null != rentAccount && !CollectionUtils.isEmpty(propertiesFromDB)) {
 				long interestStartDate = propertyUtil.getInterstStartFromMDMS(propertiesFromDB.get(0).getColony(),propertiesFromDB.get(0).getTenantId());
 				owner.getProperty().setRentSummary(rentCollectionService.calculateRentSummary(demands, rentAccount,
 						propertiesFromDB.get(0).getPropertyDetails().getInterestRate(),interestStartDate));
