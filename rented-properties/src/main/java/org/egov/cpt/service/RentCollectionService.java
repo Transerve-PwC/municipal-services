@@ -150,7 +150,7 @@ public class RentCollectionService implements IRentCollectionService {
 		return demands.stream().filter(RentDemand::isUnPaid).allMatch(demand -> {
 			LocalDate demandGenerationDate = getLocalDate(demand.getGenerationDate());
 			LocalDate paymentDate = getLocalDate(dateOfPayment);
-			if(demandGenerationDate.getYear()<getLocalDate(interestStartDate).getYear())
+			if(demand.getGenerationDate()<interestStartDate)
 				return true;
 			boolean isPaymentDateWithinGraceperiod = demand.getInitialGracePeriod() >= ChronoUnit.DAYS
 					.between(demandGenerationDate, paymentDate);
@@ -196,7 +196,7 @@ public class RentCollectionService implements IRentCollectionService {
 			}
 
 			LocalDate demandInterestSinceDate = getLocalDate(demand.getInterestSince());
-			if(demandInterestSinceDate.getYear() >= getLocalDate(interestStartDate).getYear()) {
+			if(demand.getInterestSince() >= interestStartDate) {
 				long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(demandInterestSinceDate, paymentDate);
 
 				if (noOfDaysForInterestCalculation == 0) {
