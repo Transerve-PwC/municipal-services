@@ -244,7 +244,7 @@ public class RentCollectionService implements IRentCollectionService {
 							+ ChronoUnit.DAYS.between(demandGenerationDate, atDate);
 					LocalDate demandInterestSinceDate = getLocalDate(demand.getInterestSince());
 					
-					if (noOfDaysBetweenGenerationAndPayment > demand.getInitialGracePeriod() && demandInterestSinceDate.getYear() >= getLocalDate(interestStartDate).getYear()) {
+					if (noOfDaysBetweenGenerationAndPayment > demand.getInitialGracePeriod() && demand.getInterestSince() >= interestStartDate) {
 						long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(demandInterestSinceDate, atDate);
 						calculatedInterest = demand.getRemainingPrincipal() * noOfDaysForInterestCalculation
 								* interestRate / 365 / 100;
