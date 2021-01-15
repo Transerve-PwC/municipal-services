@@ -196,6 +196,7 @@ public class RentCollectionService implements IRentCollectionService {
 			}
 
 			LocalDate demandInterestSinceDate = getLocalDate(demand.getInterestSince());
+			
 			if(demand.getInterestSince() >= interestStartDate) {
 				long noOfDaysForInterestCalculation = ChronoUnit.DAYS.between(demandInterestSinceDate, paymentDate);
 
