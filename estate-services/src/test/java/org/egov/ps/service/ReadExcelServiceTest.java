@@ -58,7 +58,7 @@ public class ReadExcelServiceTest {
 	@Test
 	public void testReadExcelsheetTemp() throws FileNotFoundException {
 		String filepath = "excel/EstatePayment calculation_sriraj.xlsx";
-		testExcelParsingAll(filepath, 0, 47770, 57001, 5697, 461);
+		testExcelParsingAll(filepath, 0, 5356.0, 5356.0, 536.0, 16.40);
 	}
 
 	@Test
@@ -200,7 +200,7 @@ public class ReadExcelServiceTest {
 	public void testReadExcelsheet23_40_45() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
 		// testExcelParsingAll(filepath,23,267347,304166,20663,453);
-		testExcelParsingAll(filepath, 23, 267347, 304166, 24200, 453);
+		testExcelParsingAll(filepath, 23, 267347, 304166, 24200, 3846.54);
 	}
 
 	// @Test /* ST/GST Rate is different in column and different in equation of
@@ -225,7 +225,7 @@ public class ReadExcelServiceTest {
 	public void testReadExcelsheet26_14_11() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
 		// testExcelParsingAll(filepath,26,624549,643049,1850,9492);
-		testExcelParsingAll(filepath, 26, 624549, 643049, 22350, 42563);
+		testExcelParsingAll(filepath, 26, 624549, 643049, 22350, 481.32);
 	}
 
 	@Test /*
@@ -234,7 +234,7 @@ public class ReadExcelServiceTest {
 			 */
 	public void testReadExcelsheet27_15_8() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 27, 196500, 201500, 1900, 165);
+		testExcelParsingAll(filepath, 27, 196500, 201500, 1900, 675.95);
 	}
 
 	@Test /*
@@ -243,7 +243,7 @@ public class ReadExcelServiceTest {
 			 */
 	public void testReadExcelsheet28_20_22() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 28, 218500, 223000, 2450, 256);
+		testExcelParsingAll(filepath, 28, 218500, 223000, 2450, 1153.14);
 	}
 
 	@Test /*
@@ -252,7 +252,7 @@ public class ReadExcelServiceTest {
 			 */
 	public void testReadExcelsheet30_18x31_20x22_18x42() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 30, 1472500, 1472500, 5475, 24);
+		testExcelParsingAll(filepath, 30, 1472500, 1472500, 5475, 236.87);
 	}
 
 	@Test /*
@@ -261,7 +261,7 @@ public class ReadExcelServiceTest {
 			 */
 	public void testReadExcelsheet31_M_17() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 31, 223965, 251465, 2600, 1432);
+		testExcelParsingAll(filepath, 31, 223965, 251465, 2600, 1954.54);
 	}
 
 	@Test /*
@@ -270,7 +270,7 @@ public class ReadExcelServiceTest {
 			 */
 	public void testReadExcelsheet32_M_3() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 32, 207500, 224500, 5400, 292);
+		testExcelParsingAll(filepath, 32, 207500, 224500, 5400, 284.45);
 	}
 
 	@Test
@@ -282,13 +282,13 @@ public class ReadExcelServiceTest {
 	@Test /* Previous bal st/gst rate is empty */
 	public void testReadExcelsheet34_M_14() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 34, 88000, 203349, 15500, 3346);
+		testExcelParsingAll(filepath, 34, 88000, 203349, 15500, 2799.89);
 	}
 
 	@Test /* Previous bal st/gst rate is empty */
 	public void testReadExcelsheet35_M_11() throws FileNotFoundException {
 		String filepath = "excel/Estate Module Revised Calculation sheet.xlsx";
-		testExcelParsingAll(filepath, 35, 54000, 122912, 18250, 5920);
+		testExcelParsingAll(filepath, 35, 54000, 122912, 18250, 1571.57);
 	}
 
 	@Test
