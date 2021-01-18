@@ -29,8 +29,13 @@ public class ApplicationQueryBuilder {
 			+ " app.amount as appamount,  app.payment_type as apppayment_type, app.date_of_payment as appdate_of_payment, "
 
 			+ " pt.id, pt.file_number, ptdl.id as ptdlid, "
-			
-			+ " ownership.id as oid, ownership.property_details_id as oproperty_details_id, "
+
+			+ " doc.id as docid, doc.reference_id as docapplication_id, doc.tenantid as doctenantid,"
+			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
+			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, "
+			+ " doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
+
+	private static final String OWNER_COLUMNS = " ownership.id as oid, ownership.property_details_id as oproperty_details_id, "
 			+ " ownership.tenantid as otenantid, ownership.serial_number as oserial_number, "
 			+ " ownership.share as oshare, ownership.cp_number as ocp_number, ownership.state as ostate, ownership.action as oaction, "
 			+ " ownership.created_by as ocreated_by, ownership.created_time as ocreated_time, ownership.ownership_type, "
@@ -41,25 +46,7 @@ public class ApplicationQueryBuilder {
 			+ " od.guardian_name, od.guardian_relation, od.mobile_number,"
 			+ " od.allotment_number, od.date_of_allotment, od.possesion_date, od.is_approved, "
 			+ " od.is_current_owner, od.is_master_entry, od.address, od.is_director, od.is_previous_owner_required, "
-			+ " od.seller_name, od.seller_guardian_name, od.seller_relation, od.mode_of_transfer, od.dob, "
-
-			+ " doc.id as docid, doc.reference_id as docapplication_id, doc.tenantid as doctenantid,"
-			+ " doc.is_active as docis_active, doc.document_type, doc.file_store_id, doc.property_id as docproperty_id,"
-			+ " doc.created_by as dcreated_by, doc.created_time as dcreated_time, "
-			+ " doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
-
-//	private static final String OWNER_COLUMNS = " ownership.id as oid, ownership.property_details_id as oproperty_details_id, "
-//			+ " ownership.tenantid as otenantid, ownership.serial_number as oserial_number, "
-//			+ " ownership.share as oshare, ownership.cp_number as ocp_number, ownership.state as ostate, ownership.action as oaction, "
-//			+ " ownership.created_by as ocreated_by, ownership.created_time as ocreated_time, ownership.ownership_type, "
-//			+ " ownership.last_modified_by as omodified_by, ownership.last_modified_time as omodified_time, "
-//
-//			+ " od.id as odid, od.owner_id as odowner_id,"
-//			+ " od.owner_name as odowner_name, od.tenantid as odtenantid,"
-//			+ " od.guardian_name, od.guardian_relation, od.mobile_number,"
-//			+ " od.allotment_number, od.date_of_allotment, od.possesion_date, od.is_approved, "
-//			+ " od.is_current_owner, od.is_master_entry, od.address, od.is_director, od.is_previous_owner_required, "
-//			+ " od.seller_name, od.seller_guardian_name, od.seller_relation, od.mode_of_transfer, od.dob ";
+			+ " od.seller_name, od.seller_guardian_name, od.seller_relation, od.mode_of_transfer, od.dob ";
 
 	private static final String APP_TABLE = " FROM cs_ep_application_v1 app " + LEFT_JOIN
 			+ " cs_ep_documents_v1 doc ON app.id = doc.reference_id " + LEFT_JOIN
@@ -68,14 +55,14 @@ public class ApplicationQueryBuilder {
 			+ " cs_ep_owner_v1 ownership ON ownership.property_details_id = ptdl.id " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
 
-//	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
-//			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
+	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
+			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
 
 	private final String paginationWrapper = "SELECT * FROM "
 			+ " (SELECT *, DENSE_RANK() OVER (ORDER BY applast_modified_time desc) offset_ FROM " + "({})"
 			+ " result) result_offset " + "WHERE offset_ > :start AND offset_ <= :end";
 
-//	public static final String RELATION_OWNER = "owner";
+	public static final String RELATION_OWNER = "owner";
 	public static final String RELATION_OWNER_DOCUMENTS = "ownerdocs";
 
 	private String addPaginationWrapper(String query, Map<String, Object> preparedStmtList,
@@ -126,14 +113,14 @@ public class ApplicationQueryBuilder {
 		return sb.toString();
 	}
 
-//	public String getOwnersQuery(List<String> propertyDetailIds, Map<String, Object> params) {
-//		StringBuilder sb = new StringBuilder(SELECT);
-//		sb.append(OWNER_COLUMNS);
-//		sb.append(" FROM " + OWNER_TABLE);
-//		sb.append(" where ownership.property_details_id IN (:propertyDetailIds)");
-//		params.put("propertyDetailIds", propertyDetailIds);
-//		return sb.toString();
-//	}
+	public String getOwnersQuery(List<String> propertyDetailIds, Map<String, Object> params) {
+		StringBuilder sb = new StringBuilder(SELECT);
+		sb.append(OWNER_COLUMNS);
+		sb.append(" FROM " + OWNER_TABLE);
+		sb.append(" where ownership.property_details_id IN (:propertyDetailIds)");
+		params.put("propertyDetailIds", propertyDetailIds);
+		return sb.toString();
+	}
 
 	public String getApplicationSearchQuery(ApplicationCriteria criteria, Map<String, Object> preparedStmtList) {
 

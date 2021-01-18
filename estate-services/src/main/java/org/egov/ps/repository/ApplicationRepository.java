@@ -66,16 +66,17 @@ public class ApplicationRepository {
 			relations = new ArrayList<String>();
 
 			if (applications.size() == 1) {
-//				relations.add(ApplicationQueryBuilder.RELATION_OWNER);
+				relations.add(ApplicationQueryBuilder.RELATION_OWNER);
 
 				relations.add(ApplicationQueryBuilder.RELATION_OWNER_DOCUMENTS);
 			}
 
 		}
 
-//		if (relations.contains(ApplicationQueryBuilder.RELATION_OWNER)) {
-//			this.addOwnersToApplication(applications);
-//		}
+		if (relations.contains(ApplicationQueryBuilder.RELATION_OWNER)
+				|| null != criteria.getOwnerId()) {
+			this.addOwnersToApplication(applications);
+		}
 
 		if (relations.contains(PropertyQueryBuilder.RELATION_OWNER_DOCUMENTS)) {
 			this.addOwnerDocumentsToApplication(applications);
@@ -104,36 +105,36 @@ public class ApplicationRepository {
 		});
 	}
 
-//	private void addOwnersToApplication(List<Application> applications) {
-//		if (CollectionUtils.isEmpty(applications)) {
-//			return;
-//		}
-//		/**
-//		 * Extract applications property detail ids.
-//		 */
-//		List<String> applicationDetailsIds = applications.stream()
-//				.map(application -> application.getProperty().getPropertyDetails().getId())
-//				.collect(Collectors.toList());
-//
-//		/**
-//		 * Fetch owners from database
-//		 */
-//		Map<String, Object> params = new HashMap<String, Object>(1);
-//		String ownerDocsQuery = applicationQueryBuilder.getOwnersQuery(applicationDetailsIds, params);
-//		List<Owner> owners = namedParameterJdbcTemplate.query(ownerDocsQuery, params, ownerRowMapper);
-//
-//		/**
-//		 * Assign owners to corresponding properties
-//		 */
-//
-//		applications.stream().forEach(application -> {
-//			application.getProperty().getPropertyDetails()
-//					.setOwners(owners.stream()
-//							.filter(owner -> owner.getPropertyDetailsId()
-//									.equalsIgnoreCase(application.getProperty().getPropertyDetails().getId()))
-//							.collect(Collectors.toList()));
-//		});
-//	}
+	private void addOwnersToApplication(List<Application> applications) {
+		if (CollectionUtils.isEmpty(applications)) {
+			return;
+		}
+		/**
+		 * Extract applications property detail ids.
+		 */
+		List<String> applicationDetailsIds = applications.stream()
+				.map(application -> application.getProperty().getPropertyDetails().getId())
+				.collect(Collectors.toList());
+
+		/**
+		 * Fetch owners from database
+		 */
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		String ownerDocsQuery = applicationQueryBuilder.getOwnersQuery(applicationDetailsIds, params);
+		List<Owner> owners = namedParameterJdbcTemplate.query(ownerDocsQuery, params, ownerRowMapper);
+
+		/**
+		 * Assign owners to corresponding properties
+		 */
+
+		applications.stream().forEach(application -> {
+			application.getProperty().getPropertyDetails()
+					.setOwners(owners.stream()
+							.filter(owner -> owner.getPropertyDetailsId()
+									.equalsIgnoreCase(application.getProperty().getPropertyDetails().getId()))
+							.collect(Collectors.toList()));
+		});
+	}
 
 	private void addOwnerDocumentsToApplication(List<Application> applications) {
 		if (CollectionUtils.isEmpty(applications)) {
