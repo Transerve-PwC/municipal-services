@@ -73,8 +73,7 @@ public class ApplicationRepository {
 
 		}
 
-		if (relations.contains(ApplicationQueryBuilder.RELATION_OWNER)
-				|| null != criteria.getOwnerId()) {
+		if (relations.contains(ApplicationQueryBuilder.RELATION_OWNER) || null != criteria.getOwnerId()) {
 			this.addOwnersToApplication(applications);
 		}
 

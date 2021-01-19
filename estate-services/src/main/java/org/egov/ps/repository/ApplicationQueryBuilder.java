@@ -1,5 +1,7 @@
 package org.egov.ps.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ public class ApplicationQueryBuilder {
 
 	private static final String SELECT = "SELECT ";
 	private static final String LEFT_JOIN = "LEFT OUTER JOIN";
+	private static final String INNER_JOIN = "INNER JOIN";
 
 	private static final String APP_COLUMNS = " app.id as appid, app.tenantid as apptenantid, app.property_id as appproperty_id,"
 			+ " app.application_number as appapplication_number,"
@@ -50,12 +53,13 @@ public class ApplicationQueryBuilder {
 
 	private static final String APP_TABLE = " FROM cs_ep_application_v1 app " + LEFT_JOIN
 			+ " cs_ep_documents_v1 doc ON app.id = doc.reference_id " + LEFT_JOIN
-			+ " cs_ep_property_v1 pt ON pt.id = app.property_id " + LEFT_JOIN
-			+ " cs_ep_property_details_v1 ptdl  ON pt.id = ptdl.property_id " + LEFT_JOIN
-			+ " cs_ep_owner_v1 ownership ON ownership.property_details_id = ptdl.id " + LEFT_JOIN
-			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
+			+ " cs_ep_property_v1 pt ON pt.id = app.property_id " + INNER_JOIN
+			+ " cs_ep_property_details_v1 ptdl  ON pt.id = ptdl.property_id ";
 
-	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
+	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership ON ownership.property_details_id = ptdl.id "
+			+ LEFT_JOIN + " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
+
+	private static final String OWNERS_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
 
 	private final String paginationWrapper = "SELECT * FROM "
@@ -116,7 +120,7 @@ public class ApplicationQueryBuilder {
 	public String getOwnersQuery(List<String> propertyDetailIds, Map<String, Object> params) {
 		StringBuilder sb = new StringBuilder(SELECT);
 		sb.append(OWNER_COLUMNS);
-		sb.append(" FROM " + OWNER_TABLE);
+		sb.append(" FROM " + OWNERS_TABLE);
 		sb.append(" where ownership.property_details_id IN (:propertyDetailIds)");
 		params.put("propertyDetailIds", propertyDetailIds);
 		return sb.toString();
@@ -124,11 +128,42 @@ public class ApplicationQueryBuilder {
 
 	public String getApplicationSearchQuery(ApplicationCriteria criteria, Map<String, Object> preparedStmtList) {
 
-		StringBuilder builder = new StringBuilder(SELECT);
+		StringBuilder builder;
+		List<String> relations = criteria.getRelations();
 
-		builder.append(APP_COLUMNS);
+		if (relations == null) {
+			builder = new StringBuilder(SELECT);
+			builder.append(APP_COLUMNS + "," + OWNER_COLUMNS);
+			builder.append(APP_TABLE + LEFT_JOIN + OWNER_TABLE);
+		} else {
 
-		builder.append(APP_TABLE);
+			builder = new StringBuilder(SELECT);
+			String columns[] = { APP_COLUMNS };
+			List<String> columnList = new ArrayList<>(Arrays.asList(columns));
+
+			String tables[] = { APP_TABLE };
+			List<String> tableList = new ArrayList<>(Arrays.asList(tables));
+
+			// columns
+			if (relations.contains(RELATION_OWNER)) {
+				columnList.add(OWNER_COLUMNS);
+			}
+			if (relations.contains(RELATION_OWNER_DOCUMENTS)) {
+				columnList.add(OWNER_DOCS_COLUMNS);
+			}
+
+			String output = columnList.stream().reduce(null, (str1, str2) -> str1 == null ? str2 : str1 + " , " + str2);
+			builder.append(output);
+
+			// Joins
+			if (relations.contains(RELATION_OWNER)) {
+				tableList.add(OWNER_TABLE);
+			}
+
+			String tableOutput = tableList.stream().reduce(null,
+					(str1, str2) -> str1 == null ? str2 : str1 + LEFT_JOIN + str2);
+			builder.append(tableOutput);
+		}
 
 		if (!ObjectUtils.isEmpty(criteria.getPropertyId())) {
 			addClauseIfRequired(preparedStmtList, builder);
@@ -186,6 +221,8 @@ public class ApplicationQueryBuilder {
 			preparedStmtList.put("ownerId", criteria.getOwnerId());
 		}
 
-		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return
+
+		addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}
 }

@@ -12,6 +12,7 @@ import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,10 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 					applicationMap.put(applicationId, currentApplication);
 
 					if (hasColumn(rs, "appproperty_id")) {
-						Property property = Property.builder().id(rs.getString("appproperty_id")).build();
+						PropertyDetails propertyDetails = PropertyDetails.builder().id(rs.getString("ptdlid"))
+								.branchType(rs.getString("appbranch_type")).build();
+						Property property = Property.builder().id(rs.getString("appproperty_id"))
+								.propertyDetails(propertyDetails).build();
 						currentApplication.setProperty(property);
 					}
 				}
@@ -127,7 +131,7 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 							.dateOfAllotment(rs.getLong("date_of_allotment"))
 							.possesionDate(rs.getLong("possesion_date")).isApproved(rs.getBoolean("is_approved"))
 							.isCurrentOwner(rs.getBoolean("is_current_owner"))
-							.isMasterEntry(rs.getBoolean("is_master_entry")).address(rs.getString("odaddress"))
+							.isMasterEntry(rs.getBoolean("is_master_entry")).address(rs.getString("address"))
 							.isDirector(rs.getBoolean("is_director"))
 							.isPreviousOwnerRequired(rs.getBoolean("is_previous_owner_required"))
 							.sellerName(rs.getString("seller_name"))
