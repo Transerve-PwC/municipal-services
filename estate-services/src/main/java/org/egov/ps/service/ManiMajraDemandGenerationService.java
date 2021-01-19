@@ -198,9 +198,6 @@ public class ManiMajraDemandGenerationService {
 				
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(demandGenerationAnnualDate);
-
-				System.out.println("Year Values ----> " + calendar.getWeekYear());
-				System.out.println("Month Values ----> " + calendar.get(Calendar.MONTH));
 				if (calendar.getWeekYear() >= startYear || calendar.getWeekYear() <= endYear) {
 					if (calendar.get(Calendar.MONTH) == 3 - 1 || demandGenerationAnnualDate.equals(startDate)
 							|| demandGenerationAnnualDate.equals(endDate)) {
