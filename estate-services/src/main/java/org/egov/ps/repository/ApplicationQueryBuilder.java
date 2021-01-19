@@ -221,8 +221,6 @@ public class ApplicationQueryBuilder {
 			preparedStmtList.put("ownerId", criteria.getOwnerId());
 		}
 
-		return
-
-		addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
+		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 	}
 }
