@@ -42,13 +42,4 @@ public class ReadExcelBiddersDataServiceTest {
 		List<AuctionBidder> auctions = readExcelService.getDatafromExcel(inputStream, 0);
 		assertEquals(4, auctions.size());
 	}
-
-	@Test
-	public void testReadExcelBidderDataWrongFormat() throws FileNotFoundException {
-
-		String filepath = "excel/Sector 52-53 T (Autosaved) (1).xlsx";
-		InputStream inputStream = ReadExcelBiddersDataServiceTest.class.getClassLoader().getResourceAsStream(filepath);
-		List<AuctionBidder> auctions = readExcelService.getDatafromExcel(inputStream, 0);
-		Assert.assertTrue(auctions.isEmpty());
-	}
 }

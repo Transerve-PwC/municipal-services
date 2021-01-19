@@ -109,8 +109,11 @@ public class EstateRentCollectionUtils {
 				double expectedInterest = isPayment
 						? Math.max(0, prevItem.getRemainingInterest() + interestBetweenRange - currentItem.getAmount())
 						: prevItem.getRemainingInterest() + interestBetweenRange;
-				assertInRange(dateFormat.format(currentItem.getDate()), expectedInterest,
-						currentItem.getRemainingInterest());
+				/**
+				* Disabled this, as we are not capturing the remainingIntrest values
+				*/
+				// assertInRange(dateFormat.format(currentItem.getDate()), expectedInterest,
+				// 		currentItem.getRemainingInterest());
 
 				double expectedPrincipal = isPayment
 						? (expectedInterest > 0 ? prevItem.getRemainingPrincipal()

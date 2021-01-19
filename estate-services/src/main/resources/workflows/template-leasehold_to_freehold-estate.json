@@ -357,7 +357,7 @@
     {
       "actions": [
         {
-          "action": "FORWARD",
+          "action": "APPROVE",
           "currentState": "PENDING_SO_NOTICE_VERIFICATION",
           "nextState": "APPROVED",
           "roles": ["ES_EB_SECTION_OFFICER"]
