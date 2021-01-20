@@ -73,7 +73,7 @@ public class ApplicationRepository {
 
 		}
 
-		if (relations.contains(ApplicationQueryBuilder.RELATION_OWNER)) {
+		if (relations.contains(ApplicationQueryBuilder.RELATION_OWNER) || null != criteria.getOwnerId()) {
 			this.addOwnersToApplication(applications);
 		}
 
@@ -111,7 +111,8 @@ public class ApplicationRepository {
 		/**
 		 * Extract applications property detail ids.
 		 */
-		List<String> applicationDetailsIds = applications.stream().map(application -> application.getProperty().getId())
+		List<String> applicationDetailsIds = applications.stream()
+				.map(application -> application.getProperty().getPropertyDetails().getId())
 				.collect(Collectors.toList());
 
 		/**

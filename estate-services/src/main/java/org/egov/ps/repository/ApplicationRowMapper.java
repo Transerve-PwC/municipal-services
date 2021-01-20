@@ -12,6 +12,7 @@ import org.egov.ps.model.Document;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.OwnerDetails;
 import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyDetails;
 import org.egov.ps.web.contracts.AuditDetails;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,10 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 					applicationMap.put(applicationId, currentApplication);
 
 					if (hasColumn(rs, "appproperty_id")) {
-						Property property = Property.builder().id(rs.getString("appproperty_id")).build();
+						PropertyDetails propertyDetails = PropertyDetails.builder().id(rs.getString("ptdlid"))
+								.branchType(rs.getString("appbranch_type")).build();
+						Property property = Property.builder().id(rs.getString("appproperty_id"))
+								.propertyDetails(propertyDetails).build();
 						currentApplication.setProperty(property);
 					}
 				}
@@ -112,6 +116,10 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 				final String ownerDetailId = rs.getString("odid");
 				final String OwnerPropertyDetailId = rs.getString("oproperty_details_id");
 
+				final AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("ocreated_by"))
+						.createdTime(rs.getLong("ocreated_time")).lastModifiedBy(rs.getString("omodified_by"))
+						.lastModifiedTime(rs.getLong("omodified_time")).build();
+
 				if (ownerId != null) {
 
 					final OwnerDetails ownerDetails = OwnerDetails.builder().id(ownerDetailId)
@@ -124,12 +132,20 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 							.possesionDate(rs.getLong("possesion_date")).isApproved(rs.getBoolean("is_approved"))
 							.isCurrentOwner(rs.getBoolean("is_current_owner"))
 							.isMasterEntry(rs.getBoolean("is_master_entry")).address(rs.getString("address"))
-							.isDirector(rs.getBoolean("is_director")).build();
+							.isDirector(rs.getBoolean("is_director"))
+							.isPreviousOwnerRequired(rs.getBoolean("is_previous_owner_required"))
+							.sellerName(rs.getString("seller_name"))
+							.sellerGuardianName(rs.getString("seller_guardian_name"))
+							.sellerRelation(rs.getString("seller_relation"))
+							.modeOfTransfer(rs.getString("mode_of_transfer")).dob(rs.getLong("dob"))
+							.auditDetails(auditdetails).build();
 
 					final Owner owners = Owner.builder().id(ownerId).propertyDetailsId(OwnerPropertyDetailId)
 							.tenantId(rs.getString("otenantid")).serialNumber(rs.getString("oserial_number"))
 							.share(rs.getDouble("oshare")).cpNumber(rs.getString("ocp_number"))
-							.ownershipType(rs.getString("ownership_type")).ownerDetails(ownerDetails).build();
+							.state(rs.getString("ostate")).action(rs.getString("oaction"))
+							.ownershipType(rs.getString("ownership_type")).ownerDetails(ownerDetails)
+							.auditDetails(auditdetails).build();
 
 					currentApplication.getProperty().getPropertyDetails().addOwnerItem(owners);
 				}
