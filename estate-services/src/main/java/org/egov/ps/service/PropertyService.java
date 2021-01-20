@@ -262,7 +262,7 @@ public class PropertyService {
 			criteria.setFileNumber(criteria.getFileNumber().trim().toUpperCase());
 		}
 
-		if (criteria.isEmpty()) {
+		if (criteria.isEmpty() || criteria.getState() ==null) {
 			/**
 			 * Set the list of states to exclude draft states. Allow criteria to have
 			 * creator as current user.
