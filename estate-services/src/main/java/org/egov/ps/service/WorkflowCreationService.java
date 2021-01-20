@@ -71,7 +71,7 @@ public class WorkflowCreationService {
 		templateMapping.put("template-refund_of_emd-estate",
 				Arrays.asList(ApplicationType.builder().name("ES-EB-IS-RefundOfEmd").prefix("ES_EB_ROE_").build()));
 		templateMapping.put("template-allotment_of_site-estate",
-				Arrays.asList(ApplicationType.builder().name("ES-EB-AllotmentOfSite").prefix("ES_EB_AOS_").build()));
+				Arrays.asList(ApplicationType.builder().name("ES-EB-AllotmentOfSite").prefix("ES_").build()));
 		// Building Branch
 		templateMapping.put("template-bb-property_master",
 				Arrays.asList(ApplicationType.builder().name("ES-BB-PropertyMaster").prefix("ES_BB_PM_").build()));
