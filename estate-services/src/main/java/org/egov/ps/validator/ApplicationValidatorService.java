@@ -151,11 +151,11 @@ public class ApplicationValidatorService {
 		List<EstateDemand> demands = propertyRepository.getDemandDetailsForPropertyDetailsIds(propertyDetailsIds);
 		EstateAccount estateAccount = propertyRepository.getPropertyEstateAccountDetails(propertyDetailsIds);
 		List<EstatePayment> payments = propertyRepository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
-		estateRentCollectionService.settle(demands, payments, estateAccount, 18,
+		estateRentCollectionService.settle(demands, payments, estateAccount, PSConstants.GST_INTEREST_RATE,
 				property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 				property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 		EstateRentSummary estateRentSummary = estateRentCollectionService.calculateRentSummary(demands, estateAccount,
-				18.0,
+				PSConstants.GST_INTEREST_RATE,
 				property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 				property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 		Double rentDue = estateRentSummary.getBalanceRent() + estateRentSummary.getBalanceGST()

@@ -250,7 +250,7 @@ public class EstateDemandGenerationService {
 			// Replace the 4th line 18 with the MDMS data
 			property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
 					property.getPropertyDetails().getEstateDemands(), property.getPropertyDetails().getEstatePayments(),
-					property.getPropertyDetails().getEstateAccount(), 18,
+					property.getPropertyDetails().getEstateAccount(), PSConstants.GST_INTEREST_RATE,
 					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 

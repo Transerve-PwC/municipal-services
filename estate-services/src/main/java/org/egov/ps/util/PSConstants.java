@@ -158,5 +158,7 @@ public class PSConstants {
 
 	public static final String OWNERSHIP_TRANSFER = "OwnershipTransfer";
 	public static final String MODE_OF_TRANSFER = "MODE_OF_TRANSFER";
+	
+	public static final double GST_INTEREST_RATE = 18.0;
 
 }

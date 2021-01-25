@@ -143,7 +143,7 @@ public class PropertyService {
 		.forEach(property -> {
 			estateRentCollectionService.settle(property.getPropertyDetails().getEstateDemands(),
 					property.getPropertyDetails().getEstatePayments(),
-					property.getPropertyDetails().getEstateAccount(), 18,
+					property.getPropertyDetails().getEstateAccount(), PSConstants.GST_INTEREST_RATE,
 					property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 					property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 			property.setEstateRentSummary(
@@ -151,7 +151,7 @@ public class PropertyService {
 					estateRentCollectionService.calculateRentSummary(
 							property.getPropertyDetails().getEstateDemands(),
 							property.getPropertyDetails().getEstateAccount(),
-							18.0,
+							PSConstants.GST_INTEREST_RATE,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest()
 							.doubleValue()));
@@ -170,7 +170,7 @@ public class PropertyService {
 				property.getPropertyDetails().setEstateRentCollections(estateRentCollectionService.settle(
 						property.getPropertyDetails().getEstateDemands(),
 						property.getPropertyDetails().getEstatePayments(),
-						property.getPropertyDetails().getEstateAccount(), 18,
+						property.getPropertyDetails().getEstateAccount(), PSConstants.GST_INTEREST_RATE,
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 			});
@@ -347,7 +347,7 @@ public class PropertyService {
 						&& property.getPropertyDetails().getPropertyType()
 						.equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-							estateAccount, 18.0,
+							estateAccount, PSConstants.GST_INTEREST_RATE,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 					property.getPropertyDetails().setEstateDemands(demands);
@@ -436,7 +436,7 @@ public class PropertyService {
 
 				accountStatementResponse = AccountStatementResponse.builder()
 						.estateAccountStatements(estateRentCollectionService.getAccountStatement(demands, payments,
-								18.00, accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
+								PSConstants.GST_INTEREST_RATE, accountStatementCriteria.getFromDate(), accountStatementCriteria.getToDate(),
 								property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 								property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()))
 						.build();
@@ -517,11 +517,11 @@ public class PropertyService {
 					&& property.getPropertyDetails().getPaymentConfig() != null
 					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 				List<EstatePayment> payments = repository.getEstatePaymentsForPropertyDetailsIds(propertyDetailsIds);
-				estateRentCollectionService.settle(demands, payments, account, 18,
+				estateRentCollectionService.settle(demands, payments, account, PSConstants.GST_INTEREST_RATE,
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 				EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
-						18.0,
+						PSConstants.GST_INTEREST_RATE,
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 				property.getPropertyDetails()
@@ -622,7 +622,7 @@ public class PropertyService {
 			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
 					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-						estateAccount, 18.0,
+						estateAccount, PSConstants.GST_INTEREST_RATE,
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 			}
