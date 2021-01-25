@@ -151,7 +151,7 @@ public class PropertyService {
 					estateRentCollectionService.calculateRentSummary(
 							property.getPropertyDetails().getEstateDemands(),
 							property.getPropertyDetails().getEstateAccount(),
-							property.getPropertyDetails().getInterestRate(),
+							18.0,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest()
 							.doubleValue()));
@@ -347,7 +347,7 @@ public class PropertyService {
 						&& property.getPropertyDetails().getPropertyType()
 						.equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 					property.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-							estateAccount, property.getPropertyDetails().getInterestRate(),
+							estateAccount, 18.0,
 							property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 							property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 					property.getPropertyDetails().setEstateDemands(demands);
@@ -521,7 +521,7 @@ public class PropertyService {
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 				EstateRentSummary rentSummary = estateRentCollectionService.calculateRentSummary(demands, account,
-						property.getPropertyDetails().getInterestRate(),
+						18.0,
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue());
 				property.getPropertyDetails()
@@ -622,7 +622,7 @@ public class PropertyService {
 			if (!CollectionUtils.isEmpty(demands) && property.getPropertyDetails().getPaymentConfig() != null
 					&& property.getPropertyDetails().getPropertyType().equalsIgnoreCase(PSConstants.ES_PM_LEASEHOLD)) {
 				propertyDueAmount.setEstateRentSummary(estateRentCollectionService.calculateRentSummary(demands,
-						estateAccount, property.getPropertyDetails().getInterestRate(),
+						estateAccount, 18.0,
 						property.getPropertyDetails().getPaymentConfig().getIsIntrestApplicable(),
 						property.getPropertyDetails().getPaymentConfig().getRateOfInterest().doubleValue()));
 			}
