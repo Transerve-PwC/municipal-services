@@ -118,7 +118,7 @@ public class AccountStatementExcelGenerationServiceTest {
 		PropertyDetails propertyDetails = new PropertyDetails();
 		propertyDetails.setInterestRate(24D);
 		propertyDetails.setRentIncrementPercentage(5D);
-		propertyDetails.setRentIncrementPeriod(1);
+		propertyDetails.setRentIncrementPeriod(1f);
 		property.setPropertyDetails(propertyDetails);
 		OwnerDetails ownerDetails = new OwnerDetails();
 		ownerDetails.setName("John");

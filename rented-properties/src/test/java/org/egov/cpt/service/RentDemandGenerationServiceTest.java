@@ -200,7 +200,7 @@ public class RentDemandGenerationServiceTest {
 		PropertyDetails propertyDetails = new PropertyDetails();
 		propertyDetails.setInterestRate(24D);
 		propertyDetails.setRentIncrementPercentage(5D);
-		propertyDetails.setRentIncrementPeriod(1);
+		propertyDetails.setRentIncrementPeriod(1f);
 		property.setPropertyDetails(propertyDetails);
 		return Collections.singletonList(property);
 	}

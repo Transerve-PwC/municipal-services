@@ -69,7 +69,7 @@ public class PropertyDetails {
 	@Builder.Default
 	@Max(value = 99, message = "Rent increment period can not be more than 99")
 	@Min(value = 0, message = "Rent increment period can not be less than zero")
-	private int rentIncrementPeriod = 1;
+	private float rentIncrementPeriod = 1f;
 
 	@JsonProperty("id")
 	@Size(max = 256, message = "Id must be between 0 and 256 characters in length")
