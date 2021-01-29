@@ -304,8 +304,8 @@ public class PropertyService {
 				if (!criteria.getBranchType().stream().filter(branch -> employeeBranches.contains(branch)).findAny()
 						.isPresent())
 					throw new CustomException("INVALID ACCESS", "You are not able to access this resource.");
-
-				if(criteria.getState() == null) {
+				
+				if(criteria.branchTypeOnly()) {
 					for (String branch : criteria.getBranchType()) {
 						if(branch.equalsIgnoreCase(PSConstants.ESTATE_BRANCH)) 
 							businessServiceName = config.getAosBusinessServiceValue();
@@ -322,6 +322,8 @@ public class PropertyService {
 						criteria.setUserId(requestInfo.getUserInfo().getUuid());
 					};
 				}
+				else if (!CollectionUtils.isEmpty(criteria.getState()) && criteria.getState().contains(PSConstants.PM_DRAFTED))
+					criteria.setUserId(requestInfo.getUserInfo().getUuid());
 			} else {
 				criteria.setBranchType(new ArrayList<>(employeeBranches));
 			}
