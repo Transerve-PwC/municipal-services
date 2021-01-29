@@ -129,40 +129,20 @@ public class RentDemandGenerationService {
 			List<RentDemand> rentDemandList, List<RentPayment> rentPaymentList, RentAccount rentAccount) {
 		float oldYear =  new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 				.getYear();
-		int oldMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
+		float oldMonth = new Date(firstDemand.getGenerationDate()).toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDate().getMonthValue();
+
+		oldYear=oldYear+(oldMonth/12);
+		
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		float currentYear = localDate.getYear();
-		int currentMonth = localDate.getMonthValue();
-//				int currentMonth = 10;
+		float currentMonth = localDate.getMonthValue();
 		
-		if(currentMonth>3 && currentMonth<=6) {
-			currentYear=currentYear+0.25f;
-		}else if(currentMonth>6 && currentMonth<=9) {
-			currentYear=currentYear+0.5f;
-		}else if(currentMonth>9) {
-			currentYear=currentYear+0.75f;
-		}
+		currentYear=currentYear+(currentMonth/12);
 
-		/*
-		 * String[] incrementValue=String.valueOf(property.getPropertyDetails().
-		 * getRentIncrementPeriod()).split("[.]"); int incrementYear =
-		 * Integer.parseInt(incrementValue[0]); int incrementMonth =
-		 * Integer.parseInt(incrementValue[1]);
-		 */
-		
 		Double collectionPrincipal = firstDemand.getCollectionPrincipal();
-
-		if(oldMonth>=3 && oldMonth<6) {
-			oldYear=oldYear+0.25f;
-		}else if(oldMonth>=6 && oldMonth<9) {
-			oldYear=oldYear+0.5f;
-		}else if(oldMonth>=9) {
-			oldYear=oldYear+0.75f;
-		}
-
+		
 		oldYear = oldYear + property.getPropertyDetails().getRentIncrementPeriod();
-
 
 			while (oldYear <= currentYear) {
 				if (oldYear == currentYear && currentMonth >= oldMonth) {
@@ -182,8 +162,6 @@ public class RentDemandGenerationService {
 				.mode(ModeEnum.GENERATED).generationDate(date.getTime()).collectionPrincipal(collectionPrincipal)
 				.auditDetails(auditDetails).remainingPrincipal(collectionPrincipal).interestSince(date.getTime())
 				.build();
-		System.out.println("generationDate(date.getTime()):"+date.getTime());
-		System.out.println("collection pricie******"+collectionPrincipal);
 		log.info("Generating Rent demand id '{}' of principal '{}' for property with transit no {}", rentDemand.getId(),
 				collectionPrincipal, property.getTransitNumber());
 		property.setDemands(Collections.singletonList(rentDemand));
