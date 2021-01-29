@@ -167,7 +167,7 @@ public class WorkflowIntegrator {
 					bidder.setState(idStatusMap.get(property.getPropertyDetails().getBidders().get(0).getAuctionId()));
 					if (property.getPropertyDetails().getBidders().get(0).getAction()
 							.equalsIgnoreCase(PSConstants.EM_ACTION_APPROVE)) {
-						bidder.setRefundStatus(PSConstants.PM_APPROVED);
+						bidder.setRefundStatus(PSConstants.ES_REFUNDED);
 					}
 				});
 			}

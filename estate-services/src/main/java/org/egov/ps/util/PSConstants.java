@@ -16,6 +16,8 @@ public class PSConstants {
 
 	public static final String ES_WF_DOCS = "WF_DOCS";
 
+	public static final String ES_REFUNDED = "ES_REFUNDED";
+
 	public static final String ESTATE_BRANCH = "ESTATE_BRANCH";
 
 	public static final String BUILDING_BRANCH = "BUILDING_BRANCH";
