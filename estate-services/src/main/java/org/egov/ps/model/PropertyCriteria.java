@@ -73,10 +73,10 @@ public class PropertyCriteria {
 	}
 	
 	public boolean branchTypeOnly() {
-        return (!this.branchType.isEmpty() && this.tenantId == null && this.fileNumber==null && this.category == null && this.subCategory == null && this.siteNumber == null
+        return (this.branchType!=null && this.tenantId == null && this.fileNumber==null && this.category == null && this.subCategory == null && this.siteNumber == null
                 && this.mohalla == null && this.street == null && this.houseNumber == null &&
                 this.sector == null && this.state==null && this.offset == null 
-                && this.limit == null && this.propertyIds.isEmpty() && this.relations.isEmpty()
+                && this.limit == null && this.propertyIds.size() == 0 && this.relations.size() == 0
         );
     }
 
