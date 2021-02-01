@@ -129,7 +129,9 @@ public class ApplicationsNotificationService {
 					.getApplicationFees(application.getMDMSModuleName(), requestInfo, application.getTenantId());
 
 			BigDecimal estimateAmount = applicationEnrichmentService.fetchEstimateAmountFromMDMSJson(feesConfigurations, application);
-			application.setTotalDue(estimateAmount);
+			BigDecimal gstEstimatePercentage = applicationEnrichmentService.feesGSTOfApplication(application, requestInfo);
+			BigDecimal gstEstimateAmount = (estimateAmount.multiply(gstEstimatePercentage)).divide(new BigDecimal(100));
+			application.setTotalDue(estimateAmount.add(gstEstimateAmount));
 			
 			/**
 			 * Enrich hearing date
