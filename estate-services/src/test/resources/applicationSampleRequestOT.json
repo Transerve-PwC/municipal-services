@@ -20,6 +20,7 @@
             "applicationType": "SaleDeed",
             "comments": " ",
             "hardcopyReceivedDate": 0,
+            "newsPaperAdvertisementDate":1612266778
             "applicationDetails": {
                 "modeOfTransfer": "MODE_OF_TRANSFER.SALEDEED",
                 "registrationNumber": "reg",

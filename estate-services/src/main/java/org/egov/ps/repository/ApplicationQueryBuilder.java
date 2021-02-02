@@ -29,7 +29,7 @@ public class ApplicationQueryBuilder {
 			+ " app.created_by as appcreated_by, app.last_modified_by as applast_modified_by,"
 			+ " app.created_time as appcreated_time, app.last_modified_time as applast_modified_time, "
 			+ " app.bank_name as appbank_name, app.transaction_number as apptransaction_number, "
-			+ " app.amount as appamount,  app.payment_type as apppayment_type, app.date_of_payment as appdate_of_payment, "
+			+ " app.amount as appamount,  app.payment_type as apppayment_type, app.date_of_payment as appdate_of_payment,app.news_paper_advertisement_date as appnews_paper_advertisement_date, "
 
 			+ " pt.id, pt.file_number, ptdl.id as ptdlid, "
 

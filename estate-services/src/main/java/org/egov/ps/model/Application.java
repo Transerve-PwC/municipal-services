@@ -243,4 +243,7 @@ public class Application {
 	@JsonProperty("dateOfPayment")
 	private Long dateOfPayment;
 	
+	@JsonProperty("newsPaperAdvertisementDate")
+	private Long newsPaperAdvertisementDate;
+	
 }
