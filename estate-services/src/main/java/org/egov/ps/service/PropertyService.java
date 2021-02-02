@@ -280,6 +280,12 @@ public class PropertyService {
 			 */
 			criteria.setUserId(requestInfo.getUserInfo().getUuid());
 		}
+		/**
+		 * when trying to access property through auctionId
+		 */
+		if(criteria.getAuctionId()!=null && criteria.getRelations()!=null && !criteria.getRelations().contains(PSConstants.RELATION_BIDDER))
+			criteria.getRelations().add(PSConstants.RELATION_BIDDER);
+	
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE)) {
 			Set<String> employeeBranches = new HashSet<>();
 			String businessServiceName = null;

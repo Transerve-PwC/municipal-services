@@ -116,7 +116,8 @@ public class PropertyQueryBuilder {
 			+ " cs_ep_property_details_v1 ptdl  ON pt.id = ptdl.property_id " + LEFT_JOIN
 			+ " cs_ep_payment_config_v1 pc ON pc.property_details_id = ptdl.id " + LEFT_JOIN
 			+ " cs_ep_payment_config_items_v1 pci ON pc.id = pci.payment_config_id " + LEFT_JOIN
-			+ " cs_ep_premium_amount_config_items_v1 paci ON pc.id = paci.payment_config_id ";
+			+ " cs_ep_premium_amount_config_items_v1 paci ON pc.id = paci.payment_config_id "+ LEFT_JOIN
+			+ " cs_ep_auction aut ON aut.property_details_id = ptdl.id ";
 
 	private static final String OWNER_TABLE = " cs_ep_owner_v1 ownership " + LEFT_JOIN
 			+ " cs_ep_owner_details_v1 od ON ownership.id = od.owner_id ";
@@ -295,6 +296,12 @@ public class PropertyQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append("pt.sector_number IN (:sector_number)");
 			preparedStmtList.put("sector_number", criteria.getSector());
+		}
+		
+		if (null != criteria.getAuctionId()) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("aut.auction_id =:auction_id");
+			preparedStmtList.put("auction_id", criteria.getAuctionId());
 		}
 
 		return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);

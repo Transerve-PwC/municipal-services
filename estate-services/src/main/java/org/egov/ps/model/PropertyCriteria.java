@@ -65,6 +65,8 @@ public class PropertyCriteria {
 	 * Created by
 	 */
 	private String userId;
+	
+	private String auctionId;
 
 	public boolean isEmpty() {
 		return (this.fileNumber == null && this.category == null && this.state == null && this.offset == null
@@ -76,7 +78,7 @@ public class PropertyCriteria {
         return (this.branchType!=null && this.tenantId == null && this.fileNumber==null && this.category == null && this.subCategory == null && this.siteNumber == null
                 && this.mohalla == null && this.street == null && this.houseNumber == null &&
                 this.sector == null && this.state==null && this.offset == null 
-                && this.limit == null && this.propertyIds.size() == 0 && this.relations.size() == 0
+                && this.limit == null && this.propertyIds.size() == 0 && this.relations.size() == 0 && auctionId==null
         );
     }
 
