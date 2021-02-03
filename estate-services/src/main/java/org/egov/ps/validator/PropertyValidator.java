@@ -241,7 +241,7 @@ public class PropertyValidator {
 		ObjectMapper mapper = new ObjectMapper();
 		List<EstateDocumentList> documentTypeList = mapper.convertValue(fieldConfigurations,
 				new TypeReference<List<EstateDocumentList>>() {
-				});
+		});
 
 		owner.getOwnerDetails().getOwnerDocuments().stream().forEach(document -> {
 			if (!documentTypeList.contains(EstateDocumentList.builder().code(document.getDocumentType()).build())) {
@@ -279,15 +279,13 @@ public class PropertyValidator {
 
 		if (requestProperty.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)
 				&& (requestProperty.getPropertyDetails().getMmDemandStartMonth() == 0
-						|| requestProperty.getPropertyDetails().getMmDemandStartYear() == 0)) {
+				|| requestProperty.getPropertyDetails().getMmDemandStartYear() == 0)) {
 			errorMap.put("MANIMAJRA DEMAND DATE", "The Demand Start Year or Start Month can't be null or 0");
 		}
 
 		if (!CollectionUtils.isEmpty(requestProperty.getPropertyDetails().getBidders())) {
 			PropertyCriteria auctionCriteria = new PropertyCriteria();
-			List<String> bidders = new ArrayList<String>();
-			bidders.add("bidder");
-			auctionCriteria.setRelations(bidders);
+			auctionCriteria.setRelations(Collections.singletonList(PSConstants.RELATION_BIDDER));
 			List<Property> auctionPropertiesFromSearchResponse = repository.getProperties(auctionCriteria);
 			String requestAuctionId = requestProperty.getPropertyDetails().getBidders().get(0).getAuctionId().trim();
 			if (!CollectionUtils.isEmpty(propertiesFromSearchResponse)) {
@@ -295,7 +293,8 @@ public class PropertyValidator {
 					if (!CollectionUtils.isEmpty(property.getPropertyDetails().getBidders())) {
 						String responseAuctionId = property.getPropertyDetails().getBidders().get(0).getAuctionId();
 						requestProperty.getPropertyDetails().getBidders().forEach(bidder -> {
-							if (bidder.getId() == null && responseAuctionId.equalsIgnoreCase(requestAuctionId)) {
+							if (bidder.getId() == null && !requestProperty.getPropertyDetails().getId().equalsIgnoreCase(property.getPropertyDetails().getId()) 
+									&& responseAuctionId.equalsIgnoreCase(requestAuctionId )) {
 								errorMap.put("AUCTION_ID_ALREADY_EXIST", "The given Auction Id already exists");
 							}
 							if (bidder.getAuctionId() == null || bidder.getAuctionId().isEmpty()) {
