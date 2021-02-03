@@ -135,8 +135,6 @@ public class ApplicationService {
 	public List<Application> updateApplicationRequest(ApplicationRequest applicationRequest) {
 		validator.validateUpdateRequest(applicationRequest);
 		applicationEnrichmentService.enrichUpdateApplication(applicationRequest);
-		applicationRequest.getApplications().stream()
-				.forEach(application -> updateApplication(applicationRequest.getRequestInfo(), application));
 
 		applicationRequest.getApplications().forEach(application -> {
 			if (application.getState().equalsIgnoreCase(PSConstants.PENDING_SO_APPROVAL)
@@ -144,6 +142,9 @@ public class ApplicationService {
 				postApprovalChangeOwnerShare(application, applicationRequest.getRequestInfo());
 			}
 		});
+
+		applicationRequest.getApplications().stream()
+				.forEach(application -> updateApplication(applicationRequest.getRequestInfo(), application));
 
 		producer.push(config.getUpdateApplicationTopic(), applicationRequest);
 		applicationNotificationService.processNotifications(applicationRequest);
@@ -239,12 +240,16 @@ public class ApplicationService {
 					 * Increase owner share if owner already exists else create new owner with the
 					 * current share
 					 */
-					if (null != transferee.get("id") && ownerFromDb.getId().equals(transferee.get("id").asText())) {
+					if (!transferee.get("id").isNull() && ownerFromDb.getId().equals(transferee.get("id").asText())) {
 						double transferedShare = ownerFromDb.getShare() + percentageTransfered;
 						ownerFromDb.setShare(transferedShare);
 						ownerFromDb.getOwnerDetails().setIsCurrentOwner(true);
 					}
-					if (null == transferee.get("id") && ownerFromDb.getId().equals(transferor.get("id").asText())) {
+
+					/**
+					 * Create new owner
+					 */
+					if (transferee.get("id").isNull() && ownerFromDb.getId().equals(transferor.get("id").asText())) {
 						AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 						String ownerId = UUID.randomUUID().toString();
 
