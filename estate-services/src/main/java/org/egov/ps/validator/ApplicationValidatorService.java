@@ -11,6 +11,7 @@ import org.egov.ps.annotation.ApplicationValidator;
 import org.egov.ps.model.Application;
 import org.egov.ps.model.ApplicationCriteria;
 import org.egov.ps.model.Property;
+import org.egov.ps.model.PropertyCriteria;
 import org.egov.ps.repository.ApplicationRepository;
 import org.egov.ps.repository.PropertyRepository;
 import org.egov.ps.service.MDMSService;
@@ -95,6 +96,9 @@ public class ApplicationValidatorService {
 			String propertyId = application.getProperty().getId();
 			validatePropertyExists(request.getRequestInfo(), propertyId, application);
 			JsonNode applicationDetails = application.getApplicationDetails();
+			if (application.getModuleType().equalsIgnoreCase(PSConstants.OWNERSHIP_TRANSFER)) {
+				validateSharePercentage(application, request.getRequestInfo());
+			}
 			try {
 				String applicationDetailsString = this.objectMapper.writeValueAsString(applicationDetails);
 				Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
@@ -115,6 +119,29 @@ public class ApplicationValidatorService {
 		});
 	}
 
+	private void validateSharePercentage(Application application, RequestInfo requestInfo) {
+		PropertyCriteria propertySearchCriteria = PropertyCriteria.builder()
+				.propertyId(application.getProperty().getId()).build();
+		List<Property> properties = propertyRepository.getProperties(propertySearchCriteria);
+
+		properties.forEach(property -> {
+			property.getPropertyDetails().getOwners().forEach(ownerFromDb -> {
+				JsonNode transferor = (application.getApplicationDetails().get("transferor") != null)
+						? application.getApplicationDetails().get("transferor")
+						: application.getApplicationDetails().get("owner");
+				if (ownerFromDb.getId().equals(transferor.get("id").asText())) {
+					JsonNode transferee = application.getApplicationDetails().get("transferee");
+					double percentageTransfered = transferee.get("percentageOfShareTransferred").asDouble();
+					if (ownerFromDb.getShare() < percentageTransfered) {
+						throw new CustomException("INVALID_SHARE", String.format("Your current share is %.0f"
+								+ "%% and you can't transfer more than which you have", ownerFromDb.getShare()));
+					}
+				}
+			});
+
+		});
+	}
+	
 	private void validatePropertyExists(RequestInfo requestInfo, String propertyId, Application application) {
 		Property property = propertyRepository.findPropertyById(propertyId);
 		if (property == null) {
