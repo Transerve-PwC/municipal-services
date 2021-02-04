@@ -138,6 +138,7 @@ public class ApplicationEnrichmentService {
 
 		if (!CollectionUtils.isEmpty(request.getApplications())) {
 			request.getApplications().forEach(application -> {
+				enrichApplicationDetails(application);
 				AuditDetails modifyAuditDetails = application.getAuditDetails();
 				modifyAuditDetails.setLastModifiedBy(auditDetails.getLastModifiedBy());
 				modifyAuditDetails.setLastModifiedTime(auditDetails.getLastModifiedTime());
