@@ -122,8 +122,7 @@ public class ApplicationService {
 		}
 		List<Application> applications = applicationRepository.getApplications(criteria);
 		if (CollectionUtils.isEmpty(applications)) {
-			if ((requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)
-					|| requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_EMPLOYEE))
+			if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PSConstants.ROLE_CITIZEN)
 					&& criteria.getApplicationNumber() != null)
 				throw new CustomException("INVALID ACCESS", "You are not able to access this resource.");
 			else
