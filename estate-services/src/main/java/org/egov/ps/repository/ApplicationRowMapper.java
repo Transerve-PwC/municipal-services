@@ -58,6 +58,7 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
 							.paymentAmount(rs.getBigDecimal("appamount")).paymentType(rs.getString("apppayment_type"))
 							.dateOfPayment(rs.getLong("appdate_of_payment"))
 							.newsPaperAdvertisementDate(rs.getLong("appnews_paper_advertisement_date"))
+							.applicationSubmissionDate(rs.getLong("appapplication_submission_date"))
 							.auditDetails(auditdetails).build();
 
 					PGobject applicationDetailsPgObject = (PGobject) rs.getObject("appapplication_details");

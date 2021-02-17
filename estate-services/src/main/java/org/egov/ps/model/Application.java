@@ -246,4 +246,7 @@ public class Application {
 	@JsonProperty("newsPaperAdvertisementDate")
 	private Long newsPaperAdvertisementDate;
 	
+	@JsonProperty("applicationSubmissionDate")
+	private Long applicationSubmissionDate;
+	
 }

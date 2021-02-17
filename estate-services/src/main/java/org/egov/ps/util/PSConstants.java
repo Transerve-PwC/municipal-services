@@ -164,5 +164,7 @@ public class PSConstants {
 	public static final double GST_INTEREST_RATE = 18.0;
 	
 	public static final String RELATION_BIDDER = "bidder";
+	
+	public static final String ACTION_SUBMIT = "SUBMIT";
 
 }

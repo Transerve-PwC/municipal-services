@@ -143,6 +143,9 @@ public class ApplicationEnrichmentService {
 				modifyAuditDetails.setLastModifiedBy(auditDetails.getLastModifiedBy());
 				modifyAuditDetails.setLastModifiedTime(auditDetails.getLastModifiedTime());
 				application.setAuditDetails(modifyAuditDetails);
+				
+				if(application.getAction().equalsIgnoreCase(PSConstants.ACTION_SUBMIT) && application.getState().equalsIgnoreCase(""))
+					application.setApplicationSubmissionDate(auditDetails.getLastModifiedTime());
 
 				List<Document> applicationDocuments = application.getAllDocuments();
 				AuditDetails docAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
