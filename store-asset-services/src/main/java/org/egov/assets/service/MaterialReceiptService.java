@@ -76,10 +76,13 @@ public class MaterialReceiptService extends DomainService {
 					materialReceipt.issueingStore(getStore(materialReceiptSearch.getTenantId(),
 							materialReceipt.getIssueingStore().getCode()));
 
-				if (materialReceipt.getSupplier() != null)
-					materialReceipt.setSupplier(
-							getSupplier(materialReceipt.getSupplier().getCode(), materialReceiptSearch.getTenantId()));
-
+				
+				if (materialReceipt.getSupplier() != null) {
+					Supplier supplier = getSupplier(materialReceipt.getSupplier().getCode(), materialReceiptSearch.getTenantId());
+					if(supplier!=null)
+						materialReceipt.setSupplier(supplier);
+				}
+				
 				List<MaterialReceiptDetail> materialReceiptDetail = getMaterialReceiptDetail(
 						materialReceipt.getMrnNumber(), materialReceiptSearch.getTenantId());
 				materialReceipt.setReceiptDetails(materialReceiptDetail);
@@ -87,7 +90,16 @@ public class MaterialReceiptService extends DomainService {
 		}
 		return materialReceiptPagination;
 	}
+	public JSONArray searchStock(MaterialReceiptSearch materialReceiptSearch) {
+		JSONArray materialReceiptPagination = materialReceiptJdbcRepository
+				.searchStock(materialReceiptSearch);
 
+		
+		return materialReceiptPagination;
+	}
+	
+	
+	
 	public JSONArray getInventoryReport(MaterialReceiptSearch materialReceiptSearch) {
 		return materialReceiptJdbcRepository.getInventoryReport(materialReceiptSearch);
 	}

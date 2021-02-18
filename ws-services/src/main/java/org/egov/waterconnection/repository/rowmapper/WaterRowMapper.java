@@ -67,6 +67,8 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
                 currentWaterConnection.setDiv(rs.getString("div"));
                 currentWaterConnection.setSubdiv(rs.getString("subdiv"));
                 currentWaterConnection.setCcCode(rs.getString("cccode"));
+                currentWaterConnection.setBillGroup(rs.getString("billGroup"));
+                currentWaterConnection.setContractValue(rs.getString("contract_value"));
 
                 currentWaterConnection.setLedgerGroup(rs.getString("ledgerGroup"));
                 currentWaterConnection.setMeterCount(rs.getString("meterCount"));
@@ -109,6 +111,8 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 					app.setApplicationStatus(rs.getString("app_applicationstatus"));
 					app.setAction(rs.getString("app_action"));
 					app.setComments(rs.getString("app_comments"));
+					app.setIsFerruleApplicable(rs.getBoolean("app_ferrule"));
+					app.setSecurityCharge(rs.getDouble("app_securitycharge"));
 					
 					AuditDetails auditdetails1 = AuditDetails.builder()
 		                    .createdBy(rs.getString("app_createdBy"))
@@ -200,7 +204,7 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
                     .relationship(Relationship.fromValue(rs.getString("holderrelationship")))
                     .status(org.egov.waterconnection.model.Status.fromValue(rs.getString("holderstatus")))
                     .tenantId(rs.getString("holdertenantid")).ownerType(rs.getString("connectionholdertype"))
-                    .isPrimaryOwner(isPrimaryOwner).uuid(uuid).correspondenceAddress("holdercorrespondenceAddress").build();
+                    .isPrimaryOwner(isPrimaryOwner).uuid(uuid).correspondenceAddress(rs.getString("holdercorrepondanceaddress")).build();
             waterConnection.addConnectionHolderInfo(connectionHolderInfo);
         }
     }

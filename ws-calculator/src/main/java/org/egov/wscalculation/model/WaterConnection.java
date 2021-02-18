@@ -85,6 +85,12 @@ public class WaterConnection extends Connection {
 	
 	@JsonProperty("inWorkflow")
 	private Boolean inWorkflow = false;
+
+	@JsonProperty("contractValue")
+	private String contractValue = null;
+
+	@JsonProperty("billGroup")
+	private String billGroup = null;
 	
 	@JsonProperty("activityType")
 	private String activityType = null;
@@ -403,5 +409,21 @@ public class WaterConnection extends Connection {
 
 	public void setLedgerGroup(String ledgerGroup) {
 		this.ledgerGroup = ledgerGroup;
+	}
+
+	public String getContractValue() {
+		return contractValue;
+	}
+
+	public void setContractValue(String contractValue) {
+		this.contractValue = contractValue;
+	}
+
+	public String getBillGroup() {
+		return billGroup;
+	}
+
+	public void setBillGroup(String billGroup) {
+		this.billGroup = billGroup;
 	}
 }

@@ -179,9 +179,7 @@ public class DemandService {
 			String tenantId = calculation.getTenantId();
 			String consumerCode = isForConnectionNO == true ? calculation.getConnectionNo()
 					: calculation.getApplicationNO();
-			User owner = waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).toCommonUser();
-
-		//	User owner = property.getOwners().get(0).toCommonUser();
+			User owner = User.builder().uuid(requestInfo.getUserInfo().getUuid()).build();
 
 			List<DemandDetail> demandDetails = new LinkedList<>();
 			calculation.getTaxHeadEstimates().forEach(taxHeadEstimate -> {
@@ -203,7 +201,7 @@ public class DemandService {
 
 			addRoundOffTaxHead(calculation.getTenantId(), demandDetails);
 
-			demands.add(Demand.builder().consumerCode(consumerCode).demandDetails(demandDetails).payer(owner)
+			demands.add(Demand.builder().consumerCode(consumerCode).demandDetails(demandDetails).payer(null)
 					.minimumAmountPayable(minimumPaybleAmount).tenantId(tenantId).taxPeriodFrom(fromDate)
 					.taxPeriodTo(toDate).consumerType("waterConnection").businessService(businessService)
 					.status(StatusEnum.valueOf("ACTIVE")).billExpiryTime(expiryDate).build());

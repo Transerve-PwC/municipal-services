@@ -27,6 +27,12 @@ public class WaterApplication {
 	@JsonProperty("comments")
 	private String comments = null;
 
+	@JsonProperty("isFerruleApplicable")
+	private Boolean isFerruleApplicable = true;
+	
+	@JsonProperty("securityCharge")
+	private Double securityCharge = null;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
@@ -127,5 +133,21 @@ public class WaterApplication {
 
 	public void setAuditDetails(AuditDetails auditDetails) {
 		this.auditDetails = auditDetails;
+	}
+
+	public Boolean getIsFerruleApplicable() {
+		return isFerruleApplicable;
+	}
+
+	public void setIsFerruleApplicable(Boolean isFerruleApplicable) {
+		this.isFerruleApplicable = isFerruleApplicable;
+	}
+
+	public Double getSecurityCharge() {
+		return securityCharge;
+	}
+
+	public void setSecurityCharge(Double securityCharge) {
+		this.securityCharge = securityCharge;
 	}
 }

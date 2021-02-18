@@ -76,7 +76,7 @@ public class ConnectionHolderInfo extends User {
         this.mobileNumber = mobileNumber2;
         gender = gender2;
         fatherOrHusbandName = fatherOrHusbandName2;
-        correspondenceAddress = correspondenceAddress2;
+        this.correspondenceAddress = correspondenceAddress;
         this.isPrimaryOwner = isPrimaryOwner;
         this.ownerShipPercentage = ownerShipPercentage;
         this.ownerType = ownerType;
@@ -117,7 +117,7 @@ public class ConnectionHolderInfo extends User {
         this.setPermanentAddress(user.getPermanentAddress());
         this.setPermanentCity(user.getPermanentCity());
         this.setPermanentPincode(user.getPermanentPincode());
-        this.setCorrespondenceAddress(user.getCorrespondenceAddress());
+       // this.setCorrespondenceAddress(user.getCorrespondenceAddress());
         this.setCorrespondenceCity(user.getCorrespondenceCity());
         this.setCorrespondencePincode(user.getCorrespondencePincode());
         this.setActive(user.getActive());

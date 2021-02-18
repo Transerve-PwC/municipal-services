@@ -93,6 +93,7 @@ public class MaterialIssue {
 		REJECTED("Rejected"),
 
 		CANCELED("CANCELED"),
+		REVIEWOFJE("Review Of JE"),
 
 		RECEIPTED("RECEIPTED");
 

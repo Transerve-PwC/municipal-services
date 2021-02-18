@@ -143,29 +143,7 @@ public class WaterServiceImpl implements WaterService {
 		boolean isStateUpdatable = true;
 		BusinessService businessService = null;
 			
-		if(WCConstants.WS_ACTION_REACTIVATION.equalsIgnoreCase(
-				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
-			waterConnectionRequest.getWaterConnection().setActivityType(WCConstants.WS_REACTIVATE);
-
-			HashMap<String, Object> additionalDetails = mapper
-					.convertValue(waterConnectionRequest.getWaterConnection().getAdditionalDetails(), HashMap.class);
-			additionalDetails.put(WCConstants.ADHOC_PENALTY, null);
-			additionalDetails.put(WCConstants.ADHOC_PENALTY_REASON, null);
-			additionalDetails.put(WCConstants.ADHOC_PENALTY_COMMENT, null);
-			additionalDetails.put(WCConstants.ADHOC_REBATE, null);
-			additionalDetails.put(WCConstants.ADHOC_REBATE_REASON, null);
-			additionalDetails.put(WCConstants.ADHOC_REBATE_COMMENT, null);
-
-			waterConnectionRequest.getWaterConnection().setAdditionalDetails(additionalDetails);
-
-		}
-		if (WCConstants.STATUS_PENDING_FOR_REGULAR.equalsIgnoreCase(
-				waterConnectionRequest.getWaterConnection().getApplicationStatus())
-				&& WCConstants.ACTION_APPLY_FOR_REGULAR_CONNECTION.equalsIgnoreCase(
-						waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())){
-			waterConnectionRequest.getWaterConnection().setActivityType(WCConstants.WS_APPLY_FOR_REGULAR_CON);
-			waterConnectionRequest.getWaterConnection().setWaterApplicationType(WCConstants.APPLICATION_TYPE_REGULAR);
-		}
+		
 		
 		if (WCConstants.ACTION_INITIATE.equalsIgnoreCase(
 				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {

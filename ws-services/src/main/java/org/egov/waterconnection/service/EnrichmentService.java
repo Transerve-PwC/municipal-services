@@ -263,15 +263,6 @@ public class EnrichmentService {
      * @param property 
      */
 	private void setConnectionNO(WaterConnectionRequest request, Property property) {
-		/*
-		 * List<String> connectionNumbers = getIdList(request.getRequestInfo(),
-		 * request.getWaterConnection().getTenantId(),
-		 * config.getWaterConnectionIdGenName(),
-		 * config.getWaterConnectionIdGenFormat()); if (connectionNumbers.size() != 1) {
-		 * throw new CustomException("IDGEN_ERROR",
-		 * "The Id of WaterConnection returned by idgen is not equal to number of WaterConnection"
-		 * ); }
-		 */
 		
 		WaterConnection connection = request.getWaterConnection();
 		String connectionId = connection.getDiv().concat(connection.getSubdiv()).concat(property.getAddress().getLocality().getCode()).concat(connection.getLedgerNo()).concat(property.getAddress().getDoorNo()).concat(property.getAddress().getFloorNo()).concat("0");

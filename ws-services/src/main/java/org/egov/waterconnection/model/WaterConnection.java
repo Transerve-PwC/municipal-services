@@ -88,6 +88,28 @@ public class WaterConnection extends Connection {
 	@JsonProperty("activityType")
 	private String activityType = null;
 
+	@JsonProperty("contractValue")
+	private String contractValue = null;
+
+	@JsonProperty("billGroup")
+	private String billGroup = null;
+	
+	public String getContractValue() {
+		return contractValue;
+	}
+
+	public void setContractValue(String contractValue) {
+		this.contractValue = contractValue;
+	}
+
+	public String getBillGroup() {
+		return billGroup;
+	}
+
+	public void setBillGroup(String billGroup) {
+		this.billGroup = billGroup;
+	}
+
 	public WaterConnection waterSource(String waterSource) {
 		this.waterSource = waterSource;
 		return this;

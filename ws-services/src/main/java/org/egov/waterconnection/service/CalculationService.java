@@ -47,6 +47,7 @@ public class CalculationService {
 				|| WCConstants.ACTION_APPROVE_FOR_CONNECTION_RENAME.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
 				|| WCConstants.ACTION_APPROVE_FOR_CONNECTION_DISCONNECTION.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
 				|| WCConstants.ACTION_SEND_BACK_FOR_ADDON_PAYMENT.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
+				|| WCConstants.ACTION_VERIFY_AND_FORWARD_PAYMENT.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())
 				|| WCConstants.ACTION_APPROVE_ACTIVATE_CONNECTION.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())){
 			CalculationCriteria criteria = CalculationCriteria.builder()
 					.applicationNo(request.getWaterConnection().getApplicationNo())

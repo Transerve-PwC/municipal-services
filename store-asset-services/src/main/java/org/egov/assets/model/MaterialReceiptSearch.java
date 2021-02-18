@@ -44,6 +44,8 @@ public class MaterialReceiptSearch {
 	private String storeName;
 
 	private String financialYear;
+	
+	private String asOnDate;
 
 	private String tenantId;
 

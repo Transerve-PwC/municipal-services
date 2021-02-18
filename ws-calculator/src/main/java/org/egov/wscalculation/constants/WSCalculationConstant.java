@@ -323,6 +323,10 @@ public class WSCalculationConstant {
 	
 	public static final String WS_REACTIVATE = "REACTIVATE_CONNECTION";
 
+	public static final String WS_APPLY_FOR_TEMP_TEMP_CON = "APPLY_FOR_TEMPORARY_TEMPORARY_CONNECTION";
+
+	public static final String WS_APPLY_FOR_TEMP_REGULAR_CON = "APPLY_FOR_TEMPORARY_REGULAR_CONNECTION";
+	
 	public static final String WS_CHANGE_OWNER_INFO = "UPDATE_CONNECTION_HOLDER_INFO";
 
 	public static final String WS_CONVERSION = "CONNECTION_CONVERSION";
@@ -334,5 +338,7 @@ public class WSCalculationConstant {
 	public static final String WS_STATUS_PENDING_FOR_CMR = "PENDING_METER_READING_CAPTURE";
 
 	public static final String payment_cheque = "CHEQUE";
+
+	public static final String WS_RESIDENTIAL = "RESIDENTIAL";
 	
 }

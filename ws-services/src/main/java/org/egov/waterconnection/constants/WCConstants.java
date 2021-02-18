@@ -42,7 +42,7 @@ public class WCConstants {
 
     public static final String ACTION_APPLY  = "APPLY";
 
-    public static final String ACTIVATE_CONNECTION  = "ACTIVATE_CONNECTION";
+    public static final String ACTIVATE_CONNECTION  = "ACTIVATE_REGULAR_CONNECTION";
 
     public static final String ACTION_REJECT  = "REJECT";
 
@@ -54,7 +54,7 @@ public class WCConstants {
     
     public static final String ACTION_PAY_FOR_TEMPORARY_CONNECTION  = "PAY_FOR_TEMPORARY_CONNECTION";
 
-    public static final String ACTION_ACTIVATE_TEMP_CONNECTION  = "ACTIVATE_TEMP_CONNECTION";
+    public static final String ACTION_ACTIVATE_TEMP_CONNECTION  = "ACTIVATE_TEMPORARY_CONNECTION";
 
 
     public static final String STATUS_INITIATED = "INITIATED";
@@ -275,4 +275,6 @@ public class WCConstants {
 	public static final String WS_APPLY_FOR_TEMP_TEMP_CON = "APPLY_FOR_TEMPORARY_TEMPORARY_CONNECTION";
 
 	public static final String WS_APPLY_FOR_TEMP_REGULAR_CON = "APPLY_FOR_TEMPORARY_REGULAR_CONNECTION";
+
+	public static final String ACTION_VERIFY_AND_FORWARD_PAYMENT = "VERIFY_AND_FORWARD_FOR_PAYMENT";
 }

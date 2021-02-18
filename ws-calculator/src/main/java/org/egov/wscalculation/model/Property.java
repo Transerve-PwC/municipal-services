@@ -57,7 +57,7 @@ public class Property extends PropertyInfo {
 	private Double landArea;
 
 	@JsonProperty("superBuiltUpArea")
-	private BigDecimal superBuiltUpArea;
+	private Double superBuiltUpArea;
 
 	@JsonProperty("source")
 	private Source source;
@@ -86,7 +86,7 @@ public class Property extends PropertyInfo {
 			String accountId, String oldPropertyId, Status status, Address address, String acknowldgementNumber,
 			String propertyType, String ownershipCategory, List<OwnerInfo> owners, Institution institution,
 			CreationReason creationReason, String usageCategory, Long noOfFloors, Double landArea,
-			BigDecimal superBuiltUpArea, Source source, Channel channel, List<Document> documents, List<Unit> units,
+			Double superBuiltUpArea, Source source, Channel channel, List<Document> documents, List<Unit> units,
 			Object additionalDetails, AuditDetails auditDetails, ProcessInstance workflow) {
 		super(id, propertyId, surveyId, linkedProperties, tenantId, accountId, oldPropertyId, status, address);
 		this.acknowldgementNumber = acknowldgementNumber;

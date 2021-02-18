@@ -87,6 +87,7 @@ public class OpeningbalanceApiController {
 			@RequestParam(value = "financialyear", required = true) String financialyear,
 			@RequestParam(value = "isprint", required = true) boolean forprint) {
 		List<String> mrnStatus=Arrays.asList(MaterialReceipt.MrnStatusEnum.APPROVED.toString());
+
 		MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder().tenantId(tenantId).mrnStatus(mrnStatus)
 				.receiptType(Arrays.asList("OPENING BALANCE")).forprint(forprint).receivingStore(storecode)
 				.forprint(forprint).financialYear(financialyear).build();
@@ -94,7 +95,35 @@ public class OpeningbalanceApiController {
 				pdfRequest.getRequestInfo());
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
-	
+	@PostMapping(value = "/_closingReport", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<PDFResponse> closingbalanceReportPdfPrintPost(@Valid @RequestBody PDFRequest pdfRequest,
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "storecode", required = true) String storecode,
+			@RequestParam(value = "asOnDate", required = true) String asOnDate,
+			@RequestParam(value = "isprint", required = true) boolean forprint) {
+		List<String> mrnStatus=Arrays.asList(MaterialReceipt.MrnStatusEnum.APPROVED.toString());
+		MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder().tenantId(tenantId).mrnStatus(mrnStatus)
+				.forprint(forprint).receivingStore(storecode)
+				.forprint(forprint).asOnDate(asOnDate).build();
+		PDFResponse response = openingBalanceService.printClosingBalanceReportPdf(materialReceiptSearch,
+				pdfRequest.getRequestInfo());
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
+	@PostMapping(value = "/_stockReport", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<PDFResponse> stockbalanceReportPdfPrintPost(@Valid @RequestBody PDFRequest pdfRequest,
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "storecode", required = true) String storecode,
+			@RequestParam(value = "asOnDate", required = true) String asOnDate,
+			@RequestParam(value = "material", required = true) String material,
+			@RequestParam(value = "isprint", required = true) boolean forprint) {
+		List<String> mrnStatus=Arrays.asList(MaterialReceipt.MrnStatusEnum.APPROVED.toString());
+		MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder().tenantId(tenantId).mrnStatus(mrnStatus)
+				.forprint(forprint).receivingStore(storecode).materials(Arrays.asList(material))
+				.forprint(forprint).asOnDate(asOnDate).build();
+		PDFResponse response = openingBalanceService.printStockBalanceReportPdf(materialReceiptSearch,
+				pdfRequest.getRequestInfo());
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
 	@PostMapping(value = "/_updateStatus", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<OpeningBalanceResponse> openingBalanceUpdateStatusPost(
 			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
