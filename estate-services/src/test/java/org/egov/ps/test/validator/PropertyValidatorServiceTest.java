@@ -74,7 +74,7 @@ public class PropertyValidatorServiceTest {
 
 		// Step 4 - Test case
 		Map<String, String> errorMap = new HashMap<String, String>();
-		propertyValidator.validateDocumentsOnType(requestInfo, "ch", owner, errorMap, "");
+		propertyValidator.validateDocumentsOnType(requestInfo,"ESTATE_BRANCH", "ch", owner, errorMap, "");
 
 	}
 
@@ -110,7 +110,7 @@ public class PropertyValidatorServiceTest {
 
 		// Step 4 - Test case
 		Map<String, String> errorMap = new HashMap<String, String>();
-		propertyValidator.validateDocumentsOnType(requestInfo, "ch", owner, errorMap, "");
+		propertyValidator.validateDocumentsOnType(requestInfo,"ESTATE_BRANCH", "ch", owner, errorMap, "");
 
 	}
 
