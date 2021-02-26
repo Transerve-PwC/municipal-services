@@ -622,8 +622,9 @@ public class EstimationService {
 			boolean isSubMinorMatching = billSlb.getUsageCategorySubMinor().equalsIgnoreCase(
 					unit.getUsageCategorySubMinor()) || (billSlb.getUsageCategorySubMinor().equalsIgnoreCase(all));
 
-			boolean isDetailsMatching = billSlb.getUsageCategoryDetail().equalsIgnoreCase(unit.getUsageCategoryDetail())
-					|| (billSlb.getUsageCategoryDetail().equalsIgnoreCase(all));
+//			boolean isDetailsMatching = billSlb.getUsageCategoryDetail().equalsIgnoreCase(unit.getUsageCategoryDetail())
+//					|| (billSlb.getUsageCategoryDetail().equalsIgnoreCase(all));
+			boolean isDetailsMatching=true;
 
 			boolean isFloorMatching = billSlb.getFromFloor() <= floorNo && billSlb.getToFloor() >= floorNo;
 
@@ -805,11 +806,13 @@ public class EstimationService {
 		if (CollectionUtils.isEmpty(billingSlabRes.getBillingSlab()) || billingSlabRes.getBillingSlab() == null){
 			throw new CustomException(BILLING_SLAB_SEARCH_FAILED,BILLING_SLAB_SEARCH_FAILED_MSG);
 		}
-
-		if(billingSlabRes.getBillingSlab().get(0).getType().equals(MutationBillingSlab.TypeEnum.FLAT)){
+		if(billingSlabRes.getBillingSlab().get(0).getType()==null) {
 			fees = BigDecimal.valueOf(billingSlabRes.getBillingSlab().get(0).getFixedAmount());
 		}
-		if(billingSlabRes.getBillingSlab().get(0).getType().equals(MutationBillingSlab.TypeEnum.RATE)){
+		else if(billingSlabRes.getBillingSlab().get(0).getType().equals(MutationBillingSlab.TypeEnum.FLAT)){
+			fees = BigDecimal.valueOf(billingSlabRes.getBillingSlab().get(0).getFixedAmount());
+		}
+		else if(billingSlabRes.getBillingSlab().get(0).getType().equals(MutationBillingSlab.TypeEnum.RATE)){
 			BigDecimal rate = BigDecimal.valueOf(billingSlabRes.getBillingSlab().get(0).getRate());
 			BigDecimal marketValuefess = BigDecimal.valueOf(billingSlabSearchCriteria.getMarketValue());
 			fees= marketValuefess.multiply(rate.divide(CalculatorConstants.HUNDRED));
