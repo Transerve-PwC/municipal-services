@@ -74,7 +74,7 @@ public class Address   {
         private String street;
 
         @Valid
-        @NotNull
+//        @NotNull
         @JsonProperty("locality")
         private Boundary locality;
 

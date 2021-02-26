@@ -166,7 +166,8 @@ public class PropertyValidator {
         /*
          * Blocking owner changes in update flow
          */
-		List<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().map(OwnerInfo::getUuid).collect(Collectors.toList());
+//		List<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().map(OwnerInfo::getUuid).collect(Collectors.toList());
+		List<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().filter(owner->owner.getStatus().toString().equalsIgnoreCase(Status.ACTIVE.toString())).map(OwnerInfo::getUuid).collect(Collectors.toList());
 		List<String> uuidsNotFound = new ArrayList<>();
 //
 //		if(!property.getWorkflow().getBusinessService().equalsIgnoreCase(configs.getUpdatePTWfName()))
@@ -175,9 +176,9 @@ public class PropertyValidator {
 		if (!CollectionUtils.isEmpty(uuidsNotFound))
 			errorMap.put("EG_PT_UPDATE_OWNER_UUID_ERROR", "Invalid owners found in request : " + uuidsNotFound);
 
-		if(searchOwnerUuids.size() != request.getProperty().getOwners().size())
-			errorMap.put("EG_PT_UPDATE_OWNER_SIZE_ERROR", "Update request cannot change owner Information please use mutation process");
-		
+//		if(searchOwnerUuids.size() != request.getProperty().getOwners().stream().filter(owner->owner.getStatus().toString().equalsIgnoreCase(Status.ACTIVE.toString())).collect(Collectors.toList()).size())
+//			errorMap.put("EG_PT_UPDATE_OWNER_SIZE_ERROR", "Update request cannot change owner Information please use mutation process");
+	
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
     }
@@ -481,9 +482,9 @@ public class PropertyValidator {
 
 		String uuid = request.getRequestInfo().getUserInfo().getUuid();
 		Property property = request.getProperty();
-
+		
 		Set<String> ownerIds = propertyFromSearch.getOwners().stream().map(OwnerInfo::getUuid).collect(Collectors.toSet());
-
+		
 		if (!(ownerIds.contains(uuid) || uuid.equalsIgnoreCase(propertyFromSearch.getAccountId()))) {
 			errorMap.put("EG_PT_UPDATE AUTHORIZATION FAILURE",
 					"Not Authorized to update property with propertyId " + property.getPropertyId());
@@ -564,8 +565,8 @@ public class PropertyValidator {
 			if(criteria.getTenantId() == null)
 				throw new CustomException("EG_PT_INVALID_SEARCH"," TenantId is mandatory for search by " + userType);
 			
-			if(criteria.getTenantId() != null && isCriteriaEmpty)
-				throw new CustomException("EG_PT_INVALID_SEARCH"," Search is not allowed on empty Criteria, Atleast one criteria should be provided with tenantId for " + userType);
+//			if(criteria.getTenantId() != null && isCriteriaEmpty)
+//				throw new CustomException("EG_PT_INVALID_SEARCH"," Search is not allowed on empty Criteria, Atleast one criteria should be provided with tenantId for " + userType);
 			
 			allowedParams = Arrays.asList(configs.getEmployeeSearchParams().split(","));
 		}
