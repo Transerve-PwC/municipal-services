@@ -111,7 +111,7 @@ public class  TradeLicense   {
     private String applicationNumber;
 
     @JsonProperty("businessService")
-    private String businessService = "TL";
+    private String businessService = "NewTL";
 
     @JsonProperty("oldLicenseNumber")
     private String oldLicenseNumber = null;
