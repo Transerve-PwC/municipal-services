@@ -486,7 +486,14 @@ public class PropertyService {
 		}
 
 		Property property = propertiesFromDB.get(0);
-		Owner owner = utils.getCurrentOwnerFromProperty(property);
+		Owner owner = null;
+		if (null != propertyFromRequest.getPayer() && null != propertyFromRequest.getPayer().getUuid()
+				&& !propertyFromRequest.getPayer().getUuid().isEmpty()) {
+			owner = property.getPropertyDetails().getOwners().stream()
+					.filter(o -> o.getId().equals(propertyFromRequest.getPayer().getUuid())).findFirst().get();
+		} else {
+			owner = utils.getCurrentOwnerFromProperty(property);
+		}
 
 		/**
 		 * Create egov user if not already present.
