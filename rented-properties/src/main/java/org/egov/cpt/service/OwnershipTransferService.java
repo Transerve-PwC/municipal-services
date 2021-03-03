@@ -133,13 +133,15 @@ public class OwnershipTransferService {
 		propertyValidator.validatePropertyRentDetails(request);
 		List<Owner> ownersFromSearch = propertyValidator.validateUpdateRequest(request);
 		enrichmentService.enrichUpdateOwnershipTransfer(request, ownersFromSearch);
-		String applicationState = request.getOwners().get(0).getApplicationState(); // demand generation
+		String applicationState = request.getOwners().get(0).getApplicationState(); 
+		
+		// demand generation
 		/*
 		 * if (applicationState.equalsIgnoreCase(PTConstants.
 		 * OT_STATE_PENDING_SA_VERIFICATION)) {
 		 * demandService.updateDemand(request.getRequestInfo(), request.getOwners()); }
 		 */
-		if (applicationState.equalsIgnoreCase(PTConstants.OT_STATE_PENDING_APRO)) {
+		if ((request.getOwners().get(0).getOwnerDetails().isAPROChargePaid() && applicationState.equalsIgnoreCase(PTConstants.OT_STATE_PENDING_SA_VERIFICATION)) || applicationState.equalsIgnoreCase(PTConstants.OT_STATE_PENDING_APRO)) {
 			demandService.generateDemand(request.getRequestInfo(), request.getOwners());
 		}
 		if (config.getIsWorkflowEnabled()) {

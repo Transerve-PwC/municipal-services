@@ -178,5 +178,8 @@ public class OwnerDetails {
 
 	@JsonProperty("aproCharge")
 	private BigDecimal aproCharge;
+	
+	@JsonProperty("isAPROChargePaid")
+	private boolean isAPROChargePaid;
 
 }

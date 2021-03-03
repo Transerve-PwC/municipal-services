@@ -868,7 +868,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.Owners.*.ownerDetails.id
 
-        - query: UPDATE cs_pt_ownershipdetails_v1 SET name=?, email=?, phone=?, gender=?, date_of_birth=?, aadhaar_number=?, allotment_startdate=?, allotment_enddate=?, posession_startdate=?, posession_enddate=?, monthly_rent=?, revision_period=?, revision_percentage=?, father_or_husband=?, relation=?, relation_with_deceased_allottee=?, date_of_death_allottee=?, application_type=?, modified_by=?, modified_date=?, due_amount=?, apro_charge=?, permanent=? where id=?;
+        - query: UPDATE cs_pt_ownershipdetails_v1 SET name=?, email=?, phone=?, gender=?, date_of_birth=?, aadhaar_number=?, allotment_startdate=?, allotment_enddate=?, posession_startdate=?, posession_enddate=?, monthly_rent=?, revision_period=?, revision_percentage=?, father_or_husband=?, relation=?, relation_with_deceased_allottee=?, date_of_death_allottee=?, application_type=?, modified_by=?, modified_date=?, due_amount=?, apro_charge=?, permanent=?, isapro_charge_paid=? where id=?;
           basePath: $.Owners.*.ownerDetails
           jsonMaps:
             - jsonPath: $.Owners.*.ownerDetails.name
@@ -916,6 +916,8 @@ serviceMaps:
             - jsonPath: $.Owners.*.ownerDetails.aproCharge
 
             - jsonPath: $.Owners.*.ownerDetails.permanent
+            
+            - jsonPath: $.Owners.*.ownerDetails.isAPROChargePaid
 
             - jsonPath: $.Owners.*.ownerDetails.id
 
@@ -1065,7 +1067,7 @@ serviceMaps:
       - jsonPath: $.DuplicateCopyApplications.*.state
 
       - jsonPath: $.DuplicateCopyApplications.*.action 
-
+      
       - jsonPath: $.DuplicateCopyApplications.*.auditDetails.lastModifiedBy
 
       - jsonPath: $.DuplicateCopyApplications.*.auditDetails.lastModifiedTime
@@ -1079,7 +1081,7 @@ serviceMaps:
       - jsonPath: $.DuplicateCopyApplications.*.applicant.*.id
     
     
-    - query: UPDATE cs_pt_duplicatecopy_applicant SET name=?, email=?, mobileno=?, guardian=?, relationship=?, aadhaar_number=?, fee_amount=?, apro_charge=?, modified_by=?, modified_time=? WHERE id=?;
+    - query: UPDATE cs_pt_duplicatecopy_applicant SET name=?, email=?, mobileno=?, guardian=?, relationship=?, aadhaar_number=?, fee_amount=?,  modified_by=?, modified_time=? WHERE id=?;
       basePath: DuplicateCopyApplications.*.applicant.*
       jsonMaps:
 
@@ -1097,8 +1099,6 @@ serviceMaps:
       
       - jsonPath: $.DuplicateCopyApplications.*.applicant.*.feeAmount
 
-      - jsonPath: $.DuplicateCopyApplications.*.applicant.*.aproCharge
-      
       - jsonPath: $.DuplicateCopyApplications.*.auditDetails.lastModifiedBy 
       
       - jsonPath: $.DuplicateCopyApplications.*.auditDetails.lastModifiedTime

@@ -133,13 +133,8 @@ public class DuplicateCopyService {
 				.validateDuplicateCopyUpdateRequest(duplicateCopyRequest);
 		enrichmentService.enrichDuplicateCopyUpdateRequest(duplicateCopyRequest, searchedProperty);
 		String applicationState = duplicateCopyRequest.getDuplicateCopyApplications().get(0).getState();
-		/*
-		 * if (applicationState.equalsIgnoreCase(PTConstants.
-		 * DC_STATE_PENDING_SA_VERIFICATION)) {
-		 * demandService.updateDuplicateCopyDemand(duplicateCopyRequest.getRequestInfo()
-		 * , duplicateCopyRequest.getDuplicateCopyApplications()); }
-		 */
-		if (applicationState.equalsIgnoreCase(PTConstants.DC_STATE_PENDING_APRO)) {
+
+		if (applicationState.equalsIgnoreCase(PTConstants.DC_STATE_PENDING_SA_VERIFICATION)) {
 			demandService.generateDuplicateCopyDemand(duplicateCopyRequest.getRequestInfo(),
 					duplicateCopyRequest.getDuplicateCopyApplications());
 		}

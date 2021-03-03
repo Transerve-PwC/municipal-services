@@ -320,17 +320,16 @@ public class EnrichmentService {
 
 	private void enrichUpdateDemand(Owner owner) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
-
-		// TaxHeadEstimate estimate = new TaxHeadEstimate();
-		/*
-		 * if (owner.getApplicationState().equalsIgnoreCase(PTConstants.
-		 * OT_STATE_PENDING_SA_VERIFICATION)) {
-		 * estimate.setEstimateAmount(owner.getOwnerDetails().getDueAmount());
-		 * estimate.setCategory(Category.DUE);
-		 * estimate.setTaxHeadCode(getTaxHeadCode(PTConstants.
-		 * BILLING_BUSINESS_SERVICE_OT, Category.DUE)); }
-		 */
-		if (owner.getApplicationState().equalsIgnoreCase(PTConstants.OT_STATE_PENDING_APRO)) {
+		
+		if(owner.getOwnerDetails().isAPROChargePaid() && owner.getApplicationState().equalsIgnoreCase(PTConstants.OT_STATE_PENDING_SA_VERIFICATION)){
+			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
+			estimate1.setEstimateAmount(owner.getOwnerDetails().getDueAmount());
+			estimate1.setCategory(Category.FEE);
+			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(owner.getBillingBusinessService(),
+					PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
+			estimates.add(estimate1);
+		}
+		else if (owner.getApplicationState().equalsIgnoreCase(PTConstants.OT_STATE_PENDING_APRO)) {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(owner.getOwnerDetails().getDueAmount());
 			estimate1.setCategory(Category.FEE);
@@ -498,28 +497,23 @@ public class EnrichmentService {
 	private void enrichDuplicateCopyUpdateDemand(DuplicateCopy application) {
 		List<TaxHeadEstimate> estimates = new LinkedList<>();
 
-		/*
-		 * if (application.getState().equalsIgnoreCase(PTConstants.
-		 * DC_STATE_PENDING_SA_VERIFICATION)) {
-		 * estimate.setEstimateAmount(application.getApplicant().get(0).getFeeAmount());
-		 * estimate.setCategory(Category.FEE);
-		 * estimate.setTaxHeadCode(getTaxHeadCode(PTConstants.
-		 * BILLING_BUSINESS_SERVICE_DC, Category.FEE)); }
-		 */
-		if (application.getState().equalsIgnoreCase(PTConstants.DC_STATE_PENDING_APRO)) {
+		if (application.getState().equalsIgnoreCase(PTConstants.DC_STATE_PENDING_SA_VERIFICATION)) {
 			TaxHeadEstimate estimate1 = new TaxHeadEstimate();
 			estimate1.setEstimateAmount(application.getApplicant().get(0).getFeeAmount());
 			estimate1.setCategory(Category.FEE);
 			estimate1.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
 					PTConstants.TAX_HEAD_CODE_APPLICATION_CHARGE, Category.FEE));
 			estimates.add(estimate1);
-
-			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
-			estimate2.setEstimateAmount(application.getApplicant().get(0).getAproCharge());
-			estimate2.setCategory(Category.FEE);
-			estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(application.getBillingBusinessService(),
-					PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE, Category.FEE));
-			estimates.add(estimate2);
+			
+			/*
+			 * TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+			 * estimate2.setEstimateAmount(application.getApplicant().get(0).getAproCharge()
+			 * ); estimate2.setCategory(Category.FEE);
+			 * estimate2.setTaxHeadCode(getTaxHeadCodeWithCharge(application.
+			 * getBillingBusinessService(), PTConstants.TAX_HEAD_CODE_PUBLICATION_CHARGE,
+			 * Category.FEE)); estimates.add(estimate2);
+			 */
+			 
 		}
 		Calculation calculation = Calculation.builder().applicationNumber(application.getApplicationNumber())
 				.taxHeadEstimates(estimates).tenantId(application.getTenantId()).build();

@@ -67,7 +67,7 @@ public class DuplicateCopyPropertyRowMapper implements ResultSetExtractor<List<D
 						.applicationId(rs.getString("app_id")).name(rs.getString("name")).email(rs.getString("email"))
 						.phone(rs.getString("mobileno")).guardian(rs.getString("guardian"))
 						.relationship(rs.getString("relationship")).adhaarNumber(rs.getString("adhaarnumber"))
-						.feeAmount(rs.getBigDecimal("fee_amount")).aproCharge(rs.getBigDecimal("apro_charge"))
+						.feeAmount(rs.getBigDecimal("fee_amount"))
 						.auditDetails(auditDetails).build();
 				applicantMap.put(rs.getString("aid"), applicant);
 				currentapplication.setApplicant(new ArrayList<>(applicantMap.values()));

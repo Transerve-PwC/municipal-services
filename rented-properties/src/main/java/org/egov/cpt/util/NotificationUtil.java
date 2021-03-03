@@ -105,6 +105,11 @@ public class NotificationUtil {
 				break;
 
 			case PTConstants.OT_ACTION_STATUS_CA_APPROVED:
+				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_PAYMENT, localizationMessage);
+				message = getInitiatedOtMsg(owner, messageTemplate);
+				break;
+				
+			case PTConstants.OT_ACTION_STATUS_CA_SENDTOAPRO:
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_CA_APPROVED, localizationMessage);
 				message = getInitiatedOtMsg(owner, messageTemplate);
 				break;
@@ -133,7 +138,10 @@ public class NotificationUtil {
 		message = message.replace("<3>", PTConstants.OWNERSHIP_TRANSFER_APPLICATION);
 		message = message.replace("<4>", owner.getOwnerDetails().getApplicationNumber());
 		if (message.contains("<5>")) {
-			message = message.replace("<5>", due.add(charge) + "");
+			if(charge!=null)
+				message = message.replace("<5>", due.add(charge) + "");
+			else
+				message = message.replace("<5>", due + "");
 		}
 		return message;
 	}
@@ -265,10 +273,12 @@ public class NotificationUtil {
 				message = getInitiatedDcMsg(copy, messageTemplate);
 				break;
 
-			case PTConstants.DC_ACTION_STATUS_CA_APPROVED:
-				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_CA_APPROVED, localizationMessage);
-				message = getInitiatedDcMsg(copy, messageTemplate);
-				break;
+			/*
+			 * case PTConstants.DC_ACTION_STATUS_CA_APPROVED: messageTemplate =
+			 * getMessageTemplate(PTConstants.NOTIFICATION_OT_CA_APPROVED,
+			 * localizationMessage); message = getInitiatedDcMsg(copy, messageTemplate);
+			 * break;
+			 */
 
 			case PTConstants.DC_ACTION_STATUS_APPROVED:
 				messageTemplate = getMessageTemplate(PTConstants.NOTIFICATION_OT_APPROVED, localizationMessage);
@@ -289,12 +299,11 @@ public class NotificationUtil {
 
 	private String getInitiatedDcMsg(DuplicateCopy copy, String message) {
 		BigDecimal fee = copy.getApplicant().get(0).getFeeAmount();
-		BigDecimal charge = copy.getApplicant().get(0).getAproCharge();
 		message = message.replace("<2>", copy.getApplicant().get(0).getName());
 		message = message.replace("<3>", PTConstants.DUPLICATE_COPY_APPLICATION);
 		message = message.replace("<4>", copy.getApplicationNumber());
 		if (message.contains("<5>")) {
-			message = message.replace("<5>", fee.add(charge) + "");
+			message = message.replace("<5>", fee + "");
 		}
 		return message;
 	}
