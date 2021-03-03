@@ -42,9 +42,10 @@ public class OwnerRowMapper implements ResultSetExtractor<List<Owner>> {
 
 			final Owner owner = Owner.builder().id(ownerId).propertyDetailsId(OwnerPropertyDetailId)
 					.tenantId(rs.getString("otenantid")).serialNumber(rs.getString("oserial_number"))
-					.share(rs.getDouble("oshare")).cpNumber(rs.getString("ocp_number")).state(rs.getString("ostate"))
-					.action(rs.getString("oaction")).ownershipType(rs.getString("ownership_type"))
-					.ownerDetails(ownerDetails).auditDetails(auditdetails).build();
+					.share(rs.getDouble("oshare")).cpNumber(rs.getString("ocp_number"))
+					.npNumber(rs.getString("onp_number")).state(rs.getString("ostate")).action(rs.getString("oaction"))
+					.ownershipType(rs.getString("ownership_type")).ownerDetails(ownerDetails).auditDetails(auditdetails)
+					.build();
 			owners.add(owner);
 		}
 		return owners;

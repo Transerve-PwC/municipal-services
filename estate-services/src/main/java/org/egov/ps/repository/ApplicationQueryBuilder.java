@@ -31,7 +31,8 @@ public class ApplicationQueryBuilder {
 			+ " app.bank_name as appbank_name, app.transaction_number as apptransaction_number, "
 			+ " app.amount as appamount,  app.payment_type as apppayment_type, app.date_of_payment as appdate_of_payment,"
 			+ " app.news_paper_advertisement_date as appnews_paper_advertisement_date,app.application_submission_date as appapplication_submission_date, "
-
+			+ " app.book_number as appbook_number, app.page_number as apppage_number, app.volume_number as appvolume_number, "
+			
 			+ " pt.id, pt.file_number, ptdl.id as ptdlid, "
 
 			+ " doc.id as docid, doc.reference_id as docapplication_id, doc.tenantid as doctenantid,"
@@ -40,7 +41,7 @@ public class ApplicationQueryBuilder {
 			+ " doc.last_modified_by as dmodified_by, doc.last_modified_time as dmodified_time ";
 
 	private static final String OWNER_COLUMNS = " ownership.id as oid, ownership.property_details_id as oproperty_details_id, "
-			+ " ownership.tenantid as otenantid, ownership.serial_number as oserial_number, "
+			+ " ownership.tenantid as otenantid, ownership.serial_number as oserial_number, ownership.np_number as onp_number, "
 			+ " ownership.share as oshare, ownership.cp_number as ocp_number, ownership.state as ostate, ownership.action as oaction, "
 			+ " ownership.created_by as ocreated_by, ownership.created_time as ocreated_time, ownership.ownership_type, "
 			+ " ownership.last_modified_by as omodified_by, ownership.last_modified_time as omodified_time, "

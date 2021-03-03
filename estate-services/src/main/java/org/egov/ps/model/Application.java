@@ -249,4 +249,13 @@ public class Application {
 	@JsonProperty("applicationSubmissionDate")
 	private Long applicationSubmissionDate;
 	
+	@JsonProperty("bookNumber")
+	private String bookNumber;
+	
+	@JsonProperty("pageNumber")
+	private String pageNumber;
+	
+	@JsonProperty("volumeNumber")
+	private String volumeNumber;
+	
 }

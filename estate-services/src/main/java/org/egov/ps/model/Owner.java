@@ -1,9 +1,9 @@
 package org.egov.ps.model;
 
+import java.util.List;
+
 import org.egov.ps.web.contracts.AuditDetails;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -73,4 +73,6 @@ public class Owner {
 	@JsonProperty("mortgageDetails") // TODO: I think it should be in ownerDetails
 	private MortgageDetails mortgageDetails;
 	
+	@JsonProperty("npNumber")
+	private String npNumber;
 }
