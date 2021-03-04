@@ -1,5 +1,6 @@
 package org.egov.assets.wf;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -7,11 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.assets.common.MdmsRepository;
-import org.egov.assets.model.Indent;
 import org.egov.assets.model.IndentRequest;
 import org.egov.assets.model.Material;
+import org.egov.assets.model.MaterialIssue;
+import org.egov.assets.model.MaterialIssue.IssueTypeEnum;
+import org.egov.assets.model.MaterialIssueDetail;
+import org.egov.assets.model.MaterialIssueRequest;
+import org.egov.assets.model.MaterialIssueResponse;
+import org.egov.assets.model.MaterialIssueSearchContract;
+import org.egov.assets.model.MaterialIssuedFromReceipt;
 import org.egov.assets.model.User;
 import org.egov.assets.model.WorkFlowDetails;
+import org.egov.assets.service.MaterialIssueService;
 import org.egov.assets.wf.model.ProcessInstanceResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
@@ -72,6 +80,10 @@ public class WorkflowIntegrator {
 	private final String wfServiceTransitionUrl;
 	private final String wfServiceProcessSearchUrl;
 
+	
+	@Autowired
+	
+	MaterialIssueService service;
 	@Autowired
 	public WorkflowIntegrator(RestTemplate rest, MdmsRepository mdmsRepository,
 			@Value("${egov.services.egov_workflow.hostname}") final String wfServiceHostname,
@@ -149,7 +161,8 @@ public class WorkflowIntegrator {
 			try {
 				response = rest.postForObject(wfServiceTransitionUrl, workFlowRequest, String.class);
 			} catch (HttpClientErrorException e) {
-
+				
+			//	backUpdateIndentMinusForWorkFlow();
 				/*
 				 * extracting message from client error exception
 				 */
@@ -158,6 +171,7 @@ public class WorkflowIntegrator {
 				try {
 					errros = responseContext.read("$.Errors");
 				} catch (PathNotFoundException pnfe) {
+					
 					log.error("EG_TL_WF_ERROR_KEY_NOT_FOUND",
 							" Unable to read the json path in error object : " + pnfe.getMessage());
 					throw new CustomException("EG_TL_WF_ERROR_KEY_NOT_FOUND",
@@ -165,6 +179,99 @@ public class WorkflowIntegrator {
 				}
 				throw new CustomException("EG_WF_ERROR", errros.toString());
 			} catch (Exception e) {
+				
+			
+					/*	MaterialIssueDetail issueDetail=new MaterialIssueDetail();
+						service.backUpdateIndentMinusForWorkFlow(issueDetail, issueDetail.getTenantId());*/
+				
+				//backUpdateIndentMinusForWorkFlow();
+				throw new CustomException("EG_WF_ERROR",
+						" Exception occured while integrating with workflow : " + e.getMessage());
+			}
+
+			/*
+			 * on success result from work-flow read the data and set the status back to TL
+			 * object
+			 */
+			DocumentContext responseContext = JsonPath.parse(response);
+			List<Map<String, Object>> responseArray = responseContext.read(PROCESSINSTANCESJOSNKEY);
+			Map<String, String> idStatusMap = new HashMap<>();
+			responseArray.forEach(object -> {
+
+				DocumentContext instanceContext = JsonPath.parse(object);
+				idStatusMap.put(instanceContext.read(BUSINESSIDJOSNKEY), instanceContext.read(STATUSJSONKEY));
+			});
+			System.out.println(idStatusMap);
+			workFlowDetails.setStatus(idStatusMap.get(workFlowDetails.getBusinessId()));
+		}
+
+		return workFlowDetails;
+	}
+	public WorkFlowDetails callWorkFlowForIndent(RequestInfo requestInfo, WorkFlowDetails workFlowDetails, String tenantId,MaterialIssueRequest materialIssueRequest) {
+
+		JSONArray array = new JSONArray();
+		JSONObject obj = new JSONObject();
+		if (workFlowDetails.getWfDocuments() != null) {
+			workFlowDetails.getWfDocuments().forEach(document -> {
+				document.setDocumentType("Document");
+			});
+		}
+		obj.put(BUSINESSIDKEY, workFlowDetails.getBusinessId());
+		obj.put(TENANTIDKEY, tenantId);
+		obj.put(BUSINESSSERVICEKEY, workFlowDetails.getBusinessService());
+		obj.put(MODULENAMEKEY, MODULENAMEVALUE);
+		obj.put(ACTIONKEY, workFlowDetails.getAction());
+		obj.put(COMMENTKEY, workFlowDetails.getComments());
+		obj.put(DOCUMENTSKEY, workFlowDetails.getWfDocuments());
+
+		List<Map<String, String>> uuidmaps = new LinkedList<>();
+
+		if (!CollectionUtils.isEmpty(workFlowDetails.getAssignee())) {
+			// Adding assignes to processInstance
+			User user = new User();
+			workFlowDetails.getAssignee().forEach(assignee -> {
+				user.setUuid(assignee);
+			});
+			obj.put(ASSIGNEEKEY, user);
+		}
+
+		array.add(obj);
+		if (!array.isEmpty()) {
+			JSONObject workFlowRequest = new JSONObject();
+			workFlowRequest.put(REQUESTINFOKEY, requestInfo);
+			workFlowRequest.put(WORKFLOWREQUESTARRAYKEY, array);
+			String response = null;
+			try {
+				response = rest.postForObject(wfServiceTransitionUrl, workFlowRequest, String.class);
+			} catch (HttpClientErrorException e) {
+				
+				for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
+					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+						service.backUpdateIndentMinusForWorkFlow(materialIssueDetail, materialIssueDetail.getTenantId());
+					}
+				}
+				/*
+				 * extracting message from client error exception
+				 */
+				DocumentContext responseContext = JsonPath.parse(e.getResponseBodyAsString());
+				List<Object> errros = null;
+				try {
+					errros = responseContext.read("$.Errors");
+				} catch (PathNotFoundException pnfe) {
+					
+					log.error("EG_TL_WF_ERROR_KEY_NOT_FOUND",
+							" Unable to read the json path in error object : " + pnfe.getMessage());
+					throw new CustomException("EG_TL_WF_ERROR_KEY_NOT_FOUND",
+							" Unable to read the json path in error object : " + pnfe.getMessage());
+				}
+				throw new CustomException("EG_WF_ERROR", errros.toString());
+			} catch (Exception e) {
+				
+						for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
+							for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+								service.backUpdateIndentMinusForWorkFlow(materialIssueDetail, materialIssueDetail.getTenantId());
+							}
+						}
 				throw new CustomException("EG_WF_ERROR",
 						" Exception occured while integrating with workflow : " + e.getMessage());
 			}
@@ -220,4 +327,5 @@ public class WorkflowIntegrator {
 		return response;
 	}
 
+	
 }

@@ -107,7 +107,7 @@ public class ConnectionHolderInfo extends User {
         this.setUserName(user.getUserName());
         this.setPassword(user.getPassword());
         this.setSalutation(user.getSalutation());
-        this.setName(user.getName());
+    //    this.setName(user.getName());
         this.setGender(user.getGender());
         this.setMobileNumber(user.getMobileNumber());
         this.setEmailId(user.getEmailId());

@@ -67,5 +67,16 @@ public class EOfficeConfiguration {
 
 	@Value("${eoffice.service.url.filependinghierarchy}")
 	private String eofficefilependinghierarchy;
+	
+	
+	@Value("${eoffice.service.url.employeeDetails}")
+	private String eofficeEmplyoeeDetials;
+	
+	@Value("${eoffice.service.departmentId}")
+	private String eofficeDepartmentId;
+	
+	@Value("${eoffice.service.authEncoded}")
+	private String eofficeAuthEncoded;
+
 
 }

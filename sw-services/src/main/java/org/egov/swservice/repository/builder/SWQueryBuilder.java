@@ -29,18 +29,18 @@ public class SWQueryBuilder {
 	//private static final String Offset_Limit_String = "OFFSET ? LIMIT ?";
 	
 	private final static String noOfConnectionSearchQuery = "SELECT count(*) FROM eg_sw_connection WHERE";
-	
+	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship,connectionholder.name as holdername, connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, connectionholder.mobile_no as holdermobileno, connectionholder.gender as holdergender, connectionholder.guardian_name as holderguardianname ";
 	private final static String SEWERAGE_SEARCH_QUERY = "SELECT "
 			/*+ " conn.*, sc.*, document.*, plumber.*, "*/
 			+ " sc.connectionExecutionDate, sc.noOfWaterClosets, sc.noOfToilets,sc.proposedWaterClosets, sc.proposedToilets, sc.connectionType, sc.connection_id as connection_Id, sc.appCreatedDate,"
-			+ " sc.detailsprovidedby, sc.estimationfileStoreId , sc.sanctionfileStoreId , sc.estimationLetterDate,"
+			+ " sc.metercount,sc.meterrentcode,sc.mfrcode,sc.meterdigits,sc.meterunit,sc.sanctionedcapacity,sc.detailsprovidedby, sc.estimationfileStoreId , sc.sanctionfileStoreId , sc.estimationLetterDate,"
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id,"
-			+ " conn.roadcuttingarea, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.createdBy as sw_createdBy,"
+			+ " conn.cccode,conn.div,conn.subdiv,conn.ledger_no,conn.ledgergroup,conn.billgroup,conn.contract_value,conn.roadcuttingarea, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.createdBy as sw_createdBy,"
 			+ " conn.lastModifiedBy as sw_lastModifiedBy, conn.createdTime as sw_createdTime, conn.lastModifiedTime as sw_lastModifiedTime, "
 			+ " conn.adhocpenaltyreason, conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment,"
 			+ " conn.roadtype, document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id, plumber.name as plumber_name, plumber.licenseno,"
 			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship, "
-			+ " property.id as seweragepropertyid, property.usagecategory, property.usagesubcategory "
+			+ " property.id as seweragepropertyid, property.usagecategory, property.usagesubcategory, " +holderSelectValues
 			+ " FROM eg_sw_connection conn "
 	+  INNER_JOIN_STRING 
 	+" eg_sw_service sc ON sc.connection_id = conn.id"
@@ -49,7 +49,9 @@ public class SWQueryBuilder {
 	+  LEFT_OUTER_JOIN_STRING
 	+ "eg_sw_applicationdocument document ON document.swid = conn.id" 
 	+  LEFT_OUTER_JOIN_STRING
-	+ "eg_sw_plumberinfo plumber ON plumber.swid = conn.id";
+	+ "eg_sw_plumberinfo plumber ON plumber.swid = conn.id"
+			+ LEFT_OUTER_JOIN_STRING
+		    + "eg_sw_connectionholder connectionholder ON connectionholder.connectionid = conn.id";
 
 	/**
 	 * 
@@ -73,14 +75,10 @@ public class SWQueryBuilder {
 			return null;
 		StringBuilder query = new StringBuilder(SEWERAGE_SEARCH_QUERY);
 		if (!StringUtils.isEmpty(criteria.getMobileNumber())) {
-			Set<String> propertyIds = new HashSet<>();
-			List<Property> propertyList = sewerageServicesUtil.propertySearchOnCriteria(criteria, requestInfo);
-			propertyList.forEach(property -> propertyIds.add(property.getId()));
-			if (!propertyIds.isEmpty()) {
-				addClauseIfRequired(preparedStatement, query);
-				query.append(" conn.property_id in (").append(createQuery(propertyIds)).append(" )");
-				addToPreparedStatement(preparedStatement, propertyIds);
-			}
+
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" connectionholder.mobile_no = ? ");
+			preparedStatement.add(criteria.getMobileNumber());
 		}
 		if (!StringUtils.isEmpty(criteria.getTenantId())) {
 			addClauseIfRequired(preparedStatement, query);

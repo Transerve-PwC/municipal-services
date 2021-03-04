@@ -1,6 +1,6 @@
 package org.egov.integration.model;
 
-import java.util.List;
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,11 +17,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class EOfficeRequest {
+public class EOfficeMapRequestInfoWrapper {
 
-	@JsonProperty("orgid")
-	private String orgid;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	@JsonProperty("postdetailid")
-	private List<String> postdetailid;
+	@JsonProperty("employeePostDetailMap")
+	private EmployeePostDetailMap employeePostDetailMap;
 }

@@ -78,6 +78,13 @@ public class PaymentUpdateService {
 			} catch (Exception ex) {
 				log.error("Temp Catch Excption:", ex);
 			}			
+			for (PaymentDetail paymentDetail : paymentRequest.getPayment().getPaymentDetails()) {
+				if (paymentDetail.getBusinessService().equalsIgnoreCase(WCConstants.WATER_SERVICE_BUSINESS_ID)) {
+					BillGeneration bill = BillGeneration.builder().paymentStatus(paymentDetail.getBill().getStatus().toString()).status(paymentDetail.getBill().getStatus().toString()).consumerCode(paymentDetail.getBill().getConsumerCode()).
+							paymentMode(paymentRequest.getPayment().getPaymentMode().toString()).paymentId(paymentDetail.getReceiptNumber()).billId(paymentDetail.getBillId()).totalAmountPaid(paymentDetail.getTotalAmountPaid().toString()).build();
+					repo.updatebillingstatus(bill);
+				}
+			}
 			boolean isServiceMatched = false;
 			for (PaymentDetail paymentDetail : paymentRequest.getPayment().getPaymentDetails()) {
 				if (paymentDetail.getBusinessService().equalsIgnoreCase(config.getReceiptBusinessservice())) {
@@ -147,11 +154,10 @@ public class PaymentUpdateService {
 					
 					
 					repo.updateWaterConnection(waterConnectionRequest, false);
-					BillGeneration bill = BillGeneration.builder().paymentStatus(WCConstants.STATUS_PAID).status(WCConstants.STATUS_PAID).consumerCode(paymentDetail.getBill().getConsumerCode()).
-							paymentId(paymentDetail.getReceiptNumber()).billId(paymentDetail.getBillId()).totalAmountPaid(paymentDetail.getTotalAmountPaid().toString()).build();
-					repo.updatebillingstatus(bill);
+					
 				}
 			}
+			
 			sendNotificationForPayment(paymentRequest);
 		} catch (Exception ex) {
 			log.error("Failed to process payment topic message. Exception: ", ex);

@@ -1,1 +1,0 @@
-ALTER TABLE materialreceiptdetailaddnlinfo ADD COLUMN quantity numeric(13,2) ;

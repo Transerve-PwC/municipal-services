@@ -1,1 +1,0 @@
-ALTER TABLE materialreceipt ADD COLUMN deleted boolean;

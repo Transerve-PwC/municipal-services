@@ -51,7 +51,7 @@ public class WsQueryBuilder {
 	private static final String INNER_JOIN_STRING = " INNER JOIN ";
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 
-	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship, connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
+	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship,connectionholder.name as holdername, connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby, connectionholder.lastmodifiedtime as holderlastmodifiedtime, ";
 	
 	private static final String WATER_SEARCH_QUERY = "SELECT "
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
@@ -62,7 +62,7 @@ public class WsQueryBuilder {
 			+ " conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
 			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.cccode, conn.div, conn.subdiv, conn.ledger_no,conn.ledgergroup, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
 			+ " conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime, "
-			+ " conn.roadtype, conn.waterApplicationType, conn.securityCharge, conn.connectionusagestype, conn.inworkflow, conn.billGroup, conn.contract_value, "
+			+ " conn.roadtype,conn.proposedUsage_category, conn.waterApplicationType, conn.securityCharge, conn.connectionusagestype, conn.inworkflow, conn.billGroup, conn.contract_value, "
 			+ " document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id,"
 			+ " plumber.name as plumber_name, plumber.licenseno,"
 			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress,"

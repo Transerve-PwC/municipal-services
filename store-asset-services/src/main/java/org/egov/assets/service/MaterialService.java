@@ -194,6 +194,20 @@ public class MaterialService extends DomainService {
 			throw new CustomException("Material", "Given Material is invalid: " + code);
 
 	}
+	public MaterialType fetchMaterialType(final String tenantId, final String code, final RequestInfo requestInfo) {
+
+		JSONArray responseJSONArray;
+		final ObjectMapper mapper = new ObjectMapper();
+
+		responseJSONArray = mdmsRepository.getByCriteria(tenantId, "store-asset", "MaterialType", "code", code,
+				requestInfo);
+
+		if (responseJSONArray != null && responseJSONArray.size() > 0)
+			return mapper.convertValue(responseJSONArray.get(0), MaterialType.class);
+		else
+			throw new CustomException("Material", "Given Material is invalid: " + code);
+
+	}
 
 	private void validate(List<Material> materials, String method, RequestInfo requestInfo) {
 

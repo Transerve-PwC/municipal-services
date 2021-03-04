@@ -11,7 +11,9 @@ import org.egov.swservice.model.SewerageConnectionRequest;
 import org.egov.swservice.model.workflow.ProcessInstance;
 import org.egov.swservice.model.workflow.ProcessInstanceRequest;
 import org.egov.swservice.model.workflow.ProcessInstanceResponse;
+import org.egov.swservice.util.SWConstants;
 import org.egov.tracer.model.CustomException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -57,11 +59,18 @@ public class WorkflowIntegrator {
 	public void callWorkFlow(SewerageConnectionRequest sewerageConnectionRequest, Property property) {
 
 		SewerageConnection connection = sewerageConnectionRequest.getSewerageConnection();
+		
+		if(sewerageConnectionRequest.getSewerageConnection().getProcessInstance().getAction().equalsIgnoreCase(SWConstants.ACTION_PAY)) {
+			JSONObject obj = new JSONObject();
+			obj.put("role", "SW_JE_"+sewerageConnectionRequest.getSewerageConnection().getSubdiv());
+			sewerageConnectionRequest.getSewerageConnection().getProcessInstance().setAdditionalDetails(obj);
+		}
+		
 		ProcessInstance processInstance = ProcessInstance.builder()
 				.businessId(sewerageConnectionRequest.getSewerageConnection().getApplicationNo())
 				.tenantId(property.getTenantId())
 				.businessService(config.getBusinessServiceValue()).moduleName(MODULENAMEVALUE)
-				.action(connection.getProcessInstance().getAction()).build();
+				.action(connection.getProcessInstance().getAction()).additionalDetails(sewerageConnectionRequest.getSewerageConnection().getProcessInstance().getAdditionalDetails()).build();
 
 		if (!StringUtils.isEmpty(sewerageConnectionRequest.getSewerageConnection().getProcessInstance())) {
 			if (!CollectionUtils

@@ -295,5 +295,16 @@ public class SWCalculationConstant {
 	public static final String SW_TIME_ADHOC_PENALTY = "SW_TIME_ADHOC_PENALTY";
 
 	public static final String SW_TIME_ADHOC_REBATE = "SW_TIME_ADHOC_REBATE";
+	
+
+	public static final String RESIDENTIAL_PLOTTED = "RESIDENTIAL.PLOTTED";
+
+	public static final String RESIDENTIAL_VILLAGE = "RESIDENTIAL.VILLAGE";
+
+	public static final String RESIDENTIAL_CHB = "RESIDENTIAL.CHBDWELLINGUNITS";
+
+	
+	public static final List<String> LAND_AREA_CATEGORY = Collections
+			.unmodifiableList(Arrays.asList(RESIDENTIAL_PLOTTED,RESIDENTIAL_VILLAGE,RESIDENTIAL_CHB));
 
 }

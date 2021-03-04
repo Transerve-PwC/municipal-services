@@ -458,6 +458,7 @@ public class EstimationService {
 	private List<TaxHeadEstimate> getTaxHeadForFeeEstimationForTempAppCon(CalculationCriteria criteria,
 			Map<String, Object> masterData, RequestInfo requestInfo) {
 		Map<String, JSONArray> billingSlabMaster = new HashMap<>();
+		String propertyUsage = "";
 		if (criteria.getWaterConnection().getWaterApplication().getActivityType()
 				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_TEMP_CON)) {
 
@@ -480,8 +481,12 @@ public class EstimationService {
 			List<BillingSlab> billingSlabs = null;
 
 			billingSlabs = mappingBillingSlab.stream().filter(slab -> {
+				String propertyString = property.getUsageCategory().split("\\.")[0];
+				if(property.getUsageCategory().split("\\.")[0].equalsIgnoreCase(WSCalculationConstant.WS_RESIDENTIAL)) {
+					propertyString = property.getUsageCategory();
+				}
 				boolean isBuildingTypeMatching = slab.getBuildingType()
-						.equalsIgnoreCase(property.getUsageCategory().split("\\.")[0]);// property.usagecategory
+						.equalsIgnoreCase(propertyString);// property.usagecategory
 
 				return isBuildingTypeMatching;
 			}).collect(Collectors.toList());
@@ -546,13 +551,17 @@ public class EstimationService {
 			} catch (IOException e) {
 				throw new CustomException("Parsing Exception", " Billing Slab can not be parsed!");
 			}
-
+			
 			List<BillingSlab> billingSlabs = null;
 			billingSlabs = mappingBillingSlab.stream().filter(slab -> {
-				boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(property.getUsageCategory().split("\\.")[0]);// property.usagecategory
+				String propertyString = property.getUsageCategory().split("\\.")[0];
+				if(property.getUsageCategory().split("\\.")[0].equalsIgnoreCase(WSCalculationConstant.WS_RESIDENTIAL)) {
+					propertyString = property.getUsageCategory();
+					
+				}
+				return  slab.getBuildingType().equalsIgnoreCase(propertyString);// property.usagecategory
 
-				return isBuildingTypeMatching;
-			}).collect(Collectors.toList());
+			}).collect(Collectors.toList());	
 
 			Double multiplier = 0.0;
 			for (Slab slabs : billingSlabs.get(0).getSlabs()) {

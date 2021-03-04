@@ -74,8 +74,8 @@ public class CalculatorController {
 	@PostMapping("/_updateDemand")
 	public ResponseEntity<DemandResponse> updateDemands(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid GetBillCriteria getBillCriteria) {
-		List<Demand> demands = demandService.updateDemands(getBillCriteria, requestInfoWrapper);
-		DemandResponse response = DemandResponse.builder().demands(demands)
+		//List<Demand> demands = demandService.updateDemands(getBillCriteria, requestInfoWrapper);
+		DemandResponse response = DemandResponse.builder()
 				.responseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();

@@ -94,6 +94,9 @@ public class WaterConnection extends Connection {
 	@JsonProperty("billGroup")
 	private String billGroup = null;
 	
+	@JsonProperty("proposedUsageCategory")
+	private String proposedUsageCategory = null;
+	
 	public String getContractValue() {
 		return contractValue;
 	}
@@ -424,5 +427,13 @@ public class WaterConnection extends Connection {
 
 	public void setLedgerGroup(String ledgerGroup) {
 		this.ledgerGroup = ledgerGroup;
+	}
+
+	public String getProposedUsageCategory() {
+		return proposedUsageCategory;
+	}
+
+	public void setProposedUsageCategory(String proposedUsageCategory) {
+		this.proposedUsageCategory = proposedUsageCategory;
 	}
 }

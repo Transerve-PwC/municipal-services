@@ -170,6 +170,9 @@ public class MaterialReceiptService extends DomainService {
 		}
 		return materialMap;
 	}
+	
+	
+
 
 	private Map<String, Uom> getUoms(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
 		net.minidev.json.JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "common-masters", "UOM",

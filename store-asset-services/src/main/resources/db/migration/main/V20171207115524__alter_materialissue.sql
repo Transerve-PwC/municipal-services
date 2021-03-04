@@ -1,1 +1,0 @@
-alter table materialissue drop column isdeleted;

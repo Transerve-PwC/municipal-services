@@ -9,9 +9,12 @@ import javax.validation.constraints.Size;
 
 import org.egov.common.contract.request.User;
 import org.egov.swservice.model.Document;
+import org.json.simple.JSONObject;
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -77,6 +80,10 @@ public class ProcessInstance {
 	@Valid
 	private List<Document> documents;
 
+    @JsonProperty("additionalDetails")
+    @JsonInclude(Include.NON_NULL)
+    private JSONObject additionalDetails = null;
+    
 	@JsonProperty("assignes")
 	private List<User> assignes;
 

@@ -338,7 +338,7 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
 				+ " recptunitrate, recpttotalvalue, issuenum, issuestore, issuedepart, TO_CHAR(TO_TIMESTAMP(issuedate/1000), 'DD-MM-YYYY') issuedate, issueqty, issuerate, issueuom, issuetotalvalue, balanceqty,  \r\n"
 				+ " balanceuom, balancetotalvalue from ((select tenantid,opnBalance.mrnnumber openmrn, opnBalance.storecode openstore, opnBalance.department opendepart, opnBalance.material openmat,\r\n"
 				+ " opnBalance.uomno openuom,opnBalance.qtyopeningbalance openqty, opnBalance.unitrateopeningbalance openrate, opnBalance.valueopeningbalance opentotalvalue,\r\n"
-				+ " 0 as recptdate, '' as recptreceiptno, '' as recptdepartment, 0 as recptqtypurchased, '' as recptuom, 0 as recptunitrate, 0 as recpttotalvalue,\r\n"
+				+ " null as recptdate, '' as recptreceiptno, '' as recptdepartment, 0 as recptqtypurchased, '' as recptuom, 0 as recptunitrate, 0 as recpttotalvalue,\r\n"
 				+ " issues.issuenumber issuenum,issues.tostore issuestore, issues.department issuedepart,issues.issuedate issuedate, issues.quantity issueqty, opnBalance.unitrateopeningbalance issuerate,\r\n"
 				+ " issues.uom issueuom, opnBalance.unitrateopeningbalance*issues.quantity issuetotalvalue, (opnBalance.qtyopeningbalance::numeric(18,2) - SUM(COALESCE(issues.quantity,0)::numeric(18,2)) OVER (PARTITION BY opnBalance.mrnnumber ORDER BY issues.id, issues.issuedate)) balanceqty, opnBalance.uomno balanceuom, \r\n"
 				+ " ((opnBalance.qtyopeningbalance::numeric(18,2) - SUM(COALESCE(issues.quantity,0)::numeric(18,2)) OVER (PARTITION BY opnBalance.mrnnumber ORDER BY issues.id, issues.issuedate)) * opnBalance.unitrateopeningbalance::numeric(18,2))  balancetotalvalue\r\n"

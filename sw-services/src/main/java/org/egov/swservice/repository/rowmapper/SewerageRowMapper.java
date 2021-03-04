@@ -10,8 +10,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.swservice.model.AuditDetails;
 import org.egov.swservice.model.Connection.StatusEnum;
+import org.egov.swservice.model.ConnectionHolderInfo;
 import org.egov.swservice.model.Document;
 import org.egov.swservice.model.PlumberInfo;
+import org.egov.swservice.model.Relationship;
 import org.egov.swservice.model.SWProperty;
 import org.egov.swservice.model.SewerageConnection;
 import org.egov.swservice.model.Status;
@@ -20,6 +22,7 @@ import org.egov.swservice.util.SWConstants;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnection>> {
@@ -35,8 +38,7 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 				sewarageConnection.setTenantId(rs.getString("tenantid"));
 				sewarageConnection.setId(rs.getString("connection_Id"));
 				sewarageConnection.setApplicationNo(rs.getString("applicationNo"));
-				sewarageConnection
-						.setApplicationStatus(rs.getString("applicationstatus"));
+				sewarageConnection.setApplicationStatus(rs.getString("applicationstatus"));
 				sewarageConnection.setStatus(StatusEnum.fromValue(rs.getString("status")));
 				sewarageConnection.setConnectionNo(rs.getString("connectionNo"));
 				sewarageConnection.setOldConnectionNo(rs.getString("oldConnectionNo"));
@@ -48,6 +50,22 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 				sewarageConnection.setConnectionType(rs.getString("connectionType"));
 				sewarageConnection.setRoadCuttingArea(rs.getFloat("roadcuttingarea"));
 				sewarageConnection.setRoadType(rs.getString("roadtype"));
+
+				sewarageConnection.setLedgerNo(rs.getString("ledger_no"));
+				sewarageConnection.setDiv(rs.getString("div"));
+				sewarageConnection.setSubdiv(rs.getString("subdiv"));
+				sewarageConnection.setCcCode(rs.getString("cccode"));
+				sewarageConnection.setBillGroup(rs.getString("billGroup"));
+				sewarageConnection.setContractValue(rs.getString("contract_value"));
+
+				sewarageConnection.setLedgerGroup(rs.getString("ledgerGroup"));
+				sewarageConnection.setMeterCount(rs.getString("meterCount"));
+				sewarageConnection.setMeterRentCode(rs.getString("meterRentCode"));
+				sewarageConnection.setMfrCode(rs.getString("mfrCode"));
+				sewarageConnection.setMeterDigits(rs.getString("meterDigits"));
+				sewarageConnection.setMeterUnit(rs.getString("meterUnit"));
+				sewarageConnection.setSanctionedCapacity(rs.getString("sanctionedCapacity"));
+
 				// get property id and get property object
 				HashMap<String, Object> addtionalDetails = new HashMap<>();
 				addtionalDetails.put(SWConstants.ADHOC_PENALTY, rs.getBigDecimal("adhocpenalty"));
@@ -64,16 +82,13 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 				sewarageConnection.setAdditionalDetails(addtionalDetails);
 				sewarageConnection.processInstance(ProcessInstance.builder().action((rs.getString("action"))).build());
 				sewarageConnection.setPropertyId(rs.getString("property_id"));
-				
-				 AuditDetails auditdetails = AuditDetails.builder()
-	                        .createdBy(rs.getString("sw_createdBy"))
-	                        .createdTime(rs.getLong("sw_createdTime"))
-	                        .lastModifiedBy(rs.getString("sw_lastModifiedBy"))
-	                        .lastModifiedTime(rs.getLong("sw_lastModifiedTime"))
-	                        .build();
-				 sewarageConnection.setAuditDetails(auditdetails);
-				 
-				String waterpropertyid=rs.getString("seweragepropertyid");
+
+				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("sw_createdBy"))
+						.createdTime(rs.getLong("sw_createdTime")).lastModifiedBy(rs.getString("sw_lastModifiedBy"))
+						.lastModifiedTime(rs.getLong("sw_lastModifiedTime")).build();
+				sewarageConnection.setAuditDetails(auditdetails);
+
+				String waterpropertyid = rs.getString("seweragepropertyid");
 				if (!StringUtils.isEmpty(waterpropertyid)) {
 					SWProperty property = new SWProperty();
 					property.setId(rs.getString("seweragepropertyid"));
@@ -82,7 +97,7 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 					property.setAuditDetails(auditdetails);
 					sewarageConnection.setSwProperty(property);
 				}
-				 
+
 				// Add documents id's
 				connectionListMap.put(Id, sewarageConnection);
 			}
@@ -92,6 +107,7 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 	}
 
 	private void addChildrenToProperty(ResultSet rs, SewerageConnection sewerageConnection) throws SQLException {
+		addHoldersDeatilsToSewerageConnection(rs, sewerageConnection);
 		String document_Id = rs.getString("doc_Id");
 		String isActive = rs.getString("doc_active");
 		boolean documentActive = false;
@@ -120,6 +136,26 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 			plumber.setFatherOrHusbandName(rs.getString("fatherorhusbandname"));
 			sewerageConnection.addPlumberInfoItem(plumber);
 		}
+	}
+
+	private void addHoldersDeatilsToSewerageConnection(ResultSet rs, SewerageConnection sewerageConnection)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		List<ConnectionHolderInfo> connectionHolders = sewerageConnection.getConnectionHolders();
+		if (!CollectionUtils.isEmpty(connectionHolders)) {
+			return;
+
+		}
+
+		ConnectionHolderInfo connectionHolderInfo = ConnectionHolderInfo.builder()
+				.relationship(Relationship.fromValue(rs.getString("holderrelationship")))
+				.status(org.egov.swservice.model.Status.fromValue(rs.getString("holderstatus")))
+				.tenantId(rs.getString("holdertenantid")).ownerType(rs.getString("connectionholdertype"))
+				.isPrimaryOwner(rs.getBoolean("isprimaryholder")).name(rs.getString("holdername"))
+				.correspondenceAddress(rs.getString("holdercorrepondanceaddress"))
+				.guardianName(rs.getString("holderguardianname")).gender(rs.getString("holdergender"))
+				.mobileNumber(rs.getString("holdermobileno")).build();
+		sewerageConnection.addConnectionHolderInfo(connectionHolderInfo);
 	}
 
 }

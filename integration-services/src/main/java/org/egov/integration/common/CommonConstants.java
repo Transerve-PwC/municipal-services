@@ -28,12 +28,17 @@ public class CommonConstants {
 	public static final String PT_PARAM_HOUSENO = "HouseNo";
 	public static final String PT_PARAM_SECTORID = "SectorId";
 	public static final String EOFFICE_WS_RESPONSE = "WSResponse";
+	public static final String EOFFICE_EMP_RESPONSE = "EMP_DETAIL";
 	public static final String EOFFICE_FILEPENDING = "FilePending";
 	public static final String EOFFICE_FILECLOSED = "FileClosed";
 	public static final String EOFFICE_RECEIPTPENDING = "ReceiptPending";
 	public static final String EOFFICE_RECEIPTCLOSED = "ReceiptClosed";
+	public static final String EOFFICE_EMPLOYEE_DETAILS = "EmployeeDetails";
 	public static final String EOFFICE_VIP = "VipReceipts";
 	public static final String EOFFICE_HIERARCHY = "FileHierarchy";
+	public static final String EOFFICE_EXCEPTION_CODE = "EOFFICE_EXCEPTION";
+	public static final String DEPARTMENT_ID="departmentId";
+	
 
 }
 

@@ -74,4 +74,8 @@ public class ApiConfiguration {
 
 	@Value("${payroll.encryption.key}")
 	private String encrptionKey;
+	
+	
+	@Value("${persister.save.eofficeData.topic}")
+	private String eofficeSaveTopic;
 }

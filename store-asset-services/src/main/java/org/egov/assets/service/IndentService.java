@@ -422,7 +422,7 @@ public class IndentService extends DomainService {
 					 * errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode (),
 					 * "expectedDeliveryDate",indent.getExpectedDeliveryDate(). toString()); }
 					 */
-					if (indent.getExpectedDeliveryDate() != null
+					if (indent.getExpectedDeliveryDate() != null 
 							&& indent.getIndentDate().compareTo(indent.getExpectedDeliveryDate()) > 0) {
 						LOG.info("expectedDeliveryDate=" + toDateStr(indent.getExpectedDeliveryDate()));
 						LOG.info("indentDate=" + toDateStr(indent.getIndentDate()));

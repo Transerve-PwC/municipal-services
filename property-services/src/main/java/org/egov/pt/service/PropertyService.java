@@ -123,7 +123,7 @@ public class PropertyService {
 	 */
 	private void processPropertyUpdate(PropertyRequest request, Property propertyFromSearch) {
 		
-		propertyValidator.validateRequestForUpdate(request, propertyFromSearch);
+	//	propertyValidator.validateRequestForUpdate(request, propertyFromSearch);
 		request.getProperty().setOwners(propertyFromSearch.getOwners());
 		enrichmentService.enrichUpdateRequest(request, propertyFromSearch);
 		

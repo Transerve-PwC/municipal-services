@@ -73,6 +73,9 @@ public class WaterConnection extends Connection {
 	@JsonProperty("meterUnit")
 	private String meterUnit = null;
 
+	@JsonProperty("proposedUsageCategory")
+	private String proposedUsageCategory = null;
+	
 	@JsonProperty("sanctionedCapacity")
 	private String sanctionedCapacity = null;
 
@@ -425,5 +428,13 @@ public class WaterConnection extends Connection {
 
 	public void setBillGroup(String billGroup) {
 		this.billGroup = billGroup;
+	}
+
+	public String getProposedUsageCategory() {
+		return proposedUsageCategory;
+	}
+
+	public void setProposedUsageCategory(String proposedUsageCategory) {
+		this.proposedUsageCategory = proposedUsageCategory;
 	}
 }

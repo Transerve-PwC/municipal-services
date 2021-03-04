@@ -51,18 +51,16 @@ public class EstimationService {
 
 	@Autowired
 	private ObjectMapper mapper;
-	
+
 	@Autowired
 	private SWCalculationUtil sWCalculationUtil;
 
 	/**
-	 * Generates a List of Tax head estimates with tax head code, tax head
-	 * category and the amount to be collected for the key.
+	 * Generates a List of Tax head estimates with tax head code, tax head category
+	 * and the amount to be collected for the key.
 	 *
-	 * @param criteria
-	 *            criteria based on which calculation will be done.
-	 * @param requestInfo
-	 *            request info from incoming request.
+	 * @param criteria    criteria based on which calculation will be done.
+	 * @param requestInfo request info from incoming request.
 	 * @return Map<String, Double>
 	 */
 	@SuppressWarnings("rawtypes")
@@ -75,7 +73,8 @@ public class EstimationService {
 		}
 		if (criteria.getSewerageConnection() == null || StringUtils.isEmpty(criteria.getConnectionNo())) {
 			StringBuilder builder = new StringBuilder();
-			builder.append("Sewerage Connection are not present for ").append(StringUtils.isEmpty(criteria.getConnectionNo()) ? "" : criteria.getConnectionNo())
+			builder.append("Sewerage Connection are not present for ")
+					.append(StringUtils.isEmpty(criteria.getConnectionNo()) ? "" : criteria.getConnectionNo())
 					.append(" connection no");
 			throw new CustomException("Sewerage Connection not found for given criteria ", builder.toString());
 		}
@@ -112,7 +111,8 @@ public class EstimationService {
 		if (timeBasedExemeptionMasterMap.get(SWCalculationConstant.SW_SEWERAGE_CESS_MASTER) != null) {
 			List<Object> sewerageCessMasterList = timeBasedExemeptionMasterMap
 					.get(SWCalculationConstant.SW_SEWERAGE_CESS_MASTER);
-			BigDecimal sewerageCess = sewerageCessUtil.getSewerageCess(sewarageCharge, SWCalculationConstant.Assesment_Year, sewerageCessMasterList);
+			BigDecimal sewerageCess = sewerageCessUtil.getSewerageCess(sewarageCharge,
+					SWCalculationConstant.Assesment_Year, sewerageCessMasterList);
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_WATER_CESS)
 					.estimateAmount(sewerageCess.setScale(2, 2)).build());
 		}
@@ -120,8 +120,8 @@ public class EstimationService {
 	}
 
 	/**
-	 * method to do a first level filtering on the slabs based on the values
-	 * present in the Sewerage Details
+	 * method to do a first level filtering on the slabs based on the values present
+	 * in the Sewerage Details
 	 */
 
 	public BigDecimal getSewerageEstimationCharge(SewerageConnection sewerageConnection, CalculationCriteria criteria,
@@ -233,21 +233,23 @@ public class EstimationService {
 	 */
 	private List<BillingSlab> getSlabsFiltered(SewerageConnection sewerageConnection, List<BillingSlab> billingSlabs,
 			String calculationAttribue, RequestInfo requestInfo) {
-		
+
 		SewerageConnectionRequest sewerageConnectionRequest = SewerageConnectionRequest.builder()
 				.sewerageConnection(sewerageConnection).requestInfo(requestInfo).build();
 		Property property = sWCalculationUtil.getProperty(sewerageConnectionRequest);
-		
+
 		// get billing Slab
 		log.debug(" the slabs count : " + billingSlabs.size());
-		final String buildingType = (property.getUsageCategory() != null) ? property.getUsageCategory().split("\\.")[0] : "";
+		final String buildingType = (property.getUsageCategory() != null) ? property.getUsageCategory().split("\\.")[0]
+				: "";
 		final String connectionType = sewerageConnection.getConnectionType();
 		final String calculationAttribute = calculationAttribue;
 
 		return billingSlabs.stream().filter(slab -> {
 			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(buildingType);
 			boolean isConnectionTypeMatching = slab.getConnectionType().equalsIgnoreCase(connectionType);
-			boolean isCalculationAttributeMatching = slab.getCalculationAttribute().equalsIgnoreCase(calculationAttribute);
+			boolean isCalculationAttributeMatching = slab.getCalculationAttribute()
+					.equalsIgnoreCase(calculationAttribute);
 			return isBuildingTypeMatching && isConnectionTypeMatching && isCalculationAttributeMatching;
 		}).collect(Collectors.toList());
 	}
@@ -273,8 +275,7 @@ public class EstimationService {
 
 	/**
 	 * 
-	 * @param type
-	 *            will be calculation Attribute
+	 * @param type will be calculation Attribute
 	 * @return true if calculation Attribute is not Flat else false
 	 */
 	private boolean isRangeCalculation(String type) {
@@ -317,7 +318,7 @@ public class EstimationService {
 	 */
 	private List<TaxHeadEstimate> getTaxHeadForFeeEstimation(CalculationCriteria criteria,
 			Map<String, Object> masterData, RequestInfo requestInfo) {
-		
+
 		Map<String, JSONArray> billingSlabMaster = new HashMap<>();
 
 		billingSlabMaster.put(SWCalculationConstant.SW_REGULAR_CHARGES_MASTER,
@@ -338,51 +339,46 @@ public class EstimationService {
 		List<BillingSlab> billingSlabs = null;
 
 		billingSlabs = mappingBillingSlab.stream().filter(slab -> {
-			boolean isBuildingTypeMatching = slab.getBuildingType().equalsIgnoreCase(criteria.getSewerageConnection().getSwProperty().getUsageCategory());// property.usagecategory
+			boolean isBuildingTypeMatching = slab.getBuildingType()
+					.equalsIgnoreCase(property.getUsageCategory().split("\\.")[0]);// property.usagecategory
 
 			return isBuildingTypeMatching;
 		}).collect(Collectors.toList());
-		
+
 		Double charge = 0.0;
+		Double landArea;
+
+		if (SWCalculationConstant.LAND_AREA_CATEGORY.contains(property.getUsageCategory())) {
+			landArea = property.getSuperBuiltUpArea();
+		} else {
+			landArea = property.getLandArea();
+		}
 
 		for (Slab slabs : billingSlabs.get(0).getSlabs()) {
 
-			if ((criteria.getSewerageConnection().getSwProperty().getUsageCategory()).equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC) && slabs.getCode().equalsIgnoreCase(criteria.getSewerageConnection().getSwProperty().getUsageSubCategory())
-					&& property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo()) {
-				charge = slabs.getCharge();
-			} else if (property.getLandArea() > slabs.getFrom() && property.getLandArea() < slabs.getTo() && (!(criteria.getSewerageConnection().getSwProperty().getUsageCategory()).equalsIgnoreCase(SWCalculationConstant.SW_DOMESTIC))) {
+			if (landArea > slabs.getFrom() && landArea < slabs.getTo()
+
+					&& slabs.getCode().equalsIgnoreCase(property.getUsageCategory())) {
 				charge = slabs.getCharge();
 			}
-			
+
 		}
-		
-		BigDecimal roadCuttingCharge = BigDecimal.ZERO;
+
 		BigDecimal finalCharge = new BigDecimal(charge);
 
-		if (criteria.getSewerageConnection().getRoadType() != null)
-			roadCuttingCharge = getChargeForRoadCutting(masterData, criteria.getSewerageConnection().getRoadType(),
-					criteria.getSewerageConnection().getRoadCuttingArea());
 		if (!(finalCharge.compareTo(BigDecimal.ZERO) == 0))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ONE_TIME_FEE)
 					.estimateAmount(finalCharge.setScale(2, 2)).build());
 
-		if (!(roadCuttingCharge.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ROAD_CUTTING_CHARGE)
-					.estimateAmount(roadCuttingCharge.setScale(2, 2)).build());
-		
-		
-		addAdhocPenalityAndRebate(estimates, criteria.getSewerageConnection());
+		// addAdhocPenalityAndRebate(estimates, criteria.getSewerageConnection());
 		return estimates;
 	}
 
-	
 	/**
 	 * Enrich the adhoc penality and adhoc rebate
 	 * 
-	 * @param estimates
-	 *            tax head estimate
-	 * @param connection
-	 *            water connection object
+	 * @param estimates  tax head estimate
+	 * @param connection water connection object
 	 */
 	@SuppressWarnings({ "unchecked" })
 	private void addAdhocPenalityAndRebate(List<TaxHeadEstimate> estimates, SewerageConnection connection) {
@@ -404,6 +400,7 @@ public class EstimationService {
 			}
 		}
 	}
+
 	/**
 	 * 
 	 * @param masterData
@@ -444,7 +441,7 @@ public class EstimationService {
 				return BigDecimal.ZERO;
 			JSONObject master = mapper.convertValue(filteredMasters.get(0), JSONObject.class);
 			charge = new BigDecimal(master.getAsNumber(SWCalculationConstant.UNIT_COST_CONST).toString());
-			charge = charge.multiply(new BigDecimal (roadCuttingArea));
+			charge = charge.multiply(new BigDecimal(roadCuttingArea));
 			charge = charge.add(charge.multiply(supervision_tax.divide(SWCalculationConstant.HUNDRED)));
 			charge = charge.add(charge.multiply(gst_tax.divide(SWCalculationConstant.HUNDRED)));
 
@@ -499,31 +496,31 @@ public class EstimationService {
 		}
 		return charge;
 	}
-	
-	public Map<String, Object> getQuaterStartAndEndDate(Map<String, Object> billingPeriod){
+
+	public Map<String, Object> getQuaterStartAndEndDate(Map<String, Object> billingPeriod) {
 		Date date = new Date();
 		Calendar fromDateCalendar = Calendar.getInstance();
 		fromDateCalendar.setTime(date);
-		fromDateCalendar.set(Calendar.MONTH, fromDateCalendar.get(Calendar.MONTH)/3 * 3);
+		fromDateCalendar.set(Calendar.MONTH, fromDateCalendar.get(Calendar.MONTH) / 3 * 3);
 		fromDateCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		setTimeToBeginningOfDay(fromDateCalendar);
 		Calendar toDateCalendar = Calendar.getInstance();
 		toDateCalendar.setTime(date);
-		toDateCalendar.set(Calendar.MONTH, toDateCalendar.get(Calendar.MONTH)/3 * 3 + 2);
+		toDateCalendar.set(Calendar.MONTH, toDateCalendar.get(Calendar.MONTH) / 3 * 3 + 2);
 		toDateCalendar.set(Calendar.DAY_OF_MONTH, toDateCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		setTimeToEndofDay(toDateCalendar);
 		billingPeriod.put(SWCalculationConstant.STARTING_DATE_APPLICABLES, fromDateCalendar.getTimeInMillis());
 		billingPeriod.put(SWCalculationConstant.ENDING_DATE_APPLICABLES, toDateCalendar.getTimeInMillis());
 		return billingPeriod;
 	}
-	
-	public Map<String, Object> getMonthStartAndEndDate(Map<String, Object> billingPeriod){
+
+	public Map<String, Object> getMonthStartAndEndDate(Map<String, Object> billingPeriod) {
 		Date date = new Date();
 		Calendar monthStartDate = Calendar.getInstance();
 		monthStartDate.setTime(date);
 		monthStartDate.set(Calendar.DAY_OF_MONTH, monthStartDate.getActualMinimum(Calendar.DAY_OF_MONTH));
 		setTimeToBeginningOfDay(monthStartDate);
-	    
+
 		Calendar monthEndDate = Calendar.getInstance();
 		monthEndDate.setTime(date);
 		monthEndDate.set(Calendar.DAY_OF_MONTH, monthEndDate.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -532,18 +529,18 @@ public class EstimationService {
 		billingPeriod.put(SWCalculationConstant.ENDING_DATE_APPLICABLES, monthEndDate.getTimeInMillis());
 		return billingPeriod;
 	}
-	
+
 	private static void setTimeToBeginningOfDay(Calendar calendar) {
-	    calendar.set(Calendar.HOUR_OF_DAY, 0);
-	    calendar.set(Calendar.MINUTE, 0);
-	    calendar.set(Calendar.SECOND, 0);
-	    calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
 	}
 
 	private static void setTimeToEndofDay(Calendar calendar) {
-	    calendar.set(Calendar.HOUR_OF_DAY, 23);
-	    calendar.set(Calendar.MINUTE, 59);
-	    calendar.set(Calendar.SECOND, 59);
-	    calendar.set(Calendar.MILLISECOND, 999);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
 	}
 }

@@ -96,7 +96,7 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, false);
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		enrichmentService.enrichWaterConnection(waterConnectionRequest);
-		userService.createUser(waterConnectionRequest);
+	//	userService.createUser(waterConnectionRequest);
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
@@ -167,7 +167,7 @@ public class WaterServiceImpl implements WaterService {
 			waterDaoImpl.pushForEditNotification(waterConnectionRequest);
 			//Enrich file store Id After payment
 			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
-			userService.updateUser(waterConnectionRequest, searchResult);
+		//	userService.updateUser(waterConnectionRequest, searchResult);
 			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		}
 		//Call workflow
@@ -187,7 +187,7 @@ public class WaterServiceImpl implements WaterService {
 		}
 		waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
 		
-		enrichmentService.postForMeterReading(waterConnectionRequest);
+	//	enrichmentService.postForMeterReading(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
 	

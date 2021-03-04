@@ -1,12 +1,8 @@
 package org.egov.ec.web.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.egov.ec.service.ViolationService;
-import org.egov.ec.web.models.NotificationTemplate;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +105,13 @@ public class ViolationController {
 				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 		return genearateChallanService.getSearchChallan(requestInfoWrapper);
 	}
-				
+
+	@PostMapping(value = "/_sendMessage")
+	public ResponseEntity<ResponseInfoWrapper> sendMessage(
+			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,@RequestHeader("User-Agent") String requestHeader) {
+		log.info("Entering: " + Thread.currentThread().getStackTrace()[1].getClassName()
+				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
+		return genearateChallanService.sendMessage(requestInfoWrapper,requestHeader);
+	}
+
 }

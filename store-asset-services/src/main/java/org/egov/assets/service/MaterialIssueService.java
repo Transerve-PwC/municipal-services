@@ -188,8 +188,8 @@ public class MaterialIssueService extends DomainService {
 
 				WorkFlowDetails workFlowDetails = materialIssueRequest.getWorkFlowDetails();
 				workFlowDetails.setBusinessId(materialIssue.getIssueNumber());
-				workflowIntegrator.callWorkFlow(materialIssueRequest.getRequestInfo(), workFlowDetails,
-						materialIssue.getTenantId());
+				workflowIntegrator.callWorkFlowForIndent(materialIssueRequest.getRequestInfo(), workFlowDetails,
+						materialIssue.getTenantId(),materialIssueRequest);
 
 			}
 			kafkaTemplate.send(createTopic, createKey, materialIssueRequest);
@@ -206,6 +206,16 @@ public class MaterialIssueService extends DomainService {
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("indentissuedquantity",
 				"indentissuedquantity  + " + materialIssueDetail.getQuantityIssued().toString());
+		materialIssueDetail.getIndentDetail().setTenantId(tenantId);
+		materialIssueJdbcRepository.updateColumn(
+				new IndentDetailEntity().toEntity(materialIssueDetail.getIndentDetail()), "indentdetail", hashMap,
+				null);
+	}
+	
+	public void backUpdateIndentMinusForWorkFlow(MaterialIssueDetail materialIssueDetail, String tenantId) {
+		HashMap<String, String> hashMap = new HashMap<>();
+		hashMap.put("indentissuedquantity",
+				"indentissuedquantity  - " + materialIssueDetail.getQuantityIssued().toString());
 		materialIssueDetail.getIndentDetail().setTenantId(tenantId);
 		materialIssueJdbcRepository.updateColumn(
 				new IndentDetailEntity().toEntity(materialIssueDetail.getIndentDetail()), "indentdetail", hashMap,

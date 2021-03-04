@@ -507,4 +507,25 @@ public class ViolationService {
 		}
 	}
 
+	public ResponseEntity<ResponseInfoWrapper> sendMessage(RequestInfoWrapper requestInfoWrapper, String requestHeader) {
+		log.info("Violation Service - Generate Challan");
+		Violation violationMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), Violation.class);
+		String strOutput = violationMaster.getNotificationTemplate().getBody()
+				.replace("<violator>",violationMaster.getViolatorName())
+				.replace("<ChallanId>", violationMaster.getChallanId())
+				.replace("<EnchroachmentType>", violationMaster.getEncroachmentType())
+				.replace("<Date and Time>",
+						violationMaster.getViolationDate() + " " + violationMaster.getViolationTime())
+				.replace("<Link>", (config.getLoginUrl()+"?mobileno="+violationMaster.getContactNumber()+"&ecno="+violationMaster.getChallanId()))
+				.replace("<br>","\r\n");
+		log.info("Message Ready To Send : {}",strOutput);
+		violationMaster.getNotificationTemplate().setBody(strOutput);
+		violationMaster.getNotificationTemplate().setMessage(strOutput);
+		producer.push(config.getSmsNotificationTopic(), violationMaster.getNotificationTemplate());
+
+		return new ResponseEntity<>(
+				ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+						.responseBody(violationMaster).build(),
+				HttpStatus.OK);
+	}
 }

@@ -22,6 +22,6 @@ public class EOfficeRequestInfoWrapper {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@JsonProperty("eOfficeRequest")
+	@JsonProperty("EOfficeRequest")
 	private EOfficeRequest eOfficeRequest;
 }

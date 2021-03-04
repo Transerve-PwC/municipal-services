@@ -129,6 +129,9 @@ public class BillGeneration {
 
 	@JsonProperty("toDate")
 	private Long toDate;
+
+	@JsonProperty("receiptDate")
+	private Long receiptDate;
 	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

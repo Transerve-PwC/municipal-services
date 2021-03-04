@@ -69,6 +69,7 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
                 currentWaterConnection.setCcCode(rs.getString("cccode"));
                 currentWaterConnection.setBillGroup(rs.getString("billGroup"));
                 currentWaterConnection.setContractValue(rs.getString("contract_value"));
+                currentWaterConnection.setProposedUsageCategory(rs.getString("proposedUsage_category"));
 
                 currentWaterConnection.setLedgerGroup(rs.getString("ledgerGroup"));
                 currentWaterConnection.setMeterCount(rs.getString("meterCount"));
@@ -204,7 +205,7 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
                     .relationship(Relationship.fromValue(rs.getString("holderrelationship")))
                     .status(org.egov.waterconnection.model.Status.fromValue(rs.getString("holderstatus")))
                     .tenantId(rs.getString("holdertenantid")).ownerType(rs.getString("connectionholdertype"))
-                    .isPrimaryOwner(isPrimaryOwner).uuid(uuid).correspondenceAddress(rs.getString("holdercorrepondanceaddress")).build();
+                    .isPrimaryOwner(isPrimaryOwner).uuid(uuid).name(rs.getString("holdername")).correspondenceAddress(rs.getString("holdercorrepondanceaddress")).build();
             waterConnection.addConnectionHolderInfo(connectionHolderInfo);
         }
     }

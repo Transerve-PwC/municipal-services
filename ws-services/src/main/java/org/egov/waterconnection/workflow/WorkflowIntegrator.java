@@ -13,6 +13,7 @@ import org.egov.waterconnection.model.workflow.ProcessInstance;
 import org.egov.waterconnection.model.workflow.ProcessInstanceRequest;
 import org.egov.waterconnection.model.workflow.ProcessInstanceResponse;
 import org.egov.waterconnection.util.WaterServicesUtil;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -61,7 +62,11 @@ public class WorkflowIntegrator {
 
 		String activityType = waterConnectionRequest.getWaterConnection().getActivityType();
 		String businessService = getBusinessService(activityType);
-				
+				if(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction().equalsIgnoreCase(WCConstants.ACTION_PAY)) {
+					JSONObject obj = new JSONObject();
+					obj.put("role", "WS_JE_"+waterConnectionRequest.getWaterConnection().getSubdiv());
+					waterConnectionRequest.getWaterConnection().getProcessInstance().setAdditionalDetails(obj);
+				}
 		ProcessInstance processInstance = ProcessInstance.builder()
 				.businessId(waterConnectionRequest.getWaterConnection().getApplicationNo())
 				.tenantId(property.getTenantId())

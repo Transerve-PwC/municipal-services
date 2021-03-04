@@ -28,6 +28,7 @@ import org.egov.ps.util.PSConstants;
 import org.egov.ps.web.contracts.AccountStatementResponse;
 import org.egov.ps.web.contracts.EstateAccount;
 import org.egov.ps.web.contracts.EstateAccountStatement;
+import org.egov.ps.web.contracts.ManiMajraAccountStatement;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,8 @@ public class AccountStatementExcelGenerationService {
 	private static final String PAYMENT = "Payment";
 	private static String[] headerColumns = { "Date", "Consolidated Demand", "Amount", "Type (Payment)", "Type (Rent)", "Principal due",
 			"GST Due", "Interest Due", "Gst Penalty Due", "Total Due", "Account Balance", "Receipt No." };
+	private static String[] mmHeaderColumns = { "Date", "Rent", "Amount", "Type (Payment)", "Type (Rent)", "Principal Due",
+			"GST Due", "Total Due", "Account Balance", "Receipt No." };
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 
 	@Autowired
@@ -67,6 +70,95 @@ public class AccountStatementExcelGenerationService {
 		Property property = properties.get(0);
 		List<HashMap<String, String>> response = new ArrayList<HashMap<String, String>>();
 
+		if (property.getPropertyDetails().getBranchType().equalsIgnoreCase(PSConstants.MANI_MAJRA)) {
+			AccountStatementResponse accountStatementResponse = propertyService.searchPayments(accountStatementCriteria,
+					requestInfo);
+
+			try {
+				Workbook workbook = new XSSFWorkbook();
+				Sheet sheet = workbook.createSheet("AccountStatement");
+
+				Font headerFont = workbook.createFont();
+				headerFont.setBold(true);
+				headerFont.setFontHeightInPoints((short) 10);
+				headerFont.setColor(IndexedColors.BLACK.getIndex());
+
+				// Create a CellStyle with the font
+				CellStyle headerCellStyle = workbook.createCellStyle();
+				headerCellStyle.setFont(headerFont);
+
+				// Create a Row
+				Row headerRow = sheet.createRow(0);
+
+				Cell cell = headerRow.createCell(1);
+				cell.setCellValue("Account Statement of the Property. " + property.getSiteNumber());
+				cell.setCellStyle(headerCellStyle);
+
+				Row headerRow3 = sheet.createRow(2);
+				for (int i = 0; i < mmHeaderColumns.length; i++) {
+					cell = headerRow3.createCell(i);
+					cell.setCellValue(mmHeaderColumns[i]);
+					cell.setCellStyle(headerCellStyle);
+				}
+
+				int rowNum = 3;
+				int statementsSize = accountStatementResponse.getMmAccountStatements().size();
+
+				for (int i = 0; i < statementsSize; i++) {
+					ManiMajraAccountStatement rentAccountStmt = accountStatementResponse.getMmAccountStatements()
+							.get(i);
+					Row row = sheet.createRow(rowNum++);
+					if (i < statementsSize - 1) {
+						row.createCell(0).setCellValue(getFormattedDate(rentAccountStmt.getDate()));
+						row.createCell(1).setCellValue(String.format("%,.2f", rentAccountStmt.getRent()));
+						row.createCell(2)
+								.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getAmount())));
+						Optional.ofNullable(rentAccountStmt)
+								.filter(r -> r.getType().name().equals(ManiMajraAccountStatement.Type.C.name()))
+								.ifPresent(o -> row.createCell(3).setCellValue(PAYMENT));
+						Optional.ofNullable(rentAccountStmt)
+								.filter(r -> r.getType().name().equals(ManiMajraAccountStatement.Type.D.name()))
+								.ifPresent(o -> row.createCell(4).setCellValue(RENT));
+					} else {
+						row.createCell(0).setCellValue("Balance as on " + getFormattedDate(rentAccountStmt.getDate()));
+					}
+
+					row.createCell(5).setCellValue(
+							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingPrincipal())));
+					row.createCell(6)
+							.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingGST())));
+					row.createCell(7)
+							.setCellValue(String.format("%,.2f", Double.valueOf(rentAccountStmt.getDueAmount())));
+					row.createCell(8).setCellValue(
+							String.format("%,.2f", Double.valueOf(rentAccountStmt.getRemainingBalance())));
+					if (i < statementsSize - 1) {
+						Optional.ofNullable(rentAccountStmt)
+								.filter(r -> r.getType().name().equals(EstateAccountStatement.Type.C.name()))
+								.ifPresent(o -> row.createCell(9).setCellValue(o.getReceiptNo()));
+					}
+				}
+
+				/**
+				 * Write workbook to byte array
+				 */
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+				workbook.write(baos);
+				String fileName = String.format("AccountStatement-%s.xlsx", property.getSiteNumber());
+				response = fileStoreUtils.uploadStreamToFileStore(baos,
+						property.getTenantId(), fileName, XLSX_CONTENT_TYPE);
+
+				baos.close();
+
+				// Closing the workbook
+				workbook.close();
+				return response;
+
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+			throw new CustomException("XLS_NOT_GENERATED", "Could not generate account statement");
+		} else {
 		EstateAccount estateAccount = propertyRepository.getPropertyEstateAccountDetails(Collections.singletonList(property.getPropertyDetails().getId()));
 		if (!CollectionUtils.isEmpty(property.getPropertyDetails().getEstateDemands())
 				&& null != estateAccount
@@ -166,7 +258,7 @@ public class AccountStatementExcelGenerationService {
 			}
 			throw new CustomException("XLS_NOT_GENERATED", "Could not generate account statement");
 		}
-		
+		}
 		return response;
 	}
 

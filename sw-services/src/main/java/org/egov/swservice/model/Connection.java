@@ -43,6 +43,10 @@ public class Connection {
 	@JsonProperty("applicationStatus")
 	private String applicationStatus = null;
 
+	@JsonProperty("connectionHolders")
+	@Valid
+	private List<ConnectionHolderInfo> connectionHolders;
+
 	/**
 	 * Gets or Sets status
 	 */
@@ -567,7 +571,24 @@ public class Connection {
 		return swProperty;
 	}
 
+	public List<ConnectionHolderInfo> getConnectionHolders() {
+		return connectionHolders;
+	}
+
+	public void setConnectionHolders(List<ConnectionHolderInfo> connectionHolders) {
+		this.connectionHolders = connectionHolders;
+	}
+
 	public void setSwProperty(SWProperty swProperty) {
 		this.swProperty = swProperty;
+	}
+	
+	public Connection addConnectionHolderInfo(ConnectionHolderInfo connectionHolderInfo) {
+		if (this.connectionHolders == null) {
+			this.connectionHolders = new ArrayList<ConnectionHolderInfo>();
+		}
+		if (!this.connectionHolders.contains(connectionHolderInfo))
+			this.connectionHolders.add(connectionHolderInfo);
+		return this;
 	}
 }

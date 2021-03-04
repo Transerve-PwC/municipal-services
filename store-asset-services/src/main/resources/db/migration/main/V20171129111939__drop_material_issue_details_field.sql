@@ -1,1 +1,0 @@
-alter table materialissuedetail drop column quantitytobeissued;

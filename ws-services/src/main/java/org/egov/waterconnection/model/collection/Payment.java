@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.waterconnection.model.AuditDetails;
+import org.egov.waterconnection.model.enums.InstrumentStatusEnum;
+import org.egov.waterconnection.model.enums.PaymentModeEnum;
+import org.egov.waterconnection.model.enums.PaymentStatusEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,7 +54,7 @@ public class Payment {
 
     @NotNull
     @JsonProperty("paymentMode")
-    private String paymentMode;
+    private PaymentModeEnum paymentMode;
 
     
     @JsonProperty("instrumentDate")
@@ -62,7 +65,7 @@ public class Payment {
     private String instrumentNumber;
 
     @JsonProperty("instrumentStatus")
-    private String instrumentStatus;
+    private InstrumentStatusEnum instrumentStatus;
 
     @Size(max=64)
     @JsonProperty("ifscCode")
@@ -84,7 +87,6 @@ public class Payment {
     private String paidBy = null;
 
     @Size(max=64)
-    @NotNull
     @JsonProperty("mobileNumber")
     private String mobileNumber = null;
 
@@ -95,6 +97,10 @@ public class Payment {
     @Size(max=1024)
     @JsonProperty("payerAddress")
     private String payerAddress = null;
+    
+    @Size(max=1024)
+    @JsonProperty("narration")
+    private String narration = null;
 
     @Size(max=64)
     @JsonProperty("payerEmail")
@@ -105,8 +111,26 @@ public class Payment {
     private String payerId = null;
 
     @JsonProperty("paymentStatus")
-    private String paymentStatus;
+    private PaymentStatusEnum paymentStatus;
 
+    @JsonProperty("fileStoreId")
+    private String fileStoreId;
+    
+    @Size(max=100)
+    @JsonProperty("bankName")
+    private String bankName = null;
+
+    @Size(max=100)
+    @JsonProperty("bankBranch")
+    private String bankBranch = null;
+    
+    @Size(max=100)
+    @JsonProperty("subdivison")
+    private String subdivison = null;
+    
+    @Size(max=100)
+    @JsonProperty("gstno")
+    private String gstno = null;
 
     public Payment addpaymentDetailsItem(PaymentDetail paymentDetail) {
         if (this.paymentDetails == null) {
@@ -115,8 +139,4 @@ public class Payment {
         this.paymentDetails.add(paymentDetail);
         return this;
     }
-
-
-
-
 }
