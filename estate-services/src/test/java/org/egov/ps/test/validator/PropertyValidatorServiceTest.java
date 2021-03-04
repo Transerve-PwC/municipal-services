@@ -20,6 +20,7 @@ import org.egov.ps.model.Property;
 import org.egov.ps.model.Role;
 import org.egov.ps.service.MDMSService;
 import org.egov.ps.service.WorkflowCreationService;
+import org.egov.ps.util.PSConstants;
 import org.egov.ps.validator.PropertyValidator;
 import org.egov.ps.web.contracts.PropertyRequest;
 import org.junit.Test;
@@ -74,7 +75,7 @@ public class PropertyValidatorServiceTest {
 
 		// Step 4 - Test case
 		Map<String, String> errorMap = new HashMap<String, String>();
-		propertyValidator.validateDocumentsOnType(requestInfo, "ch", owner, errorMap, "");
+		propertyValidator.validateDocumentsOnType(requestInfo,PSConstants.ESTATE_BRANCH, "ch", owner, errorMap, "");
 
 	}
 
@@ -110,7 +111,7 @@ public class PropertyValidatorServiceTest {
 
 		// Step 4 - Test case
 		Map<String, String> errorMap = new HashMap<String, String>();
-		propertyValidator.validateDocumentsOnType(requestInfo, "ch", owner, errorMap, "");
+		propertyValidator.validateDocumentsOnType(requestInfo,PSConstants.ESTATE_BRANCH, "ch", owner, errorMap, "");
 
 	}
 
