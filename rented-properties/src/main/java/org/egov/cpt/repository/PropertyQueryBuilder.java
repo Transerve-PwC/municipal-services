@@ -29,7 +29,7 @@ public class PropertyQueryBuilder {
 	private static final String GD_ALL = " gd.*,";
 
 	private static final String PT_COLUMNS = " pt.id as pid, pt.transit_number, pt.tenantid as pttenantid, pt.colony, pt.master_data_state, pt.master_data_action,"
-			+ " pt.created_by as pcreated_by, pt.created_date as pcreated_date, pt.modified_by as pmodified_by, pt.modified_date as pmodified_date,"
+			+ " pt.created_by as pcreated_by, pt.created_date as pcreated_date, pt.modified_by as pmodified_by, pt.modified_date as pmodified_date, pt.rent_payment_consumer_code as pt_consumer_code, "
 
 			+ " ptdl.id as pdid, ptdl.property_id as pdproperty_id, ptdl.transit_number as pdtransit_number,"
 			+ " ptdl.interest_rate as pd_int_rate,ptdl.rent_increment_percentage as pd_rent_inc_pg,ptdl.rent_increment_period as pd_rent_inc_period,"

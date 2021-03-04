@@ -60,6 +60,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.tenantId(tenantId).colony(rs.getString("colony"))
 						.masterDataState(rs.getString("master_data_state"))
 						.masterDataAction(rs.getString("master_data_action")).propertyDetails(propertyDetails)
+						.rentPaymentConsumerCode(rs.getString("pt_consumer_code"))
 						.auditDetails(auditdetails).build();
 				propertyMap.put(propertyId, currentProperty);
 			}
