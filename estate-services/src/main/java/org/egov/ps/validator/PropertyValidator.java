@@ -15,6 +15,7 @@ import com.jayway.jsonpath.JsonPath;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.ps.model.Document;
 import org.egov.ps.model.EstateDocumentList;
 import org.egov.ps.model.Owner;
 import org.egov.ps.model.Property;
@@ -213,7 +214,8 @@ public class PropertyValidator {
 				// Document Validation
 				if (null != o.getOwnerDetails() && null != o.getOwnerDetails().getOwnerDocuments()) {
 					try {
-						validateDocumentsOnType(request.getRequestInfo(), property_Optional.get().getTenantId(), o,
+						validateDocumentsOnType(request.getRequestInfo(),property_Optional.get().getPropertyDetails().getBranchType(),
+								property_Optional.get().getTenantId(), o,
 								errorMap, "");
 					} catch (Exception e) {
 						log.error("Can not parse Json fie", e);
@@ -233,22 +235,30 @@ public class PropertyValidator {
 		 */
 	}
 
-	public void validateDocumentsOnType(RequestInfo requestInfo, String tenantId, Owner owner,
+	public void validateDocumentsOnType(RequestInfo requestInfo,String branchType, String tenantId, Owner owner,
 			Map<String, String> errorMap, String code) throws JSONException {
-
-		List<Map<String, Object>> fieldConfigurations = mdmsservice.getDocumentConfig("documents", requestInfo,
-				tenantId);
+		List<Map<String, Object>> fieldConfigurations=new ArrayList<Map<String,Object>>();
+		List<Document> documents = owner.getOwnerDetails().getOwnerDocuments();
+		
+		if(branchType.equalsIgnoreCase(PSConstants.BUILDING_BRANCH)) 
+			fieldConfigurations = mdmsservice.getDocumentConfig("buildingBranchOwnerDocs", requestInfo,tenantId);
+		else
+			fieldConfigurations = mdmsservice.getDocumentConfig("documents", requestInfo,tenantId);
+		
 		ObjectMapper mapper = new ObjectMapper();
 		List<EstateDocumentList> documentTypeList = mapper.convertValue(fieldConfigurations,
 				new TypeReference<List<EstateDocumentList>>() {
 		});
-
-		owner.getOwnerDetails().getOwnerDocuments().stream().forEach(document -> {
-			if (!documentTypeList.contains(EstateDocumentList.builder().code(document.getDocumentType()).build())) {
+		
+		documents.stream().filter(Document::getIsActive).map(Document::getDocumentType).forEach(docType->{
+			long count= documentTypeList.stream().map(d->d.getCode()).
+					filter(docCode->docCode.equalsIgnoreCase(String.valueOf(docType))).count();
+			if(count==0) {
 				errorMap.put("INVALID DOCUMENT",
 						"Document is not valid for user : " + owner.getOwnerDetails().getOwnerName());
 			}
 		});
+		
 	}
 
 	private boolean isMobileNumberValid(String mobileNumber) {
