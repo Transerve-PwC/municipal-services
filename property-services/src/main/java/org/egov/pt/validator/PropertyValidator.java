@@ -555,7 +555,7 @@ public class PropertyValidator {
 		if (isUserCitizen) {
 			
 			if (isCriteriaEmpty)
-				criteria.setMobileNumber(user.getMobileNumber());
+				criteria.setMobileNumber(user.getUserName());
 			
 			allowedParams = Arrays.asList(configs.getCitizenSearchParams().split(","));
 		}
