@@ -173,9 +173,9 @@ public class PSConstants {
 
 	public static final String NOC = "NOC";
 
-	public static final String BB_NOC_PENDING_SDE_JE_VERIFICATION = "PENDING_SDE_JE_VERIFICATION";
+	public static final String BB_NOC_PENDING_JE_VERIFICATION = "PENDING_JE_VERIFICATION";
 
-	public static final String BB_NOC_PENDING_DA_PROPOSAL = "PENDING_DA_PROPOSAL";
+	public static final String BB_NOC_PENDING_DRAFSMAN_CALCULATION = "PENDING_DRAFSMAN_CALCULATION";
 
 	public static final String BB_NOC_PENDING_AC_APPROVAL = "PENDING_AC_APPROVAL";
 	

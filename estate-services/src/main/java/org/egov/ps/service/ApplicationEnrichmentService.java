@@ -183,7 +183,7 @@ public class ApplicationEnrichmentService {
 
 			JsonNode applicationDetails = application.getApplicationDetails();
 
-			if (application.getState().contains(PSConstants.BB_NOC_PENDING_SDE_JE_VERIFICATION)) {
+			if (application.getState().contains(PSConstants.BB_NOC_PENDING_JE_VERIFICATION)) {
 
 				BigDecimal developmentCharges = calculateDevelopmentCharges(applicationDetails);
 				((ObjectNode) applicationDetails).put("developmentCharges", developmentCharges);
@@ -193,7 +193,7 @@ public class ApplicationEnrichmentService {
 
 			}
 
-			if (application.getState().contains(PSConstants.BB_NOC_PENDING_DA_PROPOSAL)) {
+			if (application.getState().contains(PSConstants.BB_NOC_PENDING_DRAFSMAN_CALCULATION)) {
 
 				// Development Charges
 				BigDecimal developmentCharges = new BigDecimal(applicationDetails.get("developmentCharges").toString());
