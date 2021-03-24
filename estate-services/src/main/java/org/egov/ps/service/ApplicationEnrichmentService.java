@@ -276,7 +276,7 @@ public class ApplicationEnrichmentService {
 			JsonNode applicationDetails = application.getApplicationDetails();
 
 			//Transfer Charges
-			if(!applicationDetails.get("transferCharges").isNull() && Integer.valueOf(applicationDetails.get("transferCharges").toString())>0) {
+			if(!applicationDetails.get("transferCharges").isNull() && Integer.valueOf(applicationDetails.get("transferCharges").asText())>0) {
 				BigDecimal transferCharges = new BigDecimal(applicationDetails.get("transferCharges").toString());
 				TaxHeadEstimate transferChargesEstimate = new TaxHeadEstimate();
 				transferChargesEstimate.setEstimateAmount(transferCharges);
@@ -287,7 +287,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//GST
-			if(!applicationDetails.get("GST").isNull() && Integer.valueOf(applicationDetails.get("GST").toString())>0) {
+			if(!applicationDetails.get("GST").isNull() && Integer.valueOf(applicationDetails.get("GST").asText())>0) {
 				BigDecimal gst = new BigDecimal(applicationDetails.get("GST").toString());
 				TaxHeadEstimate gstEstimate = new TaxHeadEstimate();
 				gstEstimate.setEstimateAmount(gst);
@@ -297,7 +297,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Processing fees/Application Fee
-			if(!applicationDetails.get("applicationFee").isNull() && Integer.valueOf(applicationDetails.get("applicationFee").toString())>0) {
+			if(!applicationDetails.get("applicationFee").isNull() && Integer.valueOf(applicationDetails.get("applicationFee").asText())>0) {
 				BigDecimal applciationFee = new BigDecimal(applicationDetails.get("applicationFee").toString());
 				TaxHeadEstimate applciationFeeEstimate = new TaxHeadEstimate();
 				applciationFeeEstimate.setEstimateAmount(applciationFee);
@@ -308,7 +308,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Inspection Fees
-			if(!applicationDetails.get("inspectionFee").isNull() && Integer.valueOf(applicationDetails.get("inspectionFee").toString())>0) {
+			if(!applicationDetails.get("inspectionFee").isNull() && Integer.valueOf(applicationDetails.get("inspectionFee").asText())>0) {
 				BigDecimal inspectionFee = new BigDecimal(applicationDetails.get("inspectionFee").toString());
 				TaxHeadEstimate inspectionFeeEstimate = new TaxHeadEstimate();
 				inspectionFeeEstimate.setEstimateAmount(inspectionFee);
@@ -319,7 +319,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//EMD/Security
-			if(!applicationDetails.get("securityFee").isNull() && Integer.valueOf(applicationDetails.get("securityFee").toString())>0) {
+			if(!applicationDetails.get("securityFee").isNull() && Integer.valueOf(applicationDetails.get("securityFee").asText())>0) {
 				BigDecimal securityFee = new BigDecimal(applicationDetails.get("securityFee").toString());
 				TaxHeadEstimate securityFeeEstimate = new TaxHeadEstimate();
 				securityFeeEstimate.setEstimateAmount(securityFee);
@@ -330,7 +330,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Extension fees
-			if(!applicationDetails.get("extensionFee").isNull() && Integer.valueOf(applicationDetails.get("extensionFee").toString())>0) {
+			if(!applicationDetails.get("extensionFee").isNull() && Integer.valueOf(applicationDetails.get("extensionFee").asText())>0) {
 				BigDecimal extensionFee = new BigDecimal(applicationDetails.get("extensionFee").toString());
 				TaxHeadEstimate extensionFeeEstimate = new TaxHeadEstimate();
 				extensionFeeEstimate.setEstimateAmount(extensionFee);
@@ -341,7 +341,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Certificate/Document Copying Fees
-			if(!applicationDetails.get("DocumentCopyingFee").isNull() && Integer.valueOf(applicationDetails.get("DocumentCopyingFee").toString())>0) {
+			if(!applicationDetails.get("DocumentCopyingFee").isNull() && Integer.valueOf(applicationDetails.get("DocumentCopyingFee").asText())>0) {
 				BigDecimal documentCopyingFee = new BigDecimal(applicationDetails.get("DocumentCopyingFee").toString());
 				TaxHeadEstimate documentCopyingFeeEstimate = new TaxHeadEstimate();
 				documentCopyingFeeEstimate.setEstimateAmount(documentCopyingFee);
@@ -352,7 +352,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Allotment Fees
-			if(!applicationDetails.get("allotmentFee").isNull() && Integer.valueOf(applicationDetails.get("allotmentFee").toString())>0) {
+			if(!applicationDetails.get("allotmentFee").isNull() && Integer.valueOf(applicationDetails.get("allotmentFee").asText())>0) {
 				BigDecimal allotmentFee = new BigDecimal(applicationDetails.get("allotmentFee").toString());
 				TaxHeadEstimate allotmentFeeEstimate = new TaxHeadEstimate();
 				allotmentFeeEstimate.setEstimateAmount(allotmentFee);
@@ -363,7 +363,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Conversion fees
-			if(!applicationDetails.get("conversionFee").isNull() && Integer.valueOf(applicationDetails.get("conversionFee").toString())>0) {
+			if(!applicationDetails.get("conversionFee").isNull() && Integer.valueOf(applicationDetails.get("conversionFee").asText())>0) {
 				BigDecimal conversionFee = new BigDecimal(applicationDetails.get("conversionFee").toString());
 				TaxHeadEstimate conversionFeeEstimate = new TaxHeadEstimate();
 				conversionFeeEstimate.setEstimateAmount(conversionFee);
@@ -374,7 +374,7 @@ public class ApplicationEnrichmentService {
 			}
 			
 			//Property Transfer charges
-			if(!applicationDetails.get("propertyTransferCharge").isNull() && Integer.valueOf(applicationDetails.get("propertyTransferCharge").toString())>0) {
+			if(!applicationDetails.get("propertyTransferCharge").isNull() && Integer.valueOf(applicationDetails.get("propertyTransferCharge").asText())>0) {
 				BigDecimal propertyTransferCharge = new BigDecimal(applicationDetails.get("propertyTransferCharge").toString());
 				TaxHeadEstimate propertyTransferChargeEstimate = new TaxHeadEstimate();
 				propertyTransferChargeEstimate.setEstimateAmount(propertyTransferCharge);
