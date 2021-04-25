@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import static org.egov.swservice.util.SWConstants.SEARCH_TYPE_CONNECTION;
 
 @Component
 public class SWQueryBuilder {
@@ -38,9 +39,10 @@ public class SWQueryBuilder {
 			+ "  sc.detailsprovidedby, sc.estimationfileStoreId , sc.sanctionfileStoreId , sc.estimationLetterDate,"
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id,"
 			+ " conn.roadcuttingarea, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.createdBy as sw_createdBy,"
-			+ " conn.lastModifiedBy as sw_lastModifiedBy, conn.createdTime as sw_createdTime, conn.lastModifiedTime as sw_lastModifiedTime, "
+			+ " conn.lastModifiedBy as sw_lastModifiedBy, conn.createdTime as sw_createdTime, conn.lastModifiedTime as sw_lastModifiedTime,conn.additionaldetails, "
 			+ " conn.adhocpenaltyreason, conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.applicationType, conn.dateEffectiveFrom,"
-			+ " conn.locality, conn.roadtype, document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id, plumber.name as plumber_name, plumber.licenseno,"
+			+ " conn.locality, conn.isoldapplication, conn.roadtype, document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id, plumber.name as plumber_name, plumber.licenseno,"
+			+ " roadcuttingInfo.id as roadcutting_id, roadcuttingInfo.roadtype as roadcutting_roadtype, roadcuttingInfo.roadcuttingarea as roadcutting_roadcuttingarea, roadcuttingInfo.roadcuttingarea as roadcutting_roadcuttingarea, roadcuttingInfo.active as roadcutting_active,"
 			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship, " + holderSelectValues +
 			" FROM eg_sw_connection conn "
 	+  INNER_JOIN_STRING 
@@ -50,7 +52,9 @@ public class SWQueryBuilder {
 	+  LEFT_OUTER_JOIN_STRING
 	+ "eg_sw_plumberinfo plumber ON plumber.swid = conn.id"
 	+ LEFT_OUTER_JOIN_STRING
-    + "eg_sw_connectionholder connectionholder ON connectionholder.connectionid = conn.id";
+    + "eg_sw_connectionholder connectionholder ON connectionholder.connectionid = conn.id"
+	+ LEFT_OUTER_JOIN_STRING
+	+ "eg_sw_roadcuttinginfo roadcuttingInfo ON roadcuttingInfo.swid = conn.id";
 
 	private final String paginationWrapper = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY conn_id) offset_ FROM " +
@@ -69,12 +73,14 @@ public class SWQueryBuilder {
 			RequestInfo requestInfo) {
 		if(criteria.isEmpty())
 			return null;
+		Set<String> propertyIds = new HashSet<>();
 		StringBuilder query = new StringBuilder(SEWERAGE_SEARCH_QUERY);
 		boolean propertyIdsPresent = false;
+		
 		if (!StringUtils.isEmpty(criteria.getMobileNumber()) || !StringUtils.isEmpty(criteria.getPropertyId())) {
-			Set<String> propertyIds = new HashSet<>();
 			List<Property> propertyList = sewerageServicesUtil.propertySearchOnCriteria(criteria, requestInfo);
 			propertyList.forEach(property -> propertyIds.add(property.getId()));
+			criteria.setPropertyIds(propertyIds);
 			if (!propertyIds.isEmpty()) {
 				addClauseIfRequired(preparedStatement, query);
 				query.append(" (conn.property_id in (").append(createQuery(propertyIds)).append(" )");
@@ -85,6 +91,7 @@ public class SWQueryBuilder {
 		if(!StringUtils.isEmpty(criteria.getMobileNumber())) {
 			Set<String> uuids = userService.getUUIDForUsers(criteria.getMobileNumber(), criteria.getTenantId(), requestInfo);
 			boolean userIdsPresent = false;
+			criteria.setUserIds(uuids);
 			if (!CollectionUtils.isEmpty(uuids)) {
 				addORClauseIfRequired(preparedStatement, query);
 				if(!propertyIdsPresent)
@@ -97,6 +104,17 @@ public class SWQueryBuilder {
 				query.append(")");
 			}
 		}
+		
+		/*
+		 * to return empty result for mobilenumber empty result
+		 */
+		if (!StringUtils.isEmpty(criteria.getMobileNumber()) && 
+				CollectionUtils.isEmpty(criteria.getPropertyIds()) && CollectionUtils.isEmpty(criteria.getUserIds())
+				&& StringUtils.isEmpty(criteria.getApplicationNumber()) && StringUtils.isEmpty(criteria.getPropertyId())
+				&& StringUtils.isEmpty(criteria.getConnectionNumber()) && CollectionUtils.isEmpty(criteria.getIds())) {
+			return null;
+		}
+		
 		if (!StringUtils.isEmpty(criteria.getTenantId())) {
 			addClauseIfRequired(preparedStatement, query);
 			query.append(" conn.tenantid = ? ");
@@ -106,6 +124,11 @@ public class SWQueryBuilder {
 		if (!StringUtils.isEmpty(criteria.getPropertyId()) && StringUtils.isEmpty(criteria.getMobileNumber())) {
 			if(propertyIdsPresent)
 				query.append(")");
+			else{
+				addClauseIfRequired(preparedStatement, query);
+				query.append(" conn.property_id = ? ");
+				preparedStatement.add(criteria.getPropertyId());
+			}
 		}
 		if (!CollectionUtils.isEmpty(criteria.getIds())) {
 			addClauseIfRequired(preparedStatement, query);
@@ -153,6 +176,17 @@ public class SWQueryBuilder {
 			addClauseIfRequired(preparedStatement, query);
 			query.append(" conn.applicationType = ? ");
 			preparedStatement.add(criteria.getApplicationType());
+		}
+		if(!StringUtils.isEmpty(criteria.getSearchType())
+				&& criteria.getSearchType().equalsIgnoreCase(SEARCH_TYPE_CONNECTION)){
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.isoldapplication = ? ");
+			preparedStatement.add(Boolean.FALSE);
+		}
+		if (!StringUtils.isEmpty(criteria.getLocality())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.locality = ? ");
+			preparedStatement.add(criteria.getLocality());
 		}
 		
 		//Add OrderBy clause

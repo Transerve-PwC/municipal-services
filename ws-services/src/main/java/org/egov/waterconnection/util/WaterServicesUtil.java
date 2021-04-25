@@ -151,6 +151,9 @@ public class WaterServicesUtil {
 			propertyIds.add(waterConnectionSearchCriteria.getPropertyId());
 			propertyCriteria.setPropertyIds(propertyIds);
 		}
+		if (!StringUtils.isEmpty(waterConnectionSearchCriteria.getLocality())) {
+			propertyCriteria.setLocality(waterConnectionSearchCriteria.getLocality());
+		}
 		return getPropertyDetails(serviceRequestRepository.fetchResult(getPropertyURL(propertyCriteria),
 				RequestInfoWrapper.builder().requestInfo(requestInfo).build()));
 	}
@@ -172,7 +175,7 @@ public class WaterServicesUtil {
 	 *            Response object from property service call
 	 * @return List of property
 	 */
-	private List<Property> getPropertyDetails(Object result) {
+	public List<Property> getPropertyDetails(Object result) {
 
 		try {
 			PropertyResponse propertyResponse = objectMapper.convertValue(result, PropertyResponse.class);
@@ -208,7 +211,7 @@ public class WaterServicesUtil {
 	 * @param criteria
 	 * @return property URL
 	 */
-	private StringBuilder getPropertyURL(PropertyCriteria criteria) {
+	public StringBuilder getPropertyURL(PropertyCriteria criteria) {
 		StringBuilder url = new StringBuilder(getPropertyURL());
 		boolean isanyparametermatch = false;
 		url.append("?");

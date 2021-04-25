@@ -29,6 +29,10 @@ public class SearchCriteria {
 
 	@JsonProperty("status")
 	private String status;
+	
+	private Set<String> propertyIds;
+	
+	private Set<String> userIds;
 
 	@JsonProperty("ids")
 	private Set<String> ids;
@@ -71,6 +75,12 @@ public class SearchCriteria {
 
 	@JsonProperty("searchType")
 	private String searchType = "APPLICATION";
+
+	@JsonProperty("locality")
+	private String locality;
+
+	@JsonProperty("isPropertyDetailsRequired")
+	private Boolean isPropertyDetailsRequired = false;
 
 
 	@JsonIgnore

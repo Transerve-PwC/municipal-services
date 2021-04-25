@@ -394,6 +394,29 @@ public class DemandService {
 			List<DemandDetail> demandDetails = demand.getDemandDetails();
 			List<DemandDetail> updatedDemandDetails = getUpdatedDemandDetails(calculation, demandDetails);
 			demand.setDemandDetails(updatedDemandDetails);
+
+			if(isForConnectionNo){
+				SewerageConnection connection = calculation.getSewerageConnection();
+				if (connection == null) {
+					List<SewerageConnection> sewerageConnectionList = calculatorUtils.getSewerageConnection(requestInfo,
+							calculation.getConnectionNo(),calculation.getTenantId());
+					int size = sewerageConnectionList.size();
+					connection = sewerageConnectionList.get(size-1);
+
+				}
+
+				if(connection.getApplicationType().equalsIgnoreCase("MODIFY_SEWERAGE_CONNECTION")){
+					SewerageConnectionRequest sewerageConnectionRequest = SewerageConnectionRequest.builder().sewerageConnection(connection)
+							.requestInfo(requestInfo).build();
+					Property property = sWCalculationUtil.getProperty(sewerageConnectionRequest);
+					User owner = property.getOwners().get(0).toCommonUser();
+					if (!CollectionUtils.isEmpty(sewerageConnectionRequest.getSewerageConnection().getConnectionHolders())) {
+						owner = sewerageConnectionRequest.getSewerageConnection().getConnectionHolders().get(0).toCommonUser();
+					}
+					if(!(demand.getPayer().getUuid().equalsIgnoreCase(owner.getUuid())))
+						demand.setPayer(owner);
+				}
+			}
 			demands.add(demand);
 		}
 
@@ -573,6 +596,10 @@ public class DemandService {
 
 		BigDecimal penalty = interestPenaltyEstimates.get(SWCalculationConstant.SW_TIME_PENALTY);
 		BigDecimal interest = interestPenaltyEstimates.get(SWCalculationConstant.SW_TIME_INTEREST);
+		if(penalty == null)
+			penalty = BigDecimal.ZERO;
+		if(interest == null)
+			interest = BigDecimal.ZERO;
 
 		DemandDetailAndCollection latestPenaltyDemandDetail, latestInterestDemandDetail;
 

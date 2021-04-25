@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -119,23 +120,23 @@ public class BPAService {
 		if (!StringUtils.isEmpty(bpaRequest.getBPA().getApprovalNo())) {
 			bpaRequest.getBPA().setApprovalNo(null);
 		}
-		String reqApplicationType = bpaRequest.getBPA().getApplicationType();
-		
-		if (reqApplicationType!=null && !reqApplicationType.equalsIgnoreCase(BPAConstants.BUILDING_PLAN_PC)) {
-			Map<String, String> values = edcrService.validateEdcrPlan(bpaRequest, mdmsData);
-			String applicationType = values.get(BPAConstants.APPLICATIONTYPE);
-			String serviceType = values.get(BPAConstants.SERVICETYPE);
-			this.validateCreateOC(applicationType, values, requestInfo, bpaRequest);
-			bpaValidator.validateCreate(bpaRequest, mdmsData, values);
-			if (!applicationType.equalsIgnoreCase(BPAConstants.BUILDING_PLAN_OC)) {
-				landService.addLandInfoToBPA(bpaRequest);
-			}
-			enrichmentService.enrichBPACreateRequest(bpaRequest, mdmsData, values);
-			wfIntegrator.callWorkFlow(bpaRequest);
-			nocService.createNocRequest(bpaRequest, mdmsData);
-			// this.addCalculation(applicationType, bpaRequest);
-			calculationService.addCalculationV2(bpaRequest, BPAConstants.APPLICATION_FEE_KEY, applicationType, serviceType);
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, Object> edcr = edcrService.getEDCRDetails(bpaRequest);
+		//Map<String, String> values = edcrService.validateEdcrPlan(bpaRequest, mdmsData);
+		Map<String, String> values = edcrService.validateEdcrPlanV2(bpaRequest, mdmsData, edcr);
+		String applicationType = values.get(BPAConstants.APPLICATIONTYPE);
+		String serviceType = values.get(BPAConstants.SERVICETYPE);
+		this.validateCreateOC(applicationType, values, requestInfo, bpaRequest);
+		bpaValidator.validateCreate(bpaRequest, mdmsData, values);
+		if (!applicationType.equalsIgnoreCase(BPAConstants.BUILDING_PLAN_OC)) {
+			landService.addLandInfoToBPA(bpaRequest);
 		}
+		//enrichmentService.enrichBPACreateRequest(bpaRequest, mdmsData, values);
+		enrichmentService.enrichBPACreateRequestV2(bpaRequest, mdmsData, values, edcr);			
+		wfIntegrator.callWorkFlow(bpaRequest);
+		nocService.createNocRequest(bpaRequest, mdmsData);
+		// this.addCalculation(applicationType, bpaRequest);
+		calculationService.addCalculationV2(bpaRequest, BPAConstants.APPLICATION_FEE_KEY, applicationType, serviceType);
 		repository.save(bpaRequest);
 		return bpaRequest.getBPA();
 	}
